@@ -67,6 +67,47 @@
     <string name="back">Back</string>
     <string name="version">Version %s</string>
     <string name="models_subtitle">Download and manage models</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="privacy_policy_effective_date">Effective Date: March 16, 2024</string>
+    <string name="privacy_policy_intro">Welcome to LM Playground! I am committed to maintaining the trust and confidence of all users of my app. In this Privacy Policy, I\'m providing detailed information on when and why I don\'t collect personal data, how I use the only permission required (Internet permission), and how I ensure your privacy is protected.</string>
+    <string name="privacy_policy_s1_title">1. No Personal Information Collection</string>
+    <string name="privacy_policy_s1_body">I, Andriy Druk, the developer of LM Playground, do not collect, store, use, or share any personal information from the users of my app. My app is designed with your privacy as a priority, ensuring you can use it without compromising your personal data.</string>
+    <string name="privacy_policy_s2_title">2. Non-Personal Information</string>
+    <string name="privacy_policy_s2_body">LM Playground is designed in such a way that it does not collect or use any non-personal information from its users. The app operates independently without tracking or analyzing user data, behavior, or preferences.</string>
+    <string name="privacy_policy_s3_title">3. Internet Permission Usage</string>
+    <string name="privacy_policy_s3_body">The only permission required by LM Playground is for Internet access. This permission is necessary to enable the DownloadManager to download files directly into the app. Please be assured that this function does not involve sending any data from your device to any servers or collecting information about your browsing habits.</string>
+    <string name="privacy_policy_s4_title">4. Privacy Policy Updates</string>
+    <string name="privacy_policy_s4_body">As the developer of LM Playground, I reserve the right to update this Privacy Policy at any time. Any changes will be effective immediately upon posting the updated policy on this page. Users are encouraged to frequently check this page for any changes and stay informed about how I am helping to protect the personal information I do not collect.</string>
+    <string name="privacy_policy_s5_title">5. Acceptance of This Policy</string>
+    <string name="privacy_policy_s5_body">By using LM Playground, you acknowledge and agree to this Privacy Policy. If you do not agree with the policy, please refrain from using the app. Your continued use of the app following the posting of any updates or changes to this policy will be deemed your acceptance of those changes.</string>
+    <string name="privacy_policy_s6_title">6. Contact Me</string>
+    <string name="privacy_policy_s6_body">If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me.</string>
+    <string name="privacy_policy_contact_email">andriydruk@gmail.com</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_subtitle">Frequently asked questions</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">What is LM Playground?</string>
+    <string name="faq_a1">LM Playground lets you run large language models directly on your Android device. All processing happens locally \u2013 no cloud servers needed.</string>
+    <string name="faq_q2">What models are supported?</string>
+    <string name="faq_a2">The app supports models in GGUF format with Q4_K_M quantization, including Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini, and DeepSeek R1 Distill in various sizes.</string>
+    <string name="faq_q3">How much storage space do I need?</string>
+    <string name="faq_a3">Model sizes vary from about 500 MB (small models like Qwen 3 0.6B) to several GB (larger models like DeepSeek R1 7B). Make sure you have enough free space before downloading.</string>
+    <string name="faq_q4">Does the app require an internet connection?</string>
+    <string name="faq_a4">Internet is only needed to download models. Once downloaded, models run completely offline on your device.</string>
+    <string name="faq_q5">Is my data private?</string>
+    <string name="faq_a5">Yes. All conversations are processed locally on your device. No data is sent to external servers. See the Privacy Policy for details.</string>
+    <string name="faq_q6">Why is model loading slow?</string>
+    <string name="faq_a6">Larger models take more time to load into memory. Loading times depend on your device\'s hardware. Once loaded, the model stays in memory until you unload it.</string>
+    <string name="faq_q7">Which devices work best?</string>
+    <string name="faq_a7">Devices with more RAM can run larger models. For best performance, use a device with at least 6 GB of RAM for small models and 8+ GB for larger ones.</string>
+    <string name="faq_q8">Can I load a custom GGUF model?</string>
+    <string name="faq_a8">A model file alone is not enough for loading \u2013 each model requires a tailored, prebuilt configuration (chat template, tokenizer settings, etc.) that the app uses to run it correctly. If you\'d like to use a model not yet available in the app, please visit my GitHub repository and submit a request or contribute the configuration.</string>
+    <string name="faq_q9">Can I change where models are stored?</string>
+    <string name="faq_a9">Yes. Go to Settings, then Models, and use the \u201CChange Folder\u201D option to select a different storage location.</string>
+    <string name="faq_q10">How do I delete a model?</string>
+    <string name="faq_a10">Go to Settings, then Models. In the \u201CDownloaded\u201D section, tap the delete icon next to the model you want to remove.</string>
 
     <!-- Models Screen -->
     <string name="models">Models</string>

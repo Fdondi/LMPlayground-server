@@ -13,6 +13,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material.icons.outlined.HelpOutline
+import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,6 +38,8 @@ import com.druk.lmplayground.theme.PlaygroundTheme
 fun SettingsScreen(
     onBackClick: () -> Unit,
     onModelsClick: () -> Unit,
+    onPrivacyPolicyClick: () -> Unit,
+    onFaqClick: () -> Unit,
     appVersion: String
 ) {
     Scaffold(
@@ -61,16 +66,40 @@ fun SettingsScreen(
                 subtitle = stringResource(R.string.models_subtitle),
                 onClick = onModelsClick
             )
-            
-            Spacer(Modifier.weight(1f))
-            
-            // Version at bottom
-            Text(
-                text = stringResource(R.string.version, appVersion),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(16.dp)
+
+            // Privacy Policy row
+            SettingsRow(
+                icon = Icons.Outlined.Policy,
+                title = stringResource(R.string.privacy_policy),
+                onClick = onPrivacyPolicyClick
             )
+
+            // FAQ row
+            SettingsRow(
+                icon = Icons.Outlined.HelpOutline,
+                title = stringResource(R.string.faq),
+                subtitle = stringResource(R.string.faq_subtitle),
+                onClick = onFaqClick
+            )
+
+            // Version row (static, not clickable)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Info,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.width(16.dp))
+                Text(
+                    text = stringResource(R.string.version, appVersion),
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
         }
     }
 }
@@ -79,7 +108,7 @@ fun SettingsScreen(
 fun SettingsRow(
     icon: ImageVector,
     title: String,
-    subtitle: String,
+    subtitle: String? = null,
     onClick: () -> Unit
 ) {
     Row(
@@ -100,11 +129,13 @@ fun SettingsRow(
                 text = title,
                 style = MaterialTheme.typography.bodyLarge
             )
-            Text(
-                text = subtitle,
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (subtitle != null) {
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
         Icon(
             imageVector = Icons.Filled.KeyboardArrowRight,
@@ -121,6 +152,8 @@ private fun SettingsScreenPreview() {
         SettingsScreen(
             onBackClick = {},
             onModelsClick = {},
+            onPrivacyPolicyClick = {},
+            onFaqClick = {},
             appVersion = "1.0.0"
         )
     }

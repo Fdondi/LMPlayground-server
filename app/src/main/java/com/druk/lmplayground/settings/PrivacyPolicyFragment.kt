@@ -1,5 +1,7 @@
 package com.druk.lmplayground.settings
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +11,10 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.druk.lmplayground.BuildConfig
 import com.druk.lmplayground.R
 import com.druk.lmplayground.theme.PlaygroundTheme
 
-class SettingsFragment : Fragment() {
+class PrivacyPolicyFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,18 +24,16 @@ class SettingsFragment : Fragment() {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
         setContent {
             PlaygroundTheme {
-                SettingsScreen(
+                PrivacyPolicyScreen(
                     onBackClick = { findNavController().popBackStack() },
-                    onModelsClick = {
-                        findNavController().navigate(R.id.action_settings_to_models)
-                    },
-                    onPrivacyPolicyClick = {
-                        findNavController().navigate(R.id.action_settings_to_privacy_policy)
-                    },
-                    onFaqClick = {
-                        findNavController().navigate(R.id.action_settings_to_faq)
-                    },
-                    appVersion = BuildConfig.VERSION_NAME
+                    onSendFeedbackClick = {
+                        val email = getString(R.string.privacy_policy_contact_email)
+                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+                            data = Uri.parse("mailto:$email")
+                            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+                        }
+                        startActivity(intent)
+                    }
                 )
             }
         }

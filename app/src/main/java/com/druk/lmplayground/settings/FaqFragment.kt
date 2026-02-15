@@ -9,11 +9,9 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.druk.lmplayground.BuildConfig
-import com.druk.lmplayground.R
 import com.druk.lmplayground.theme.PlaygroundTheme
 
-class SettingsFragment : Fragment() {
+class FaqFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,18 +21,8 @@ class SettingsFragment : Fragment() {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
         setContent {
             PlaygroundTheme {
-                SettingsScreen(
-                    onBackClick = { findNavController().popBackStack() },
-                    onModelsClick = {
-                        findNavController().navigate(R.id.action_settings_to_models)
-                    },
-                    onPrivacyPolicyClick = {
-                        findNavController().navigate(R.id.action_settings_to_privacy_policy)
-                    },
-                    onFaqClick = {
-                        findNavController().navigate(R.id.action_settings_to_faq)
-                    },
-                    appVersion = BuildConfig.VERSION_NAME
+                FaqScreen(
+                    onBackClick = { findNavController().popBackStack() }
                 )
             }
         }

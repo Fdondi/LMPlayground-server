@@ -24,11 +24,27 @@
         <action
             android:id="@+id/action_settings_to_models"
             app:destination="@id/nav_models" />
+        <action
+            android:id="@+id/action_settings_to_faq"
+            app:destination="@id/nav_faq" />
+        <action
+            android:id="@+id/action_settings_to_privacy_policy"
+            app:destination="@id/nav_privacy_policy" />
     </fragment>
 
     <fragment
         android:id="@+id/nav_models"
         android:name="com.druk.lmplayground.storage.ModelsFragment"
         android:label="Models" />
+
+    <fragment
+        android:id="@+id/nav_faq"
+        android:name="com.druk.lmplayground.settings.FaqFragment"
+        android:label="FAQ" />
+
+    <fragment
+        android:id="@+id/nav_privacy_policy"
+        android:name="com.druk.lmplayground.settings.PrivacyPolicyFragment"
+        android:label="Privacy Policy" />
 
 </navigation>
