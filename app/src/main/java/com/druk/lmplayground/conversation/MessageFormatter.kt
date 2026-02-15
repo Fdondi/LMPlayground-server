@@ -19,6 +19,11 @@ val symbolPattern by lazy {
     Regex("""(https?://[^\s\t\n]+)|(`[^`]+`)|(@\w+)|(\*[\w]+\*)|(_[\w]+_)|(~[\w]+~)""")
 }
 
+// Pattern to match <think> blocks - both closed and unclosed (streaming)
+val thinkPattern by lazy {
+    Regex("""<think>(.*?)</think>\n?|<think>(.*)""", RegexOption.DOT_MATCHES_ALL)
+}
+
 // Accepted annotations for the ClickableTextWrapper
 enum class SymbolAnnotationType {
     PERSON, LINK
@@ -28,6 +33,13 @@ typealias StringAnnotation = AnnotatedString.Range<String>
 typealias SymbolAnnotation = Pair<AnnotatedString, StringAnnotation?>
 
 /**
+ * Strip <think> tags from text, returning only the non-thinking content.
+ */
+fun stripThinkTags(text: String): String {
+    return thinkPattern.replace(text, "").trim()
+}
+
+/**
  * Format a message following Markdown-lite syntax
  * | @username -> bold, primary color and clickable element
  * | http(s)://... -> clickable link, opening it into the browser
@@ -35,6 +47,7 @@ typealias SymbolAnnotation = Pair<AnnotatedString, StringAnnotation?>
  * | _italic_ -> italic
  * | ~strikethrough~ -> strikethrough
  * | `MyClass.myMethod` -> inline code styling
+ * | &lt;think&gt;...&lt;/think&gt; -> italic, grey (model reasoning)
  *
  * @param text contains message to be parsed
  * @return AnnotatedString with annotations used inside the ClickableText wrapper
@@ -44,43 +57,83 @@ fun messageFormatter(
     text: String,
     primary: Boolean
 ): AnnotatedString {
-    val tokens = symbolPattern.findAll(text)
+    val colorScheme = MaterialTheme.colorScheme
+    val thinkColor = colorScheme.outline
+    val codeSnippetBackground = if (primary) {
+        colorScheme.secondary
+    } else {
+        colorScheme.surface
+    }
 
     return buildAnnotatedString {
+        val thinkMatches = thinkPattern.findAll(text).toList()
 
-        var cursorPosition = 0
-
-        val codeSnippetBackground =
-            if (primary) {
-                MaterialTheme.colorScheme.secondary
-            } else {
-                MaterialTheme.colorScheme.surface
-            }
-
-        for (token in tokens) {
-            append(text.slice(cursorPosition until token.range.first))
-
-            val (annotatedString, stringAnnotation) = getSymbolAnnotation(
-                matchResult = token,
-                colorScheme = MaterialTheme.colorScheme,
-                primary = primary,
-                codeSnippetBackground = codeSnippetBackground
-            )
-            append(annotatedString)
-
-            if (stringAnnotation != null) {
-                val (item, start, end, tag) = stringAnnotation
-                addStringAnnotation(tag = tag, start = start, end = end, annotation = item)
-            }
-
-            cursorPosition = token.range.last + 1
+        if (thinkMatches.isEmpty()) {
+            appendFormattedSegment(text, colorScheme, primary, codeSnippetBackground)
+            return@buildAnnotatedString
         }
 
-        if (!tokens.none()) {
-            append(text.slice(cursorPosition..text.lastIndex))
-        } else {
-            append(text)
+        var cursor = 0
+        for (match in thinkMatches) {
+            if (cursor < match.range.first) {
+                val normalText = text.substring(cursor, match.range.first)
+                appendFormattedSegment(normalText, colorScheme, primary, codeSnippetBackground)
+            }
+
+            val thinkContent = (match.groupValues[1].ifEmpty { match.groupValues[2] }).trim()
+            if (thinkContent.isNotEmpty()) {
+                pushStyle(SpanStyle(fontStyle = FontStyle.Italic, color = thinkColor))
+                append(thinkContent)
+                pop()
+            }
+
+            cursor = match.range.last + 1
         }
+
+        if (cursor < text.length) {
+            val remainingText = text.substring(cursor)
+            appendFormattedSegment(remainingText, colorScheme, primary, codeSnippetBackground)
+        }
+    }
+}
+
+/**
+ * Append a text segment with markdown-lite formatting to the AnnotatedString builder.
+ */
+private fun AnnotatedString.Builder.appendFormattedSegment(
+    text: String,
+    colorScheme: ColorScheme,
+    primary: Boolean,
+    codeSnippetBackground: Color
+) {
+    if (text.isEmpty()) return
+
+    val tokens = symbolPattern.findAll(text)
+    var cursorPosition = 0
+
+    for (token in tokens) {
+        append(text.slice(cursorPosition until token.range.first))
+
+        val (annotatedString, stringAnnotation) = getSymbolAnnotation(
+            matchResult = token,
+            colorScheme = colorScheme,
+            primary = primary,
+            codeSnippetBackground = codeSnippetBackground
+        )
+        append(annotatedString)
+
+        if (stringAnnotation != null) {
+            val (item, start, end, tag) = stringAnnotation
+            addStringAnnotation(tag = tag, start = start, end = end, annotation = item)
+        }
+
+        cursorPosition = token.range.last + 1
+    }
+
+    if (!tokens.none()) {
+        append(text.slice(cursorPosition..text.lastIndex))
+    } else {
+        append(text)
     }
 }
 

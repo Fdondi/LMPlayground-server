@@ -86,7 +86,7 @@ fun ChatItemBubble(
                 horizontalArrangement = Arrangement.spacedBy(0.dp)
             ) {
                 IconButton(onClick = {
-                    clipboardManager.setText(AnnotatedString(message.content))
+                    clipboardManager.setText(AnnotatedString(stripThinkTags(message.content)))
                 }) {
                     Icon(
                         imageVector = Icons.Outlined.ContentCopy,
