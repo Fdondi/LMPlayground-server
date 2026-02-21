@@ -14,8 +14,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Close
@@ -46,7 +48,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -55,6 +60,7 @@ import com.druk.lmplayground.R
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
+import com.druk.lmplayground.models.releaseDateLabel
 import com.druk.lmplayground.theme.PlaygroundTheme
 
 @Composable
@@ -381,6 +387,17 @@ private fun DownloadedModelItem(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (model.logoRes != 0) {
+            Image(
+                painter = painterResource(id = model.logoRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+        }
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = model.name,
@@ -390,6 +407,11 @@ private fun DownloadedModelItem(
             )
             Text(
                 text = model.description,
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = model.releaseDateLabel(),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
@@ -417,6 +439,17 @@ private fun AvailableModelItem(
             .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (model.logoRes != 0) {
+            Image(
+                painter = painterResource(id = model.logoRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+            Spacer(modifier = Modifier.width(12.dp))
+        }
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = model.name,
@@ -428,6 +461,11 @@ private fun AvailableModelItem(
                 text = downloadProgress?.status ?: model.description,
                 style = MaterialTheme.typography.bodySmall,
                 color = if (downloadProgress != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Text(
+                text = model.releaseDateLabel(),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
         }
         

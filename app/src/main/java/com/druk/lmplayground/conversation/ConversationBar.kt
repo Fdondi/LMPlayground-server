@@ -36,6 +36,7 @@ import com.druk.lmplayground.AppBar
 import com.druk.lmplayground.R
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
+import java.time.LocalDate
 
 const val ConversationBarTestTag = "ConversationBarTestTag"
 
@@ -151,6 +152,7 @@ fun ChannelBarWithModelInfoPreview() {
                 name = "Model Name Model Name Model Name Model Name Model Name",
                 filename = "model.gguf",
                 remoteUri = Uri.parse("https://example.com/model.gguf"),
+                releaseDate = LocalDate.parse("2025-01-01"),
                 description = "Model Description"
             ),
             modelStatus = "Loading 50%"
