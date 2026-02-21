@@ -10,47 +10,60 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.BaselineShift
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
+import org.commonmark.ext.gfm.strikethrough.Strikethrough
+import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
+import org.commonmark.node.Block
+import org.commonmark.node.BlockQuote
+import org.commonmark.node.BulletList
+import org.commonmark.node.Code
+import org.commonmark.node.Document
+import org.commonmark.node.Emphasis
+import org.commonmark.node.FencedCodeBlock
+import org.commonmark.node.HardLineBreak
+import org.commonmark.node.Heading
+import org.commonmark.node.HtmlBlock
+import org.commonmark.node.HtmlInline
+import org.commonmark.node.Image
+import org.commonmark.node.IndentedCodeBlock
+import org.commonmark.node.Link
+import org.commonmark.node.ListItem
+import org.commonmark.node.Node
+import org.commonmark.node.OrderedList
+import org.commonmark.node.Paragraph
+import org.commonmark.node.SoftLineBreak
+import org.commonmark.node.StrongEmphasis
+import org.commonmark.node.Text
+import org.commonmark.node.ThematicBreak
+import org.commonmark.parser.Parser
 
-// Regex containing the syntax tokens
-val symbolPattern by lazy {
-    Regex("""(https?://[^\s\t\n]+)|(`[^`]+`)|(@\w+)|(\*[\w]+\*)|(_[\w]+_)|(~[\w]+~)""")
-}
-
-// Pattern to match <think> blocks - both closed and unclosed (streaming)
 val thinkPattern by lazy {
     Regex("""<think>(.*?)</think>\n?|<think>(.*)""", RegexOption.DOT_MATCHES_ALL)
 }
 
-// Accepted annotations for the ClickableTextWrapper
 enum class SymbolAnnotationType {
     PERSON, LINK
 }
+
 typealias StringAnnotation = AnnotatedString.Range<String>
-// Pair returning styled content and annotation for ClickableText when matching syntax token
 typealias SymbolAnnotation = Pair<AnnotatedString, StringAnnotation?>
 
-/**
- * Strip <think> tags from text, returning only the non-thinking content.
- */
+private val markdownParser by lazy {
+    Parser.builder()
+        .extensions(listOf(StrikethroughExtension.create()))
+        .build()
+}
+
 fun stripThinkTags(text: String): String {
     return thinkPattern.replace(text, "").trim()
 }
 
 /**
- * Format a message following Markdown-lite syntax
- * | @username -> bold, primary color and clickable element
- * | http(s)://... -> clickable link, opening it into the browser
- * | *bold* -> bold
- * | _italic_ -> italic
- * | ~strikethrough~ -> strikethrough
- * | `MyClass.myMethod` -> inline code styling
- * | &lt;think&gt;...&lt;/think&gt; -> italic, grey (model reasoning)
+ * Format a message by parsing Markdown into a styled AnnotatedString.
  *
- * @param text contains message to be parsed
- * @return AnnotatedString with annotations used inside the ClickableText wrapper
+ * Handles bold, italic, inline code, code blocks, headings, lists, links,
+ * blockquotes, strikethrough, horizontal rules, and <think> blocks.
  */
 @Composable
 fun messageFormatter(
@@ -59,29 +72,35 @@ fun messageFormatter(
 ): AnnotatedString {
     val colorScheme = MaterialTheme.colorScheme
     val thinkColor = colorScheme.outline
-    val codeSnippetBackground = if (primary) {
-        colorScheme.secondary
-    } else {
-        colorScheme.surface
-    }
+    val codeBackground = if (primary) colorScheme.secondary else colorScheme.surface
 
     return buildAnnotatedString {
         val thinkMatches = thinkPattern.findAll(text).toList()
 
         if (thinkMatches.isEmpty()) {
-            appendFormattedSegment(text, colorScheme, primary, codeSnippetBackground)
+            appendMarkdown(text, colorScheme, primary, codeBackground)
             return@buildAnnotatedString
         }
 
         var cursor = 0
         for (match in thinkMatches) {
             if (cursor < match.range.first) {
-                val normalText = text.substring(cursor, match.range.first)
-                appendFormattedSegment(normalText, colorScheme, primary, codeSnippetBackground)
+                appendMarkdown(
+                    text.substring(cursor, match.range.first),
+                    colorScheme, primary, codeBackground
+                )
             }
 
             val thinkContent = (match.groupValues[1].ifEmpty { match.groupValues[2] }).trim()
             if (thinkContent.isNotEmpty()) {
+                pushStyle(SpanStyle(
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 12.sp,
+                    color = thinkColor
+                ))
+                append("Thoughts")
+                pop()
+                append("\n")
                 pushStyle(SpanStyle(fontStyle = FontStyle.Italic, color = thinkColor))
                 append(thinkContent)
                 pop()
@@ -91,127 +110,226 @@ fun messageFormatter(
         }
 
         if (cursor < text.length) {
-            val remainingText = text.substring(cursor)
-            appendFormattedSegment(remainingText, colorScheme, primary, codeSnippetBackground)
+            val remainingText = text.substring(cursor).trimStart()
+            if (remainingText.isNotEmpty()) {
+                append("\n\n")
+                pushStyle(SpanStyle(color = colorScheme.outline))
+                append("\u2500\u2500\u2500")
+                pop()
+                append("\n\n")
+                appendMarkdown(remainingText, colorScheme, primary, codeBackground)
+            }
         }
     }
 }
 
-/**
- * Append a text segment with markdown-lite formatting to the AnnotatedString builder.
- */
-private fun AnnotatedString.Builder.appendFormattedSegment(
+private fun AnnotatedString.Builder.appendMarkdown(
     text: String,
     colorScheme: ColorScheme,
     primary: Boolean,
-    codeSnippetBackground: Color
+    codeBackground: Color
 ) {
     if (text.isEmpty()) return
+    val document = markdownParser.parse(text)
+    val ctx = RenderContext(colorScheme, primary, codeBackground)
+    renderNode(document, ctx, isFirstBlock = true)
+}
 
-    val tokens = symbolPattern.findAll(text)
-    var cursorPosition = 0
+private data class RenderContext(
+    val colorScheme: ColorScheme,
+    val primary: Boolean,
+    val codeBackground: Color
+)
 
-    for (token in tokens) {
-        append(text.slice(cursorPosition until token.range.first))
+private val headingSizes = mapOf(
+    1 to 24.sp,
+    2 to 20.sp,
+    3 to 18.sp,
+    4 to 16.sp,
+    5 to 14.sp,
+    6 to 13.sp
+)
 
-        val (annotatedString, stringAnnotation) = getSymbolAnnotation(
-            matchResult = token,
-            colorScheme = colorScheme,
-            primary = primary,
-            codeSnippetBackground = codeSnippetBackground
-        )
-        append(annotatedString)
+private fun AnnotatedString.Builder.renderNode(
+    node: Node,
+    ctx: RenderContext,
+    isFirstBlock: Boolean = false,
+    listDepth: Int = 0,
+    orderedIndex: Int? = null
+) {
+    when (node) {
+        is Document -> renderChildren(node, ctx, listDepth = listDepth)
 
-        if (stringAnnotation != null) {
-            val (item, start, end, tag) = stringAnnotation
-            addStringAnnotation(tag = tag, start = start, end = end, annotation = item)
+        is Heading -> {
+            if (!isFirstBlock) append("\n\n")
+            val fontSize = headingSizes[node.level] ?: 14.sp
+            pushStyle(SpanStyle(fontSize = fontSize, fontWeight = FontWeight.Bold))
+            renderChildren(node, ctx, listDepth = listDepth)
+            pop()
         }
 
-        cursorPosition = token.range.last + 1
-    }
+        is Paragraph -> {
+            val insideListItem = node.parent is ListItem
+            if (!isFirstBlock && !insideListItem) append("\n\n")
+            renderChildren(node, ctx, listDepth = listDepth)
+        }
 
-    if (!tokens.none()) {
-        append(text.slice(cursorPosition..text.lastIndex))
-    } else {
-        append(text)
+        is BlockQuote -> {
+            if (!isFirstBlock) append("\n\n")
+            pushStyle(SpanStyle(fontStyle = FontStyle.Italic, color = ctx.colorScheme.outline))
+            append("\u2502 ")
+            renderChildren(node, ctx, listDepth = listDepth)
+            pop()
+        }
+
+        is BulletList -> {
+            if (!isFirstBlock) {
+                append(if (node.parent is ListItem) "\n" else "\n\n")
+            }
+            var child = node.firstChild
+            var isFirst = true
+            while (child != null) {
+                renderNode(child, ctx, isFirstBlock = isFirst, listDepth = listDepth + 1)
+                isFirst = false
+                child = child.next
+            }
+        }
+
+        is OrderedList -> {
+            if (!isFirstBlock) {
+                append(if (node.parent is ListItem) "\n" else "\n\n")
+            }
+            var child = node.firstChild
+            var index = node.markerStartNumber ?: 1
+            var isFirst = true
+            while (child != null) {
+                renderNode(
+                    child, ctx,
+                    isFirstBlock = isFirst,
+                    listDepth = listDepth + 1,
+                    orderedIndex = index
+                )
+                index++
+                isFirst = false
+                child = child.next
+            }
+        }
+
+        is ListItem -> {
+            if (!isFirstBlock) append("\n")
+            val indent = "  ".repeat((listDepth - 1).coerceAtLeast(0))
+            val bullet = if (orderedIndex != null) "$indent$orderedIndex. " else "$indent\u2022 "
+            append(bullet)
+            renderChildren(node, ctx, listDepth = listDepth)
+        }
+
+        is FencedCodeBlock -> {
+            if (!isFirstBlock) append("\n\n")
+            pushStyle(
+                SpanStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 13.sp,
+                    background = ctx.codeBackground
+                )
+            )
+            append(node.literal.trimEnd('\n'))
+            pop()
+        }
+
+        is IndentedCodeBlock -> {
+            if (!isFirstBlock) append("\n\n")
+            pushStyle(
+                SpanStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 13.sp,
+                    background = ctx.codeBackground
+                )
+            )
+            append(node.literal.trimEnd('\n'))
+            pop()
+        }
+
+        is ThematicBreak -> {
+            if (!isFirstBlock) append("\n\n")
+            pushStyle(SpanStyle(color = ctx.colorScheme.outline))
+            append("\u2E3B")
+            pop()
+        }
+
+        is StrongEmphasis -> {
+            pushStyle(SpanStyle(fontWeight = FontWeight.Bold))
+            renderChildren(node, ctx, listDepth = listDepth)
+            pop()
+        }
+
+        is Emphasis -> {
+            pushStyle(SpanStyle(fontStyle = FontStyle.Italic))
+            renderChildren(node, ctx, listDepth = listDepth)
+            pop()
+        }
+
+        is Code -> {
+            pushStyle(
+                SpanStyle(
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 13.sp,
+                    background = ctx.codeBackground
+                )
+            )
+            append(node.literal)
+            pop()
+        }
+
+        is Link -> {
+            val linkColor = if (ctx.primary) {
+                ctx.colorScheme.inversePrimary
+            } else {
+                ctx.colorScheme.primary
+            }
+            pushStyle(SpanStyle(color = linkColor, textDecoration = TextDecoration.Underline))
+            val startIdx = length
+            renderChildren(node, ctx, listDepth = listDepth)
+            val endIdx = length
+            addStringAnnotation(
+                tag = SymbolAnnotationType.LINK.name,
+                annotation = node.destination,
+                start = startIdx,
+                end = endIdx
+            )
+            pop()
+        }
+
+        is Image -> {
+            renderChildren(node, ctx, listDepth = listDepth)
+        }
+
+        is Strikethrough -> {
+            pushStyle(SpanStyle(textDecoration = TextDecoration.LineThrough))
+            renderChildren(node, ctx, listDepth = listDepth)
+            pop()
+        }
+
+        is HardLineBreak -> append("\n")
+        is SoftLineBreak -> append("\n")
+        is Text -> append(node.literal)
+
+        is HtmlBlock -> append(node.literal.trim())
+        is HtmlInline -> append(node.literal)
+
+        else -> renderChildren(node, ctx, listDepth = listDepth)
     }
 }
 
-/**
- * Map regex matches found in a message with supported syntax symbols
- *
- * @param matchResult is a regex result matching our syntax symbols
- * @return pair of AnnotatedString with annotation (optional) used inside the ClickableText wrapper
- */
-private fun getSymbolAnnotation(
-    matchResult: MatchResult,
-    colorScheme: ColorScheme,
-    primary: Boolean,
-    codeSnippetBackground: Color
-): SymbolAnnotation {
-    return when (matchResult.value.first()) {
-        '@' -> SymbolAnnotation(
-            AnnotatedString(
-                text = matchResult.value,
-                spanStyle = SpanStyle(
-                    color = if (primary) colorScheme.inversePrimary else colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
-            ),
-            StringAnnotation(
-                item = matchResult.value.substring(1),
-                start = matchResult.range.first,
-                end = matchResult.range.last,
-                tag = SymbolAnnotationType.PERSON.name
-            )
-        )
-        '*' -> SymbolAnnotation(
-            AnnotatedString(
-                text = matchResult.value.trim('*'),
-                spanStyle = SpanStyle(fontWeight = FontWeight.Bold)
-            ),
-            null
-        )
-        '_' -> SymbolAnnotation(
-            AnnotatedString(
-                text = matchResult.value.trim('_'),
-                spanStyle = SpanStyle(fontStyle = FontStyle.Italic)
-            ),
-            null
-        )
-        '~' -> SymbolAnnotation(
-            AnnotatedString(
-                text = matchResult.value.trim('~'),
-                spanStyle = SpanStyle(textDecoration = TextDecoration.LineThrough)
-            ),
-            null
-        )
-        '`' -> SymbolAnnotation(
-            AnnotatedString(
-                text = matchResult.value.trim('`'),
-                spanStyle = SpanStyle(
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 12.sp,
-                    background = codeSnippetBackground,
-                    baselineShift = BaselineShift(0.2f)
-                )
-            ),
-            null
-        )
-        'h' -> SymbolAnnotation(
-            AnnotatedString(
-                text = matchResult.value,
-                spanStyle = SpanStyle(
-                    color = if (primary) colorScheme.inversePrimary else colorScheme.primary
-                )
-            ),
-            StringAnnotation(
-                item = matchResult.value,
-                start = matchResult.range.first,
-                end = matchResult.range.last,
-                tag = SymbolAnnotationType.LINK.name
-            )
-        )
-        else -> SymbolAnnotation(AnnotatedString(matchResult.value), null)
+private fun AnnotatedString.Builder.renderChildren(
+    parent: Node,
+    ctx: RenderContext,
+    listDepth: Int = 0
+) {
+    var child = parent.firstChild
+    var firstBlock = true
+    while (child != null) {
+        renderNode(child, ctx, isFirstBlock = firstBlock, listDepth = listDepth)
+        if (child is Block) firstBlock = false
+        child = child.next
     }
 }
