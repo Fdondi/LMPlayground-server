@@ -28,7 +28,8 @@ fun Messages(
     messages: List<Message>,
     navigateToProfile: (String) -> Unit,
     scrollState: LazyListState,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    isGenerating: Boolean = false
 ) {
     var piningBottom by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -43,13 +44,15 @@ fun Messages(
         ) {
             for (index in messages.indices) {
                 val content = messages[index]
+                val isLast = index == messages.lastIndex
                 item {
                     Message(
                         onAuthorClick = { name -> navigateToProfile(name) },
                         msg = content,
                         isUserMe = content.author == "User",
                         isFirstMessageByAuthor = true,
-                        isLastMessageByAuthor = true
+                        isLastMessageByAuthor = true,
+                        showActions = !(isLast && isGenerating)
                     )
                 }
             }

@@ -279,7 +279,8 @@ class ConversationFragment : Fragment() {
                             messages = messages,
                             navigateToProfile = { },
                             modifier = Modifier.weight(1f),
-                            scrollState = scrollState
+                            scrollState = scrollState,
+                            isGenerating = isGenerating == true
                         )
                         UserInput(
                             modifier = Modifier

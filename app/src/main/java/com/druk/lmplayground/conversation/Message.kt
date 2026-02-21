@@ -27,7 +27,8 @@ fun Message(
     msg: Message,
     isUserMe: Boolean,
     isFirstMessageByAuthor: Boolean,
-    isLastMessageByAuthor: Boolean
+    isLastMessageByAuthor: Boolean,
+    showActions: Boolean = true
 ) {
     val spaceBetweenAuthors = if (isLastMessageByAuthor) Modifier.padding(top = 8.dp) else Modifier
     Row(modifier = spaceBetweenAuthors) {
@@ -59,7 +60,7 @@ fun Message(
                     )
                 }
             }
-            ChatItemBubble(msg, isUserMe)
+            ChatItemBubble(msg, isUserMe, showActions)
             if (isFirstMessageByAuthor) {
                 // Last bubble before next author
                 Spacer(modifier = Modifier.height(8.dp))
