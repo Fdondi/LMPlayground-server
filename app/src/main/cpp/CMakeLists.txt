@@ -3,10 +3,21 @@
 # For more examples on how to use CMake, see https://github.com/android/ndk-samples.
 
 # Sets the minimum CMake version required for this project.
-cmake_minimum_required(VERSION 3.22.1)
+cmake_minimum_required(VERSION 3.31.6)
 
 # Declares the project name first
 project("llamacpp")
+
+# Per-ABI performance flags (must be set before add_subdirectory)
+if(DEFINED ANDROID_ABI)
+    if(ANDROID_ABI STREQUAL "arm64-v8a")
+        set(GGML_CPU_KLEIDIAI ON)
+        set(GGML_OPENMP ON)
+    elseif(ANDROID_ABI STREQUAL "x86_64")
+        set(GGML_CPU_KLEIDIAI OFF)
+        set(GGML_OPENMP OFF)
+    endif()
+endif()
 
 # Create a static library with our ggml_fopen override
 # This will be linked BEFORE ggml so our implementation takes precedence

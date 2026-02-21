@@ -28,7 +28,7 @@
 class AndroidLogBuf : public std::streambuf {
 protected:
     std::streamsize xsputn(const char* s, std::streamsize n) override {
-        __android_log_print(ANDROID_LOG_INFO, "Llama", "%.*s", n, s);
+        __android_log_print(ANDROID_LOG_INFO, "Llama", "%.*s", (int)n, s);
         return n;
     }
 
