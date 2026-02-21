@@ -96,24 +96,32 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         _isModelReady.postValue(false)
         
         viewModelScope.launch {
+            // Stop any in-flight generation and tear down previous model
+            generatingJob?.cancel()
+            generatingJob?.join()
+            generatingJob = null
+
+            withContext(Dispatchers.Default) {
+                llamaSession?.destroy()
+                llamaSession = null
+                llamaModel?.unloadModel()
+                llamaModel = null
+            }
+
+            modelFileHandle?.close()
+            modelFileHandle = null
+
             withContext(Dispatchers.Default) {
                 _modelLoadingProgress.postValue(0f)
                 _loadedModel.postValue(modelInfo)
                 _loadedModelStatus.postValue("Loading...")
                 
-                // Close any previous file handle
-                modelFileHandle?.close()
-                modelFileHandle = null
-                
-                // Open model file via SAF - returns "fd:N" path format
-                // Our native ggml_fopen/llama_open overrides use dup() to create copies
                 val fileHandle = storageRepository.openModelFile(modelInfo.filename)
                 if (fileHandle == null) {
                     _loadedModelStatus.postValue("Cannot open file")
                     return@withContext
                 }
                 
-                // IMPORTANT: Keep handle alive while model is loaded (prevents GC from closing fd)
                 modelFileHandle = fileHandle
                 
                 val llamaModel = llamaCpp.loadModel(
@@ -182,7 +190,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     @MainThread
     fun cancelGeneration() {
         generatingJob?.cancel()
-        generatingJob = null
     }
 
     fun getReport(): String? {
