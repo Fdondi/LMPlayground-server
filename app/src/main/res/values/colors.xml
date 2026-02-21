@@ -14,7 +14,5 @@
     <color name="yellow_logo">@color/yellow700</color>
     <color name="blue_logo">@color/blue500</color>
 
-    <!-- Status bar -->
-    <color name="black30">#4D000000</color>
 
 </resources>

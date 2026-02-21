@@ -19,7 +19,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Download
@@ -28,7 +28,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -104,7 +104,7 @@ fun ModelsScreen(
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
-                            imageVector = Icons.Filled.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = stringResource(R.string.back)
                         )
                     }
@@ -152,7 +152,7 @@ fun ModelsScreen(
                         model = modelWithStatus.model,
                         onDeleteClick = { modelToDelete = modelWithStatus.model }
                     )
-                    Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }
             
@@ -176,7 +176,7 @@ fun ModelsScreen(
                         onDownloadClick = { onDownloadModel(model) },
                         onCancelClick = { onCancelDownload(model) }
                     )
-                    Divider(modifier = Modifier.padding(horizontal = 16.dp))
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }
         }
@@ -350,7 +350,7 @@ private fun StorageInfoCard(
                 Spacer(modifier = Modifier.height(8.dp))
                 val progressValue = storageInfo.usedBytes.toFloat() / storageInfo.totalBytes.toFloat()
                 LinearProgressIndicator(
-                    progress = progressValue.coerceIn(0f, 1f),
+                    progress = { progressValue.coerceIn(0f, 1f) },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
@@ -478,7 +478,7 @@ private fun AvailableModelItem(
                 // Progress indicator
                 if (downloadProgress.progress >= 0f) {
                     CircularProgressIndicator(
-                        progress = downloadProgress.progress,
+                        progress = { downloadProgress.progress },
                         modifier = Modifier.size(36.dp),
                         strokeWidth = 3.dp
                     )
