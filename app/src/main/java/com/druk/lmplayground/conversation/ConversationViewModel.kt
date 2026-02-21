@@ -18,6 +18,7 @@ import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
 import com.druk.lmplayground.storage.StoragePreferences
 import com.druk.lmplayground.storage.StorageRepository
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
@@ -57,14 +58,22 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     )
 
     override fun onCleared() {
-        generatingJob?.cancel()
-        viewModelScope.launch {
-            llamaModel?.unloadModel()
-        }
-        // Close the file handle AFTER model is unloaded
-        // Native code uses dup() copies, but we need to close the original
-        modelFileHandle?.close()
+        val job = generatingJob
+        val session = llamaSession
+        val model = llamaModel
+        val handle = modelFileHandle
+        generatingJob = null
+        llamaSession = null
+        llamaModel = null
         modelFileHandle = null
+
+        CoroutineScope(Dispatchers.Default).launch {
+            job?.cancel()
+            job?.join()
+            session?.destroy()
+            model?.unloadModel()
+            handle?.close()
+        }
         super.onCleared()
     }
 
@@ -184,13 +193,16 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             if (modelFileHandle != null || llamaModel != null) {
                 generatingJob?.cancel()
+                generatingJob?.join()
                 generatingJob = null
-                llamaSession?.destroy()
-                llamaSession = null
-                llamaModel?.unloadModel()  // Native code closes its dup'd copies via fclose()
-                llamaModel = null
-                
-                // Close the original fd AFTER model is unloaded
+
+                withContext(Dispatchers.Default) {
+                    llamaSession?.destroy()
+                    llamaSession = null
+                    llamaModel?.unloadModel()
+                    llamaModel = null
+                }
+
                 modelFileHandle?.close()
                 modelFileHandle = null
                 
