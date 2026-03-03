@@ -21,6 +21,7 @@ LM Playground is an Android application for running Large Language Models locall
 
 | Family | Sizes | Provider |
 |--------|-------|----------|
+| Qwen 3.5 | 0.8B, 2B, 4B | Alibaba |
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
 | Gemma 3n | E2B, E4B | Google |
 | Gemma 3 | 1B, 4B | Google |
@@ -44,7 +45,7 @@ LM Playground is an Android application for running Large Language Models locall
 
 </details>
 
-All models use Q4_K_M quantization. See [`ModelInfoProvider.kt`](app/src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt) for the full list.
+Most models use Q4_K_M quantization; Qwen 3.5 uses Q3_K_M. See [`ModelInfoProvider.kt`](app/src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt) for the full list.
 
 ## Install
 

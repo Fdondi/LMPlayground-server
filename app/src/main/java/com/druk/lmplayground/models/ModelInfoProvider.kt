@@ -35,6 +35,30 @@ object ModelInfoProvider {
             logoRes = R.drawable.logo_qwen
         ),
         ModelInfo(
+            name = "Qwen 3.5 0.8B",
+            filename = "Qwen_Qwen3.5-0.8B-Q3_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-0.8B-GGUF/resolve/main/Qwen_Qwen3.5-0.8B-Q3_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-02-27"),
+            description = "Alibaba \u00B7 Lightweight chat model \u00B7 466Mb",
+            logoRes = R.drawable.logo_qwen
+        ),
+        ModelInfo(
+            name = "Qwen 3.5 2B",
+            filename = "Qwen_Qwen3.5-2B-Q3_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-2B-GGUF/resolve/main/Qwen_Qwen3.5-2B-Q3_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-02-27"),
+            description = "Alibaba \u00B7 General-purpose chat model \u00B7 1.07Gb",
+            logoRes = R.drawable.logo_qwen
+        ),
+        ModelInfo(
+            name = "Qwen 3.5 4B",
+            filename = "Qwen_Qwen3.5-4B-Q3_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q3_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-02-27"),
+            description = "Alibaba \u00B7 General-purpose chat model \u00B7 2.25Gb",
+            logoRes = R.drawable.logo_qwen
+        ),
+        ModelInfo(
             name = "Gemma 3 1B",
             filename = "gemma-3-1b-it-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-3-1b-it-GGUF/resolve/main/gemma-3-1b-it-Q4_K_M.gguf"),
