@@ -113,6 +113,9 @@ Java_com_druk_llamacpp_LlamaModel_getModelSize(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return 0;
+    }
     return model->getModelSize();
 }
 
@@ -122,6 +125,10 @@ Java_com_druk_llamacpp_LlamaModel_unloadModel(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return;
+    }
+    env->SetLongField(thiz, fid, 0);
     model->unloadModel();
     delete model;
 }
@@ -133,6 +140,9 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz) {
     jclass clazz1 = env->GetObjectClass(thiz);
     jfieldID fid1 = env->GetFieldID(clazz1, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid1);
+    if (model == nullptr) {
+        return nullptr;
+    }
 
     jclass clazz2 = env->FindClass("com/druk/llamacpp/LlamaGenerationSession");
     jmethodID constructor = env->GetMethodID(clazz2, "<init>", "()V");

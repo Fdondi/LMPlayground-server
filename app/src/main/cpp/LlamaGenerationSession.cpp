@@ -82,6 +82,9 @@ LlamaGenerationSession::~LlamaGenerationSession() {
         llama_sampler_free(smpl);
     }
     if (messages != nullptr) {
+        for (auto& msg : *messages) {
+            free(const_cast<char*>(msg.content));
+        }
         delete messages;
     }
     if (formatted != nullptr) {

@@ -101,15 +101,20 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             generatingJob?.join()
             generatingJob = null
 
+            // Capture and null references on main thread to prevent races
+            val prevSession = llamaSession
+            val prevModel = llamaModel
+            val prevHandle = modelFileHandle
+            llamaSession = null
+            llamaModel = null
+            modelFileHandle = null
+
             withContext(Dispatchers.Default) {
-                llamaSession?.destroy()
-                llamaSession = null
-                llamaModel?.unloadModel()
-                llamaModel = null
+                prevSession?.destroy()
+                prevModel?.unloadModel()
             }
 
-            modelFileHandle?.close()
-            modelFileHandle = null
+            prevHandle?.close()
 
             withContext(Dispatchers.Default) {
                 _modelLoadingProgress.postValue(0f)
@@ -203,15 +208,20 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 generatingJob?.join()
                 generatingJob = null
 
+                // Capture and null references on main thread to prevent races
+                val prevSession = llamaSession
+                val prevModel = llamaModel
+                val prevHandle = modelFileHandle
+                llamaSession = null
+                llamaModel = null
+                modelFileHandle = null
+
                 withContext(Dispatchers.Default) {
-                    llamaSession?.destroy()
-                    llamaSession = null
-                    llamaModel?.unloadModel()
-                    llamaModel = null
+                    prevSession?.destroy()
+                    prevModel?.unloadModel()
                 }
 
-                modelFileHandle?.close()
-                modelFileHandle = null
+                prevHandle?.close()
                 
                 _loadedModel.postValue(null)
                 _loadedModelStatus.postValue(null)
