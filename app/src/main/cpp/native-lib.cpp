@@ -161,6 +161,9 @@ extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_
     jclass clazz = env->GetObjectClass(obj);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(obj, fid);
+    if (session == nullptr) {
+        return 1;
+    }
 
     jclass javaClass = env->FindClass("com/druk/llamacpp/LlamaGenerationCallback");
     jmethodID newTokensMethodId = env->GetMethodID(javaClass, "newTokens", "([B)V");
@@ -185,6 +188,9 @@ Java_com_druk_llamacpp_LlamaGenerationSession_addMessage(JNIEnv *env,
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return;
+    }
 
     const char* utfMessage = env->GetStringUTFChars(message, nullptr);
     session->addMessage(utfMessage);
@@ -197,6 +203,9 @@ Java_com_druk_llamacpp_LlamaGenerationSession_printReport(JNIEnv *env, jobject t
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return;
+    }
     session->printReport();
 }
 
@@ -206,6 +215,9 @@ Java_com_druk_llamacpp_LlamaGenerationSession_getReport(JNIEnv *env, jobject thi
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return env->NewStringUTF("");
+    }
     auto report = session->getReport();
     auto string = env->NewStringUTF(report.c_str());
     return string;
@@ -218,8 +230,8 @@ extern "C" JNIEXPORT void JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_
     auto *session = (LlamaGenerationSession*)env->GetLongField(obj, fid);
 
     if (session != nullptr) {
-        delete session;
         env->SetLongField(obj, fid, (long)nullptr);
+        delete session;
         __android_log_print(ANDROID_LOG_DEBUG, "Llama", "Destroy");
     }
 }

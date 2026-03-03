@@ -129,6 +129,10 @@ void LlamaGenerationSession::init(llama_model *model) {
 }
 
 int LlamaGenerationSession::addMessage(const char *string) {
+    if (messages == nullptr || formatted == nullptr || ctx == nullptr) {
+        LOGe("addMessage called on uninitialized session");
+        return 1;
+    }
     // add the user input to the message list and format it
     messages->push_back({"user", strdup(string)});
     int new_len = llama_chat_apply_template(tmpl, messages->data(), messages->size(), true, formatted->data(), formatted->size());
@@ -173,6 +177,10 @@ int LlamaGenerationSession::addMessage(const char *string) {
 }
 
 int LlamaGenerationSession::generate(const ResponseCallback& callback) {
+    if (ctx == nullptr || smpl == nullptr) {
+        LOGe("generate called on uninitialized session");
+        return 1;
+    }
     // check if we have enough space in the context to evaluate this batch
     int n_ctx = llama_n_ctx(ctx);
     int n_ctx_used = llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
