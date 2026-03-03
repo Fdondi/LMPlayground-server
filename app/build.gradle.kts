@@ -14,8 +14,8 @@ android {
         applicationId = "com.druk.lmplayground"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1_02_00
-        versionName = "1.2.0"
+        versionCode = 1_02_01
+        versionName = "1.2.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
