@@ -18,6 +18,9 @@ output.json
 # IntelliJ
 *.iml
 .idea/
+
+# VS Code / Cursor
+.vscode/
 misc.xml
 deploymentTargetDropDown.xml
 render.experimental.xml
