@@ -139,6 +139,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.viewbinding)
     implementation(libs.androidx.compose.ui.googlefonts)
 
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.okhttp3)
+
     implementation(libs.commonmark)
     implementation(libs.commonmark.ext.gfm.strikethrough)
 

@@ -1,6 +1,9 @@
 package com.druk.lmplayground.storage
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,17 +11,23 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.ComposeView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
 
 class ModelsFragment : Fragment() {
 
     private val viewModel: StorageViewModel by viewModels()
+
+    private var pendingDownloadModel: ModelInfo? = null
 
     private val folderPickerLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree()
@@ -31,6 +40,46 @@ class ModelsFragment : Fragment() {
             )
             viewModel.requestStorageFolderChange(uri)
         }
+    }
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _ ->
+        pendingDownloadModel?.let { model ->
+            viewModel.downloadModel(model)
+            pendingDownloadModel = null
+        }
+    }
+
+    private fun startDownloadWithPermissionCheck(model: ModelInfo) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            viewModel.downloadModel(model)
+            return
+        }
+
+        val granted = ContextCompat.checkSelfPermission(
+            requireContext(), Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (granted || shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS).not()
+            && hasAskedNotificationPermission()
+        ) {
+            viewModel.downloadModel(model)
+        } else {
+            pendingDownloadModel = model
+            setAskedNotificationPermission()
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    private fun hasAskedNotificationPermission(): Boolean {
+        return requireContext().getSharedPreferences("download_prefs", 0)
+            .getBoolean("asked_notification_permission", false)
+    }
+
+    private fun setAskedNotificationPermission() {
+        requireContext().getSharedPreferences("download_prefs", 0)
+            .edit().putBoolean("asked_notification_permission", true).apply()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +101,14 @@ class ModelsFragment : Fragment() {
             val pendingMigration by viewModel.pendingMigration.observeAsState()
             val migrationProgress by viewModel.migrationProgress.observeAsState()
 
+            val prevDownloadCount = remember { androidx.compose.runtime.mutableIntStateOf(downloadingProgress.size) }
+            LaunchedEffect(downloadingProgress.size) {
+                if (downloadingProgress.size < prevDownloadCount.intValue) {
+                    viewModel.loadStorageInfo()
+                }
+                prevDownloadCount.intValue = downloadingProgress.size
+            }
+
             PlaygroundTheme {
                 ModelsScreen(
                     storageInfo = storageInfo,
@@ -62,11 +119,11 @@ class ModelsFragment : Fragment() {
                     migrationProgress = migrationProgress,
                     onBackClick = { findNavController().popBackStack() },
                     onChangeFolderClick = { folderPickerLauncher.launch(null) },
-                    onDeleteModel = { model -> 
+                    onDeleteModel = { model ->
                         viewModel.deleteModel(model)
                     },
                     onDownloadModel = { model ->
-                        viewModel.downloadModel(model)
+                        startDownloadWithPermissionCheck(model)
                     },
                     onCancelDownload = { model ->
                         viewModel.cancelDownload(model)

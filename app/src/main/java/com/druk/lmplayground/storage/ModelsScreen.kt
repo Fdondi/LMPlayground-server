@@ -2,6 +2,7 @@
 
 package com.druk.lmplayground.storage
 
+import android.content.Context
 import android.text.format.Formatter
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -56,6 +57,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlin.math.roundToInt
 import com.druk.lmplayground.R
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
@@ -433,6 +435,8 @@ private fun AvailableModelItem(
     onDownloadClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
+    val context = LocalContext.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -457,25 +461,33 @@ private fun AvailableModelItem(
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
-            Text(
-                text = downloadProgress?.status ?: model.description,
-                style = MaterialTheme.typography.bodySmall,
-                color = if (downloadProgress != null) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
-            )
-            Text(
-                text = model.releaseDateLabel(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (downloadProgress != null) {
+                Text(
+                    text = formatDownloadStats(context, downloadProgress),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            } else {
+                Text(
+                    text = model.description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            if (downloadProgress == null) {
+                Text(
+                    text = model.releaseDateLabel(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
         
         if (downloadProgress != null) {
-            // Show circular progress with cancel button
             Box(
                 modifier = Modifier.size(48.dp),
                 contentAlignment = Alignment.Center
             ) {
-                // Progress indicator
                 if (downloadProgress.progress >= 0f) {
                     CircularProgressIndicator(
                         progress = { downloadProgress.progress },
@@ -483,13 +495,11 @@ private fun AvailableModelItem(
                         strokeWidth = 3.dp
                     )
                 } else {
-                    // Indeterminate for "Moving to storage..."
                     CircularProgressIndicator(
                         modifier = Modifier.size(36.dp),
                         strokeWidth = 3.dp
                     )
                 }
-                // Cancel button in center
                 IconButton(
                     onClick = onCancelClick,
                     modifier = Modifier.size(36.dp)
@@ -514,6 +524,44 @@ private fun AvailableModelItem(
     }
 }
 
+private fun formatDownloadStats(context: Context, progress: DownloadProgress): String {
+    if (progress.progress < 0f) return progress.status
+
+    val parts = mutableListOf<String>()
+
+    if (progress.totalBytes > 0) {
+        val downloaded = Formatter.formatFileSize(context, progress.bytesDownloaded)
+        val total = Formatter.formatFileSize(context, progress.totalBytes)
+        parts.add("$downloaded / $total")
+    } else if (progress.bytesDownloaded > 0) {
+        parts.add(Formatter.formatFileSize(context, progress.bytesDownloaded))
+    } else {
+        return progress.status
+    }
+
+    if (progress.speedBytesPerSec > 0) {
+        parts.add("${Formatter.formatFileSize(context, progress.speedBytesPerSec)}/s")
+    }
+
+    if (progress.etaSeconds > 0) {
+        parts.add(formatEta(progress.etaSeconds))
+    }
+
+    return parts.joinToString(" \u2022 ")
+}
+
+private fun formatEta(seconds: Long): String {
+    return when {
+        seconds < 60 -> "${seconds}s left"
+        seconds < 3600 -> "${seconds / 60}m ${seconds % 60}s left"
+        else -> {
+            val hours = seconds / 3600
+            val mins = (seconds % 3600) / 60
+            "${hours}h ${mins}m left"
+        }
+    }
+}
+
 @Preview
 @Composable
 private fun ModelsScreenPreview() {
@@ -533,7 +581,11 @@ private fun ModelsScreenPreview() {
                 "Gemma 3 4B" to DownloadProgress(
                     modelName = "Gemma 3 4B",
                     progress = 0.45f,
-                    status = "Downloading 45%"
+                    status = "Downloading…",
+                    bytesDownloaded = 1_200_000_000L,
+                    totalBytes = 2_700_000_000L,
+                    speedBytesPerSec = 15_000_000L,
+                    etaSeconds = 100L
                 )
             ),
             snackbarMessage = null,

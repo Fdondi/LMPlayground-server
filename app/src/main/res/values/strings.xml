@@ -126,6 +126,16 @@
     <string name="browse_more_models">Browse Models</string>
     <string name="cancel">Cancel</string>
     
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Model Downloads</string>
+    <string name="download_notification_channel_description">Shows progress for model file downloads</string>
+    <string name="download_complete">Download complete</string>
+    <string name="moving_to_storage">Moving to storage\u2026</string>
+    <string name="starting_download">Starting download\u2026</string>
+    <string name="download_failed">Download failed</string>
+    <string name="download_cancelled">Download cancelled</string>
+    <string name="waiting_for_network">Waiting for network\u2026</string>
+
     <!-- Migration -->
     <string name="migrate_models_title">Migrate Models?</string>
     <string name="migrate_models_message">Found %1$d model(s) (%2$s) in the previous folder. Would you like to copy them to the new location?</string>
