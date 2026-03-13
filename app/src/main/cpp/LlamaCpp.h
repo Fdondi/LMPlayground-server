@@ -22,7 +22,7 @@ public:
 
     int generate(const ResponseCallback& callback);
 
-    int addMessage(const char *string);
+    int addMessage(const char *string, bool enableThinking);
 
     std::string getReport();
 
@@ -52,6 +52,8 @@ public:
                    void* progress_callback_user_data);
 
     uint64_t getModelSize();
+
+    bool supportsThinking();
 
     void unloadModel();
 

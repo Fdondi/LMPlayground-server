@@ -59,6 +59,17 @@ uint64_t LlamaModel::getModelSize() {
     return llama_model_size(this->model);
 }
 
+bool LlamaModel::supportsThinking() {
+    if (this->model == nullptr) {
+        return false;
+    }
+    const char *tmpl = llama_model_chat_template(this->model, nullptr);
+    if (tmpl == nullptr) {
+        return false;
+    }
+    return std::string(tmpl).find("<think>") != std::string::npos;
+}
+
 void LlamaModel::unloadModel() {
     if (model != nullptr) {
         llama_model_free(model);

@@ -42,6 +42,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _loadedModel = MutableLiveData<ModelInfo?>(null)
     private val _loadedModelStatus = MutableLiveData<String?>(null)
     private val _models = MutableLiveData<List<ModelWithStatus>>(emptyList())
+    private val _supportsThinking = MutableLiveData(false)
+    private val _thinkingEnabled = MutableLiveData(true)
     
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -52,6 +54,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val loadedModel: LiveData<ModelInfo?> = _loadedModel
     val loadedModelStatus: LiveData<String?> = _loadedModelStatus
     val models: LiveData<List<ModelWithStatus>> = _models
+    val supportsThinking: LiveData<Boolean> = _supportsThinking
+    val thinkingEnabled: LiveData<Boolean> = _thinkingEnabled
 
     val uiState = ConversationUiState(
         initialMessages = emptyList()
@@ -119,6 +123,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             withContext(Dispatchers.Default) {
                 _modelLoadingProgress.postValue(0f)
                 _loadedModel.postValue(modelInfo)
+                _thinkingEnabled.postValue(true)
+                _supportsThinking.postValue(false)
                 _loadedModelStatus.postValue("Loading...")
                 
                 val fileHandle = storageRepository.openModelFile(modelInfo.filename)
@@ -147,11 +153,17 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 val llamaSession = llamaModel.createSession()
                 this@ConversationViewModel.llamaModel = llamaModel
                 this@ConversationViewModel.llamaSession = llamaSession
+                _supportsThinking.postValue(llamaModel.supportsThinking())
                 _modelLoadingProgress.postValue(0f)
                 _loadedModelStatus.postValue(modelDescription)
                 _isModelReady.postValue(true)
             }
         }
+    }
+
+    @MainThread
+    fun toggleThinking() {
+        _thinkingEnabled.value = _thinkingEnabled.value != true
     }
 
     @MainThread
@@ -165,22 +177,21 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         )
 
         val antiPrompt = _loadedModel.value?.antiPrompt
+        val enableThinking = _thinkingEnabled.value == true
         _isGenerating.postValue(true)
         generatingJob = viewModelScope.launch {
             withContext(Dispatchers.Default) {
                 val llamaSession = llamaSession ?: return@withContext
-                llamaSession.addMessage(message.content)
+                llamaSession.addMessage(message.content, enableThinking)
 
                 val callback = object: LlamaGenerationCallback {
                     var responseByteArray = ByteArray(0)
                     override fun newTokens(newTokens: ByteArray) {
                         responseByteArray += newTokens
-                        var string = String(responseByteArray, Charsets.UTF_8)
-                        for (suffix in antiPrompt ?: emptyArray()) {
-                            string = string.removeSuffix(suffix)
-                            string = string.removeSuffix(suffix + "\n")
-                        }
-                        uiState.updateLastMessage(string)
+                        val string = String(responseByteArray, Charsets.UTF_8)
+                        uiState.updateLastMessage(
+                            ResponseProcessor.process(string, antiPrompt ?: emptyArray())
+                        )
                     }
                 }
                 while (this.isActive && llamaSession.generate(callback) == 0) {
@@ -234,4 +245,5 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun resetModelList() {
         _models.postValue(emptyList())
     }
+
 }

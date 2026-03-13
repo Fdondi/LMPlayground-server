@@ -59,6 +59,29 @@ fun stripThinkTags(text: String): String {
     return thinkPattern.replace(text, "").trim()
 }
 
+data class ThinkingSplit(
+    val thinkingContent: String,
+    val responseContent: String
+)
+
+fun splitThinking(text: String): ThinkingSplit {
+    val matches = thinkPattern.findAll(text).toList()
+    if (matches.isEmpty()) return ThinkingSplit("", text)
+
+    val thinking = StringBuilder()
+    var cursor = 0
+    for (match in matches) {
+        val content = (match.groupValues[1].ifEmpty { match.groupValues[2] }).trim()
+        if (content.isNotEmpty()) {
+            if (thinking.isNotEmpty()) thinking.append("\n")
+            thinking.append(content)
+        }
+        cursor = match.range.last + 1
+    }
+    val response = if (cursor < text.length) text.substring(cursor).trimStart() else ""
+    return ThinkingSplit(thinking.toString(), response)
+}
+
 /**
  * Format a message by parsing Markdown into a styled AnnotatedString.
  *
@@ -112,10 +135,6 @@ fun messageFormatter(
         if (cursor < text.length) {
             val remainingText = text.substring(cursor).trimStart()
             if (remainingText.isNotEmpty()) {
-                append("\n\n")
-                pushStyle(SpanStyle(color = colorScheme.outline))
-                append("\u2500\u2500\u2500")
-                pop()
                 append("\n\n")
                 appendMarkdown(remainingText, colorScheme, primary, codeBackground)
             }

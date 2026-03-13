@@ -29,6 +29,13 @@ class LlamaModel {
     external fun getModelSize(): Long
 
     /**
+     * Checks if the model's chat template supports thinking/reasoning mode.
+     *
+     * @return true if the model supports thinking.
+     */
+    external fun supportsThinking(): Boolean
+
+    /**
      * Unloads the model from memory and releases associated resources.
      */
     external fun unloadModel()

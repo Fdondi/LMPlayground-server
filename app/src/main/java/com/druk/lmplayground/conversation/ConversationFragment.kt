@@ -73,6 +73,8 @@ class ConversationFragment : Fragment() {
             val progress by viewModel.modelLoadingProgress.observeAsState(0f)
             val modelInfo by viewModel.loadedModel.observeAsState()
             val modelStatus by viewModel.loadedModelStatus.observeAsState()
+            val supportsThinking by viewModel.supportsThinking.observeAsState(false)
+            val thinkingEnabled by viewModel.thinkingEnabled.observeAsState(true)
             val isModelReady by viewModel.isModelReady.observeAsState(false)
             val models by viewModel.models.observeAsState(emptyList())
             
@@ -292,6 +294,9 @@ class ConversationFragment : Fragment() {
                                 UserInputStatus.GENERATING
                             else
                                 UserInputStatus.IDLE,
+                            supportsThinking = supportsThinking,
+                            thinkingEnabled = thinkingEnabled,
+                            onThinkingToggle = { viewModel.toggleThinking() },
                             onMessageSent = { content ->
                                 viewModel.addMessage(
                                     Message("User", content)

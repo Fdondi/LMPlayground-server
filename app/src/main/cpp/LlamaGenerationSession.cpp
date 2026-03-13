@@ -128,7 +128,7 @@ void LlamaGenerationSession::init(llama_model *model) {
     prev_len = 0;
 }
 
-int LlamaGenerationSession::addMessage(const char *string) {
+int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) {
     if (messages == nullptr || formatted == nullptr || ctx == nullptr) {
         LOGe("addMessage called on uninitialized session");
         return 1;
@@ -147,6 +147,10 @@ int LlamaGenerationSession::addMessage(const char *string) {
 
     // remove previous messages to obtain the prompt to generate the response
     std::string prompt(formatted->begin() + prev_len, formatted->begin() + new_len);
+
+    if (!enableThinking) {
+        prompt += "<think>\n\n</think>\n\n";
+    }
 
     response.clear();
 

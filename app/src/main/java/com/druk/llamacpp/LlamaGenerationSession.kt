@@ -27,8 +27,9 @@ class LlamaGenerationSession {
      * Adds a message to the current context of the session.
      *
      * @param message The message to add to the context.
+     * @param enableThinking Whether the model should use its thinking/reasoning mode.
      */
-    external fun addMessage(message: String)
+    external fun addMessage(message: String, enableThinking: Boolean)
 
     /**
      * Prints a report about the current state of the generation session to the console.

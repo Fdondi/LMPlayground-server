@@ -18,6 +18,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Psychology
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
@@ -47,6 +52,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.druk.lmplayground.R
 
@@ -67,6 +73,9 @@ fun UserInputPreview() {
 fun UserInput(
     modifier: Modifier = Modifier,
     status: UserInputStatus = UserInputStatus.IDLE,
+    supportsThinking: Boolean = false,
+    thinkingEnabled: Boolean = true,
+    onThinkingToggle: () -> Unit = {},
     onMessageSent: (String) -> Unit,
     onCancelClicked: () -> Unit = {},
     resetScroll: () -> Unit = {},
@@ -83,6 +92,9 @@ fun UserInput(
         Column(modifier = modifier) {
             UserInputText(
                 status,
+                supportsThinking = supportsThinking,
+                thinkingEnabled = thinkingEnabled,
+                onThinkingToggle = onThinkingToggle,
                 textFieldValue = textState,
                 onTextChanged = { textState = it },
                 // Only show the keyboard if there's no input selector and text field has focus
@@ -140,6 +152,9 @@ var SemanticsPropertyReceiver.keyboardShownProperty by KeyboardShownKey
 @Composable
 private fun UserInputText(
     status: UserInputStatus,
+    supportsThinking: Boolean = false,
+    thinkingEnabled: Boolean = true,
+    onThinkingToggle: () -> Unit = {},
     keyboardType: KeyboardType = KeyboardType.Text,
     onTextChanged: (TextFieldValue) -> Unit,
     textFieldValue: TextFieldValue,
@@ -150,20 +165,38 @@ private fun UserInputText(
     onCancelClicked: () -> Unit
 ) {
     val a11ylabel = stringResource(id = R.string.textfield_desc)
+    val textStartPadding = if (supportsThinking) 4.dp else 32.dp
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .heightIn(min = 48.dp, max = 320.dp),
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = Arrangement.End,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(Modifier.weight(1f).align(Alignment.CenterVertically)) {
+        if (supportsThinking) {
+            val thinkingAlpha = if (thinkingEnabled) 1f else 0.4f
+            IconButton(
+                onClick = onThinkingToggle,
+                enabled = status != UserInputStatus.GENERATING,
+                modifier = Modifier.padding(start = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Psychology,
+                    contentDescription = if (thinkingEnabled) "Disable thinking" else "Enable thinking",
+                    modifier = Modifier.alpha(thinkingAlpha)
+                )
+            }
+        }
+
+        Box(Modifier.weight(1f)) {
             UserInputTextField(
                 true,
                 textFieldValue,
                 onTextChanged,
                 onTextFieldFocused,
                 keyboardType,
+                textStartPadding,
                 Modifier.semantics {
                     contentDescription = a11ylabel
                     keyboardShownProperty = keyboardShown
@@ -188,7 +221,7 @@ private fun UserInputText(
         )
 
         // Send button
-        Box(Modifier.align(Alignment.CenterVertically)) {
+        Box {
             when (status) {
                 UserInputStatus.IDLE, UserInputStatus.NOT_LOADED -> {
                     Button(
@@ -231,6 +264,7 @@ private fun BoxScope.UserInputTextField(
     onTextChanged: (TextFieldValue) -> Unit,
     onTextFieldFocused: (Boolean) -> Unit,
     keyboardType: KeyboardType,
+    startPadding: Dp,
     modifier: Modifier = Modifier
 ) {
     var lastFocusState by remember { mutableStateOf(false) }
@@ -238,7 +272,7 @@ private fun BoxScope.UserInputTextField(
         value = textFieldValue,
         onValueChange = { onTextChanged(it) },
         modifier = modifier
-            .padding(start = 32.dp)
+            .padding(start = startPadding)
             .align(Alignment.CenterStart)
             .fillMaxWidth()
             .clearFocusOnKeyboardDismiss()
@@ -264,7 +298,7 @@ private fun BoxScope.UserInputTextField(
         Text(
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .padding(start = 32.dp),
+                .padding(start = startPadding),
             text = stringResource(R.string.textfield_hint),
             style = MaterialTheme.typography.bodyLarge.copy(color = disableContentColor)
         )

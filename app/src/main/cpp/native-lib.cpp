@@ -120,6 +120,18 @@ Java_com_druk_llamacpp_LlamaModel_getModelSize(JNIEnv *env, jobject thiz) {
 }
 
 extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_druk_llamacpp_LlamaModel_supportsThinking(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return JNI_FALSE;
+    }
+    return model->supportsThinking() ? JNI_TRUE : JNI_FALSE;
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_druk_llamacpp_LlamaModel_unloadModel(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
@@ -184,7 +196,8 @@ extern "C"
 JNIEXPORT void JNICALL
 Java_com_druk_llamacpp_LlamaGenerationSession_addMessage(JNIEnv *env,
                                                          jobject thiz,
-                                                         jstring message) {
+                                                         jstring message,
+                                                         jboolean enableThinking) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
@@ -193,7 +206,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_addMessage(JNIEnv *env,
     }
 
     const char* utfMessage = env->GetStringUTFChars(message, nullptr);
-    session->addMessage(utfMessage);
+    session->addMessage(utfMessage, enableThinking);
     env->ReleaseStringUTFChars(message, utfMessage);
 }
 

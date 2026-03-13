@@ -1,5 +1,6 @@
 package com.druk.lmplayground.conversation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -7,6 +8,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,6 +20,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.ExpandLess
+import androidx.compose.material.icons.outlined.ExpandMore
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -27,10 +31,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
@@ -63,18 +71,89 @@ fun ChatItemBubble(
     Column {
         if (isWaitingForResponse) {
             ThinkingIndicator()
-        } else {
+        } else if (isUserMe) {
             Surface {
                 val styledMessage = messageFormatter(
                     text = message.content,
-                    primary = isUserMe
+                    primary = true
                 )
-
                 SelectionContainer {
                     Text(
                         text = styledMessage,
                         style = MaterialTheme.typography.bodyLarge.copy(color = LocalContentColor.current)
                     )
+                }
+            }
+        } else {
+            val split = remember(message.content) { splitThinking(message.content) }
+            val hasThinking = split.thinkingContent.isNotEmpty()
+            val isGenerating = !showActions
+
+            if (hasThinking) {
+                val isActivelyThinking = isGenerating && split.responseContent.isEmpty()
+                var expanded by remember { mutableStateOf(false) }
+
+                // Live second counter while thinking
+                var elapsedSeconds by remember { mutableIntStateOf(0) }
+                LaunchedEffect(isActivelyThinking) {
+                    if (isActivelyThinking) {
+                        while (true) {
+                            delay(1000)
+                            elapsedSeconds++
+                        }
+                    }
+                }
+                val thinkingDuration = formatDuration(elapsedSeconds)
+
+                Row(
+                    modifier = Modifier
+                        .clickable { expanded = !expanded }
+                        .padding(vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                        contentDescription = if (expanded) "Collapse thinking" else "Expand thinking",
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.outline
+                    )
+                    Text(
+                        text = "Thinking \u00B7 $thinkingDuration",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.padding(start = 4.dp)
+                    )
+                }
+                AnimatedVisibility(visible = expanded) {
+                    Surface {
+                        SelectionContainer {
+                            Text(
+                                text = split.thinkingContent,
+                                style = MaterialTheme.typography.bodySmall.copy(
+                                    fontStyle = FontStyle.Italic,
+                                    color = MaterialTheme.colorScheme.outline
+                                )
+                            )
+                        }
+                    }
+                }
+                if (split.responseContent.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(18.dp))
+                }
+            }
+
+            if (split.responseContent.isNotEmpty()) {
+                Surface {
+                    val styledMessage = messageFormatter(
+                        text = split.responseContent,
+                        primary = false
+                    )
+                    SelectionContainer {
+                        Text(
+                            text = styledMessage,
+                            style = MaterialTheme.typography.bodyLarge.copy(color = LocalContentColor.current)
+                        )
+                    }
                 }
             }
         }
@@ -131,6 +210,16 @@ fun ChatItemBubble(
 
     if (showRatingSheet) {
         RatingBottomSheet(onDismiss = { showRatingSheet = false })
+    }
+}
+
+private fun formatDuration(seconds: Int): String {
+    return if (seconds < 60) {
+        "${seconds}s"
+    } else {
+        val m = seconds / 60
+        val s = seconds % 60
+        "${m}m ${s}s"
     }
 }
 
