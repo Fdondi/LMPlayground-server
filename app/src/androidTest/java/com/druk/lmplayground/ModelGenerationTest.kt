@@ -75,7 +75,6 @@ class ModelGenerationTest {
         Log.d(TAG, "Loading model: ${modelFile.name} (${modelFile.length() / 1024 / 1024}MB)")
         val model = llamaCpp.loadModel(
             modelFile.absolutePath,
-            "", "", emptyArray(),
             object : LlamaProgressCallback {
                 override fun onProgress(progress: Float) {
                     Log.d(TAG, "Loading: ${(progress * 100).toInt()}%")
@@ -86,15 +85,29 @@ class ModelGenerationTest {
         return model
     }
 
-    private fun generateFullResponse(session: LlamaGenerationSession): String {
+    private fun generateFullResponse(
+        session: LlamaGenerationSession,
+        maxTokens: Int = 2048,
+        timeoutMs: Long = 120_000
+    ): String {
         val responseBytes = mutableListOf<Byte>()
+        var tokenCount = 0
+        val deadline = System.currentTimeMillis() + timeoutMs
         val callback = object : LlamaGenerationCallback {
             override fun newTokens(newTokens: ByteArray) {
                 responseBytes.addAll(newTokens.toList())
             }
         }
         while (session.generate(callback) == 0) {
-            // continue generating
+            tokenCount++
+            if (tokenCount >= maxTokens) {
+                Log.d(TAG, "Reached max token limit ($maxTokens)")
+                break
+            }
+            if (System.currentTimeMillis() > deadline) {
+                Log.d(TAG, "Reached timeout (${timeoutMs}ms) after $tokenCount tokens")
+                break
+            }
         }
         return String(responseBytes.toByteArray(), Charsets.UTF_8)
     }
@@ -178,7 +191,7 @@ class ModelGenerationTest {
         val raw = generateFullResponse(session)
         Log.d(TAG, "Raw response:\n$raw")
 
-        val processed = ResponseProcessor.process(raw, emptyArray())
+        val processed = ResponseProcessor.process(raw)
         Log.d(TAG, "Processed response:\n$processed")
 
         assertTrue("Processed response should not be empty", processed.isNotBlank())
@@ -203,7 +216,7 @@ class ModelGenerationTest {
         Log.d(TAG, "Turn 1 raw:\n$response1")
         assertTrue("First response should not be empty", response1.isNotBlank())
 
-        val processed1 = ResponseProcessor.process(response1, emptyArray())
+        val processed1 = ResponseProcessor.process(response1)
         Log.d(TAG, "Turn 1 processed:\n$processed1")
 
         // Second turn
@@ -212,7 +225,81 @@ class ModelGenerationTest {
         Log.d(TAG, "Turn 2 raw:\n$response2")
         assertTrue("Second response should not be empty", response2.isNotBlank())
 
-        val processed2 = ResponseProcessor.process(response2, emptyArray())
+        val processed2 = ResponseProcessor.process(response2)
         Log.d(TAG, "Turn 2 processed:\n$processed2")
+    }
+
+    private fun findSpecificModel(nameFragment: String): File? {
+        for (name in CANDIDATE_MODELS) {
+            if (name.contains(nameFragment)) {
+                val file = File(MODELS_PATH, name)
+                if (file.exists() && file.canRead()) return file
+            }
+        }
+        return null
+    }
+
+    @Test(timeout = 180_000)
+    fun testQwen35ThinkingEnabled() {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        Log.d(TAG, "supportsThinking: ${model.supportsThinking()}")
+        assertTrue("Qwen 3.5 should support thinking", model.supportsThinking())
+
+        val session = model.createSession()
+        this.session = session
+
+        session.addMessage("Say hello in one sentence", true)
+        val raw = generateFullResponse(session, maxTokens = 512, timeoutMs = 120_000)
+        Log.d(TAG, "Qwen3.5 thinking=true raw (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+
+        val hasThinkClose = raw.contains("</think>")
+        Log.d(TAG, "Contains </think>: $hasThinkClose")
+    }
+
+    @Test(timeout = 180_000)
+    fun testQwen35ThinkingDisabled() {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        val session = model.createSession()
+        this.session = session
+
+        session.addMessage("Say hello in one sentence", false)
+        val raw = generateFullResponse(session, maxTokens = 512, timeoutMs = 120_000)
+        Log.d(TAG, "Qwen3.5 thinking=false raw (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty with thinking disabled", raw.isNotBlank())
+    }
+
+    @Test(timeout = 300_000)
+    fun testQwen35MultiTurnThinking() {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        val session = model.createSession()
+        this.session = session
+
+        // Turn 1
+        session.addMessage("Say hello", true)
+        val r1 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Qwen3.5 multi-turn T1 (${r1.length} chars):\n$r1")
+        assertTrue("Turn 1 should not be empty", r1.isNotBlank())
+
+        // Turn 2
+        session.addMessage("What is 2+2?", true)
+        val r2 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Qwen3.5 multi-turn T2 (${r2.length} chars):\n$r2")
+        assertTrue("Turn 2 should not be empty", r2.isNotBlank())
+
+        // Turn 3
+        session.addMessage("Thanks!", true)
+        val r3 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Qwen3.5 multi-turn T3 (${r3.length} chars):\n$r3")
+        assertTrue("Turn 3 should not be empty", r3.isNotBlank())
     }
 }
