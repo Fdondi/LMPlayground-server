@@ -191,9 +191,6 @@ object ModelInfoProvider {
             filename = "Qwen2.5-0.5B-Instruct-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-09-19"),
-            inputPrefix = "<|im_start|>user\n",
-            inputSuffix = "<|im_end|>\n<|im_start|>assistant\n",
-            antiPrompt = arrayOf("<|im_end|>"),
             description = "Alibaba \u00B7 Ultra-lightweight chat model \u00B7 398Mb",
             logoRes = R.drawable.logo_qwen
         ),
@@ -202,9 +199,6 @@ object ModelInfoProvider {
             filename = "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-09-19"),
-            inputPrefix = "<|im_start|>user\n",
-            inputSuffix = "<|im_end|>\n<|im_start|>assistant\n",
-            antiPrompt = arrayOf("<|im_end|>"),
             description = "Alibaba \u00B7 Compact chat model \u00B7 986Mb",
             logoRes = R.drawable.logo_qwen
         ),
@@ -213,9 +207,6 @@ object ModelInfoProvider {
             filename = "Phi-3.5-mini-instruct-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-08-20"),
-            inputPrefix = "<|user|>\n",
-            inputSuffix = "<|end|>\n<|assistant|>\n",
-            antiPrompt = arrayOf("<|end|>", "<|assistant|>"),
             description = "Microsoft \u00B7 Compact chat model \u00B7 2.2Gb",
             logoRes = R.drawable.logo_microsoft
         ),
@@ -224,8 +215,6 @@ object ModelInfoProvider {
             filename = "Mistral-7B-Instruct-v0.3-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-05-22"),
-            inputPrefix = "[INST]",
-            inputSuffix = "[/INST]",
             description = "Mistral \u00B7 General-purpose chat model \u00B7 4.37Gb",
             logoRes = R.drawable.logo_mistral
         ),
@@ -234,9 +223,6 @@ object ModelInfoProvider {
             filename = "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-07-23"),
-            inputPrefix = "<|start_header_id|>user<|end_header_id|>\n\n",
-            inputSuffix = "<|eot_id|><|start_header_id|>assistant<|end_header_id|>\n\n",
-            antiPrompt = arrayOf("<|eot_id|>"),
             description = "Meta \u00B7 General-purpose chat model \u00B7 4.92Gb",
             logoRes = R.drawable.logo_meta
         ),
@@ -245,9 +231,6 @@ object ModelInfoProvider {
             filename = "gemma-2-9b-it-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/bartowski/gemma-2-9b-it-GGUF/resolve/main/gemma-2-9b-it-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-06-27"),
-            inputPrefix = "<start_of_turn>user\n",
-            inputSuffix = "<end_of_turn>\n<start_of_turn>model\n",
-            antiPrompt = arrayOf("<start_of_turn>user", "<start_of_turn>model", "<end_of_turn>"),
             description = "Google \u00B7 Advanced chat model \u00B7 5.44Gb",
             logoRes = R.drawable.logo_google
         )

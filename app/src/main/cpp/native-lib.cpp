@@ -73,12 +73,8 @@ JNICALL
 Java_com_druk_llamacpp_LlamaCpp_loadModel(JNIEnv *env,
                    jobject activity,
                    jstring modelPath,
-                   jstring inputPrefix,
-                   jstring inputSuffix,
-                   jobjectArray aniPrompt,
                    jobject progressCallback) {
 
-    // Struct to hold multiple pointers
     struct CallbackContext {
         JNIEnv *env;
         jobject progressCallback;
