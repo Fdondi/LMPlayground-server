@@ -7,6 +7,7 @@
 
 #include "LlamaCpp.h"
 #include "common.h"
+#include "chat.h"
 
 #include "console.h"
 #include "log.h"
@@ -43,12 +44,14 @@ void LlamaModel::loadModel(const std::string &modelPath,
     model = llama_model_load_from_file(modelPath.c_str(), model_params);
     if (model == nullptr) {
         LOG_ERR("%s: failed to load model '%s'\n", __func__, modelPath.c_str());
+        return;
     }
+    chat_tmpls = common_chat_templates_init(model, "");
 }
 
 LlamaGenerationSession* LlamaModel::createGenerationSession() {
     auto *session = new LlamaGenerationSession();
-    session->init(model);
+    session->init(model, chat_tmpls.get());
     return session;
 }
 
@@ -60,17 +63,14 @@ uint64_t LlamaModel::getModelSize() {
 }
 
 bool LlamaModel::supportsThinking() {
-    if (this->model == nullptr) {
+    if (!chat_tmpls) {
         return false;
     }
-    const char *tmpl = llama_model_chat_template(this->model, nullptr);
-    if (tmpl == nullptr) {
-        return false;
-    }
-    return std::string(tmpl).find("<think>") != std::string::npos;
+    return common_chat_templates_support_enable_thinking(chat_tmpls.get());
 }
 
 void LlamaModel::unloadModel() {
+    chat_tmpls.reset();
     if (model != nullptr) {
         llama_model_free(model);
         model = nullptr;

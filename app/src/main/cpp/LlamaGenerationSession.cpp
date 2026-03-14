@@ -8,6 +8,7 @@
 #include "LlamaCpp.h"
 
 #include "common.h"
+#include "chat.h"
 #include "console.h"
 #include "llama.h"
 #include "log.h"
@@ -81,28 +82,24 @@ LlamaGenerationSession::~LlamaGenerationSession() {
     if (smpl != nullptr) {
         llama_sampler_free(smpl);
     }
-    if (messages != nullptr) {
-        for (auto& msg : *messages) {
-            free(const_cast<char*>(msg.content));
-        }
-        delete messages;
-    }
-    if (formatted != nullptr) {
-        delete formatted;
-    }
 }
 
-void LlamaGenerationSession::init(llama_model *model) {
+void LlamaGenerationSession::init(llama_model *model, const struct common_chat_templates *tmpls) {
 
     vocab = llama_model_get_vocab(model);
+    chat_tmpls = tmpls;
 
     int n_threads = std::max(1, std::min(8, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
     LOGi("Using %d threads", n_threads);
 
-    // initialize the context
+    static constexpr int MAX_CTX_MOBILE = 4096;
+    int n_ctx_train = llama_model_n_ctx_train(model);
+    int n_ctx = std::min(n_ctx_train, MAX_CTX_MOBILE);
+    LOGi("Model training context: %d, using: %d", n_ctx_train, n_ctx);
+
     llama_context_params ctx_params = llama_context_default_params();
-    ctx_params.n_ctx = 2048;
-    ctx_params.n_batch = 2048;
+    ctx_params.n_ctx = n_ctx;
+    ctx_params.n_batch = n_ctx;
     ctx_params.n_threads       = n_threads;
     ctx_params.n_threads_batch = n_threads;
 
@@ -113,66 +110,149 @@ void LlamaGenerationSession::init(llama_model *model) {
     }
 
     auto smplParams = llama_sampler_chain_default_params();
-    smplParams.no_perf = true; // disable performance tracking for the sampler
+    smplParams.no_perf = true;
 
-    // initialize the sampler
     smpl = llama_sampler_chain_init(smplParams);
     llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
     llama_sampler_chain_add(smpl, llama_sampler_init_min_p(0.05f, 1));
     llama_sampler_chain_add(smpl, llama_sampler_init_temp(0.8f));
     llama_sampler_chain_add(smpl, llama_sampler_init_dist(LLAMA_DEFAULT_SEED));
 
-    messages = new std::vector<llama_chat_message>();
-    formatted = new std::vector<char>(ctx_params.n_ctx);
-    tmpl = llama_model_chat_template(model, /* name */ nullptr);
     prev_len = 0;
 }
 
+static std::string strip_think_tags(const std::string &text) {
+    std::string result;
+    size_t pos = 0;
+    while (pos < text.size()) {
+        size_t open = text.find("<think>", pos);
+        if (open == std::string::npos) {
+            result.append(text, pos, std::string::npos);
+            break;
+        }
+        result.append(text, pos, open - pos);
+        size_t close = text.find("</think>", open);
+        if (close == std::string::npos) {
+            break;
+        }
+        pos = close + 8; // strlen("</think>")
+        // skip trailing newlines after the close tag
+        while (pos < text.size() && text[pos] == '\n') pos++;
+    }
+    return result;
+}
+
 int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) {
-    if (messages == nullptr || formatted == nullptr || ctx == nullptr) {
+    if (chat_tmpls == nullptr || ctx == nullptr) {
         LOGe("addMessage called on uninitialized session");
         return 1;
     }
-    // add the user input to the message list and format it
-    messages->push_back({"user", strdup(string)});
-    int new_len = llama_chat_apply_template(tmpl, messages->data(), messages->size(), true, formatted->data(), formatted->size());
-    if (new_len > (int)formatted->size()) {
-        formatted->resize(new_len);
-        new_len = llama_chat_apply_template(tmpl, messages->data(), messages->size(), true, formatted->data(), formatted->size());
+
+    common_chat_msg user_msg;
+    user_msg.role = "user";
+    user_msg.content = string;
+    messages.push_back(user_msg);
+
+    auto renderPrompt = [&](bool enableThinking) -> common_chat_params {
+        common_chat_templates_inputs inputs;
+        inputs.messages = messages;
+        inputs.add_generation_prompt = true;
+        inputs.use_jinja = true;
+        inputs.enable_thinking = enableThinking;
+        return common_chat_templates_apply(chat_tmpls, inputs);
+    };
+
+    // The Jinja template drops thinking content from non-last assistant messages,
+    // so the re-rendered prompt is shorter than what's in the KV cache. We must
+    // clear the cache and re-process from scratch when this happens.
+    if (prev_had_thinking && prev_len > 0) {
+        LOGi("Previous turn had thinking - clearing KV cache for re-render");
+        llama_memory_clear(llama_get_memory(ctx), true);
+        prev_len = 0;
     }
-    if (new_len < 0) {
+
+    auto result = renderPrompt(enableThinking);
+    std::string full_prompt = result.prompt;
+    additional_stops = result.additional_stops;
+
+    if ((int)full_prompt.size() < prev_len) {
         LOGe("failed to apply the chat template");
         return 1;
     }
 
-    // remove previous messages to obtain the prompt to generate the response
-    std::string prompt(formatted->begin() + prev_len, formatted->begin() + new_len);
-
-    if (!enableThinking) {
-        prompt += "<think>\n\n</think>\n\n";
-    }
-
+    std::string prompt = full_prompt.substr(prev_len);
     response.clear();
 
-    const bool is_first = llama_memory_seq_pos_max(llama_get_memory(ctx), 0) == 0;
+    bool is_first = (prev_len == 0);
+    int n_ctx = llama_n_ctx(ctx);
+    int n_ctx_used = is_first ? 0 : (int)llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
 
-    // tokenize the prompt
-    const int n_prompt_tokens = -llama_tokenize(vocab, prompt.c_str(), prompt.size(), NULL, 0, is_first, true);
+    int n_prompt_tokens = -llama_tokenize(vocab, prompt.c_str(), prompt.size(), NULL, 0, is_first, true);
+
+    bool compacted = false;
+
+    // Stage 1: strip thinking content from older assistant messages
+    if (n_ctx_used + n_prompt_tokens > n_ctx) {
+        LOGi("Context would overflow (%d + %d > %d), stripping thinking from older turns",
+             n_ctx_used, n_prompt_tokens, n_ctx);
+
+        bool stripped_any = false;
+        for (size_t i = 0; i + 1 < messages.size(); i++) {
+            if (messages[i].role == "assistant" && messages[i].content.find("<think>") != std::string::npos) {
+                messages[i].content = strip_think_tags(messages[i].content);
+                stripped_any = true;
+            }
+        }
+
+        if (stripped_any) {
+            result = renderPrompt(enableThinking);
+            full_prompt = result.prompt;
+            additional_stops = result.additional_stops;
+            prompt = full_prompt;
+            is_first = true;
+            n_ctx_used = 0;
+            n_prompt_tokens = -llama_tokenize(vocab, prompt.c_str(), prompt.size(), NULL, 0, true, true);
+            compacted = true;
+        }
+    }
+
+    // Stage 2: drop oldest user+assistant pairs
+    while (n_ctx_used + n_prompt_tokens > n_ctx && messages.size() > 1) {
+        LOGi("Still overflowing (%d + %d > %d), dropping oldest turn (%zu messages remain)",
+             n_ctx_used, n_prompt_tokens, n_ctx, messages.size());
+
+        auto it = messages.begin();
+        if (it->role == "system") ++it;
+        if (it == messages.end()) break;
+        messages.erase(it);
+
+        it = messages.begin();
+        if (it->role == "system") ++it;
+        if (it != messages.end() && it->role == "assistant") {
+            messages.erase(it);
+        }
+
+        result = renderPrompt(enableThinking);
+        full_prompt = result.prompt;
+        additional_stops = result.additional_stops;
+        prompt = full_prompt;
+        is_first = true;
+        n_ctx_used = 0;
+        n_prompt_tokens = -llama_tokenize(vocab, prompt.c_str(), prompt.size(), NULL, 0, true, true);
+        compacted = true;
+    }
+
+    if (compacted) {
+        LOGi("Context compacted, clearing KV cache and reprocessing (%d tokens)", n_prompt_tokens);
+        llama_memory_clear(llama_get_memory(ctx), true);
+        prev_len = 0;
+        is_first = true;
+    }
+
     prompt_tokens.resize(n_prompt_tokens);
     if (llama_tokenize(vocab, prompt.c_str(), prompt.size(), prompt_tokens.data(), prompt_tokens.size(), is_first, true) < 0) {
         LOGe("failed to tokenize the prompt");
         return 1;
-    }
-
-    // Print the prompt tokens for debugging
-    for (const auto& token : prompt_tokens) {
-        char buf[256];
-        int n = llama_token_to_piece(vocab, token, buf, sizeof(buf), 0, true);
-        if (n < 0) {
-            LOGe("failed to convert token to piece");
-            return 1;
-        }
-        std::string piece(buf, n);
     }
 
     batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
@@ -180,53 +260,77 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     return 0;
 }
 
+void LlamaGenerationSession::finalizeResponse() {
+    common_chat_msg assistant_msg;
+    assistant_msg.role = "assistant";
+    assistant_msg.content = response;
+    messages.push_back(assistant_msg);
+
+    prev_had_thinking = response.find("</think>") != std::string::npos;
+
+    common_chat_templates_inputs inputs;
+    inputs.messages = messages;
+    inputs.add_generation_prompt = false;
+    inputs.use_jinja = true;
+    inputs.enable_thinking = true;
+
+    auto result = common_chat_templates_apply(chat_tmpls, inputs);
+    prev_len = (int)result.prompt.size();
+}
+
 int LlamaGenerationSession::generate(const ResponseCallback& callback) {
     if (ctx == nullptr || smpl == nullptr) {
         LOGe("generate called on uninitialized session");
         return 1;
     }
-    // check if we have enough space in the context to evaluate this batch
+
     int n_ctx = llama_n_ctx(ctx);
     int n_ctx_used = llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
     if (n_ctx_used + batch.n_tokens > n_ctx) {
         LOGe("context size exceeded: n_ctx_used = %d, batch.n_tokens = %d, n_ctx = %d", n_ctx_used, batch.n_tokens, n_ctx);
-        return 1; // context size exceeded
+        finalizeResponse();
+        return 1;
     }
 
     if (llama_decode(ctx, batch)) {
         LOGe("failed to decode the batch");
-        return 1; // decoding failed
+        finalizeResponse();
+        return 1;
     }
 
-    // sample the next token
     last_token = llama_sampler_sample(smpl, ctx, -1);
 
-    // is it an end of generation?
-    if (llama_vocab_is_eog(vocab, last_token)) {
-        // add the response to the messages
-        messages->push_back({"assistant", strdup(response.c_str())});
-        prev_len = llama_chat_apply_template(tmpl, messages->data(), messages->size(), false, nullptr, 0);
-        if (prev_len < 0) {
-            LOGe("failed to apply the chat template");
+    bool is_eog = llama_vocab_is_eog(vocab, last_token);
+
+    if (!is_eog) {
+        char buf[256];
+        int n = llama_token_to_piece(vocab, last_token, buf, sizeof(buf), 0, true);
+        if (n < 0) {
+            LOGe("failed to convert token to piece");
+            finalizeResponse();
+            return 1;
         }
-        return 1; // end of generation
+        std::string piece(buf, n);
+        response += piece;
+
+        for (const auto& stop : additional_stops) {
+            if (response.size() >= stop.size() &&
+                response.compare(response.size() - stop.size(), stop.size(), stop) == 0) {
+                response.erase(response.size() - stop.size());
+                is_eog = true;
+                break;
+            }
+        }
+
+        if (!is_eog) {
+            callback(piece.c_str());
+            batch = llama_batch_get_one(&last_token, 1);
+            return 0;
+        }
     }
 
-    // convert the token to a string, print it and add it to the response
-    char buf[256];
-    int n = llama_token_to_piece(vocab, last_token, buf, sizeof(buf), 0, true);
-    if (n < 0) {
-        LOGe("failed to convert token to piece");
-        return 1; // conversion failed
-    }
-    std::string piece(buf, n);
-    response += piece;
-
-    callback(piece.c_str());
-
-    // prepare the next batch with the sampled token
-    batch = llama_batch_get_one(&last_token, 1);
-    return 0;
+    finalizeResponse();
+    return 1;
 }
 
 void LlamaGenerationSession::printReport() {

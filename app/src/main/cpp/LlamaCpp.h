@@ -6,6 +6,7 @@
 #define LMPLAYGROUND_LLAMACPP_H
 
 #include "common.h"
+#include "chat.h"
 #include "sampling.h"
 
 class LlamaGenerationSession {
@@ -16,7 +17,7 @@ public:
 
     ~LlamaGenerationSession();
 
-    void init(llama_model *model);
+    void init(llama_model *model, const struct common_chat_templates *chat_tmpls);
 
     void printReport();
 
@@ -27,12 +28,14 @@ public:
     std::string getReport();
 
 private:
+    void finalizeResponse();
     const struct llama_vocab * vocab = nullptr;
     llama_context * ctx = nullptr;
     llama_sampler * smpl = nullptr;
-    std::vector<llama_chat_message>* messages = nullptr;
-    std::vector<char>* formatted = nullptr;
-    const char * tmpl = nullptr;
+    const struct common_chat_templates * chat_tmpls = nullptr;
+    bool prev_had_thinking = false;
+    std::vector<common_chat_msg> messages;
+    std::vector<std::string> additional_stops;
     int prev_len = 0;
     std::vector<llama_token> prompt_tokens;
     llama_token last_token;
@@ -58,8 +61,8 @@ public:
     void unloadModel();
 
 private:
-    // Private members for the model, like the model data, etc.
     llama_model *model = nullptr;
+    common_chat_templates_ptr chat_tmpls;
 };
 
 #endif //LMPLAYGROUND_LLAMACPP_H

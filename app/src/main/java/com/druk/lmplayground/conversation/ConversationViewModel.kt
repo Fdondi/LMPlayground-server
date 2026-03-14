@@ -137,9 +137,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 
                 val llamaModel = llamaCpp.loadModel(
                     fileHandle.path,
-                    modelInfo.inputPrefix,
-                    modelInfo.inputSuffix,
-                    modelInfo.antiPrompt,
                     object: LlamaProgressCallback {
                         override fun onProgress(progress: Float) {
                             val progressDescription = "${round(100 * progress).toInt()}%"
@@ -176,7 +173,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             )
         )
 
-        val antiPrompt = _loadedModel.value?.antiPrompt
         val enableThinking = _thinkingEnabled.value == true
         _isGenerating.postValue(true)
         generatingJob = viewModelScope.launch {
@@ -188,10 +184,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     var responseByteArray = ByteArray(0)
                     override fun newTokens(newTokens: ByteArray) {
                         responseByteArray += newTokens
-                        val string = String(responseByteArray, Charsets.UTF_8)
-                        uiState.updateLastMessage(
-                            ResponseProcessor.process(string, antiPrompt ?: emptyArray())
-                        )
+                        var string = String(responseByteArray, Charsets.UTF_8)
+                        string = ResponseProcessor.process(string)
+                        if (enableThinking) {
+                            string = ResponseProcessor.ensureThinkingTag(string)
+                        } else {
+                            string = ResponseProcessor.stripCompleteThinkBlocks(string)
+                        }
+                        uiState.updateLastMessage(string)
                     }
                 }
                 while (this.isActive && llamaSession.generate(callback) == 0) {
