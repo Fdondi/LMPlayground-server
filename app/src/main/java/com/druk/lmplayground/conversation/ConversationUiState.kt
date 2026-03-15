@@ -13,6 +13,15 @@ class ConversationUiState(
         _messages.add(msg) // Add to the end of the list
     }
 
+    fun markThinkingStarted() {
+        val message = _messages.last()
+        if (message.thinkingStartTimeMs == 0L) {
+            _messages[_messages.size - 1] = message.copy(
+                thinkingStartTimeMs = System.currentTimeMillis()
+            )
+        }
+    }
+
     fun updateLastMessage(msg: String, thinkingTokens: Int = 0, responseTokens: Int = 0) {
         val message = _messages.last()
         val isThinkingActive = message.thinkingStartTimeMs > 0

@@ -196,12 +196,22 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     var totalTokens = 0
                     var thinkingTokenCount = 0
                     var thinkingComplete = !enableThinking
+                    var modelIsThinking = enableThinking
                     override fun newTokens(newTokens: ByteArray) {
                         responseByteArray += newTokens
                         totalTokens++
                         var string = String(responseByteArray, Charsets.UTF_8)
                         string = ResponseProcessor.process(string)
-                        if (enableThinking) {
+
+                        // Detect thinking from model output even when the
+                        // toggle is off (models like LFM 2.5 always think)
+                        if (!modelIsThinking && string.startsWith("<think>")) {
+                            modelIsThinking = true
+                            thinkingComplete = false
+                            uiState.markThinkingStarted()
+                        }
+
+                        if (modelIsThinking) {
                             string = ResponseProcessor.ensureThinkingTag(string)
                         } else {
                             string = ResponseProcessor.stripCompleteThinkBlocks(string)
