@@ -74,7 +74,7 @@ class ConversationFragment : Fragment() {
             val modelInfo by viewModel.loadedModel.observeAsState()
             val modelStatus by viewModel.loadedModelStatus.observeAsState()
             val supportsThinking by viewModel.supportsThinking.observeAsState(false)
-            val thinkingEnabled by viewModel.thinkingEnabled.observeAsState(true)
+            val thinkingEnabled by viewModel.thinkingEnabled.observeAsState(false)
             val isModelReady by viewModel.isModelReady.observeAsState(false)
             val models by viewModel.models.observeAsState(emptyList())
             
@@ -279,7 +279,6 @@ class ConversationFragment : Fragment() {
                             }) {
                         Messages(
                             messages = messages,
-                            navigateToProfile = { },
                             modifier = Modifier.weight(1f),
                             scrollState = scrollState,
                             isGenerating = isGenerating == true

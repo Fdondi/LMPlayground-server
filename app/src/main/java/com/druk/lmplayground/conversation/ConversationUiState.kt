@@ -2,7 +2,6 @@ package com.druk.lmplayground.conversation
 
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.toMutableStateList
-import com.druk.lmplayground.R
 
 class ConversationUiState(
     initialMessages: List<Message>
@@ -16,7 +15,20 @@ class ConversationUiState(
 
     fun updateLastMessage(msg: String) {
         val message = _messages.last()
-        _messages[_messages.size - 1] = message.copy(content = msg)
+        val isThinkingActive = message.thinkingStartTimeMs > 0
+        val thinkingJustEnded = isThinkingActive && msg.contains("</think>")
+
+        val duration = if (isThinkingActive) {
+            ((System.currentTimeMillis() - message.thinkingStartTimeMs) / 1000).toInt()
+        } else {
+            message.thinkingDurationSeconds
+        }
+
+        _messages[_messages.size - 1] = message.copy(
+            content = msg,
+            thinkingDurationSeconds = duration,
+            thinkingStartTimeMs = if (thinkingJustEnded) 0L else message.thinkingStartTimeMs
+        )
     }
 
     fun resetMessages() {
@@ -29,8 +41,6 @@ data class Message(
     val author: String,
     val content: String,
     val image: Int? = null,
-    val authorImage: Int = if (author == "User")
-        R.drawable.ic_baseline_person
-    else
-        R.drawable.penrose_triangle_monochrome
+    val thinkingDurationSeconds: Int = 0,
+    val thinkingStartTimeMs: Long = 0
 )

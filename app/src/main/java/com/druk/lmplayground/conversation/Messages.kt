@@ -18,21 +18,22 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.druk.lmplayground.R
 import kotlinx.coroutines.launch
 
 @Composable
 fun Messages(
     messages: List<Message>,
-    navigateToProfile: (String) -> Unit,
     scrollState: LazyListState,
     modifier: Modifier = Modifier,
     isGenerating: Boolean = false
 ) {
     var piningBottom by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(messages.size) {
+        piningBottom = true
+    }
     Box(modifier = modifier.pointerInput(Unit) {
         detectTapGestures(onPress = {
             piningBottom = false
@@ -47,11 +48,8 @@ fun Messages(
                 val isLast = index == messages.lastIndex
                 item {
                     Message(
-                        onAuthorClick = { name -> navigateToProfile(name) },
                         msg = content,
                         isUserMe = content.author == "User",
-                        isFirstMessageByAuthor = true,
-                        isLastMessageByAuthor = true,
                         showActions = !(isLast && isGenerating)
                     )
                 }

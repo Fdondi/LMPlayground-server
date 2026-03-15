@@ -16,12 +16,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
-import androidx.compose.material.icons.outlined.ExpandLess
-import androidx.compose.material.icons.outlined.ExpandMore
+import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -31,13 +29,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import kotlinx.coroutines.delay
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -49,61 +44,27 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.druk.lmplayground.R
 
-private val ChatBubbleShape = RoundedCornerShape(20.dp, 20.dp, 20.dp, 20.dp)
-
 @Composable
 fun ChatItemBubble(
     message: Message,
-    isUserMe: Boolean,
     showActions: Boolean = true
 ) {
-
-    val backgroundBubbleColor = if (isUserMe) {
-        MaterialTheme.colorScheme.primary
-    } else {
-        MaterialTheme.colorScheme.surfaceVariant
-    }
     var showRatingSheet by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
 
-    val isWaitingForResponse = !isUserMe && !showActions && message.content.isEmpty()
+    val isWaitingForResponse = !showActions && message.content.isEmpty()
 
     Column {
         if (isWaitingForResponse) {
             ThinkingIndicator()
-        } else if (isUserMe) {
-            Surface {
-                val styledMessage = messageFormatter(
-                    text = message.content,
-                    primary = true
-                )
-                SelectionContainer {
-                    Text(
-                        text = styledMessage,
-                        style = MaterialTheme.typography.bodyLarge.copy(color = LocalContentColor.current)
-                    )
-                }
-            }
         } else {
             val split = remember(message.content) { splitThinking(message.content) }
             val hasThinking = split.thinkingContent.isNotEmpty()
             val isGenerating = !showActions
 
             if (hasThinking) {
-                val isActivelyThinking = isGenerating && split.responseContent.isEmpty()
                 var expanded by remember { mutableStateOf(false) }
-
-                // Live second counter while thinking
-                var elapsedSeconds by remember { mutableIntStateOf(0) }
-                LaunchedEffect(isActivelyThinking) {
-                    if (isActivelyThinking) {
-                        while (true) {
-                            delay(1000)
-                            elapsedSeconds++
-                        }
-                    }
-                }
-                val thinkingDuration = formatDuration(elapsedSeconds)
+                val thinkingDuration = formatDuration(message.thinkingDurationSeconds)
 
                 Row(
                     modifier = Modifier
@@ -112,7 +73,7 @@ fun ChatItemBubble(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = if (expanded) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                        imageVector = Icons.Outlined.Lightbulb,
                         contentDescription = if (expanded) "Collapse thinking" else "Expand thinking",
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.outline
@@ -143,37 +104,30 @@ fun ChatItemBubble(
             }
 
             if (split.responseContent.isNotEmpty()) {
-                Surface {
-                    val styledMessage = messageFormatter(
-                        text = split.responseContent,
-                        primary = false
+                val styledMessage = messageFormatter(
+                    text = split.responseContent,
+                    primary = false
+                )
+                SelectionContainer {
+                    Text(
+                        text = styledMessage,
+                        style = MaterialTheme.typography.bodyLarge.copy(color = LocalContentColor.current)
                     )
-                    SelectionContainer {
-                        Text(
-                            text = styledMessage,
-                            style = MaterialTheme.typography.bodyLarge.copy(color = LocalContentColor.current)
-                        )
-                    }
                 }
             }
         }
 
         message.image?.let {
             Spacer(modifier = Modifier.height(4.dp))
-            Surface(
-                color = backgroundBubbleColor,
-                shape = ChatBubbleShape
-            ) {
-                Image(
-                    painter = painterResource(it),
-                    contentScale = ContentScale.Fit,
-                    modifier = Modifier.size(160.dp),
-                    contentDescription = stringResource(id = R.string.attached_image)
-                )
-            }
+            Image(
+                painter = painterResource(it),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(160.dp),
+                contentDescription = stringResource(id = R.string.attached_image)
+            )
         }
 
-        if (!isUserMe && showActions) {
+        if (showActions) {
             Spacer(modifier = Modifier.height(4.dp))
             Row(
                 horizontalArrangement = Arrangement.spacedBy(0.dp)

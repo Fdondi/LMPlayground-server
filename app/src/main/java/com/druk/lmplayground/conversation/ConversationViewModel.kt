@@ -43,7 +43,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _loadedModelStatus = MutableLiveData<String?>(null)
     private val _models = MutableLiveData<List<ModelWithStatus>>(emptyList())
     private val _supportsThinking = MutableLiveData(false)
-    private val _thinkingEnabled = MutableLiveData(true)
+    private val _thinkingEnabled = MutableLiveData(false)
     
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -123,7 +123,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             withContext(Dispatchers.Default) {
                 _modelLoadingProgress.postValue(0f)
                 _loadedModel.postValue(modelInfo)
-                _thinkingEnabled.postValue(true)
+                _thinkingEnabled.postValue(false)
                 _supportsThinking.postValue(false)
                 _loadedModelStatus.postValue("Loading...")
                 
@@ -166,14 +166,16 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     @MainThread
     fun addMessage(message: Message) {
         uiState.addMessage(message)
+
+        val enableThinking = _thinkingEnabled.value == true
         uiState.addMessage(
             Message(
                 "Assistant",
-                ""
+                "",
+                thinkingStartTimeMs = if (enableThinking) System.currentTimeMillis() else 0L
             )
         )
 
-        val enableThinking = _thinkingEnabled.value == true
         _isGenerating.postValue(true)
         generatingJob = viewModelScope.launch {
             withContext(Dispatchers.Default) {

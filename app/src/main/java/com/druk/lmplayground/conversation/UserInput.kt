@@ -36,7 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Psychology
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
@@ -175,16 +176,17 @@ private fun UserInputText(
         verticalAlignment = Alignment.CenterVertically
     ) {
         if (supportsThinking) {
-            val thinkingAlpha = if (thinkingEnabled) 1f else 0.4f
+            val isDisabled = status == UserInputStatus.GENERATING
             IconButton(
                 onClick = onThinkingToggle,
-                enabled = status != UserInputStatus.GENERATING,
+                enabled = !isDisabled,
                 modifier = Modifier.padding(start = 4.dp)
             ) {
                 Icon(
-                    imageVector = Icons.Outlined.Psychology,
+                    imageVector = if (thinkingEnabled) Icons.Filled.Lightbulb else Icons.Outlined.Lightbulb,
                     contentDescription = if (thinkingEnabled) "Disable thinking" else "Enable thinking",
-                    modifier = Modifier.alpha(thinkingAlpha)
+                    modifier = if (isDisabled) Modifier.alpha(0.8f) else Modifier,
+                    tint = LocalContentColor.current
                 )
             }
         }
