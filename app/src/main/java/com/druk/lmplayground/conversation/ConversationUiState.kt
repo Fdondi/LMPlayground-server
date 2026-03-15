@@ -13,7 +13,7 @@ class ConversationUiState(
         _messages.add(msg) // Add to the end of the list
     }
 
-    fun updateLastMessage(msg: String) {
+    fun updateLastMessage(msg: String, thinkingTokens: Int = 0, responseTokens: Int = 0) {
         val message = _messages.last()
         val isThinkingActive = message.thinkingStartTimeMs > 0
         val thinkingJustEnded = isThinkingActive && msg.contains("</think>")
@@ -27,7 +27,9 @@ class ConversationUiState(
         _messages[_messages.size - 1] = message.copy(
             content = msg,
             thinkingDurationSeconds = duration,
-            thinkingStartTimeMs = if (thinkingJustEnded) 0L else message.thinkingStartTimeMs
+            thinkingStartTimeMs = if (thinkingJustEnded) 0L else message.thinkingStartTimeMs,
+            thinkingTokens = thinkingTokens,
+            responseTokens = responseTokens
         )
     }
 
@@ -42,5 +44,7 @@ data class Message(
     val content: String,
     val image: Int? = null,
     val thinkingDurationSeconds: Int = 0,
-    val thinkingStartTimeMs: Long = 0
+    val thinkingStartTimeMs: Long = 0,
+    val thinkingTokens: Int = 0,
+    val responseTokens: Int = 0
 )

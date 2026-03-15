@@ -193,8 +193,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
                 val callback = object: LlamaGenerationCallback {
                     var responseByteArray = ByteArray(0)
+                    var totalTokens = 0
+                    var thinkingTokenCount = 0
+                    var thinkingComplete = !enableThinking
                     override fun newTokens(newTokens: ByteArray) {
                         responseByteArray += newTokens
+                        totalTokens++
                         var string = String(responseByteArray, Charsets.UTF_8)
                         string = ResponseProcessor.process(string)
                         if (enableThinking) {
@@ -202,7 +206,16 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         } else {
                             string = ResponseProcessor.stripCompleteThinkBlocks(string)
                         }
-                        uiState.updateLastMessage(string)
+                        if (!thinkingComplete && string.contains("</think>")) {
+                            thinkingComplete = true
+                            thinkingTokenCount = totalTokens
+                        }
+                        val currentThinkingTokens = if (thinkingComplete) thinkingTokenCount else totalTokens
+                        uiState.updateLastMessage(
+                            string,
+                            thinkingTokens = currentThinkingTokens,
+                            responseTokens = totalTokens - currentThinkingTokens
+                        )
                     }
                 }
                 while (this.isActive && llamaSession.generate(callback) == 0) {

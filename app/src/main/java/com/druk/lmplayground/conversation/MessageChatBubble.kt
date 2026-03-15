@@ -19,7 +19,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
-import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -73,13 +74,19 @@ fun ChatItemBubble(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Lightbulb,
+                        imageVector = if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
                         contentDescription = if (expanded) "Collapse thinking" else "Expand thinking",
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.outline
                     )
+                    val thinkingLabel = buildString {
+                        append("Thinking \u00B7 $thinkingDuration")
+                        if (message.thinkingTokens > 0) {
+                            append(" \u00B7 ${message.thinkingTokens} tokens")
+                        }
+                    }
                     Text(
-                        text = "Thinking \u00B7 $thinkingDuration",
+                        text = thinkingLabel,
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier.padding(start = 4.dp)
@@ -130,7 +137,8 @@ fun ChatItemBubble(
         if (showActions) {
             Spacer(modifier = Modifier.height(4.dp))
             Row(
-                horizontalArrangement = Arrangement.spacedBy(0.dp)
+                horizontalArrangement = Arrangement.spacedBy(0.dp),
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(onClick = {
                     clipboardManager.setText(AnnotatedString(stripThinkTags(message.content)))
@@ -156,6 +164,14 @@ fun ChatItemBubble(
                         contentDescription = stringResource(id = R.string.downvote),
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+                if (message.responseTokens > 0) {
+                    Text(
+                        text = "${message.responseTokens} tokens",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
