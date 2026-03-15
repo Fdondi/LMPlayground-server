@@ -22,10 +22,11 @@ class DownloadRepository(private val context: Context) {
     private val workManager = WorkManager.getInstance(context)
 
     fun startDownload(model: ModelInfo, storageUri: Uri) {
+        val remoteUri = model.remoteUri ?: return
         val workName = workNameFor(model)
 
         val inputData = Data.Builder()
-            .putString(DownloadWorker.KEY_URL, model.remoteUri.toString())
+            .putString(DownloadWorker.KEY_URL, remoteUri.toString())
             .putString(DownloadWorker.KEY_FILENAME, model.filename)
             .putString(DownloadWorker.KEY_MODEL_NAME, model.name)
             .putString(DownloadWorker.KEY_STORAGE_URI, storageUri.toString())

@@ -17,6 +17,21 @@ class StoragePreferences(context: Context) {
         get() = prefs.getString(KEY_URI, null)?.toUri()
         set(value) = prefs.edit { putString(KEY_URI, value?.toString()) }
 
+    fun getCustomModelMetadata(filename: String): Pair<String, Boolean>? {
+        val value = prefs.getString("custom_model_$filename", null) ?: return null
+        val parts = value.split("|", limit = 2)
+        if (parts.size != 2) return null
+        return Pair(parts[0], parts[1].toBoolean())
+    }
+
+    fun setCustomModelMetadata(filename: String, name: String, hasChatTemplate: Boolean) {
+        prefs.edit { putString("custom_model_$filename", "$name|$hasChatTemplate") }
+    }
+
+    fun removeCustomModelMetadata(filename: String) {
+        prefs.edit { remove("custom_model_$filename") }
+    }
+
     fun clear() {
         prefs.edit { clear() }
     }

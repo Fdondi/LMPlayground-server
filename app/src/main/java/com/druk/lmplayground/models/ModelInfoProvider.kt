@@ -10,14 +10,14 @@ object ModelInfoProvider {
      * Static list of all available models
      */
     val allModels: List<ModelInfo> = listOf(
-        ModelInfo(
-            name = "Qwen 3 0.6B",
-            filename = "Qwen3-0.6B-Q4_K_M.gguf",
-            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf"),
-            releaseDate = LocalDate.parse("2025-04-29"),
-            description = "Alibaba \u00B7 Lightweight chat model \u00B7 484Mb",
-            logoRes = R.drawable.logo_qwen
-        ),
+//        ModelInfo(
+//            name = "Qwen 3 0.6B",
+//            filename = "Qwen3-0.6B-Q4_K_M.gguf",
+//            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf"),
+//            releaseDate = LocalDate.parse("2025-04-29"),
+//            description = "Alibaba \u00B7 Lightweight chat model \u00B7 484Mb",
+//            logoRes = R.drawable.logo_qwen
+//        ),
         ModelInfo(
             name = "Qwen 3 1.7B",
             filename = "Qwen3-1.7B-Q4_K_M.gguf",
@@ -251,17 +251,44 @@ object ModelInfoProvider {
      */
     fun getDisplayName(filename: String): String = getByFilename(filename)?.name ?: filename.removeSuffix(".gguf")
     
+    private fun formatFileSize(bytes: Long): String {
+        val gb = bytes / 1_000_000_000.0
+        return if (gb >= 1.0) "%.2fGb".format(gb) else "%dMb".format(bytes / 1_000_000)
+    }
+
+    /**
+     * Create a ModelInfo for a custom (user-provided) GGUF file.
+     */
+    fun createCustomModelInfo(filename: String, name: String, sizeBytes: Long): ModelInfo {
+        val sizeLabel = formatFileSize(sizeBytes)
+        return ModelInfo(
+            name = name.ifEmpty { filename.removeSuffix(".gguf") },
+            filename = filename,
+            remoteUri = null,
+            releaseDate = null,
+            description = "Custom model · $sizeLabel",
+            logoRes = R.drawable.penrose_triangle
+        )
+    }
+
     /**
      * Get models with their download status.
      */
-    fun getModelsWithStatus(downloadedFilenames: Set<String>): List<ModelWithStatus> {
-        return allModels
+    fun getModelsWithStatus(
+        downloadedFilenames: Set<String>,
+        customModels: List<ModelInfo> = emptyList()
+    ): List<ModelWithStatus> {
+        val knownModels = allModels
             .sortedByDescending { it.releaseDate }
             .map { model ->
-            ModelWithStatus(
-                model = model,
-                isDownloaded = model.filename in downloadedFilenames
-            )
+                ModelWithStatus(
+                    model = model,
+                    isDownloaded = model.filename in downloadedFilenames
+                )
+            }
+        val customWithStatus = customModels.map { model ->
+            ModelWithStatus(model = model, isDownloaded = true)
         }
+        return customWithStatus + knownModels
     }
 }

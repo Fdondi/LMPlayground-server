@@ -35,4 +35,12 @@ class LlamaCpp {
      */
     external fun loadModel(path: String,
                            progressCallback: LlamaProgressCallback): LlamaModel
+
+    /**
+     * Probes a GGUF file's metadata without loading model weights.
+     *
+     * @param path The path to the GGUF file (supports "fd:N" format).
+     * @return A String array [name, hasChatTemplate] or null on failure.
+     */
+    external fun probeModelMetadata(path: String): Array<String>?
 }

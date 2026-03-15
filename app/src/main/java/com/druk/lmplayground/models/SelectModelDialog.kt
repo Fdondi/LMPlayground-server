@@ -143,13 +143,15 @@ fun Model(
                     textAlign = TextAlign.Start,
                     maxLines = 1
                 )
-                Text(
-                    text = model.releaseDateLabel(),
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Start,
-                    maxLines = 1
-                )
+                if (model.releaseDate != null) {
+                    Text(
+                        text = model.releaseDateLabel(),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Start,
+                        maxLines = 1
+                    )
+                }
             }
         }
         Icon(

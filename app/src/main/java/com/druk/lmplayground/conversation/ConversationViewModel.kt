@@ -85,9 +85,18 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun loadModelList() {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
-                val downloadedFilenames = storageRepository.getModelFiles().map { it.name }.toSet()
+                val modelFiles = storageRepository.getModelFiles()
+                val downloadedFilenames = modelFiles.map { it.name }.toSet()
+                val customModels = modelFiles
+                    .filter { it.name !in ModelInfoProvider.knownFilenames }
+                    .mapNotNull { file ->
+                        val cached = storagePreferences.getCustomModelMetadata(file.name)
+                            ?: return@mapNotNull null
+                        if (!cached.second) return@mapNotNull null
+                        ModelInfoProvider.createCustomModelInfo(file.name, cached.first, file.sizeBytes)
+                    }
                 _models.postValue(
-                    ModelInfoProvider.getModelsWithStatus(downloadedFilenames)
+                    ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels)
                 )
             }
         }

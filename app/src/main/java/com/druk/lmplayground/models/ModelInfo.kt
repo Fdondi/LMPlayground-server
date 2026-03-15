@@ -14,11 +14,13 @@ import java.util.Locale
 data class ModelInfo(
     val name: String,
     val filename: String,
-    val remoteUri: Uri,
-    val releaseDate: LocalDate,
+    val remoteUri: Uri? = null,
+    val releaseDate: LocalDate? = null,
     val description: String,
     @param:DrawableRes val logoRes: Int = 0
-)
+) {
+    val isCustom: Boolean get() = remoteUri == null
+}
 
 /**
  * Model with its download status
@@ -30,4 +32,4 @@ data class ModelWithStatus(
 
 private val RELEASE_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US)
 
-fun ModelInfo.releaseDateLabel(): String = releaseDate.format(RELEASE_DATE_FORMATTER)
+fun ModelInfo.releaseDateLabel(): String = releaseDate?.format(RELEASE_DATE_FORMATTER) ?: ""

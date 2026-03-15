@@ -6,6 +6,7 @@
 
 #include "console.h"
 #include "ggml.h"
+#include "gguf.h"
 #include "llama.h"
 #include "log.h"
 
@@ -47,6 +48,41 @@ static void log_callback(ggml_log_level level, const char * fmt, void * data) {
     else if (level == GGML_LOG_LEVEL_INFO) __android_log_print(ANDROID_LOG_INFO, TAG, fmt, data);
     else if (level == GGML_LOG_LEVEL_WARN) __android_log_print(ANDROID_LOG_WARN, TAG, fmt, data);
     else __android_log_print(ANDROID_LOG_DEFAULT, TAG, fmt, data);
+}
+
+extern "C"
+JNIEXPORT jobjectArray JNICALL
+Java_com_druk_llamacpp_LlamaCpp_probeModelMetadata(JNIEnv *env, jobject thiz, jstring modelPath) {
+    const char* path = env->GetStringUTFChars(modelPath, nullptr);
+
+    struct gguf_init_params params = { /*.no_alloc =*/ true, /*.ctx =*/ nullptr };
+    struct gguf_context * gguf_ctx = gguf_init_from_file(path, params);
+    env->ReleaseStringUTFChars(modelPath, path);
+
+    if (gguf_ctx == nullptr) {
+        return nullptr;
+    }
+
+    // Read general.name
+    std::string name;
+    int64_t name_key = gguf_find_key(gguf_ctx, "general.name");
+    if (name_key >= 0) {
+        name = gguf_get_val_str(gguf_ctx, name_key);
+    }
+
+    // Check tokenizer.chat_template existence
+    int64_t template_key = gguf_find_key(gguf_ctx, "tokenizer.chat_template");
+    bool has_chat_template = (template_key >= 0);
+
+    gguf_free(gguf_ctx);
+
+    // Return String[] { name, hasChatTemplate }
+    jclass stringClass = env->FindClass("java/lang/String");
+    jobjectArray result = env->NewObjectArray(2, stringClass, nullptr);
+    env->SetObjectArrayElement(result, 0, env->NewStringUTF(name.c_str()));
+    env->SetObjectArrayElement(result, 1, env->NewStringUTF(has_chat_template ? "true" : "false"));
+
+    return result;
 }
 
 extern "C" JNIEXPORT int

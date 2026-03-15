@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.druk.lmplayground.App
 import com.druk.lmplayground.download.DownloadRepository
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
@@ -107,8 +108,33 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
                 val modelFiles = repository.getModelFiles()
                 _downloadedModels.postValue(modelFiles)
                 val downloadedFilenames = modelFiles.map { it.name }.toSet()
-                _allModels.postValue(ModelInfoProvider.getModelsWithStatus(downloadedFilenames))
+                val customModels = discoverCustomModels(modelFiles)
+                _allModels.postValue(ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels))
             }
+        }
+    }
+
+    private fun discoverCustomModels(modelFiles: List<ModelFile>): List<ModelInfo> {
+        val llamaCpp = (getApplication<Application>() as? App)?.llamaCpp ?: return emptyList()
+        val unknownFiles = modelFiles.filter { it.name !in ModelInfoProvider.knownFilenames }
+        return unknownFiles.mapNotNull { file ->
+            val cached = prefs.getCustomModelMetadata(file.name)
+            val (name, hasChatTemplate) = if (cached != null) {
+                cached
+            } else {
+                val handle = repository.openModelFile(file.name) ?: return@mapNotNull null
+                try {
+                    val result = llamaCpp.probeModelMetadata(handle.path) ?: return@mapNotNull null
+                    val probedName = result[0]
+                    val probedHasTemplate = result[1].toBoolean()
+                    prefs.setCustomModelMetadata(file.name, probedName, probedHasTemplate)
+                    Pair(probedName, probedHasTemplate)
+                } finally {
+                    handle.close()
+                }
+            }
+            if (!hasChatTemplate) return@mapNotNull null
+            ModelInfoProvider.createCustomModelInfo(file.name, name, file.sizeBytes)
         }
     }
 
@@ -342,6 +368,7 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
     fun getRepository(): StorageRepository = repository
 
     fun downloadModel(model: ModelInfo) {
+        if (model.remoteUri == null) return
         val storageUri = repository.getStorageUri()
         if (storageUri == null) {
             showSnackbar("${model.name}: Storage not configured")

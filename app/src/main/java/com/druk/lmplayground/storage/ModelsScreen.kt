@@ -412,11 +412,13 @@ private fun DownloadedModelItem(
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-            Text(
-                text = model.releaseDateLabel(),
-                style = MaterialTheme.typography.bodySmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            if (model.releaseDate != null) {
+                Text(
+                    text = model.releaseDateLabel(),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
         IconButton(onClick = onDeleteClick) {
             Icon(
@@ -474,7 +476,7 @@ private fun AvailableModelItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            if (downloadProgress == null) {
+            if (downloadProgress == null && model.releaseDate != null) {
                 Text(
                     text = model.releaseDateLabel(),
                     style = MaterialTheme.typography.bodySmall,
