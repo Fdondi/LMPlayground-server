@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -277,12 +278,21 @@ class ConversationFragment : Fragment() {
                                     strokeWidth = strokeWidth
                                 )
                             }) {
-                        Messages(
-                            messages = messages,
-                            modifier = Modifier.weight(1f),
-                            scrollState = scrollState,
-                            isGenerating = isGenerating == true
-                        )
+                        if (modelInfo == null && messages.isEmpty()) {
+                            Box(
+                                modifier = Modifier.weight(1f),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                WhatsNewText()
+                            }
+                        } else {
+                            Messages(
+                                messages = messages,
+                                modifier = Modifier.weight(1f),
+                                scrollState = scrollState,
+                                isGenerating = isGenerating == true
+                            )
+                        }
                         UserInput(
                             modifier = Modifier
                                 .navigationBarsPadding()
@@ -308,7 +318,10 @@ class ConversationFragment : Fragment() {
                             // navigation bar
                             resetScroll = {
                                 scope.launch {
-                                    scrollState.animateScrollToItem(scrollState.layoutInfo.totalItemsCount- 1)
+                                    val lastIndex = scrollState.layoutInfo.totalItemsCount - 1
+                                    if (lastIndex >= 0) {
+                                        scrollState.animateScrollToItem(lastIndex)
+                                    }
                                 }
                             }
                         )

@@ -273,6 +273,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _loadedModel.postValue(null)
                 _loadedModelStatus.postValue(null)
                 _isModelReady.postValue(false)
+                _supportsThinking.postValue(false)
             }
             uiState.resetMessages()
         }
