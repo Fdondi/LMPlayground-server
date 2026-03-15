@@ -240,7 +240,7 @@ class ConversationFragment : Fragment() {
                                     modelReport = null
                                 },
                                 title = {
-                                    Text(text = "Timings")
+                                    Text(text = "Session Info")
                                 },
                                 text = {
                                     Text(

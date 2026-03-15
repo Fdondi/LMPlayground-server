@@ -28,6 +28,8 @@ class LlamaModel {
      */
     external fun getModelSize(): Long
 
+    external fun getModelReport(): String
+
     /**
      * Checks if the model's chat template supports thinking/reasoning mode.
      *

@@ -229,6 +229,41 @@ class ModelGenerationTest {
         Log.d(TAG, "Turn 2 processed:\n$processed2")
     }
 
+    @Test(timeout = 300_000)
+    fun testMultiTurnThinkingDisabled() {
+        val modelFile = findModel()
+        assumeTrue("No model file found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        val session = model.createSession()
+        this.session = session
+
+        // Turn 1
+        session.addMessage("Say hello in one short sentence", false)
+        val r1 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Turn 1 raw (${r1.length} chars):\n$r1")
+        assertTrue("Turn 1 should not be empty", r1.isNotBlank())
+
+        // Turn 2
+        session.addMessage("Now say goodbye in one short sentence", false)
+        val r2 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Turn 2 raw (${r2.length} chars):\n$r2")
+        assertTrue("Turn 2 should not be empty", r2.isNotBlank())
+
+        // Turn 3
+        session.addMessage("What was the first thing you said?", false)
+        val r3 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Turn 3 raw (${r3.length} chars):\n$r3")
+        assertTrue("Turn 3 should not be empty", r3.isNotBlank())
+
+        // The key assertion: responses should not be identical (the original bug
+        // caused the model to repeat the same response every turn)
+        assertFalse(
+            "Responses should not all be identical (indicates broken multi-turn)",
+            r1 == r2 && r2 == r3
+        )
+    }
+
     private fun findSpecificModel(nameFragment: String): File? {
         for (name in CANDIDATE_MODELS) {
             if (name.contains(nameFragment)) {

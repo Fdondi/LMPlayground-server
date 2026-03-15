@@ -233,7 +233,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     fun getReport(): String? {
-        return llamaSession?.getReport()
+        val modelReport = llamaModel?.getModelReport() ?: return null
+        val sessionReport = llamaSession?.getReport() ?: return null
+        return modelReport + "\n" + sessionReport
     }
 
     fun unloadModel() {

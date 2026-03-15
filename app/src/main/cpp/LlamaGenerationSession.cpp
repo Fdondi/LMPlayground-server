@@ -21,6 +21,7 @@
 #include <ctime>
 #include <fstream>
 #include <iostream>
+#include <iomanip>
 #include <sstream>
 #include <string>
 #include <utility>
@@ -110,7 +111,7 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
     }
 
     auto smplParams = llama_sampler_chain_default_params();
-    smplParams.no_perf = true;
+    smplParams.no_perf = false;
 
     smpl = llama_sampler_chain_init(smplParams);
     llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
@@ -162,22 +163,25 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         return common_chat_templates_apply(chat_tmpls, inputs);
     };
 
-    // The Jinja template drops thinking content from non-last assistant messages,
-    // so the re-rendered prompt is shorter than what's in the KV cache. We must
-    // clear the cache and re-process from scratch when this happens.
-    if (prev_had_thinking && prev_len > 0) {
-        LOGi("Previous turn had thinking - clearing KV cache for re-render");
-        llama_memory_clear(llama_get_memory(ctx), true);
-        prev_len = 0;
-    }
+    prev_enable_thinking = enableThinking;
 
     auto result = renderPrompt(enableThinking);
     std::string full_prompt = result.prompt;
     additional_stops = result.additional_stops;
 
-    if ((int)full_prompt.size() < prev_len) {
-        LOGe("failed to apply the chat template");
-        return 1;
+    // Check if the rendered prompt prefix matches what finalizeResponse computed.
+    // The Jinja template may render assistant content differently depending on
+    // position (e.g. Qwen3 adds <think></think> prefill to the last assistant
+    // message but strips it from earlier ones). A mismatch means the KV cache
+    // doesn't correspond to the current render, so we must clear and reprocess.
+    if (prev_len > 0) {
+        bool prefix_match = (int)full_prompt.size() >= prev_len &&
+                            full_prompt.compare(0, prev_len, prev_rendered_prompt) == 0;
+        if (!prefix_match) {
+            LOGi("Prompt prefix mismatch, clearing KV cache");
+            llama_memory_clear(llama_get_memory(ctx), true);
+            prev_len = 0;
+        }
     }
 
     std::string prompt = full_prompt.substr(prev_len);
@@ -272,10 +276,11 @@ void LlamaGenerationSession::finalizeResponse() {
     inputs.messages = messages;
     inputs.add_generation_prompt = false;
     inputs.use_jinja = true;
-    inputs.enable_thinking = true;
+    inputs.enable_thinking = prev_enable_thinking;
 
     auto result = common_chat_templates_apply(chat_tmpls, inputs);
-    prev_len = (int)result.prompt.size();
+    prev_rendered_prompt = result.prompt;
+    prev_len = (int)prev_rendered_prompt.size();
 }
 
 int LlamaGenerationSession::generate(const ResponseCallback& callback) {
@@ -339,11 +344,33 @@ void LlamaGenerationSession::printReport() {
 
 std::string LlamaGenerationSession::getReport() {
     auto timings = llama_perf_context(ctx);
+    auto sampler_timings = llama_perf_sampler(smpl);
+
+    int n_ctx_total = llama_n_ctx(ctx);
+    int n_ctx_used = (int)llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
+
     std::ostringstream report;
-    report << "load time = " << timings.t_load_ms << " ms\n\n";
-    report << "prompt eval time = " << timings.t_p_eval_ms << " ms / " << timings.n_p_eval << " tokens\n";
-    report << "(" << 1e3 / timings.t_p_eval_ms * timings.n_p_eval << " tokens per second)\n\n";
-    report << "eval time = " << timings.t_eval_ms << " ms / " << timings.n_eval << " runs\n";
-    report << "(" << 1e3 / timings.t_eval_ms * timings.n_eval << " tokens per second)\n\n";
+
+    report << "Session\n";
+    report << "  Context: " << n_ctx_used << " / " << n_ctx_total << " tokens\n";
+    report << "  Prompt tokens: " << timings.n_p_eval << "\n";
+    report << "  Generated tokens: " << timings.n_eval << "\n";
+    report << "\n";
+
+    report << "Performance\n";
+    report << "  Load time: " << std::fixed << std::setprecision(0) << timings.t_load_ms << " ms\n";
+    if (timings.n_p_eval > 0 && timings.t_p_eval_ms > 0) {
+        report << "  Prompt eval: " << timings.n_p_eval << " tokens, "
+               << std::setprecision(1) << (1e3 / timings.t_p_eval_ms * timings.n_p_eval) << " t/s\n";
+    }
+    if (timings.n_eval > 0 && timings.t_eval_ms > 0) {
+        report << "  Generation: " << timings.n_eval << " tokens, "
+               << std::setprecision(1) << (1e3 / timings.t_eval_ms * timings.n_eval) << " t/s\n";
+    }
+    if (sampler_timings.n_sample > 0 && sampler_timings.t_sample_ms > 0) {
+        report << "  Sampling: " << sampler_timings.n_sample << " tokens, "
+               << std::setprecision(1) << (1e3 / sampler_timings.t_sample_ms * sampler_timings.n_sample) << " t/s\n";
+    }
+
     return report.str();
 }

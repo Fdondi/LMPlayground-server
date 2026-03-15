@@ -19,6 +19,7 @@
 #include <cstring>
 #include <ctime>
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -67,6 +68,34 @@ bool LlamaModel::supportsThinking() {
         return false;
     }
     return common_chat_templates_support_enable_thinking(chat_tmpls.get());
+}
+
+std::string LlamaModel::getModelReport() {
+    if (model == nullptr) {
+        return "";
+    }
+
+    char desc[256];
+    llama_model_desc(model, desc, sizeof(desc));
+
+    uint64_t n_params = llama_model_n_params(model);
+    int n_ctx_train = llama_model_n_ctx_train(model);
+
+    std::ostringstream report;
+    report << "Model\n";
+    report << "  Architecture: " << desc << "\n";
+
+    if (n_params >= 1000000000ULL) {
+        report << "  Parameters: " << std::fixed << std::setprecision(2)
+               << (n_params / 1e9) << "B\n";
+    } else {
+        report << "  Parameters: " << std::fixed << std::setprecision(0)
+               << (n_params / 1e6) << "M\n";
+    }
+
+    report << "  Training context: " << n_ctx_train << "\n";
+
+    return report.str();
 }
 
 void LlamaModel::unloadModel() {

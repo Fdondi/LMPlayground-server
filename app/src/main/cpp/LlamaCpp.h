@@ -34,6 +34,8 @@ private:
     llama_sampler * smpl = nullptr;
     const struct common_chat_templates * chat_tmpls = nullptr;
     bool prev_had_thinking = false;
+    bool prev_enable_thinking = false;
+    std::string prev_rendered_prompt;
     std::vector<common_chat_msg> messages;
     std::vector<std::string> additional_stops;
     int prev_len = 0;
@@ -55,6 +57,8 @@ public:
                    void* progress_callback_user_data);
 
     uint64_t getModelSize();
+
+    std::string getModelReport();
 
     bool supportsThinking();
 

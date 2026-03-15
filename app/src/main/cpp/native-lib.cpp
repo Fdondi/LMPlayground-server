@@ -152,6 +152,19 @@ Java_com_druk_llamacpp_LlamaModel_getModelSize(JNIEnv *env, jobject thiz) {
 }
 
 extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_druk_llamacpp_LlamaModel_getModelReport(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return env->NewStringUTF("");
+    }
+    auto report = model->getModelReport();
+    return env->NewStringUTF(report.c_str());
+}
+
+extern "C"
 JNIEXPORT jboolean JNICALL
 Java_com_druk_llamacpp_LlamaModel_supportsThinking(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
