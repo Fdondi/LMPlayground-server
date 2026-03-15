@@ -10,14 +10,14 @@ object ModelInfoProvider {
      * Static list of all available models
      */
     val allModels: List<ModelInfo> = listOf(
-//        ModelInfo(
-//            name = "Qwen 3 0.6B",
-//            filename = "Qwen3-0.6B-Q4_K_M.gguf",
-//            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf"),
-//            releaseDate = LocalDate.parse("2025-04-29"),
-//            description = "Alibaba \u00B7 Lightweight chat model \u00B7 484Mb",
-//            logoRes = R.drawable.logo_qwen
-//        ),
+        ModelInfo(
+            name = "Qwen 3 0.6B",
+            filename = "Qwen3-0.6B-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2025-04-29"),
+            description = "Alibaba \u00B7 Lightweight chat model \u00B7 484Mb",
+            logoRes = R.drawable.logo_qwen
+        ),
         ModelInfo(
             name = "Qwen 3 1.7B",
             filename = "Qwen3-1.7B-Q4_K_M.gguf",
