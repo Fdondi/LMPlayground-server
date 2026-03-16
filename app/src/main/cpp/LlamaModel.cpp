@@ -32,6 +32,9 @@
 #include <android/log.h>
 #include <fcntl.h>
 
+#define TAG "llama-android.cpp"
+#define LOGi(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
+
 void LlamaModel::loadModel(const std::string &modelPath,
                            int32_t n_gpu_layers,
                            llama_progress_callback progress_callback,
@@ -50,12 +53,37 @@ void LlamaModel::loadModel(const std::string &modelPath,
     chat_tmpls = common_chat_templates_init(model, "");
 }
 
+void LlamaModel::loadMmprojModel(const std::string &mmprojPath) {
+    if (model == nullptr) {
+        LOG_ERR("%s: text model not loaded yet\n", __func__);
+        return;
+    }
+
+    mtmd_context_params params = mtmd_context_params_default();
+    params.use_gpu = false;
+    params.n_threads = std::max(1, std::min(8, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
+    params.warmup = false;
+    // Limit image tokens for faster processing on mobile devices
+    params.image_max_tokens = 384;
+
+    mtmd_ctx = mtmd_init_from_file(mmprojPath.c_str(), model, params);
+    if (mtmd_ctx == nullptr) {
+        LOG_ERR("%s: failed to load mmproj model '%s'\n", __func__, mmprojPath.c_str());
+    } else {
+        LOGi("Loaded mmproj model, vision support: %d", mtmd_support_vision(mtmd_ctx));
+    }
+}
+
+bool LlamaModel::supportsVision() {
+    return mtmd_ctx != nullptr && mtmd_support_vision(mtmd_ctx);
+}
+
 LlamaGenerationSession* LlamaModel::createGenerationSession(const SamplerParams &params) {
     if (model == nullptr) {
         return nullptr;
     }
     auto *session = new LlamaGenerationSession();
-    session->init(model, chat_tmpls.get(), params);
+    session->init(model, chat_tmpls.get(), mtmd_ctx, params);
     return session;
 }
 
@@ -109,6 +137,10 @@ std::string LlamaModel::getModelReport() {
 }
 
 void LlamaModel::unloadModel() {
+    if (mtmd_ctx != nullptr) {
+        mtmd_free(mtmd_ctx);
+        mtmd_ctx = nullptr;
+    }
     chat_tmpls.reset();
     if (model != nullptr) {
         llama_model_free(model);

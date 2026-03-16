@@ -8,6 +8,8 @@
 #include "common.h"
 #include "chat.h"
 #include "sampling.h"
+#include "mtmd.h"
+#include "mtmd-helper.h"
 
 struct SamplerParams {
     int n_ctx;
@@ -28,13 +30,16 @@ public:
 
     ~LlamaGenerationSession();
 
-    void init(llama_model *model, const struct common_chat_templates *chat_tmpls, const SamplerParams &params);
+    void init(llama_model *model, const struct common_chat_templates *chat_tmpls,
+              mtmd_context *mtmd_ctx, const SamplerParams &params);
 
     void printReport();
 
     int generate(const ResponseCallback& callback);
 
     int addMessage(const char *string, bool enableThinking);
+
+    void setImageData(const unsigned char *data, size_t len);
 
     std::string getReport();
 
@@ -46,6 +51,7 @@ private:
     llama_context * ctx = nullptr;
     llama_sampler * smpl = nullptr;
     const struct common_chat_templates * chat_tmpls = nullptr;
+    mtmd_context * mtmd_ctx = nullptr;
     bool prev_had_thinking = false;
     bool prev_enable_thinking = false;
     std::string prev_rendered_prompt;
@@ -60,6 +66,8 @@ private:
     bool parser_initialized = false;
     SamplerParams sampler_params;
     bool budget_sampler_added = false;
+    std::vector<unsigned char> pending_image_data;
+    bool skip_first_decode = false;
 };
 
 class LlamaModel {
@@ -74,17 +82,22 @@ public:
                    llama_progress_callback progress_callback,
                    void* progress_callback_user_data);
 
+    void loadMmprojModel(const std::string &mmprojPath);
+
     uint64_t getModelSize();
 
     std::string getModelReport();
 
     bool supportsThinking();
 
+    bool supportsVision();
+
     void unloadModel();
 
 private:
     llama_model *model = nullptr;
     common_chat_templates_ptr chat_tmpls;
+    mtmd_context *mtmd_ctx = nullptr;
 };
 
 #endif //LMPLAYGROUND_LLAMACPP_H

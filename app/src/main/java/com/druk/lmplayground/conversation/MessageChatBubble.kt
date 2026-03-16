@@ -136,6 +136,16 @@ fun ChatItemBubble(
             )
         }
 
+        message.imageUri?.let { uri ->
+            Spacer(modifier = Modifier.height(4.dp))
+            coil.compose.AsyncImage(
+                model = uri,
+                contentDescription = stringResource(id = R.string.attached_image),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.size(160.dp)
+            )
+        }
+
         if (showActions) {
             Spacer(modifier = Modifier.height(4.dp))
             Row(

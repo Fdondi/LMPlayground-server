@@ -86,7 +86,13 @@ LlamaGenerationSession::~LlamaGenerationSession() {
     }
 }
 
-void LlamaGenerationSession::init(llama_model *model, const struct common_chat_templates *tmpls, const SamplerParams &params) {
+void LlamaGenerationSession::setImageData(const unsigned char *data, size_t len) {
+    pending_image_data.assign(data, data + len);
+}
+
+void LlamaGenerationSession::init(llama_model *model, const struct common_chat_templates *tmpls,
+                                   mtmd_context *mtmd, const SamplerParams &params) {
+    mtmd_ctx = mtmd;
 
     vocab = llama_model_get_vocab(model);
     chat_tmpls = tmpls;
@@ -175,9 +181,16 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         return 1;
     }
 
+    bool has_image = mtmd_ctx != nullptr && !pending_image_data.empty();
+
     common_chat_msg user_msg;
     user_msg.role = "user";
-    user_msg.content = string;
+    if (has_image) {
+        // Prepend media marker so the Jinja template places it correctly
+        user_msg.content = std::string(mtmd_default_marker()) + "\n" + string;
+    } else {
+        user_msg.content = string;
+    }
     messages.push_back(user_msg);
 
     auto renderPrompt = [&](bool enableThinking) -> common_chat_params {
@@ -209,11 +222,86 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     std::string full_prompt = result.prompt;
     additional_stops = result.additional_stops;
 
+    response.clear();
+    skip_first_decode = false;
+
+    // Vision path: use mtmd to tokenize and eval the full prompt with image
+    if (has_image) {
+        LOGi("Vision path: processing image (%zu bytes) with prompt", pending_image_data.size());
+
+        // Strip media markers from older user messages — we can't re-encode old images,
+        // and mtmd_tokenize requires marker count == bitmap count
+        std::string marker = mtmd_default_marker();
+        for (size_t i = 0; i + 1 < messages.size(); i++) {
+            if (messages[i].role == "user") {
+                size_t pos;
+                while ((pos = messages[i].content.find(marker)) != std::string::npos) {
+                    // Remove marker and trailing newline
+                    size_t end = pos + marker.size();
+                    if (end < messages[i].content.size() && messages[i].content[end] == '\n') end++;
+                    messages[i].content.erase(pos, end - pos);
+                }
+            }
+        }
+
+        // Re-render prompt after stripping old markers
+        result = renderPrompt(enableThinking);
+        full_prompt = result.prompt;
+        additional_stops = result.additional_stops;
+
+        // Always clear KV cache for vision — we re-eval the full prompt
+        llama_memory_clear(llama_get_memory(ctx), true);
+        prev_len = 0;
+
+        // Create bitmap from image data
+        mtmd_bitmap *bitmap = mtmd_helper_bitmap_init_from_buf(
+            mtmd_ctx, pending_image_data.data(), pending_image_data.size());
+        if (bitmap == nullptr) {
+            LOGe("Failed to create bitmap from image data");
+            pending_image_data.clear();
+            return 1;
+        }
+
+        // Tokenize prompt with image
+        mtmd_input_chunks *chunks = mtmd_input_chunks_init();
+        mtmd_input_text text;
+        text.text = full_prompt.c_str();
+        text.add_special = true;
+        text.parse_special = true;
+        const mtmd_bitmap *bitmaps[] = { bitmap };
+
+        int32_t tokenize_result = mtmd_tokenize(mtmd_ctx, chunks, &text, bitmaps, 1);
+        mtmd_bitmap_free(bitmap);
+        pending_image_data.clear();
+
+        if (tokenize_result != 0) {
+            LOGe("Failed to tokenize vision prompt (error: %d)", tokenize_result);
+            mtmd_input_chunks_free(chunks);
+            return 1;
+        }
+
+        // Eval all chunks (text + image)
+        int n_batch = llama_n_batch(ctx);
+        llama_pos new_n_past = 0;
+        int32_t eval_result = mtmd_helper_eval_chunks(
+            mtmd_ctx, ctx, chunks, 0, 0, n_batch, true, &new_n_past);
+
+        mtmd_input_chunks_free(chunks);
+
+        if (eval_result != 0) {
+            LOGe("Failed to eval vision chunks (error: %d)", eval_result);
+            return 1;
+        }
+
+        LOGi("Vision eval complete, n_past = %d", (int)new_n_past);
+
+        // After mtmd eval, logits are ready — skip first decode in generate()
+        skip_first_decode = true;
+        return 0;
+    }
+
+    // Text-only path (unchanged)
     // Check if the rendered prompt prefix matches what finalizeResponse computed.
-    // The Jinja template may render assistant content differently depending on
-    // position (e.g. Qwen3 adds <think></think> prefill to the last assistant
-    // message but strips it from earlier ones). A mismatch means the KV cache
-    // doesn't correspond to the current render, so we must clear and reprocess.
     if (prev_len > 0) {
         bool prefix_match = (int)full_prompt.size() >= prev_len &&
                             full_prompt.compare(0, prev_len, prev_rendered_prompt) == 0;
@@ -225,7 +313,6 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     }
 
     std::string prompt = full_prompt.substr(prev_len);
-    response.clear();
 
     bool is_first = (prev_len == 0);
     int n_ctx = llama_n_ctx(ctx);
@@ -280,7 +367,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         }
     }
 
-    // Stage 2: drop oldest user+assistant pairs
+    // Stage 2: drop oldest user+assistant pairs (prefer dropping image turns first)
     while (n_ctx_used + n_prompt_tokens > n_ctx && messages.size() > 1) {
         LOGi("Still overflowing (%d + %d > %d), dropping oldest turn (%zu messages remain)",
              n_ctx_used, n_prompt_tokens, n_ctx, messages.size());
@@ -449,32 +536,37 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         return 1;
     }
 
-    int n_ctx = llama_n_ctx(ctx);
-    int n_ctx_used = llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
-    if (n_ctx_used + batch.n_tokens > n_ctx) {
-        LOGe("context size exceeded: n_ctx_used = %d, batch.n_tokens = %d, n_ctx = %d", n_ctx_used, batch.n_tokens, n_ctx);
-        finalizeResponse();
-        return 1;
-    }
-
-    // Process prompt in chunks of n_batch to avoid exceeding the batch limit.
-    // After replayHistory or context compaction the prompt can be much larger
-    // than n_batch since the entire conversation is re-tokenized.
-    int n_batch_limit = llama_n_batch(ctx);
-    while (batch.n_tokens > n_batch_limit) {
-        llama_batch chunk = llama_batch_get_one(batch.token, n_batch_limit);
-        if (llama_decode(ctx, chunk)) {
-            LOGe("failed to decode prompt chunk");
+    // After vision eval, logits are already computed — skip to sampling
+    if (skip_first_decode) {
+        skip_first_decode = false;
+    } else {
+        int n_ctx = llama_n_ctx(ctx);
+        int n_ctx_used = llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
+        if (n_ctx_used + batch.n_tokens > n_ctx) {
+            LOGe("context size exceeded: n_ctx_used = %d, batch.n_tokens = %d, n_ctx = %d", n_ctx_used, batch.n_tokens, n_ctx);
             finalizeResponse();
             return 1;
         }
-        batch = llama_batch_get_one(batch.token + n_batch_limit, batch.n_tokens - n_batch_limit);
-    }
 
-    if (llama_decode(ctx, batch)) {
-        LOGe("failed to decode the batch");
-        finalizeResponse();
-        return 1;
+        // Process prompt in chunks of n_batch to avoid exceeding the batch limit.
+        // After replayHistory or context compaction the prompt can be much larger
+        // than n_batch since the entire conversation is re-tokenized.
+        int n_batch_limit = llama_n_batch(ctx);
+        while (batch.n_tokens > n_batch_limit) {
+            llama_batch chunk = llama_batch_get_one(batch.token, n_batch_limit);
+            if (llama_decode(ctx, chunk)) {
+                LOGe("failed to decode prompt chunk");
+                finalizeResponse();
+                return 1;
+            }
+            batch = llama_batch_get_one(batch.token + n_batch_limit, batch.n_tokens - n_batch_limit);
+        }
+
+        if (llama_decode(ctx, batch)) {
+            LOGe("failed to decode the batch");
+            finalizeResponse();
+            return 1;
+        }
     }
 
     // Reset sampler and feed prompt tokens so the reasoning budget sampler

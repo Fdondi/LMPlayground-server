@@ -182,6 +182,32 @@ Java_com_druk_llamacpp_LlamaModel_supportsThinking(JNIEnv *env, jobject thiz) {
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_druk_llamacpp_LlamaModel_loadMmprojModel(JNIEnv *env, jobject thiz, jstring mmprojPath) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return;
+    }
+    const char* utfPath = env->GetStringUTFChars(mmprojPath, nullptr);
+    model->loadMmprojModel(utfPath);
+    env->ReleaseStringUTFChars(mmprojPath, utfPath);
+}
+
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_druk_llamacpp_LlamaModel_supportsVision(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return JNI_FALSE;
+    }
+    return model->supportsVision() ? JNI_TRUE : JNI_FALSE;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_druk_llamacpp_LlamaModel_unloadModel(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
@@ -271,6 +297,24 @@ extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_
                 }
             }
     );
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_druk_llamacpp_LlamaGenerationSession_setImageData(JNIEnv *env,
+                                                            jobject thiz,
+                                                            jbyteArray data) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return;
+    }
+
+    jsize len = env->GetArrayLength(data);
+    jbyte* bytes = env->GetByteArrayElements(data, nullptr);
+    session->setImageData(reinterpret_cast<const unsigned char*>(bytes), len);
+    env->ReleaseByteArrayElements(data, bytes, JNI_ABORT);
 }
 
 extern "C"

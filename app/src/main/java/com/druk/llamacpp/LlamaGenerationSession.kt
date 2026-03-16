@@ -32,6 +32,14 @@ class LlamaGenerationSession {
     external fun addMessage(message: String, enableThinking: Boolean)
 
     /**
+     * Sets image data to be included with the next addMessage call.
+     * Must be called before addMessage when sending an image.
+     *
+     * @param imageData Raw image bytes (JPEG, PNG, etc.)
+     */
+    external fun setImageData(imageData: ByteArray)
+
+    /**
      * Prints a report about the current state of the generation session to the console.
      */
     external fun printReport()

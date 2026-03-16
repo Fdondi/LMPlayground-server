@@ -1,5 +1,6 @@
 package com.druk.lmplayground.conversation
 
+import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.Orientation
@@ -12,11 +13,16 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
@@ -39,7 +45,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.focus.FocusRequester
@@ -60,6 +68,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
 import com.druk.lmplayground.R
 
 enum class UserInputStatus {
@@ -83,6 +92,10 @@ fun UserInput(
     supportsThinking: Boolean = false,
     thinkingEnabled: Boolean = true,
     onThinkingToggle: () -> Unit = {},
+    supportsVision: Boolean = false,
+    attachedImageUri: Uri? = null,
+    onAttachImage: () -> Unit = {},
+    onClearImage: () -> Unit = {},
     onSwipeUp: () -> Unit = {},
     onMessageSent: (String) -> Unit,
     onCancelClicked: () -> Unit = {},
@@ -116,12 +129,44 @@ fun UserInput(
                 }
             )
         ) {
+            // Image preview row
+            if (attachedImageUri != null) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp, vertical = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        tonalElevation = 4.dp,
+                        modifier = Modifier.size(64.dp)
+                    ) {
+                        AsyncImage(
+                            model = attachedImageUri,
+                            contentDescription = "Attached image",
+                            modifier = Modifier.size(64.dp)
+                        )
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    IconButton(onClick = onClearImage, modifier = Modifier.size(24.dp)) {
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = "Remove image",
+                            modifier = Modifier.size(16.dp)
+                        )
+                    }
+                }
+            }
+
             UserInputText(
                 status,
                 focusRequester = focusRequester,
                 supportsThinking = supportsThinking,
                 thinkingEnabled = thinkingEnabled,
                 onThinkingToggle = onThinkingToggle,
+                supportsVision = supportsVision,
+                onAttachImage = onAttachImage,
                 textFieldValue = textState,
                 onTextChanged = { textState = it },
                 // Only show the keyboard if there's no input selector and text field has focus
@@ -183,6 +228,8 @@ private fun UserInputText(
     supportsThinking: Boolean = false,
     thinkingEnabled: Boolean = true,
     onThinkingToggle: () -> Unit = {},
+    supportsVision: Boolean = false,
+    onAttachImage: () -> Unit = {},
     keyboardType: KeyboardType = KeyboardType.Text,
     onTextChanged: (TextFieldValue) -> Unit,
     textFieldValue: TextFieldValue,
@@ -193,7 +240,8 @@ private fun UserInputText(
     onCancelClicked: () -> Unit
 ) {
     val a11ylabel = stringResource(id = R.string.textfield_desc)
-    val textStartPadding = if (supportsThinking) 4.dp else 32.dp
+    val hasLeftButtons = supportsThinking || supportsVision
+    val textStartPadding = if (hasLeftButtons) 4.dp else 32.dp
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -202,12 +250,27 @@ private fun UserInputText(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        if (supportsVision) {
+            val isDisabled = status == UserInputStatus.GENERATING
+            IconButton(
+                onClick = onAttachImage,
+                enabled = !isDisabled,
+                modifier = Modifier.padding(start = 4.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Image,
+                    contentDescription = "Attach image",
+                    modifier = if (isDisabled) Modifier.alpha(0.8f) else Modifier,
+                    tint = LocalContentColor.current
+                )
+            }
+        }
         if (supportsThinking) {
             val isDisabled = status == UserInputStatus.GENERATING
             IconButton(
                 onClick = onThinkingToggle,
                 enabled = !isDisabled,
-                modifier = Modifier.padding(start = 4.dp)
+                modifier = Modifier.padding(start = if (supportsVision) 0.dp else 4.dp)
             ) {
                 Icon(
                     imageVector = if (thinkingEnabled) Icons.Filled.Lightbulb else Icons.Outlined.Lightbulb,

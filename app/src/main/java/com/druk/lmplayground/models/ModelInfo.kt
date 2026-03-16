@@ -17,9 +17,12 @@ data class ModelInfo(
     val remoteUri: Uri? = null,
     val releaseDate: LocalDate? = null,
     val description: String,
-    @param:DrawableRes val logoRes: Int = 0
+    @param:DrawableRes val logoRes: Int = 0,
+    val mmprojFilename: String? = null,
+    val mmprojUri: Uri? = null
 ) {
     val isCustom: Boolean get() = remoteUri == null
+    val isVision: Boolean get() = mmprojFilename != null
 }
 
 /**

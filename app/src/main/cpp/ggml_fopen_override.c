@@ -43,7 +43,7 @@ FILE * ggml_fopen(const char * fname, const char * mode) {
                 return NULL;
             }
             LOGI("dup(%d) = %d", original_fd, fd_copy);
-            
+
             // Use fdopen on the COPY
             // fdopen takes ownership of fd_copy - it will be closed when fclose() is called
             FILE * file = fdopen(fd_copy, mode);

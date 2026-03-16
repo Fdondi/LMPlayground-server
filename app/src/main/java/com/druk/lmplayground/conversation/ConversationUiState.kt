@@ -1,5 +1,6 @@
 package com.druk.lmplayground.conversation
 
+import android.net.Uri
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.toMutableStateList
@@ -83,6 +84,7 @@ data class Message(
     val author: String,
     val content: String,
     val image: Int? = null,
+    val imageUri: Uri? = null,
     val thinkingDurationSeconds: Int = 0,
     val thinkingStartTimeMs: Long = 0,
     val thinkingTokens: Int = 0,

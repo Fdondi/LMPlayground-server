@@ -275,6 +275,115 @@ class ModelGenerationTest {
         return null
     }
 
+    private val CANDIDATE_MMPROJ = listOf(
+        "mmproj-Qwen_Qwen3.5-0.8B-f16.gguf",
+        "mmproj-Qwen_Qwen3.5-2B-f16.gguf",
+        "mmproj-Qwen_Qwen3.5-4B-f16.gguf"
+    )
+
+    private fun findMmprojFile(): File? {
+        for (name in CANDIDATE_MMPROJ) {
+            val file = File(MODELS_PATH, name)
+            if (file.exists() && file.canRead()) return file
+        }
+        return null
+    }
+
+    @Test(timeout = 180_000)
+    fun testVisionModelSupportsVision() {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojFile()
+        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+
+        val model = loadModel(modelFile!!)
+        model.loadMmprojModel(mmprojFile!!.absolutePath)
+        assertTrue("Model with mmproj should support vision", model.supportsVision())
+    }
+
+    @Test(timeout = 300_000)
+    fun testVisionGeneration() {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojFile()
+        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+        val imageFile = File(MODELS_PATH, "test_image.png")
+        assumeTrue("Test image not found at ${imageFile.absolutePath}", imageFile.exists())
+
+        val model = loadModel(modelFile!!)
+        model.loadMmprojModel(mmprojFile!!.absolutePath)
+        assertTrue("Model should support vision", model.supportsVision())
+
+        val session = model.createSession()
+        this.session = session
+
+        val imageBytes = imageFile.readBytes()
+        Log.d(TAG, "Image size: ${imageBytes.size} bytes")
+        session.setImageData(imageBytes)
+        session.addMessage("What color is this image? Answer in one word.", false)
+
+        val raw = generateFullResponse(session, maxTokens = 128, timeoutMs = 120_000)
+        Log.d(TAG, "Vision response (${raw.length} chars):\n$raw")
+        assertTrue("Vision response should not be empty", raw.isNotBlank())
+    }
+
+    @Test(timeout = 300_000)
+    fun testVisionModelTextOnly() {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojFile()
+        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+
+        val model = loadModel(modelFile!!)
+        model.loadMmprojModel(mmprojFile!!.absolutePath)
+
+        val session = model.createSession()
+        this.session = session
+
+        // Text-only message to a vision model should work normally
+        session.addMessage("Say hello in one sentence", false)
+        val raw = generateFullResponse(session, maxTokens = 128, timeoutMs = 60_000)
+        Log.d(TAG, "Vision model text-only response (${raw.length} chars):\n$raw")
+        assertTrue("Text-only response on vision model should not be empty", raw.isNotBlank())
+    }
+
+    @Test(timeout = 300_000)
+    fun testVisionMultiTurn() {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojFile()
+        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+        val imageFile = File(MODELS_PATH, "test_image.png")
+        assumeTrue("Test image not found", imageFile.exists())
+
+        val model = loadModel(modelFile!!)
+        model.loadMmprojModel(mmprojFile!!.absolutePath)
+
+        val session = model.createSession()
+        this.session = session
+
+        // Turn 1: image + text
+        val imageBytes = imageFile.readBytes()
+        session.setImageData(imageBytes)
+        session.addMessage("What is this image?", false)
+        val r1 = generateFullResponse(session, maxTokens = 64, timeoutMs = 120_000)
+        Log.d(TAG, "Vision multi-turn T1 (${r1.length} chars):\n$r1")
+        assertTrue("Turn 1 should not be empty", r1.isNotBlank())
+
+        // Turn 2: text-only follow-up
+        session.addMessage("Describe it in more detail", false)
+        val r2 = generateFullResponse(session, maxTokens = 64, timeoutMs = 60_000)
+        Log.d(TAG, "Vision multi-turn T2 (${r2.length} chars):\n$r2")
+        assertTrue("Turn 2 should not be empty", r2.isNotBlank())
+
+        // Turn 3: new image
+        session.setImageData(imageBytes)
+        session.addMessage("What color is this?", false)
+        val r3 = generateFullResponse(session, maxTokens = 64, timeoutMs = 120_000)
+        Log.d(TAG, "Vision multi-turn T3 (${r3.length} chars):\n$r3")
+        assertTrue("Turn 3 (second image) should not be empty", r3.isNotBlank())
+    }
+
     @Test(timeout = 180_000)
     fun testQwen35ThinkingEnabled() {
         val modelFile = findSpecificModel("Qwen3.5")

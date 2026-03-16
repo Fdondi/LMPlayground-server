@@ -27,10 +27,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 import java.util.UUID
 import kotlin.math.ln
+import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
 
@@ -55,6 +60,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _generationParams = MutableLiveData(GenerationParams())
     private val _maxContextSize = MutableLiveData(4096)
     private val _sessionModelHint = MutableLiveData<Pair<String, String>?>(null) // (modelName, modelFilename)
+    private val _supportsVision = MutableLiveData(false)
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -70,6 +76,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val generationParams: LiveData<GenerationParams> = _generationParams
     val maxContextSize: LiveData<Int> = _maxContextSize
     val sessionModelHint: LiveData<Pair<String, String>?> = _sessionModelHint
+    val supportsVision: LiveData<Boolean> = _supportsVision
 
     val uiState = ConversationUiState(
         initialMessages = emptyList()
@@ -155,6 +162,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _loadedModel.postValue(modelInfo)
                 _thinkingEnabled.postValue(false)
                 _supportsThinking.postValue(false)
+                _supportsVision.postValue(false)
                 _loadedModelStatus.postValue("Loading...")
 
                 val fileHandle = storageRepository.openModelFile(modelInfo.filename)
@@ -190,6 +198,24 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     }
                 )
                 progressJob.cancel()
+
+                // Load mmproj for vision models
+                // clip.cpp uses std::ifstream which needs a real filesystem path,
+                // so we copy the mmproj to a temp file in app-private storage.
+                if (modelInfo.mmprojFilename != null) {
+                    _loadedModelStatus.postValue("Loading vision...")
+                    val mmprojTempFile = java.io.File(app.cacheDir, "mmproj_temp.gguf")
+                    val copied = storageRepository.copyModelToFile(modelInfo.mmprojFilename, mmprojTempFile)
+                    if (copied) {
+                        android.util.Log.d("ConversationVM", "Loading mmproj from ${mmprojTempFile.absolutePath}")
+                        llamaModel.loadMmprojModel(mmprojTempFile.absolutePath)
+                        mmprojTempFile.delete()
+                        android.util.Log.d("ConversationVM", "mmproj loaded, supportsVision=${llamaModel.supportsVision()}")
+                    } else {
+                        android.util.Log.d("ConversationVM", "mmproj file not found: ${modelInfo.mmprojFilename}")
+                    }
+                }
+
                 val modelSize = llamaModel.getModelSize()
                 val modelDescription = Formatter.formatFileSize(app, modelSize)
                 val nCtxTrain = llamaModel.getContextTrainSize()
@@ -211,6 +237,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 this@ConversationViewModel.llamaModel = llamaModel
                 this@ConversationViewModel.llamaSession = llamaSession
                 _supportsThinking.postValue(llamaModel.supportsThinking())
+                _supportsVision.postValue(llamaModel.supportsVision())
                 _modelLoadingProgress.postValue(0f)
                 _loadedModelStatus.postValue(modelDescription)
                 _isModelReady.postValue(true)
@@ -273,6 +300,28 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             params.seed,
             params.thinkingBudget
         )
+    }
+
+    /**
+     * Copy the picked image to app cache so it persists after the picker URI expires.
+     * Returns a content URI via FileProvider so external apps can also access it.
+     */
+    private fun cacheImage(sourceUri: Uri): Uri? {
+        return try {
+            val cacheDir = java.io.File(app.cacheDir, "chat_images")
+            cacheDir.mkdirs()
+            val destFile = java.io.File(cacheDir, "img_${System.currentTimeMillis()}.jpg")
+            app.contentResolver.openInputStream(sourceUri)?.use { input ->
+                destFile.outputStream().use { output ->
+                    input.copyTo(output)
+                }
+            }
+            androidx.core.content.FileProvider.getUriForFile(
+                app, "${app.packageName}.fileprovider", destFile
+            )
+        } catch (e: Exception) {
+            null
+        }
     }
 
     @MainThread
@@ -345,10 +394,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     @MainThread
-    fun addMessage(message: Message) {
+    fun addMessage(message: Message, imageUri: Uri? = null) {
+        // Cache the image so it persists beyond the picker URI lifetime
+        val cachedImageUri = imageUri?.let { cacheImage(it) }
+        val userMessage = if (cachedImageUri != null) message.copy(imageUri = cachedImageUri) else message
+
         val enableThinking = _thinkingEnabled.value == true
         Snapshot.withMutableSnapshot {
-            uiState.addMessage(message)
+            uiState.addMessage(userMessage)
             val now = System.currentTimeMillis()
             uiState.addMessage(
                 Message(
@@ -368,6 +421,24 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
             withContext(Dispatchers.Default) {
                 val llamaSession = llamaSession ?: return@withContext
+
+                // Send image data to native layer before addMessage
+                if (imageUri != null) {
+                    try {
+                        val imageBytes = withContext(Dispatchers.IO) {
+                            resizeImageForVision(imageUri)
+                        }
+                        if (imageBytes != null) {
+                            android.util.Log.d("ConversationVM", "Image loaded: ${imageBytes.size} bytes")
+                            llamaSession.setImageData(imageBytes)
+                        } else {
+                            android.util.Log.e("ConversationVM", "Failed to read image from $imageUri")
+                        }
+                    } catch (e: Exception) {
+                        android.util.Log.e("ConversationVM", "Error reading image: ${e.message}")
+                    }
+                }
+
                 llamaSession.addMessage(message.content, enableThinking)
 
                 val callback = object: LlamaGenerationCallback {
@@ -632,8 +703,52 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _loadedModelStatus.postValue(null)
                 _isModelReady.postValue(false)
                 _supportsThinking.postValue(false)
+                _supportsVision.postValue(false)
             }
         }
+    }
+
+    private fun resizeImageForVision(uri: Uri): ByteArray? {
+        val inputStream = app.contentResolver.openInputStream(uri) ?: return null
+
+        // Decode bounds first
+        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        val boundsStream = app.contentResolver.openInputStream(uri) ?: return null
+        BitmapFactory.decodeStream(boundsStream, null, options)
+        boundsStream.close()
+
+        val maxDimension = 768
+        val origWidth = options.outWidth
+        val origHeight = options.outHeight
+        val scaleFactor = if (max(origWidth, origHeight) > maxDimension) {
+            maxDimension.toFloat() / max(origWidth, origHeight)
+        } else {
+            1f
+        }
+
+        // Subsample for memory efficiency
+        options.inJustDecodeBounds = false
+        options.inSampleSize = (1f / scaleFactor).toInt().coerceAtLeast(1)
+
+        val bitmap = BitmapFactory.decodeStream(inputStream, null, options)
+        inputStream.close()
+        if (bitmap == null) return null
+
+        // Scale to exact target if needed
+        val targetW = (origWidth * scaleFactor).toInt().coerceAtLeast(1)
+        val targetH = (origHeight * scaleFactor).toInt().coerceAtLeast(1)
+        val scaled = if (bitmap.width != targetW || bitmap.height != targetH) {
+            val s = Bitmap.createScaledBitmap(bitmap, targetW, targetH, true)
+            bitmap.recycle()
+            s
+        } else {
+            bitmap
+        }
+
+        val out = ByteArrayOutputStream()
+        scaled.compress(Bitmap.CompressFormat.JPEG, 85, out)
+        scaled.recycle()
+        return out.toByteArray()
     }
 
     fun resetModelList() {

@@ -1,5 +1,6 @@
 package com.druk.lmplayground.conversation
 
+import android.net.Uri
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
@@ -39,7 +40,8 @@ fun Messages(
     sessionModelHint: Pair<String, String>? = null,
     onSessionModelHintClick: ((String) -> Unit)? = null,
     onSessionModelHintDismiss: (() -> Unit)? = null,
-    onTokenCountClicked: (() -> Unit)? = null
+    onTokenCountClicked: (() -> Unit)? = null,
+    onImageClick: (Uri) -> Unit = {}
 ) {
     var piningBottom by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -65,7 +67,8 @@ fun Messages(
                     msg = content,
                     isUserMe = content.author == "User",
                     showActions = !(isLast && isGenerating),
-                    onTokenCountClicked = onTokenCountClicked
+                    onTokenCountClicked = onTokenCountClicked,
+                    onImageClick = onImageClick
                 )
             }
             item {

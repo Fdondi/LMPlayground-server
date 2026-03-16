@@ -39,24 +39,30 @@ object ModelInfoProvider {
             filename = "Qwen_Qwen3.5-0.8B-Q3_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-0.8B-GGUF/resolve/main/Qwen_Qwen3.5-0.8B-Q3_K_M.gguf"),
             releaseDate = LocalDate.parse("2026-02-27"),
-            description = "Alibaba \u00B7 Lightweight chat model \u00B7 466Mb",
-            logoRes = R.drawable.logo_qwen
+            description = "Alibaba \u00B7 Lightweight vision model \u00B7 466Mb + 207Mb mmproj",
+            logoRes = R.drawable.logo_qwen,
+            mmprojFilename = "mmproj-Qwen_Qwen3.5-0.8B-f16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-0.8B-GGUF/resolve/main/mmproj-Qwen_Qwen3.5-0.8B-f16.gguf")
         ),
         ModelInfo(
             name = "Qwen 3.5 2B",
             filename = "Qwen_Qwen3.5-2B-Q3_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-2B-GGUF/resolve/main/Qwen_Qwen3.5-2B-Q3_K_M.gguf"),
             releaseDate = LocalDate.parse("2026-02-27"),
-            description = "Alibaba \u00B7 General-purpose chat model \u00B7 1.07Gb",
-            logoRes = R.drawable.logo_qwen
+            description = "Alibaba \u00B7 General-purpose vision model \u00B7 1.07Gb + 207Mb mmproj",
+            logoRes = R.drawable.logo_qwen,
+            mmprojFilename = "mmproj-Qwen_Qwen3.5-2B-f16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-2B-GGUF/resolve/main/mmproj-Qwen_Qwen3.5-2B-f16.gguf")
         ),
         ModelInfo(
             name = "Qwen 3.5 4B",
             filename = "Qwen_Qwen3.5-4B-Q3_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q3_K_M.gguf"),
             releaseDate = LocalDate.parse("2026-02-27"),
-            description = "Alibaba \u00B7 General-purpose chat model \u00B7 2.25Gb",
-            logoRes = R.drawable.logo_qwen
+            description = "Alibaba \u00B7 General-purpose vision model \u00B7 2.25Gb + 207Mb mmproj",
+            logoRes = R.drawable.logo_qwen,
+            mmprojFilename = "mmproj-Qwen_Qwen3.5-4B-f16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/mmproj-Qwen_Qwen3.5-4B-f16.gguf")
         ),
         ModelInfo(
             name = "Gemma 3 1B",
@@ -71,8 +77,10 @@ object ModelInfoProvider {
             filename = "gemma-3-4b-it-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2025-03-12"),
-            description = "Google \u00B7 General-purpose chat model \u00B7 2.49Gb",
-            logoRes = R.drawable.logo_google
+            description = "Google \u00B7 General-purpose chat model \u00B7 2.49Gb \u00B7 Supports vision with mmproj",
+            logoRes = R.drawable.logo_google,
+            mmprojFilename = "gemma-3-4b-it-mmproj-f16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-mmproj-f16.gguf")
         ),
         ModelInfo(
             name = "Llama 3.2 1B",
@@ -135,32 +143,40 @@ object ModelInfoProvider {
             filename = "Ministral-3-3B-Instruct-2512-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-3B-Instruct-2512-GGUF/resolve/main/Ministral-3-3B-Instruct-2512-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-12-17"),
-            description = "Mistral \u00B7 Lightweight chat model \u00B7 2.15Gb",
-            logoRes = R.drawable.logo_mistral
+            description = "Mistral \u00B7 Lightweight vision model \u00B7 2.15Gb + mmproj",
+            logoRes = R.drawable.logo_mistral,
+            mmprojFilename = "mmproj-Ministral-3-3B-Instruct-2512-F16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-3B-Instruct-2512-GGUF/resolve/main/mmproj-Ministral-3-3B-Instruct-2512-F16.gguf")
         ),
         ModelInfo(
             name = "Ministral 3 3B Reasoning",
             filename = "Ministral-3-3B-Reasoning-2512-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-3B-Reasoning-2512-GGUF/resolve/main/Ministral-3-3B-Reasoning-2512-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-12-17"),
-            description = "Mistral \u00B7 Lightweight reasoning model \u00B7 2.15Gb",
-            logoRes = R.drawable.logo_mistral
+            description = "Mistral \u00B7 Lightweight vision reasoning model \u00B7 2.15Gb + mmproj",
+            logoRes = R.drawable.logo_mistral,
+            mmprojFilename = "mmproj-Ministral-3-3B-Reasoning-2512-F16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-3B-Reasoning-2512-GGUF/resolve/main/mmproj-Ministral-3-3B-Reasoning-2512-F16.gguf")
         ),
         ModelInfo(
             name = "Ministral 3 8B Instruct",
             filename = "Ministral-3-8B-Instruct-2512-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-8B-Instruct-2512-GGUF/resolve/main/Ministral-3-8B-Instruct-2512-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-12-17"),
-            description = "Mistral \u00B7 General-purpose chat model \u00B7 5.2Gb",
-            logoRes = R.drawable.logo_mistral
+            description = "Mistral \u00B7 General-purpose vision model \u00B7 5.2Gb + mmproj",
+            logoRes = R.drawable.logo_mistral,
+            mmprojFilename = "mmproj-Ministral-3-8B-Instruct-2512-F16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-8B-Instruct-2512-GGUF/resolve/main/mmproj-Ministral-3-8B-Instruct-2512-F16.gguf")
         ),
         ModelInfo(
             name = "Ministral 3 8B Reasoning",
             filename = "Ministral-3-8B-Reasoning-2512-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-8B-Reasoning-2512-GGUF/resolve/main/Ministral-3-8B-Reasoning-2512-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2024-12-17"),
-            description = "Mistral \u00B7 Advanced reasoning model \u00B7 5.2Gb",
-            logoRes = R.drawable.logo_mistral
+            description = "Mistral \u00B7 Advanced vision reasoning model \u00B7 5.2Gb + mmproj",
+            logoRes = R.drawable.logo_mistral,
+            mmprojFilename = "mmproj-Ministral-3-8B-Reasoning-2512-F16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-8B-Reasoning-2512-GGUF/resolve/main/mmproj-Ministral-3-8B-Reasoning-2512-F16.gguf")
         ),
         ModelInfo(
             name = "Granite 4.0 Micro",
@@ -269,9 +285,11 @@ object ModelInfoProvider {
     )
     
     /**
-     * Get all known model filenames
+     * Get all known model filenames (including mmproj files for vision models)
      */
-    val knownFilenames: Set<String> = allModels.map { it.filename }.toSet()
+    val knownFilenames: Set<String> = allModels.flatMap { model ->
+        listOfNotNull(model.filename, model.mmprojFilename)
+    }.toSet()
     
     /**
      * Get model by filename

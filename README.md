@@ -12,6 +12,7 @@ LM Playground is an Android application for running Large Language Models locall
 ## Features
 
 - **On-device inference** - no cloud, no API keys, fully offline
+- **Vision/image input** - attach images from gallery for vision-capable models (Qwen 3.5, Gemma 3, Ministral 3)
 - **Rich markdown** in chat responses - headers, code blocks, lists, and more
 - **Reasoning model support** - thinking steps from models like DeepSeek R1 and Nemotron are displayed in a styled section
 - **Reliable background downloads** - custom download engine with OkHttp and WorkManager, progress notifications with speed and ETA, automatic resume on network interruptions
@@ -22,16 +23,16 @@ LM Playground is an Android application for running Large Language Models locall
 
 | Family | Sizes | Provider |
 |--------|-------|----------|
-| Qwen 3.5 | 0.8B, 2B, 4B | Alibaba |
+| Qwen 3.5 | 0.8B, 2B, 4B (all vision) | Alibaba |
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
 | Gemma 3n | E2B, E4B | Google |
-| Gemma 3 | 1B, 4B | Google |
+| Gemma 3 | 1B, 4B (vision) | Google |
 | Nemotron 3 Nano | 4B | NVIDIA |
 | Granite 4.0 | Micro, H-Tiny | IBM |
 | DeepSeek R1 Distill | 1.5B, 7B | DeepSeek |
 | Phi-4 mini | 3.8B | Microsoft |
 | LFM2.5 Thinking | 1.2B | Liquid AI |
-| Ministral 3 | 3B, 8B (Instruct & Reasoning) | Mistral |
+| Ministral 3 | 3B, 8B (Instruct & Reasoning, all vision) | Mistral |
 | Llama 3.2 | 1B, 3B | Meta |
 | Llama 3.1 | 8B | Meta |
 

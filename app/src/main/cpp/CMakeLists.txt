@@ -27,6 +27,13 @@ add_library(ggml_override STATIC
 # Include llama.cpp subdirectory
 add_subdirectory(llama.cpp)
 
+# Include mtmd (multimodal) library for vision support
+# Set LLAMA_INSTALL_VERSION if not already set (needed by mtmd's CMakeLists)
+if(NOT DEFINED LLAMA_INSTALL_VERSION)
+    set(LLAMA_INSTALL_VERSION "0.0.0")
+endif()
+add_subdirectory(llama.cpp/tools/mtmd)
+
 # Creates and names a library, sets it as either STATIC
 # or SHARED, and provides the relative paths to its source code.
 # You can define multiple libraries, and CMake builds them for you.
@@ -55,6 +62,8 @@ add_library(${CMAKE_PROJECT_NAME} SHARED
 # NOTE: ggml_override is linked FIRST so our ggml_fopen takes precedence
 # We use --whole-archive to force inclusion and --allow-multiple-definition to
 # allow our symbol to coexist with the one from ggml (first definition wins)
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE llama.cpp/tools/mtmd)
+
 target_link_libraries(${CMAKE_PROJECT_NAME}
         # Linker flags to allow multiple definitions (first wins)
         -Wl,--allow-multiple-definition
@@ -65,5 +74,6 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         # List libraries link to the target library
         common
         llama
+        mtmd
         android
         log)

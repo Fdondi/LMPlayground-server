@@ -206,6 +206,29 @@ class StorageRepository(
         }
     }
 
+    /**
+     * Copy a model file from SAF storage to a regular file path.
+     * Used for mmproj files which need a real filesystem path for native code.
+     */
+    fun copyModelToFile(fileName: String, destFile: java.io.File): Boolean {
+        val treeUri = prefs.modelStorageUri ?: return false
+        val documentFile = DocumentFile.fromTreeUri(context, treeUri)
+        val file = documentFile?.findFile(fileName) ?: return false
+
+        return try {
+            context.contentResolver.openInputStream(file.uri)?.use { input ->
+                destFile.outputStream().use { output ->
+                    input.copyTo(output, bufferSize = 65536)
+                }
+            }
+            Log.d(TAG, "copyModelToFile() - copied $fileName to ${destFile.absolutePath} (${destFile.length()} bytes)")
+            true
+        } catch (e: Exception) {
+            Log.e(TAG, "copyModelToFile() - failed: ${e.message}")
+            false
+        }
+    }
+
     fun hasValidPermission(): Boolean {
         val uri = prefs.modelStorageUri ?: return false
         return try {

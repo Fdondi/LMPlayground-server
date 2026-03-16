@@ -1,11 +1,14 @@
 package com.druk.lmplayground.conversation
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -62,6 +65,14 @@ class ConversationFragment : Fragment() {
     private val viewModel: ConversationViewModel by viewModels()
     private val storageViewModel: StorageViewModel by viewModels()
 
+    private var attachedImageUri = mutableStateOf<Uri?>(null)
+
+    private val pickMediaLauncher = registerForActivityResult(
+        ActivityResultContracts.PickVisualMedia()
+    ) { uri ->
+        attachedImageUri.value = uri
+    }
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,6 +90,8 @@ class ConversationFragment : Fragment() {
             val modelStatus by viewModel.loadedModelStatus.observeAsState()
             val supportsThinking by viewModel.supportsThinking.observeAsState(false)
             val thinkingEnabled by viewModel.thinkingEnabled.observeAsState(false)
+            val supportsVision by viewModel.supportsVision.observeAsState(false)
+            val currentImageUri by attachedImageUri
             val isModelReady by viewModel.isModelReady.observeAsState(false)
             val models by viewModel.models.observeAsState(emptyList())
             val sessions by viewModel.sessions.observeAsState(emptyList())
@@ -373,6 +386,15 @@ class ConversationFragment : Fragment() {
                                     },
                                     onTokenCountClicked = {
                                         modelReport = viewModel.getReport()
+                                    },
+                                    onImageClick = { uri ->
+                                        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+                                            setDataAndType(uri, "image/*")
+                                            addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                        }
+                                        try {
+                                            startActivity(intent)
+                                        } catch (_: Exception) { }
                                     }
                                 )
                             }
@@ -390,12 +412,23 @@ class ConversationFragment : Fragment() {
                                 supportsThinking = supportsThinking,
                                 thinkingEnabled = thinkingEnabled,
                                 onThinkingToggle = { viewModel.toggleThinking() },
+                                supportsVision = supportsVision,
+                                attachedImageUri = currentImageUri,
+                                onAttachImage = {
+                                    pickMediaLauncher.launch(
+                                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                                    )
+                                },
+                                onClearImage = { attachedImageUri.value = null },
                                 onSwipeUp = {
                                     if (isModelReady) showParamsSheet = true
                                 },
                                 onMessageSent = { content ->
+                                    val imageUri = attachedImageUri.value
+                                    attachedImageUri.value = null
                                     viewModel.addMessage(
-                                        Message("User", content)
+                                        Message("User", content),
+                                        imageUri = imageUri
                                     )
                                 },
                                 onCancelClicked = {
@@ -415,6 +448,7 @@ class ConversationFragment : Fragment() {
                         }
                     }
                 }
+
             }
         }
     }

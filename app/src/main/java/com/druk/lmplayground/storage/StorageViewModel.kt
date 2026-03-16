@@ -151,6 +151,10 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 repository.deleteModel(model.filename)
+                // Also delete mmproj file for vision models
+                if (model.mmprojFilename != null) {
+                    repository.deleteModel(model.mmprojFilename)
+                }
             }
             loadStorageInfo()
         }
