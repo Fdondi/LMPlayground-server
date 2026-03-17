@@ -39,6 +39,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
@@ -74,6 +76,7 @@ fun UserInputPreview() {
 fun UserInput(
     modifier: Modifier = Modifier,
     status: UserInputStatus = UserInputStatus.IDLE,
+    focusRequester: FocusRequester = remember { FocusRequester() },
     supportsThinking: Boolean = false,
     thinkingEnabled: Boolean = true,
     onThinkingToggle: () -> Unit = {},
@@ -93,6 +96,7 @@ fun UserInput(
         Column(modifier = modifier) {
             UserInputText(
                 status,
+                focusRequester = focusRequester,
                 supportsThinking = supportsThinking,
                 thinkingEnabled = thinkingEnabled,
                 onThinkingToggle = onThinkingToggle,
@@ -153,6 +157,7 @@ var SemanticsPropertyReceiver.keyboardShownProperty by KeyboardShownKey
 @Composable
 private fun UserInputText(
     status: UserInputStatus,
+    focusRequester: FocusRequester,
     supportsThinking: Boolean = false,
     thinkingEnabled: Boolean = true,
     onThinkingToggle: () -> Unit = {},
@@ -194,6 +199,7 @@ private fun UserInputText(
         Box(Modifier.weight(1f)) {
             UserInputTextField(
                 true,
+                focusRequester,
                 textFieldValue,
                 onTextChanged,
                 onTextFieldFocused,
@@ -262,6 +268,7 @@ private fun UserInputText(
 @Composable
 private fun BoxScope.UserInputTextField(
     isEnabled: Boolean,
+    focusRequester: FocusRequester,
     textFieldValue: TextFieldValue,
     onTextChanged: (TextFieldValue) -> Unit,
     onTextFieldFocused: (Boolean) -> Unit,
@@ -277,6 +284,7 @@ private fun BoxScope.UserInputTextField(
             .padding(start = startPadding)
             .align(Alignment.CenterStart)
             .fillMaxWidth()
+            .focusRequester(focusRequester)
             .clearFocusOnKeyboardDismiss()
             .onFocusChanged { state ->
                 if (lastFocusState != state.isFocused) {

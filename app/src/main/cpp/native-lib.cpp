@@ -281,6 +281,38 @@ Java_com_druk_llamacpp_LlamaGenerationSession_getReport(JNIEnv *env, jobject thi
     return string;
 }
 
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_druk_llamacpp_LlamaGenerationSession_replayHistory(JNIEnv *env,
+                                                             jobject thiz,
+                                                             jobjectArray userMessages,
+                                                             jobjectArray assistantMessages) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return;
+    }
+
+    int len = env->GetArrayLength(userMessages);
+    std::vector<std::pair<std::string, std::string>> history;
+    history.reserve(len);
+
+    for (int i = 0; i < len; i++) {
+        auto jUser = (jstring) env->GetObjectArrayElement(userMessages, i);
+        auto jAssistant = (jstring) env->GetObjectArrayElement(assistantMessages, i);
+        const char* user = env->GetStringUTFChars(jUser, nullptr);
+        const char* assistant = env->GetStringUTFChars(jAssistant, nullptr);
+        history.emplace_back(user, assistant);
+        env->ReleaseStringUTFChars(jUser, user);
+        env->ReleaseStringUTFChars(jAssistant, assistant);
+        env->DeleteLocalRef(jUser);
+        env->DeleteLocalRef(jAssistant);
+    }
+
+    session->replayHistory(history);
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_destroy
         (JNIEnv *env, jobject obj) {
     jclass clazz = env->GetObjectClass(obj);

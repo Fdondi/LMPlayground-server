@@ -44,6 +44,15 @@ class LlamaGenerationSession {
     external fun getReport(): String
 
     /**
+     * Replays message history into the native session. Clears internal state and KV cache.
+     * KV cache is rebuilt lazily on the next addMessage() + generate() call.
+     *
+     * @param userMessages Array of user messages, ordered chronologically.
+     * @param assistantMessages Array of assistant responses, paired by index with userMessages.
+     */
+    external fun replayHistory(userMessages: Array<String>, assistantMessages: Array<String>)
+
+    /**
      * Destroys the generation session and releases associated resources.
      */
     external fun destroy()

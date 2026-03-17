@@ -1,0 +1,32 @@
+package com.druk.lmplayground.data
+
+import androidx.lifecycle.LiveData
+
+class ChatRepository(private val dao: ChatDao) {
+
+    fun getAllSessions(): LiveData<List<ChatSessionEntity>> = dao.getAllSessions()
+
+    suspend fun getMessages(sessionId: String): List<ChatMessageEntity> =
+        dao.getMessages(sessionId)
+
+    suspend fun insertSession(session: ChatSessionEntity) =
+        dao.insertSession(session)
+
+    suspend fun insertMessage(message: ChatMessageEntity) =
+        dao.insertMessage(message)
+
+    suspend fun updateSessionTimestamp(sessionId: String, updatedAt: Long) =
+        dao.updateSessionTimestamp(sessionId, updatedAt)
+
+    suspend fun updateSessionTitle(sessionId: String, title: String) =
+        dao.updateSessionTitle(sessionId, title)
+
+    suspend fun updateSessionModel(sessionId: String, filename: String, name: String) =
+        dao.updateSessionModel(sessionId, filename, name)
+
+    suspend fun updateSessionPinned(sessionId: String, pinned: Boolean) =
+        dao.updateSessionPinned(sessionId, pinned)
+
+    suspend fun deleteSession(sessionId: String) =
+        dao.deleteSession(sessionId)
+}

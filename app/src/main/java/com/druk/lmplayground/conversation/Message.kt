@@ -22,7 +22,8 @@ private val UserBubbleShape = RoundedCornerShape(20.dp, 20.dp, 4.dp, 20.dp)
 fun Message(
     msg: Message,
     isUserMe: Boolean,
-    showActions: Boolean = true
+    showActions: Boolean = true,
+    onTokenCountClicked: (() -> Unit)? = null
 ) {
     if (isUserMe) {
         Row(
@@ -56,7 +57,7 @@ fun Message(
                 .fillMaxWidth()
                 .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 8.dp)
         ) {
-            ChatItemBubble(msg, showActions)
+            ChatItemBubble(msg, showActions, onTokenCountClicked)
         }
     }
 }

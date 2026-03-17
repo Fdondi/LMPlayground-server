@@ -48,7 +48,8 @@ import com.druk.lmplayground.R
 @Composable
 fun ChatItemBubble(
     message: Message,
-    showActions: Boolean = true
+    showActions: Boolean = true,
+    onTokenCountClicked: (() -> Unit)? = null
 ) {
     var showRatingSheet by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
@@ -171,7 +172,15 @@ fun ChatItemBubble(
                         text = "${message.responseTokens} tokens",
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier
+                            .padding(start = 8.dp)
+                            .then(
+                                if (onTokenCountClicked != null) {
+                                    Modifier.clickable(onClick = onTokenCountClicked)
+                                } else {
+                                    Modifier
+                                }
+                            )
                     )
                 }
             }

@@ -26,7 +26,8 @@ fun Messages(
     messages: List<Message>,
     scrollState: LazyListState,
     modifier: Modifier = Modifier,
-    isGenerating: Boolean = false
+    isGenerating: Boolean = false,
+    onTokenCountClicked: (() -> Unit)? = null
 ) {
     var piningBottom by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
@@ -50,7 +51,8 @@ fun Messages(
                     Message(
                         msg = content,
                         isUserMe = content.author == "User",
-                        showActions = !(isLast && isGenerating)
+                        showActions = !(isLast && isGenerating),
+                        onTokenCountClicked = onTokenCountClicked
                     )
                 }
             }

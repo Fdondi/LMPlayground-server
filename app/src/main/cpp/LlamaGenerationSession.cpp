@@ -342,6 +342,30 @@ void LlamaGenerationSession::printReport() {
     llama_perf_context_print(ctx);
 }
 
+void LlamaGenerationSession::replayHistory(const std::vector<std::pair<std::string, std::string>>& history) {
+    messages.clear();
+    for (const auto& pair : history) {
+        common_chat_msg user_msg;
+        user_msg.role = "user";
+        user_msg.content = pair.first;
+        messages.push_back(user_msg);
+
+        common_chat_msg assistant_msg;
+        assistant_msg.role = "assistant";
+        assistant_msg.content = pair.second;
+        messages.push_back(assistant_msg);
+    }
+    prev_len = 0;
+    prev_rendered_prompt.clear();
+    prev_had_thinking = false;
+    prev_enable_thinking = false;
+    response.clear();
+    if (ctx != nullptr) {
+        llama_memory_clear(llama_get_memory(ctx), true);
+    }
+    LOGi("Replayed %zu turns of history", history.size());
+}
+
 std::string LlamaGenerationSession::getReport() {
     auto timings = llama_perf_context(ctx);
     auto sampler_timings = llama_perf_sampler(smpl);

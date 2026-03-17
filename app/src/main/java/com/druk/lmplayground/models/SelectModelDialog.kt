@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Eject
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -40,13 +41,15 @@ import com.druk.lmplayground.R
 @Composable
 fun SelectModelDialog(
     models: List<ModelWithStatus>,
+    isModelLoaded: Boolean = false,
     onLoadModel: (ModelInfo) -> Unit,
+    onUnloadModel: () -> Unit = {},
     onBrowseModels: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
     // Only show downloaded models
     val downloadedModels = models.filter { it.isDownloaded }
-    
+
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier
@@ -75,7 +78,7 @@ fun SelectModelDialog(
                         }
                     }
                 }
-                
+
                 item {
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 8.dp))
                     Spacer(modifier = Modifier.height(8.dp))
@@ -94,6 +97,24 @@ fun SelectModelDialog(
                             modifier = Modifier.padding(end = 8.dp)
                         )
                         Text(stringResource(R.string.browse_more_models))
+                    }
+                    if (isModelLoaded) {
+                        TextButton(
+                            onClick = {
+                                onDismissRequest()
+                                onUnloadModel()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Eject,
+                                contentDescription = null,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                            Text("Unload Model")
+                        }
                     }
                     Spacer(modifier = Modifier.height(8.dp))
                 }

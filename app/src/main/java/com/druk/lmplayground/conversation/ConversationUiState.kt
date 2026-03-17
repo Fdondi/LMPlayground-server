@@ -42,6 +42,11 @@ class ConversationUiState(
         )
     }
 
+    fun setMessages(messages: List<Message>) {
+        _messages.clear()
+        _messages.addAll(messages)
+    }
+
     fun resetMessages() {
         _messages.clear()
     }
@@ -55,5 +60,6 @@ data class Message(
     val thinkingDurationSeconds: Int = 0,
     val thinkingStartTimeMs: Long = 0,
     val thinkingTokens: Int = 0,
-    val responseTokens: Int = 0
+    val responseTokens: Int = 0,
+    val timestamp: Long = System.currentTimeMillis()
 )

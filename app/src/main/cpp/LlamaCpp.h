@@ -27,6 +27,8 @@ public:
 
     std::string getReport();
 
+    void replayHistory(const std::vector<std::pair<std::string, std::string>>& history);
+
 private:
     void finalizeResponse();
     const struct llama_vocab * vocab = nullptr;

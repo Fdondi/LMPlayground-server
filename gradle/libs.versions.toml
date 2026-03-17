@@ -48,7 +48,7 @@ minSdk = "30"
 okhttp = "4.11.0"
 robolectric = "4.9.2"
 rome = "1.18.0"
-room = "2.6.0"
+room = "2.7.1"
 secrets = "2.0.1"
 # @keep
 targetSdk = "35"
