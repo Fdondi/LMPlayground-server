@@ -237,7 +237,7 @@ class ReplayHistoryTest {
 
         // --- Load model and do one turn ---
         val model1 = loadModel(modelFile!!)
-        val session1 = model1.createSession()
+        val session1 = model1.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = session1
 
         session1.addMessage("The capital of France is Paris. Remember that.", false)
@@ -258,7 +258,7 @@ class ReplayHistoryTest {
         // --- Reload model from scratch ---
         Log.d(TAG, "Reloading model from scratch")
         val model2 = loadModel(modelFile)
-        val session2 = model2.createSession()
+        val session2 = model2.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = session2
 
         // Replay the saved history
