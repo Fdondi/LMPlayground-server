@@ -24,10 +24,13 @@ import com.druk.lmplayground.storage.StorageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
+import kotlin.math.ln
+import kotlin.math.min
 import kotlin.math.round
 
 class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
@@ -159,16 +162,31 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
                 modelFileHandle = fileHandle
 
+                // llama.cpp only reports progress during tensor pointer setup,
+                // which is near-instant with mmap. The slow parts (GGUF metadata
+                // parsing, mmap init, buffer allocation) report nothing.
+                // Animate estimated progress during loading for smooth UX.
+                val progressJob = CoroutineScope(Dispatchers.Main).launch {
+                    val startTime = System.currentTimeMillis()
+                    while (isActive) {
+                        val elapsed = (System.currentTimeMillis() - startTime) / 1000f
+                        // Logarithmic curve: rises quickly then slows, caps at 0.9
+                        val estimated = min(0.9f, ln(1f + elapsed) / ln(1f + 30f))
+                        _modelLoadingProgress.postValue(estimated)
+                        _loadedModelStatus.postValue("${round(100 * estimated).toInt()}%")
+                        delay(100)
+                    }
+                }
+
                 val llamaModel = llamaCpp.loadModel(
                     fileHandle.path,
                     object: LlamaProgressCallback {
                         override fun onProgress(progress: Float) {
-                            val progressDescription = "${round(100 * progress).toInt()}%"
-                            _modelLoadingProgress.postValue(progress)
-                            _loadedModelStatus.postValue(progressDescription)
+                            // Real progress from llama.cpp (0→1 during load_all_data)
                         }
                     }
                 )
+                progressJob.cancel()
                 val modelSize = llamaModel.getModelSize()
                 val modelDescription = Formatter.formatFileSize(app, modelSize)
                 val nCtxTrain = llamaModel.getContextTrainSize()
