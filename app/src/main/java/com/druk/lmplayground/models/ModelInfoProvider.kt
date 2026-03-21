@@ -171,6 +171,14 @@ object ModelInfoProvider {
             logoRes = R.drawable.logo_ibm
         ),
         ModelInfo(
+            name = "Nemotron 3 Nano 4B",
+            filename = "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF/resolve/main/NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2025-12-15"),
+            description = "NVIDIA \u00B7 Hybrid reasoning model \u00B7 2.84Gb",
+            logoRes = R.drawable.logo_nvidia
+        ),
+        ModelInfo(
             name = "Gemma 3n E2B",
             filename = "gemma-3n-E2B-it-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-3n-E2B-it-text-GGUF/resolve/main/gemma-3n-E2B-it-Q4_K_M.gguf"),

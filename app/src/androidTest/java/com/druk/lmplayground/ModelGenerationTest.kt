@@ -38,7 +38,8 @@ class ModelGenerationTest {
             "Qwen_Qwen3.5-0.8B-Q3_K_M.gguf",
             "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
             "Qwen_Qwen3.5-2B-Q3_K_M.gguf",
-            "DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf"
+            "DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf",
+            "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf"
         )
         private const val MODELS_PATH = "/data/local/tmp"
     }
@@ -336,5 +337,61 @@ class ModelGenerationTest {
         val r3 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
         Log.d(TAG, "Qwen3.5 multi-turn T3 (${r3.length} chars):\n$r3")
         assertTrue("Turn 3 should not be empty", r3.isNotBlank())
+    }
+
+    @Test(timeout = 300_000)
+    fun testNemotronLoadsAndGenerates() {
+        val modelFile = findSpecificModel("Nemotron")
+        assumeTrue("Nemotron model not found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        assertTrue("Model size should be > 0", model.getModelSize() > 0)
+        Log.d(TAG, "Nemotron supportsThinking: ${model.supportsThinking()}")
+
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
+        this.session = session
+
+        session.addMessage("Say hello in one sentence", false)
+        val raw = generateFullResponse(session, maxTokens = 256, timeoutMs = 120_000)
+        Log.d(TAG, "Nemotron raw (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+    }
+
+    @Test(timeout = 300_000)
+    fun testNemotronThinking() {
+        val modelFile = findSpecificModel("Nemotron")
+        assumeTrue("Nemotron model not found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        assumeTrue("Nemotron does not support thinking", model.supportsThinking())
+
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
+        this.session = session
+
+        session.addMessage("What is 2+2?", true)
+        val raw = generateFullResponse(session, maxTokens = 512, timeoutMs = 120_000)
+        Log.d(TAG, "Nemotron thinking=true raw (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+        assertTrue("Should contain </think> tag", raw.contains("</think>"))
+    }
+
+    @Test(timeout = 300_000)
+    fun testNemotronMultiTurn() {
+        val modelFile = findSpecificModel("Nemotron")
+        assumeTrue("Nemotron model not found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
+        this.session = session
+
+        session.addMessage("Say hello", false)
+        val r1 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Nemotron T1 (${r1.length} chars):\n$r1")
+        assertTrue("Turn 1 should not be empty", r1.isNotBlank())
+
+        session.addMessage("What did I just ask you?", false)
+        val r2 = generateFullResponse(session, maxTokens = 256, timeoutMs = 60_000)
+        Log.d(TAG, "Nemotron T2 (${r2.length} chars):\n$r2")
+        assertTrue("Turn 2 should not be empty", r2.isNotBlank())
     }
 }

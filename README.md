@@ -13,7 +13,7 @@ LM Playground is an Android application for running Large Language Models locall
 
 - **On-device inference** - no cloud, no API keys, fully offline
 - **Rich markdown** in chat responses - headers, code blocks, lists, and more
-- **Reasoning model support** - thinking steps from models like DeepSeek R1 are displayed in a styled section
+- **Reasoning model support** - thinking steps from models like DeepSeek R1 and Nemotron are displayed in a styled section
 - **Reliable background downloads** - custom download engine with OkHttp and WorkManager, progress notifications with speed and ETA, automatic resume on network interruptions
 - **Storage management** - choose where to keep multi-GB model files with Android's Storage Access Framework
 - **ARM optimized** - KleidiAI kernels and OpenMP for faster generation on arm64 devices
@@ -26,6 +26,7 @@ LM Playground is an Android application for running Large Language Models locall
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
 | Gemma 3n | E2B, E4B | Google |
 | Gemma 3 | 1B, 4B | Google |
+| Nemotron 3 Nano | 4B | NVIDIA |
 | Granite 4.0 | Micro, H-Tiny | IBM |
 | DeepSeek R1 Distill | 1.5B, 7B | DeepSeek |
 | Phi-4 mini | 3.8B | Microsoft |
