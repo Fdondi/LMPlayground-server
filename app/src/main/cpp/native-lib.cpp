@@ -234,6 +234,9 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
     jobject obj = env->NewObject(clazz2, constructor);
 
     LlamaGenerationSession* session = model->createGenerationSession(params);
+    if (session == nullptr) {
+        return nullptr;
+    }
     jclass clazz3 = env->GetObjectClass(obj);
     jfieldID fid3 = env->GetFieldID(clazz3, "nativeHandle", "J");
     env->SetLongField(obj, fid3, (long)session);

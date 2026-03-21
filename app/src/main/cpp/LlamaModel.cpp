@@ -51,6 +51,9 @@ void LlamaModel::loadModel(const std::string &modelPath,
 }
 
 LlamaGenerationSession* LlamaModel::createGenerationSession(const SamplerParams &params) {
+    if (model == nullptr) {
+        return nullptr;
+    }
     auto *session = new LlamaGenerationSession();
     session->init(model, chat_tmpls.get(), params);
     return session;
