@@ -16,9 +16,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun WhatsNewText(modifier: Modifier = Modifier) {
     val items = listOf(
-        "Load your own models from the storage folder",
-        "Thinking toggle for reasoning models",
-        "Improved multi-turn conversations"
+        "Chat history with session persistence",
+        "Switch models without losing conversations",
+        "Tunable generation parameters"
     )
 
     Column(
