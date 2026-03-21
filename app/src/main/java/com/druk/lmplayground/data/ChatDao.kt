@@ -33,6 +33,19 @@ interface ChatDao {
     @Query("UPDATE chat_sessions SET pinned = :pinned WHERE id = :sessionId")
     suspend fun updateSessionPinned(sessionId: String, pinned: Boolean)
 
+    @Query("""UPDATE chat_sessions SET
+        contextSize = :contextSize, temperature = :temperature, topP = :topP,
+        repetitionPenalty = :repetitionPenalty, topK = :topK, minP = :minP, seed = :seed
+        WHERE id = :sessionId""")
+    suspend fun updateSessionParams(
+        sessionId: String,
+        contextSize: Int, temperature: Float, topP: Float,
+        repetitionPenalty: Float, topK: Int, minP: Float, seed: Int
+    )
+
+    @Query("SELECT * FROM chat_sessions WHERE id = :sessionId")
+    suspend fun getSession(sessionId: String): ChatSessionEntity?
+
     @Query("DELETE FROM chat_sessions WHERE id = :sessionId")
     suspend fun deleteSession(sessionId: String)
 }

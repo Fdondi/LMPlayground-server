@@ -83,6 +83,9 @@ class ConversationFragment : Fragment() {
             val models by viewModel.models.observeAsState(emptyList())
             val sessions by viewModel.sessions.observeAsState(emptyList())
             val currentSessionId by viewModel.currentSessionId.observeAsState()
+            val generationParams by viewModel.generationParams.observeAsState(GenerationParams())
+            val maxContextSize by viewModel.maxContextSize.observeAsState(4096)
+            var showParamsSheet by remember { mutableStateOf(false) }
 
             // Storage configuration state
             val isStorageConfigured by storageViewModel.isStorageConfigured.observeAsState(true)
@@ -220,6 +223,15 @@ class ConversationFragment : Fragment() {
                     )
                 }
 
+                if (showParamsSheet) {
+                    GenerationParamsSheet(
+                        params = generationParams,
+                        maxContextSize = maxContextSize,
+                        onParamsChanged = { viewModel.updateGenerationParams(it) },
+                        onDismiss = { showParamsSheet = false }
+                    )
+                }
+
                 ModalNavigationDrawer(
                     drawerState = drawerState,
                     drawerContent = {
@@ -276,6 +288,9 @@ class ConversationFragment : Fragment() {
                                         },
                                         onUnloadModel = {
                                             viewModel.unloadModel()
+                                        },
+                                        onGenerationParams = {
+                                            showParamsSheet = true
                                         },
                                         onBrowseModels = {
                                             findNavController().navigate(R.id.action_home_to_models)
@@ -366,6 +381,9 @@ class ConversationFragment : Fragment() {
                                 supportsThinking = supportsThinking,
                                 thinkingEnabled = thinkingEnabled,
                                 onThinkingToggle = { viewModel.toggleThinking() },
+                                onSwipeUp = {
+                                    if (isModelReady) showParamsSheet = true
+                                },
                                 onMessageSent = { content ->
                                     viewModel.addMessage(
                                         Message("User", content)

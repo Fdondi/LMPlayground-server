@@ -48,6 +48,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _models = MutableLiveData<List<ModelWithStatus>>(emptyList())
     private val _supportsThinking = MutableLiveData(false)
     private val _thinkingEnabled = MutableLiveData(false)
+    private val _generationParams = MutableLiveData(GenerationParams())
+    private val _maxContextSize = MutableLiveData(4096)
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -60,6 +62,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val models: LiveData<List<ModelWithStatus>> = _models
     val supportsThinking: LiveData<Boolean> = _supportsThinking
     val thinkingEnabled: LiveData<Boolean> = _thinkingEnabled
+    val generationParams: LiveData<GenerationParams> = _generationParams
+    val maxContextSize: LiveData<Int> = _maxContextSize
 
     val uiState = ConversationUiState(
         initialMessages = emptyList()
@@ -167,7 +171,10 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 )
                 val modelSize = llamaModel.getModelSize()
                 val modelDescription = Formatter.formatFileSize(app, modelSize)
-                val llamaSession = llamaModel.createSession()
+                val nCtxTrain = llamaModel.getContextTrainSize()
+                _maxContextSize.postValue(minOf(nCtxTrain, 16384))
+                val params = _generationParams.value ?: GenerationParams()
+                val llamaSession = createSessionWithParams(llamaModel, params)
                 this@ConversationViewModel.llamaModel = llamaModel
                 this@ConversationViewModel.llamaSession = llamaSession
                 _supportsThinking.postValue(llamaModel.supportsThinking())
@@ -219,6 +226,80 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     @MainThread
     fun toggleThinking() {
         _thinkingEnabled.value = _thinkingEnabled.value != true
+    }
+
+    private fun createSessionWithParams(model: LlamaModel, params: GenerationParams): LlamaGenerationSession {
+        return model.createSession(
+            params.contextSize,
+            params.temperature,
+            params.topP,
+            params.repetitionPenalty,
+            params.topK,
+            params.minP,
+            params.seed
+        )
+    }
+
+    @MainThread
+    fun updateGenerationParams(params: GenerationParams) {
+        val oldParams = _generationParams.value ?: GenerationParams()
+        _generationParams.value = params
+
+        // Persist to Room if we have an active session
+        val sessionId = _currentSessionId.value
+        if (sessionId != null) {
+            viewModelScope.launch {
+                chatRepository?.updateSessionParams(
+                    sessionId,
+                    params.contextSize, params.temperature, params.topP,
+                    params.repetitionPenalty, params.topK, params.minP, params.seed
+                )
+            }
+        }
+
+        // If context size changed, must recreate session (resets conversation)
+        if (oldParams.contextSize != params.contextSize) {
+            val model = llamaModel ?: return
+            viewModelScope.launch {
+                generatingJob?.cancel()
+                generatingJob?.join()
+                generatingJob = null
+
+                val prevSession = llamaSession
+                llamaSession = null
+
+                _currentSessionId.value = null
+                uiState.resetMessages()
+
+                withContext(Dispatchers.Default) {
+                    prevSession?.destroy()
+                    val newSession = createSessionWithParams(model, params)
+                    this@ConversationViewModel.llamaSession = newSession
+                }
+            }
+        } else {
+            // Other params: recreate session but replay history
+            val model = llamaModel ?: return
+            viewModelScope.launch {
+                generatingJob?.cancel()
+                generatingJob?.join()
+                generatingJob = null
+
+                val prevSession = llamaSession
+                llamaSession = null
+
+                withContext(Dispatchers.Default) {
+                    prevSession?.destroy()
+                    val newSession = createSessionWithParams(model, params)
+                    this@ConversationViewModel.llamaSession = newSession
+
+                    val messages = uiState.messages
+                    if (messages.isNotEmpty()) {
+                        replayHistoryToSession(newSession, messages)
+                    }
+                }
+            }
+        }
     }
 
     @MainThread
@@ -302,6 +383,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         if (existing != null) return existing
 
         val modelInfo = _loadedModel.value
+        val params = _generationParams.value ?: GenerationParams()
         val id = UUID.randomUUID().toString()
         val title = firstUserMessage.content.take(50)
         val now = System.currentTimeMillis()
@@ -312,7 +394,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 modelFilename = modelInfo?.filename ?: "",
                 modelName = modelInfo?.name ?: "Unknown",
                 createdAt = now,
-                updatedAt = now
+                updatedAt = now,
+                contextSize = params.contextSize,
+                temperature = params.temperature,
+                topP = params.topP,
+                repetitionPenalty = params.repetitionPenalty,
+                topK = params.topK,
+                minP = params.minP,
+                seed = params.seed
             )
         )
         _currentSessionId.postValue(id)
@@ -337,6 +426,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun loadSession(sessionId: String) {
         viewModelScope.launch {
             val messages = chatRepository?.getMessages(sessionId) ?: return@launch
+            val sessionEntity = chatRepository.getSession(sessionId)
             val uiMessages = messages.map { entity ->
                 Message(
                     author = entity.author,
@@ -348,13 +438,34 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 )
             }
             _currentSessionId.value = sessionId
+
+            // Restore generation params from session
+            if (sessionEntity != null) {
+                val params = GenerationParams(
+                    contextSize = sessionEntity.contextSize,
+                    temperature = sessionEntity.temperature,
+                    topP = sessionEntity.topP,
+                    repetitionPenalty = sessionEntity.repetitionPenalty,
+                    topK = sessionEntity.topK,
+                    minP = sessionEntity.minP,
+                    seed = sessionEntity.seed
+                )
+                _generationParams.value = params
+            }
+
             uiState.setMessages(uiMessages)
 
-            // Replay history into native session if model is loaded
-            val session = llamaSession
-            if (session != null) {
+            // Recreate native session with restored params and replay history
+            val model = llamaModel
+            if (model != null) {
+                val prevSession = llamaSession
+                llamaSession = null
                 withContext(Dispatchers.Default) {
-                    replayHistoryToSession(session, uiMessages)
+                    prevSession?.destroy()
+                    val params = _generationParams.value ?: GenerationParams()
+                    val newSession = createSessionWithParams(model, params)
+                    this@ConversationViewModel.llamaSession = newSession
+                    replayHistoryToSession(newSession, uiMessages)
                 }
             }
         }
@@ -377,7 +488,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 llamaSession = null
                 withContext(Dispatchers.Default) {
                     prevSession?.destroy()
-                    val newSession = model.createSession()
+                    val params = _generationParams.value ?: GenerationParams()
+                    val newSession = createSessionWithParams(model, params)
                     this@ConversationViewModel.llamaSession = newSession
                 }
             }

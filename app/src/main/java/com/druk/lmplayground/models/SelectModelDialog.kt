@@ -15,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Eject
 import androidx.compose.material.icons.outlined.Search
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -44,6 +45,7 @@ fun SelectModelDialog(
     isModelLoaded: Boolean = false,
     onLoadModel: (ModelInfo) -> Unit,
     onUnloadModel: () -> Unit = {},
+    onGenerationParams: () -> Unit = {},
     onBrowseModels: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
@@ -99,6 +101,22 @@ fun SelectModelDialog(
                         Text(stringResource(R.string.browse_more_models))
                     }
                     if (isModelLoaded) {
+                        TextButton(
+                            onClick = {
+                                onDismissRequest()
+                                onGenerationParams()
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Tune,
+                                contentDescription = null,
+                                modifier = Modifier.padding(end = 8.dp)
+                            )
+                            Text("Generation Parameters")
+                        }
                         TextButton(
                             onClick = {
                                 onDismissRequest()

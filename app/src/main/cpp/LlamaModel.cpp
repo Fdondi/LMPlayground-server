@@ -50,10 +50,17 @@ void LlamaModel::loadModel(const std::string &modelPath,
     chat_tmpls = common_chat_templates_init(model, "");
 }
 
-LlamaGenerationSession* LlamaModel::createGenerationSession() {
+LlamaGenerationSession* LlamaModel::createGenerationSession(const SamplerParams &params) {
     auto *session = new LlamaGenerationSession();
-    session->init(model, chat_tmpls.get());
+    session->init(model, chat_tmpls.get(), params);
     return session;
+}
+
+int LlamaModel::getContextTrainSize() {
+    if (model == nullptr) {
+        return 0;
+    }
+    return llama_model_n_ctx_train(model);
 }
 
 uint64_t LlamaModel::getModelSize() {

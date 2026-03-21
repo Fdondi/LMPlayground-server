@@ -2,6 +2,9 @@ package com.druk.lmplayground.conversation
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.draggable
+import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -80,6 +83,7 @@ fun UserInput(
     supportsThinking: Boolean = false,
     thinkingEnabled: Boolean = true,
     onThinkingToggle: () -> Unit = {},
+    onSwipeUp: () -> Unit = {},
     onMessageSent: (String) -> Unit,
     onCancelClicked: () -> Unit = {},
     resetScroll: () -> Unit = {},
@@ -92,8 +96,26 @@ fun UserInput(
     // Used to decide if the keyboard should be shown
     var textFieldFocusState by remember { mutableStateOf(false) }
 
+    var dragAccumulator by remember { mutableStateOf(0f) }
+    val swipeThreshold = -150f // negative = upward
+    val draggableState = rememberDraggableState { delta ->
+        dragAccumulator += delta
+    }
+
     Surface(tonalElevation = 2.dp, contentColor = MaterialTheme.colorScheme.secondary) {
-        Column(modifier = modifier) {
+        Column(
+            modifier = modifier.draggable(
+                state = draggableState,
+                orientation = Orientation.Vertical,
+                onDragStarted = { dragAccumulator = 0f },
+                onDragStopped = {
+                    if (dragAccumulator < swipeThreshold) {
+                        onSwipeUp()
+                    }
+                    dragAccumulator = 0f
+                }
+            )
+        ) {
             UserInputText(
                 status,
                 focusRequester = focusRequester,

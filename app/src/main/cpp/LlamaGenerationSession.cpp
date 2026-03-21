@@ -85,7 +85,7 @@ LlamaGenerationSession::~LlamaGenerationSession() {
     }
 }
 
-void LlamaGenerationSession::init(llama_model *model, const struct common_chat_templates *tmpls) {
+void LlamaGenerationSession::init(llama_model *model, const struct common_chat_templates *tmpls, const SamplerParams &params) {
 
     vocab = llama_model_get_vocab(model);
     chat_tmpls = tmpls;
@@ -93,9 +93,8 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
     int n_threads = std::max(1, std::min(8, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
     LOGi("Using %d threads", n_threads);
 
-    static constexpr int MAX_CTX_MOBILE = 4096;
     int n_ctx_train = llama_model_n_ctx_train(model);
-    int n_ctx = std::min(n_ctx_train, MAX_CTX_MOBILE);
+    int n_ctx = std::min(params.n_ctx, n_ctx_train);
     LOGi("Model training context: %d, using: %d", n_ctx_train, n_ctx);
 
     llama_context_params ctx_params = llama_context_default_params();
@@ -114,10 +113,34 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
     smplParams.no_perf = false;
 
     smpl = llama_sampler_chain_init(smplParams);
-    llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
-    llama_sampler_chain_add(smpl, llama_sampler_init_min_p(0.05f, 1));
-    llama_sampler_chain_add(smpl, llama_sampler_init_temp(0.8f));
-    llama_sampler_chain_add(smpl, llama_sampler_init_dist(LLAMA_DEFAULT_SEED));
+
+    // Repetition penalty (only if > 1.0)
+    if (params.repetition_penalty > 1.0f) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, params.repetition_penalty, 0.0f, 0.0f));
+    }
+
+    // Top-K (only if > 0)
+    if (params.top_k > 0) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_top_k(params.top_k));
+    }
+
+    // Top-P (only if < 1.0)
+    if (params.top_p < 1.0f) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_top_p(params.top_p, 1));
+    }
+
+    // Min-P (only if > 0.0)
+    if (params.min_p > 0.0f) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_min_p(params.min_p, 1));
+    }
+
+    // Temperature: greedy if 0, otherwise temp + dist
+    if (params.temperature == 0.0f) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
+    } else {
+        llama_sampler_chain_add(smpl, llama_sampler_init_temp(params.temperature));
+        llama_sampler_chain_add(smpl, llama_sampler_init_dist(params.seed));
+    }
 
     prev_len = 0;
 }

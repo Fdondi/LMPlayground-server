@@ -117,7 +117,7 @@ class ReplayHistoryTest {
         val model = loadModel(modelFile!!)
 
         // --- Session A: build a 2-turn conversation ---
-        val sessionA = model.createSession()
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = sessionA
 
         // Turn 1
@@ -137,7 +137,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // --- Session B: new session, replay history, continue ---
-        val sessionB = model.createSession()
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = sessionB
 
         sessionB.replayHistory(
@@ -168,7 +168,7 @@ class ReplayHistoryTest {
         assumeTrue("No model in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession()
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = session
 
         // Replay with empty arrays
@@ -195,7 +195,7 @@ class ReplayHistoryTest {
         val model = loadModel(modelFile!!)
 
         // Session A: one turn
-        val sessionA = model.createSession()
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = sessionA
 
         sessionA.addMessage("What is 5 + 5?", false)
@@ -207,7 +207,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // Session B: replay + continue
-        val sessionB = model.createSession()
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = sessionB
 
         sessionB.replayHistory(
@@ -290,7 +290,7 @@ class ReplayHistoryTest {
         assumeTrue("Model doesn't support thinking", model.supportsThinking())
 
         // Session A: thinking enabled
-        val sessionA = model.createSession()
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = sessionA
 
         sessionA.addMessage("What is 7 * 8?", true)
@@ -302,7 +302,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // Session B: replay and continue with thinking
-        val sessionB = model.createSession()
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)
         this.session = sessionB
 
         sessionB.replayHistory(

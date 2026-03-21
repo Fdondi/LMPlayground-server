@@ -9,6 +9,16 @@
 #include "chat.h"
 #include "sampling.h"
 
+struct SamplerParams {
+    int n_ctx;
+    float temperature;
+    float top_p;
+    float repetition_penalty;
+    int top_k;
+    float min_p;
+    uint32_t seed;
+};
+
 class LlamaGenerationSession {
 public:
     using ResponseCallback = std::function<void(const std::string&)>;
@@ -17,7 +27,7 @@ public:
 
     ~LlamaGenerationSession();
 
-    void init(llama_model *model, const struct common_chat_templates *chat_tmpls);
+    void init(llama_model *model, const struct common_chat_templates *chat_tmpls, const SamplerParams &params);
 
     void printReport();
 
@@ -52,7 +62,8 @@ public:
     LlamaModel() = default;
     ~LlamaModel() = default;
 
-    LlamaGenerationSession* createGenerationSession();
+    LlamaGenerationSession* createGenerationSession(const SamplerParams &params);
+    int getContextTrainSize();
     void loadModel(const std::string &modelPath,
                    int32_t n_gpu_layers,
                    llama_progress_callback progress_callback,

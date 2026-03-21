@@ -191,8 +191,27 @@ Java_com_druk_llamacpp_LlamaModel_unloadModel(JNIEnv *env, jobject thiz) {
 }
 
 extern "C"
+JNIEXPORT jint JNICALL
+Java_com_druk_llamacpp_LlamaModel_getContextTrainSize(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return 0;
+    }
+    return model->getContextTrainSize();
+}
+
+extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
+                                                  jint contextSize,
+                                                  jfloat temperature,
+                                                  jfloat topP,
+                                                  jfloat repetitionPenalty,
+                                                  jint topK,
+                                                  jfloat minP,
+                                                  jint seed) {
 
     jclass clazz1 = env->GetObjectClass(thiz);
     jfieldID fid1 = env->GetFieldID(clazz1, "nativeHandle", "J");
@@ -201,11 +220,20 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz) {
         return nullptr;
     }
 
+    SamplerParams params;
+    params.n_ctx = contextSize;
+    params.temperature = temperature;
+    params.top_p = topP;
+    params.repetition_penalty = repetitionPenalty;
+    params.top_k = topK;
+    params.min_p = minP;
+    params.seed = (seed < 0) ? LLAMA_DEFAULT_SEED : static_cast<uint32_t>(seed);
+
     jclass clazz2 = env->FindClass("com/druk/llamacpp/LlamaGenerationSession");
     jmethodID constructor = env->GetMethodID(clazz2, "<init>", "()V");
     jobject obj = env->NewObject(clazz2, constructor);
 
-    LlamaGenerationSession* session = model->createGenerationSession();
+    LlamaGenerationSession* session = model->createGenerationSession(params);
     jclass clazz3 = env->GetObjectClass(obj);
     jfieldID fid3 = env->GetFieldID(clazz3, "nativeHandle", "J");
     env->SetLongField(obj, fid3, (long)session);
