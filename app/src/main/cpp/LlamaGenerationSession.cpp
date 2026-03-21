@@ -188,7 +188,18 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
 
     prev_enable_thinking = enableThinking;
 
-    auto result = renderPrompt(enableThinking);
+    common_chat_params result;
+    try {
+        result = renderPrompt(enableThinking);
+    } catch (const std::exception &e) {
+        LOGe("Failed to render chat template: %s", e.what());
+        messages.pop_back();
+        return 1;
+    } catch (...) {
+        LOGe("Failed to render chat template: unknown error");
+        messages.pop_back();
+        return 1;
+    }
     std::string full_prompt = result.prompt;
     additional_stops = result.additional_stops;
 
@@ -232,7 +243,17 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         }
 
         if (stripped_any) {
-            result = renderPrompt(enableThinking);
+            try {
+                result = renderPrompt(enableThinking);
+            } catch (const std::exception &e) {
+                LOGe("Failed to render chat template after stripping: %s", e.what());
+                messages.pop_back();
+                return 1;
+            } catch (...) {
+                LOGe("Failed to render chat template after stripping: unknown error");
+                messages.pop_back();
+                return 1;
+            }
             full_prompt = result.prompt;
             additional_stops = result.additional_stops;
             prompt = full_prompt;
@@ -259,7 +280,17 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
             messages.erase(it);
         }
 
-        result = renderPrompt(enableThinking);
+        try {
+            result = renderPrompt(enableThinking);
+        } catch (const std::exception &e) {
+            LOGe("Failed to render chat template after dropping turns: %s", e.what());
+            messages.pop_back();
+            return 1;
+        } catch (...) {
+            LOGe("Failed to render chat template after dropping turns: unknown error");
+            messages.pop_back();
+            return 1;
+        }
         full_prompt = result.prompt;
         additional_stops = result.additional_stops;
         prompt = full_prompt;
@@ -295,15 +326,25 @@ void LlamaGenerationSession::finalizeResponse() {
 
     prev_had_thinking = response.find("</think>") != std::string::npos;
 
-    common_chat_templates_inputs inputs;
-    inputs.messages = messages;
-    inputs.add_generation_prompt = false;
-    inputs.use_jinja = true;
-    inputs.enable_thinking = prev_enable_thinking;
+    try {
+        common_chat_templates_inputs inputs;
+        inputs.messages = messages;
+        inputs.add_generation_prompt = false;
+        inputs.use_jinja = true;
+        inputs.enable_thinking = prev_enable_thinking;
 
-    auto result = common_chat_templates_apply(chat_tmpls, inputs);
-    prev_rendered_prompt = result.prompt;
-    prev_len = (int)prev_rendered_prompt.size();
+        auto result = common_chat_templates_apply(chat_tmpls, inputs);
+        prev_rendered_prompt = result.prompt;
+        prev_len = (int)prev_rendered_prompt.size();
+    } catch (const std::exception &e) {
+        LOGe("Failed to render chat template in finalizeResponse: %s", e.what());
+        prev_rendered_prompt.clear();
+        prev_len = 0;
+    } catch (...) {
+        LOGe("Failed to render chat template in finalizeResponse: unknown error");
+        prev_rendered_prompt.clear();
+        prev_len = 0;
+    }
 }
 
 int LlamaGenerationSession::generate(const ResponseCallback& callback) {
