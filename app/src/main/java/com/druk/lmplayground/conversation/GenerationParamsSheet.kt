@@ -93,7 +93,7 @@ fun GenerationParamsSheet(
                 label = "Context Size",
                 value = editedParams.contextSize.toFloat(),
                 valueRange = contextMin.toFloat()..contextMax.toFloat(),
-                steps = ((contextMax - contextMin) / contextStep) - 1,
+                steps = (((contextMax - contextMin) / contextStep) - 1).coerceAtLeast(0),
                 valueDisplay = "${editedParams.contextSize}",
                 warning = if (contextWarning) "Will reset conversation" else null,
                 onValueChange = {
