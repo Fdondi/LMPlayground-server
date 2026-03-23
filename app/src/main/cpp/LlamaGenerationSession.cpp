@@ -361,6 +361,20 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         return 1;
     }
 
+    // Process prompt in chunks of n_batch to avoid exceeding the batch limit.
+    // After replayHistory or context compaction the prompt can be much larger
+    // than n_batch since the entire conversation is re-tokenized.
+    int n_batch_limit = llama_n_batch(ctx);
+    while (batch.n_tokens > n_batch_limit) {
+        llama_batch chunk = llama_batch_get_one(batch.token, n_batch_limit);
+        if (llama_decode(ctx, chunk)) {
+            LOGe("failed to decode prompt chunk");
+            finalizeResponse();
+            return 1;
+        }
+        batch = llama_batch_get_one(batch.token + n_batch_limit, batch.n_tokens - n_batch_limit);
+    }
+
     if (llama_decode(ctx, batch)) {
         LOGe("failed to decode the batch");
         finalizeResponse();
