@@ -14,6 +14,7 @@ class ConversationUiState(
     }
 
     fun markThinkingStarted() {
+        if (_messages.isEmpty()) return
         val message = _messages.last()
         if (message.thinkingStartTimeMs == 0L) {
             _messages[_messages.size - 1] = message.copy(
@@ -23,6 +24,7 @@ class ConversationUiState(
     }
 
     fun updateLastMessage(msg: String, thinkingTokens: Int = 0, responseTokens: Int = 0) {
+        if (_messages.isEmpty()) return
         val message = _messages.last()
         val isThinkingActive = message.thinkingStartTimeMs > 0
         val thinkingJustEnded = isThinkingActive && msg.contains("</think>")
