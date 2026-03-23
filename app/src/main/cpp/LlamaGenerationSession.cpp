@@ -90,7 +90,7 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
     vocab = llama_model_get_vocab(model);
     chat_tmpls = tmpls;
 
-    int n_threads = std::max(1, std::min(8, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
+    int n_threads = std::max(1, std::min(4, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
     LOGi("Using %d threads", n_threads);
 
     int n_ctx_train = llama_model_n_ctx_train(model);
@@ -99,7 +99,7 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
 
     llama_context_params ctx_params = llama_context_default_params();
     ctx_params.n_ctx = n_ctx;
-    ctx_params.n_batch = n_ctx;
+    ctx_params.n_batch = std::min(n_ctx, 512);
     ctx_params.n_threads       = n_threads;
     ctx_params.n_threads_batch = n_threads;
 
