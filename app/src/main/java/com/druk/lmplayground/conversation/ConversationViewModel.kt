@@ -201,7 +201,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _isModelReady.postValue(true)
 
                 // If there are existing messages, replay history into the new session
-                val messages = uiState.messages
+                val messages = uiState.messages.toList()
                 if (messages.isNotEmpty()) {
                     replayHistoryToSession(llamaSession, messages)
                 }
@@ -311,7 +311,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     val newSession = createSessionWithParams(model, params)
                     this@ConversationViewModel.llamaSession = newSession
 
-                    val messages = uiState.messages
+                    val messages = uiState.messages.toList()
                     if (messages.isNotEmpty()) {
                         replayHistoryToSession(newSession, messages)
                     }
