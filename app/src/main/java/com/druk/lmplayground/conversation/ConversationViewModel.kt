@@ -21,6 +21,7 @@ import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
 import com.druk.lmplayground.storage.StoragePreferences
 import com.druk.lmplayground.storage.StorageRepository
+import androidx.compose.runtime.snapshots.Snapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -357,10 +358,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
                         // Detect thinking from model output even when the
                         // toggle is off (models like LFM 2.5 always think)
+                        var thinkingJustStarted = false
                         if (!modelIsThinking && string.startsWith("<think>")) {
                             modelIsThinking = true
                             thinkingComplete = false
-                            uiState.markThinkingStarted()
+                            thinkingJustStarted = true
                         }
 
                         if (modelIsThinking) {
@@ -373,11 +375,20 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             thinkingTokenCount = totalTokens
                         }
                         val currentThinkingTokens = if (thinkingComplete) thinkingTokenCount else totalTokens
-                        uiState.updateLastMessage(
-                            string,
-                            thinkingTokens = currentThinkingTokens,
-                            responseTokens = totalTokens - currentThinkingTokens
-                        )
+                        // Wrap in mutableSnapshot so Compose sees atomic
+                        // state changes — prevents IllegalArgumentException
+                        // in LazyColumn measurement when items change mid-layout
+                        val finalString = string
+                        Snapshot.withMutableSnapshot {
+                            if (thinkingJustStarted) {
+                                uiState.markThinkingStarted()
+                            }
+                            uiState.updateLastMessage(
+                                finalString,
+                                thinkingTokens = currentThinkingTokens,
+                                responseTokens = totalTokens - currentThinkingTokens
+                            )
+                        }
                     }
                 }
                 while (this.isActive && llamaSession.generate(callback) == 0) {
