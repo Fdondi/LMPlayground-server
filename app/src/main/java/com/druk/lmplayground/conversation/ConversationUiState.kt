@@ -1,6 +1,7 @@
 package com.druk.lmplayground.conversation
 
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.toMutableStateList
 
 class ConversationUiState(
@@ -45,8 +46,10 @@ class ConversationUiState(
     }
 
     fun setMessages(messages: List<Message>) {
-        _messages.clear()
-        _messages.addAll(messages)
+        Snapshot.withMutableSnapshot {
+            _messages.clear()
+            _messages.addAll(messages)
+        }
     }
 
     fun resetMessages() {
