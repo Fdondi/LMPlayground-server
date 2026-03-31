@@ -194,6 +194,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _maxContextSize.postValue(minOf(nCtxTrain, 16384))
                 val params = _generationParams.value ?: GenerationParams()
                 val llamaSession = createSessionWithParams(llamaModel, params)
+                if (llamaSession == null) {
+                    _loadedModelStatus.postValue("Failed to create session")
+                    llamaModel.unloadModel()
+                    return@withContext
+                }
                 this@ConversationViewModel.llamaModel = llamaModel
                 this@ConversationViewModel.llamaSession = llamaSession
                 _supportsThinking.postValue(llamaModel.supportsThinking())
@@ -247,7 +252,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         _thinkingEnabled.value = _thinkingEnabled.value != true
     }
 
-    private fun createSessionWithParams(model: LlamaModel, params: GenerationParams): LlamaGenerationSession {
+    private fun createSessionWithParams(model: LlamaModel, params: GenerationParams): LlamaGenerationSession? {
         return model.createSession(
             params.contextSize,
             params.temperature,
@@ -292,7 +297,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
                 withContext(Dispatchers.Default) {
                     prevSession?.destroy()
-                    val newSession = createSessionWithParams(model, params)
+                    val newSession = createSessionWithParams(model, params) ?: return@withContext
                     this@ConversationViewModel.llamaSession = newSession
                 }
             }
@@ -309,7 +314,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
                 withContext(Dispatchers.Default) {
                     prevSession?.destroy()
-                    val newSession = createSessionWithParams(model, params)
+                    val newSession = createSessionWithParams(model, params) ?: return@withContext
                     this@ConversationViewModel.llamaSession = newSession
 
                     val messages = uiState.messages.toList()
@@ -323,16 +328,17 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     @MainThread
     fun addMessage(message: Message) {
-        uiState.addMessage(message)
-
         val enableThinking = _thinkingEnabled.value == true
-        uiState.addMessage(
-            Message(
-                "Assistant",
-                "",
-                thinkingStartTimeMs = if (enableThinking) System.currentTimeMillis() else 0L
+        Snapshot.withMutableSnapshot {
+            uiState.addMessage(message)
+            uiState.addMessage(
+                Message(
+                    "Assistant",
+                    "",
+                    thinkingStartTimeMs = if (enableThinking) System.currentTimeMillis() else 0L
+                )
             )
-        )
+        }
 
         _isGenerating.postValue(true)
         generatingJob = viewModelScope.launch {
@@ -492,7 +498,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 withContext(Dispatchers.Default) {
                     prevSession?.destroy()
                     val params = _generationParams.value ?: GenerationParams()
-                    val newSession = createSessionWithParams(model, params)
+                    val newSession = createSessionWithParams(model, params) ?: return@withContext
                     this@ConversationViewModel.llamaSession = newSession
                     replayHistoryToSession(newSession, uiMessages)
                 }
@@ -518,7 +524,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 withContext(Dispatchers.Default) {
                     prevSession?.destroy()
                     val params = _generationParams.value ?: GenerationParams()
-                    val newSession = createSessionWithParams(model, params)
+                    val newSession = createSessionWithParams(model, params) ?: return@withContext
                     this@ConversationViewModel.llamaSession = newSession
                 }
             }

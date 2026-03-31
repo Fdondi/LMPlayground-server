@@ -27,7 +27,7 @@ class LlamaModel {
         topK: Int,
         minP: Float,
         seed: Int
-    ): LlamaGenerationSession
+    ): LlamaGenerationSession?
 
     external fun getContextTrainSize(): Int
 
