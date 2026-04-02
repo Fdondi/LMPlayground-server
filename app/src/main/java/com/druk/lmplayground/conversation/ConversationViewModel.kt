@@ -192,7 +192,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 val modelDescription = Formatter.formatFileSize(app, modelSize)
                 val nCtxTrain = llamaModel.getContextTrainSize()
                 _maxContextSize.postValue(minOf(nCtxTrain, 16384))
-                val params = _generationParams.value ?: GenerationParams()
+                // Load saved per-model params, or use defaults
+                val savedMap = storagePreferences.getModelGenerationParams(modelInfo.filename)
+                val params = if (savedMap != null) {
+                    GenerationParams.fromMap(savedMap)
+                } else {
+                    GenerationParams()
+                }
+                _generationParams.postValue(params)
                 val llamaSession = createSessionWithParams(llamaModel, params)
                 if (llamaSession == null) {
                     _loadedModelStatus.postValue("Failed to create session")
@@ -269,6 +276,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun updateGenerationParams(params: GenerationParams) {
         val oldParams = _generationParams.value ?: GenerationParams()
         _generationParams.value = params
+
+        // Save as per-model defaults
+        val modelFilename = _loadedModel.value?.filename
+        if (modelFilename != null) {
+            storagePreferences.setModelGenerationParams(modelFilename, params.toMap())
+        }
 
         // Persist to Room if we have an active session
         val sessionId = _currentSessionId.value

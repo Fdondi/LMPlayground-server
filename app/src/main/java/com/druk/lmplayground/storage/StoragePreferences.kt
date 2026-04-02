@@ -32,6 +32,21 @@ class StoragePreferences(context: Context) {
         prefs.edit { remove("custom_model_$filename") }
     }
 
+    fun getModelGenerationParams(filename: String): Map<String, Float>? {
+        val json = prefs.getString("gen_params_$filename", null) ?: return null
+        return try {
+            json.split(",").associate {
+                val (k, v) = it.split("=", limit = 2)
+                k to v.toFloat()
+            }
+        } catch (_: Exception) { null }
+    }
+
+    fun setModelGenerationParams(filename: String, params: Map<String, Float>) {
+        val encoded = params.entries.joinToString(",") { "${it.key}=${it.value}" }
+        prefs.edit { putString("gen_params_$filename", encoded) }
+    }
+
     fun clear() {
         prefs.edit { clear() }
     }
