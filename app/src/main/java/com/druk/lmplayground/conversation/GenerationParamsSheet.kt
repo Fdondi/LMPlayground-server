@@ -41,6 +41,7 @@ import kotlin.math.roundToInt
 fun GenerationParamsSheet(
     params: GenerationParams,
     maxContextSize: Int,
+    supportsThinking: Boolean = false,
     onParamsChanged: (GenerationParams) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -98,9 +99,37 @@ fun GenerationParamsSheet(
                 warning = if (contextWarning) "Will reset conversation" else null,
                 onValueChange = {
                     val snapped = (it / contextStep).roundToInt() * contextStep
-                    editedParams = editedParams.copy(contextSize = snapped.coerceIn(contextMin, contextMax))
+                    val newContextSize = snapped.coerceIn(contextMin, contextMax)
+                    val oldContextSize = editedParams.contextSize
+                    // Auto-scale thinking budget proportionally when context size changes
+                    val newBudget = if (oldContextSize > 0) {
+                        (editedParams.thinkingBudget.toLong() * newContextSize / oldContextSize).toInt()
+                            .coerceIn(64, newContextSize)
+                    } else {
+                        newContextSize / 4
+                    }
+                    editedParams = editedParams.copy(contextSize = newContextSize, thinkingBudget = newBudget)
                 }
             )
+
+            // Thinking Budget (only for thinking-capable models)
+            if (supportsThinking) {
+                val budgetMin = 64
+                val budgetMax = editedParams.contextSize
+                ParamSlider(
+                    label = "Thinking Budget",
+                    value = editedParams.thinkingBudget.toFloat(),
+                    valueRange = budgetMin.toFloat()..budgetMax.toFloat(),
+                    steps = 0,
+                    valueDisplay = "${editedParams.thinkingBudget} tokens",
+                    onValueChange = {
+                        val snapped = (it / 64).roundToInt() * 64
+                        editedParams = editedParams.copy(
+                            thinkingBudget = snapped.coerceIn(budgetMin, budgetMax)
+                        )
+                    }
+                )
+            }
 
             // Temperature
             ParamSlider(

@@ -260,7 +260,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             params.repetitionPenalty,
             params.topK,
             params.minP,
-            params.seed
+            params.seed,
+            params.thinkingBudget
         )
     }
 
@@ -276,7 +277,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 chatRepository?.updateSessionParams(
                     sessionId,
                     params.contextSize, params.temperature, params.topP,
-                    params.repetitionPenalty, params.topK, params.minP, params.seed
+                    params.repetitionPenalty, params.topK, params.minP, params.seed,
+                    params.thinkingBudget
                 )
             }
         }
@@ -351,16 +353,13 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 llamaSession.addMessage(message.content, enableThinking)
 
                 val callback = object: LlamaGenerationCallback {
-                    var responseByteArray = ByteArray(0)
                     var totalTokens = 0
                     var thinkingTokenCount = 0
                     var thinkingComplete = !enableThinking
                     var modelIsThinking = enableThinking
-                    override fun newTokens(newTokens: ByteArray) {
-                        responseByteArray += newTokens
+                    override fun onFullResponse(response: String) {
                         totalTokens++
-                        var string = String(responseByteArray, Charsets.UTF_8)
-                        string = ResponseProcessor.process(string)
+                        var string = ResponseProcessor.process(response)
 
                         // Detect thinking from model output even when the
                         // toggle is off (models like LFM 2.5 always think)
@@ -371,19 +370,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             thinkingJustStarted = true
                         }
 
-                        if (modelIsThinking) {
-                            string = ResponseProcessor.ensureThinkingTag(string)
-                        } else {
-                            string = ResponseProcessor.stripCompleteThinkBlocks(string)
-                        }
                         if (!thinkingComplete && string.contains("</think>")) {
                             thinkingComplete = true
                             thinkingTokenCount = totalTokens
                         }
                         val currentThinkingTokens = if (thinkingComplete) thinkingTokenCount else totalTokens
-                        // Wrap in mutableSnapshot so Compose sees atomic
-                        // state changes — prevents IllegalArgumentException
-                        // in LazyColumn measurement when items change mid-layout
                         val finalString = string
                         Snapshot.withMutableSnapshot {
                             if (thinkingJustStarted) {
@@ -436,7 +427,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 repetitionPenalty = params.repetitionPenalty,
                 topK = params.topK,
                 minP = params.minP,
-                seed = params.seed
+                seed = params.seed,
+                thinkingBudget = params.thinkingBudget
             )
         )
         _currentSessionId.postValue(id)
@@ -483,7 +475,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     repetitionPenalty = sessionEntity.repetitionPenalty,
                     topK = sessionEntity.topK,
                     minP = sessionEntity.minP,
-                    seed = sessionEntity.seed
+                    seed = sessionEntity.seed,
+                    thinkingBudget = sessionEntity.thinkingBudget
                 )
                 _generationParams.value = params
             }

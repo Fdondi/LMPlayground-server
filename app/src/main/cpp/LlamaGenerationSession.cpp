@@ -12,6 +12,7 @@
 #include "console.h"
 #include "llama.h"
 #include "log.h"
+#include "reasoning-budget.h"
 
 #include <cassert>
 #include <cinttypes>
@@ -114,6 +115,8 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
 
     smpl = llama_sampler_chain_init(smplParams);
 
+    sampler_params = params;
+
     // Repetition penalty (only if > 1.0)
     if (params.repetition_penalty > 1.0f) {
         llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, params.repetition_penalty, 0.0f, 0.0f));
@@ -183,6 +186,9 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         inputs.add_generation_prompt = true;
         inputs.use_jinja = true;
         inputs.enable_thinking = enableThinking;
+        if (enableThinking) {
+            inputs.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
+        }
         return common_chat_templates_apply(chat_tmpls, inputs);
     };
 
@@ -236,9 +242,19 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
 
         bool stripped_any = false;
         for (size_t i = 0; i + 1 < messages.size(); i++) {
-            if (messages[i].role == "assistant" && messages[i].content.find("<think>") != std::string::npos) {
-                messages[i].content = strip_think_tags(messages[i].content);
-                stripped_any = true;
+            if (messages[i].role == "assistant") {
+                // Use PEG parser to strip thinking from any format
+                if (parser_initialized) {
+                    auto parsed = common_chat_parse(messages[i].content, false, parser_params);
+                    if (!parsed.reasoning_content.empty()) {
+                        messages[i].content = parsed.content;
+                        messages[i].reasoning_content.clear();
+                        stripped_any = true;
+                    }
+                } else if (messages[i].content.find("<think>") != std::string::npos) {
+                    messages[i].content = strip_think_tags(messages[i].content);
+                    stripped_any = true;
+                }
             }
         }
 
@@ -315,6 +331,81 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
 
     batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
 
+    // Build PEG parser params for response parsing
+    if (!result.parser.empty()) {
+        parser_params = common_chat_parser_params(result);
+        parser_params.reasoning_format = enableThinking
+            ? COMMON_REASONING_FORMAT_DEEPSEEK : COMMON_REASONING_FORMAT_NONE;
+        parser_params.parse_tool_calls = false;
+        parser_params.parser.load(result.parser);
+        parser_initialized = true;
+    } else {
+        parser_initialized = false;
+    }
+
+    // Add reasoning budget sampler on first thinking-enabled turn, using
+    // the model's actual thinking tags from the template (not hardcoded).
+    // Must be first in chain (before top-k/top-p/temp) so it can override logits,
+    // so we rebuild the entire sampler chain.
+    if (sampler_params.thinking_budget >= 0 && enableThinking && !budget_sampler_added && result.supports_thinking) {
+        auto tokenize_str = [&](const std::string &text) -> std::vector<llama_token> {
+            int n = -llama_tokenize(vocab, text.c_str(), text.size(), nullptr, 0, false, true);
+            std::vector<llama_token> tokens(n);
+            llama_tokenize(vocab, text.c_str(), text.size(), tokens.data(), tokens.size(), false, true);
+            return tokens;
+        };
+
+        std::string start_tag = result.thinking_start_tag;
+        std::string end_tag = result.thinking_end_tag;
+
+        // For gpt-oss (Gemma 4) and similar models that use channel-based thinking,
+        // thinking_start_tag/end_tag may be empty — detect from preserved tokens
+        if (start_tag.empty() && !result.preserved_tokens.empty()) {
+            for (const auto &tok : result.preserved_tokens) {
+                if (tok.find("channel") != std::string::npos) {
+                    start_tag = "<|channel|>analysis<|message|>";
+                    end_tag = "<|end|>";
+                    break;
+                }
+            }
+        }
+
+        if (!start_tag.empty() && !end_tag.empty()) {
+            // Rebuild sampler chain with budget sampler first
+            llama_sampler_free(smpl);
+            auto smplParams = llama_sampler_chain_default_params();
+            smplParams.no_perf = false;
+            smpl = llama_sampler_chain_init(smplParams);
+
+            // Budget sampler first (must override logits before other samplers filter)
+            auto start_tokens  = tokenize_str(start_tag);
+            auto end_tokens    = tokenize_str(end_tag);
+            auto forced_tokens = end_tokens;
+            llama_sampler_chain_add(smpl, common_reasoning_budget_init(
+                    vocab, start_tokens, end_tokens, forced_tokens, sampler_params.thinking_budget));
+
+            // Re-add other samplers in original order
+            if (sampler_params.repetition_penalty > 1.0f)
+                llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, sampler_params.repetition_penalty, 0.0f, 0.0f));
+            if (sampler_params.top_k > 0)
+                llama_sampler_chain_add(smpl, llama_sampler_init_top_k(sampler_params.top_k));
+            if (sampler_params.top_p < 1.0f)
+                llama_sampler_chain_add(smpl, llama_sampler_init_top_p(sampler_params.top_p, 1));
+            if (sampler_params.min_p > 0.0f)
+                llama_sampler_chain_add(smpl, llama_sampler_init_min_p(sampler_params.min_p, 1));
+            if (sampler_params.temperature == 0.0f) {
+                llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
+            } else {
+                llama_sampler_chain_add(smpl, llama_sampler_init_temp(sampler_params.temperature));
+                llama_sampler_chain_add(smpl, llama_sampler_init_dist(sampler_params.seed));
+            }
+
+            budget_sampler_added = true;
+            LOGi("Reasoning budget sampler added: budget=%d, start='%s', end='%s'",
+                 sampler_params.thinking_budget, start_tag.c_str(), end_tag.c_str());
+        }
+    }
+
     return 0;
 }
 
@@ -324,7 +415,12 @@ void LlamaGenerationSession::finalizeResponse() {
     assistant_msg.content = response;
     messages.push_back(assistant_msg);
 
-    prev_had_thinking = response.find("</think>") != std::string::npos;
+    if (parser_initialized) {
+        auto parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
+        prev_had_thinking = !parsed.reasoning_content.empty();
+    } else {
+        prev_had_thinking = response.find("</think>") != std::string::npos;
+    }
 
     try {
         common_chat_templates_inputs inputs;
@@ -381,6 +477,17 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         return 1;
     }
 
+    // Reset sampler and feed prompt tokens so the reasoning budget sampler
+    // can detect <think> prefill from chat templates (e.g. Qwen3).
+    // Only on the first call per turn (prompt_tokens is non-empty).
+    if (!prompt_tokens.empty()) {
+        llama_sampler_reset(smpl);
+        for (const auto &token : prompt_tokens) {
+            llama_sampler_accept(smpl, token);
+        }
+        prompt_tokens.clear();
+    }
+
     last_token = llama_sampler_sample(smpl, ctx, -1);
 
     bool is_eog = llama_vocab_is_eog(vocab, last_token);
@@ -406,7 +513,22 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         }
 
         if (!is_eog) {
-            callback(piece.c_str());
+            // Use PEG parser to normalize thinking format for the UI
+            if (parser_initialized) {
+                auto parsed = common_chat_parse(response, /*is_partial=*/true, parser_params);
+                std::string normalized;
+                if (!parsed.reasoning_content.empty()) {
+                    normalized = "<think>" + parsed.reasoning_content;
+                    if (!parsed.content.empty()) {
+                        normalized += "</think>" + parsed.content;
+                    }
+                } else {
+                    normalized = parsed.content.empty() ? response : parsed.content;
+                }
+                callback(normalized);
+            } else {
+                callback(response);
+            }
             batch = llama_batch_get_one(&last_token, 1);
             return 0;
         }

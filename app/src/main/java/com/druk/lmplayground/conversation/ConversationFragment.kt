@@ -227,6 +227,7 @@ class ConversationFragment : Fragment() {
                     GenerationParamsSheet(
                         params = generationParams,
                         maxContextSize = maxContextSize,
+                        supportsThinking = supportsThinking,
                         onParamsChanged = { viewModel.updateGenerationParams(it) },
                         onDismiss = { showParamsSheet = false }
                     )

@@ -215,7 +215,8 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
                                                   jfloat repetitionPenalty,
                                                   jint topK,
                                                   jfloat minP,
-                                                  jint seed) {
+                                                  jint seed,
+                                                  jint thinkingBudget) {
 
     jclass clazz1 = env->GetObjectClass(thiz);
     jfieldID fid1 = env->GetFieldID(clazz1, "nativeHandle", "J");
@@ -232,6 +233,7 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
     params.top_k = topK;
     params.min_p = minP;
     params.seed = (seed < 0) ? LLAMA_DEFAULT_SEED : static_cast<uint32_t>(seed);
+    params.thinking_budget = thinkingBudget;
 
     jclass clazz2 = env->FindClass("com/druk/llamacpp/LlamaGenerationSession");
     jmethodID constructor = env->GetMethodID(clazz2, "<init>", "()V");
@@ -258,16 +260,15 @@ extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_
     }
 
     jclass javaClass = env->FindClass("com/druk/llamacpp/LlamaGenerationCallback");
-    jmethodID newTokensMethodId = env->GetMethodID(javaClass, "newTokens", "([B)V");
+    jmethodID onFullResponseId = env->GetMethodID(javaClass, "onFullResponse", "(Ljava/lang/String;)V");
 
     return session->generate(
-            [env, newTokensMethodId, callback](const std::string &response) {
-                const char *cStr = response.c_str();
-                jsize len = strlen(cStr);
-                jbyteArray result = env->NewByteArray(len);
-                env->SetByteArrayRegion(result, 0, len, (jbyte *) cStr);
-                env->CallVoidMethod(callback, newTokensMethodId, result);
-                env->DeleteLocalRef(result);
+            [env, onFullResponseId, callback](const std::string &fullResponse) {
+                jstring jResponse = env->NewStringUTF(fullResponse.c_str());
+                if (jResponse != nullptr) {
+                    env->CallVoidMethod(callback, onFullResponseId, jResponse);
+                    env->DeleteLocalRef(jResponse);
+                }
             }
     );
 }

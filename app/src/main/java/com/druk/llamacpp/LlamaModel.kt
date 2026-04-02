@@ -26,7 +26,8 @@ class LlamaModel {
         repetitionPenalty: Float,
         topK: Int,
         minP: Float,
-        seed: Int
+        seed: Int,
+        thinkingBudget: Int
     ): LlamaGenerationSession?
 
     external fun getContextTrainSize(): Int

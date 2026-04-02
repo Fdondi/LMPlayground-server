@@ -7,5 +7,6 @@ data class GenerationParams(
     val repetitionPenalty: Float = 1.0f,
     val topK: Int = 40,
     val minP: Float = 0.05f,
-    val seed: Int = -1
+    val seed: Int = -1,
+    val thinkingBudget: Int = contextSize / 4
 )

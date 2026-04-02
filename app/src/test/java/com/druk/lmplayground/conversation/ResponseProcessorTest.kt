@@ -96,44 +96,4 @@ class ResponseProcessorTest {
         val result = ResponseProcessor.process(raw)
         assertEquals("Just a plain response.", result)
     }
-
-    // --- ensureThinkingTag ---
-
-    @Test
-    fun `ensureThinkingTag prepends when close tag present but no open`() {
-        val input = "\nSome thinking\n</think>\n\nHello!"
-        assertEquals("<think>\nSome thinking\n</think>\n\nHello!", ResponseProcessor.ensureThinkingTag(input))
-    }
-
-    @Test
-    fun `ensureThinkingTag leaves alone when both tags present`() {
-        val input = "<think>\nSome thinking\n</think>\n\nHello!"
-        assertEquals(input, ResponseProcessor.ensureThinkingTag(input))
-    }
-
-    @Test
-    fun `ensureThinkingTag prepends during streaming before close tag arrives`() {
-        val input = "Okay let me think about this..."
-        assertEquals("<think>Okay let me think about this...", ResponseProcessor.ensureThinkingTag(input))
-    }
-
-    // --- stripCompleteThinkBlocks ---
-
-    @Test
-    fun `stripCompleteThinkBlocks removes complete pair`() {
-        val input = "<think>\nSome thinking\n</think>\n\nHello!"
-        assertEquals("Hello!", ResponseProcessor.stripCompleteThinkBlocks(input))
-    }
-
-    @Test
-    fun `stripCompleteThinkBlocks keeps unclosed think tag content`() {
-        val input = "<think>Hello! How can I help?"
-        assertEquals("<think>Hello! How can I help?", ResponseProcessor.stripCompleteThinkBlocks(input))
-    }
-
-    @Test
-    fun `stripCompleteThinkBlocks with no tags returns input`() {
-        val input = "Hello!"
-        assertEquals("Hello!", ResponseProcessor.stripCompleteThinkBlocks(input))
-    }
 }

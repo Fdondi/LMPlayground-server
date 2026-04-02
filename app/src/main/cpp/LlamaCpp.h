@@ -17,6 +17,7 @@ struct SamplerParams {
     int top_k;
     float min_p;
     uint32_t seed;
+    int32_t thinking_budget; // -1 = unlimited
 };
 
 class LlamaGenerationSession {
@@ -55,6 +56,10 @@ private:
     llama_token last_token;
     llama_batch batch;
     std::string response;
+    common_chat_parser_params parser_params;
+    bool parser_initialized = false;
+    SamplerParams sampler_params;
+    bool budget_sampler_added = false;
 };
 
 class LlamaModel {

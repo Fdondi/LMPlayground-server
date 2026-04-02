@@ -91,12 +91,12 @@ class ModelGenerationTest {
         maxTokens: Int = 2048,
         timeoutMs: Long = 120_000
     ): String {
-        val responseBytes = mutableListOf<Byte>()
+        var lastResponse = ""
         var tokenCount = 0
         val deadline = System.currentTimeMillis() + timeoutMs
         val callback = object : LlamaGenerationCallback {
-            override fun newTokens(newTokens: ByteArray) {
-                responseBytes.addAll(newTokens.toList())
+            override fun onFullResponse(response: String) {
+                lastResponse = response
             }
         }
         while (session.generate(callback) == 0) {
@@ -110,7 +110,7 @@ class ModelGenerationTest {
                 break
             }
         }
-        return String(responseBytes.toByteArray(), Charsets.UTF_8)
+        return lastResponse
     }
 
     @Test
@@ -142,7 +142,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", true)
@@ -169,7 +169,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", false)
@@ -185,7 +185,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", true)
@@ -208,7 +208,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         // First turn
@@ -236,7 +236,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         // Turn 1
@@ -284,7 +284,7 @@ class ModelGenerationTest {
         Log.d(TAG, "supportsThinking: ${model.supportsThinking()}")
         assertTrue("Qwen 3.5 should support thinking", model.supportsThinking())
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", true)
@@ -302,7 +302,7 @@ class ModelGenerationTest {
         assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", false)
@@ -317,7 +317,7 @@ class ModelGenerationTest {
         assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         // Turn 1
@@ -348,7 +348,7 @@ class ModelGenerationTest {
         assertTrue("Model size should be > 0", model.getModelSize() > 0)
         Log.d(TAG, "Nemotron supportsThinking: ${model.supportsThinking()}")
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", false)
@@ -365,7 +365,7 @@ class ModelGenerationTest {
         val model = loadModel(modelFile!!)
         assumeTrue("Nemotron does not support thinking", model.supportsThinking())
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("What is 2+2?", true)
@@ -381,7 +381,7 @@ class ModelGenerationTest {
         assumeTrue("Nemotron model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         session.addMessage("Say hello", false)
@@ -394,4 +394,40 @@ class ModelGenerationTest {
         Log.d(TAG, "Nemotron T2 (${r2.length} chars):\n$r2")
         assertTrue("Turn 2 should not be empty", r2.isNotBlank())
     }
+
+    @Test(timeout = 180_000)
+    fun testThinkingBudgetLimitsTokens() {
+        val modelFile = findModel()
+        assumeTrue("No model file found in $MODELS_PATH", modelFile != null)
+
+        val model = loadModel(modelFile!!)
+        assumeTrue("Model must support thinking", model.supportsThinking())
+
+        val budget = 50
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, budget)!!
+        this.session = session
+
+        session.addMessage("Explain quantum computing", true)
+        val raw = generateFullResponse(session, maxTokens = 1024, timeoutMs = 120_000)
+        Log.d(TAG, "Budget=$budget raw (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+
+        val hasThinkClose = raw.contains("</think>")
+        assertTrue("Response should contain </think> (budget should force close)", hasThinkClose)
+
+        // Count tokens in the thinking block (rough char-based estimate:
+        // the thinking content between <think> and </think> should be limited)
+        val thinkStart = raw.indexOf("<think>")
+        val thinkEnd = raw.indexOf("</think>")
+        if (thinkStart >= 0 && thinkEnd > thinkStart) {
+            val thinkContent = raw.substring(thinkStart + 7, thinkEnd)
+            Log.d(TAG, "Thinking content length: ${thinkContent.length} chars")
+            // With a 50-token budget, thinking should be short (rough ~4 chars/token)
+            assertTrue(
+                "Thinking content should be limited (got ${thinkContent.length} chars)",
+                thinkContent.length < 500
+            )
+        }
+    }
+
 }

@@ -30,8 +30,9 @@ class ChatRepository(private val dao: ChatDao) {
     suspend fun updateSessionParams(
         sessionId: String,
         contextSize: Int, temperature: Float, topP: Float,
-        repetitionPenalty: Float, topK: Int, minP: Float, seed: Int
-    ) = dao.updateSessionParams(sessionId, contextSize, temperature, topP, repetitionPenalty, topK, minP, seed)
+        repetitionPenalty: Float, topK: Int, minP: Float, seed: Int,
+        thinkingBudget: Int
+    ) = dao.updateSessionParams(sessionId, contextSize, temperature, topP, repetitionPenalty, topK, minP, seed, thinkingBudget)
 
     suspend fun getSession(sessionId: String): ChatSessionEntity? =
         dao.getSession(sessionId)
