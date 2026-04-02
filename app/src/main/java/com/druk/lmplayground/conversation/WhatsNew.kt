@@ -18,8 +18,8 @@ import androidx.compose.ui.unit.dp
 fun WhatsNewText(modifier: Modifier = Modifier) {
     val items = listOf(
         "New Gemma 4 models (E2B, E4B)",
-        "Chat history with session persistence",
-        "Tunable generation parameters"
+        "Per-model generation parameters",
+        "Thinking budget control"
     )
 
     Column(
