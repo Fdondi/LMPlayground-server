@@ -3,6 +3,7 @@ package com.druk.lmplayground.conversation
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -16,13 +17,13 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun WhatsNewText(modifier: Modifier = Modifier) {
     val items = listOf(
+        "New Gemma 4 models (E2B, E4B)",
         "Chat history with session persistence",
-        "Switch models without losing conversations",
         "Tunable generation parameters"
     )
 
     Column(
-        modifier = modifier.padding(horizontal = 32.dp),
+        modifier = modifier.fillMaxWidth().padding(horizontal = 32.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
