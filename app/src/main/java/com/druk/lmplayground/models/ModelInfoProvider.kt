@@ -115,6 +115,14 @@ object ModelInfoProvider {
             logoRes = R.drawable.logo_deepseek
         ),
         ModelInfo(
+            name = "LFM2.5 350M",
+            filename = "LFM2.5-350M-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/LiquidAI/LFM2.5-350M-GGUF/resolve/main/LFM2.5-350M-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-03-25"),
+            description = "Liquid AI \u00B7 Ultra-lightweight chat model \u00B7 267Mb",
+            logoRes = R.drawable.logo_liquid
+        ),
+        ModelInfo(
             name = "LFM2.5 1.2B Thinking",
             filename = "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/LFM2.5-1.2B-Thinking-GGUF/resolve/main/LFM2.5-1.2B-Thinking-Q4_K_M.gguf"),
