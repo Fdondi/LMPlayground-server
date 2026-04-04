@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -44,17 +45,17 @@ fun Messages(
             state = scrollState,
             modifier = Modifier.fillMaxSize()
         ) {
-            for (index in messages.indices) {
-                val content = messages[index]
+            itemsIndexed(
+                items = messages,
+                key = { _, msg -> msg.timestamp }
+            ) { index, content ->
                 val isLast = index == messages.lastIndex
-                item {
-                    Message(
-                        msg = content,
-                        isUserMe = content.author == "User",
-                        showActions = !(isLast && isGenerating),
-                        onTokenCountClicked = onTokenCountClicked
-                    )
-                }
+                Message(
+                    msg = content,
+                    isUserMe = content.author == "User",
+                    showActions = !(isLast && isGenerating),
+                    onTokenCountClicked = onTokenCountClicked
+                )
             }
             item {
                 Spacer(modifier = Modifier.height(16.dp))
