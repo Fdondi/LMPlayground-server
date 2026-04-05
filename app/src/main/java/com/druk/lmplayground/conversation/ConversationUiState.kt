@@ -3,6 +3,7 @@ package com.druk.lmplayground.conversation
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.toMutableStateList
+import java.util.concurrent.atomic.AtomicLong
 
 class ConversationUiState(
     initialMessages: List<Message>
@@ -57,6 +58,8 @@ class ConversationUiState(
     }
 }
 
+private val messageIdCounter = AtomicLong(0)
+
 @Immutable
 data class Message(
     val author: String,
@@ -66,5 +69,6 @@ data class Message(
     val thinkingStartTimeMs: Long = 0,
     val thinkingTokens: Int = 0,
     val responseTokens: Int = 0,
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+    val id: Long = messageIdCounter.incrementAndGet()
 )
