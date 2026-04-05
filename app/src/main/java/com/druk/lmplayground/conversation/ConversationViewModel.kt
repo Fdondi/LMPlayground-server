@@ -54,6 +54,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _thinkingEnabled = MutableLiveData(false)
     private val _generationParams = MutableLiveData(GenerationParams())
     private val _maxContextSize = MutableLiveData(4096)
+    private val _sessionModelHint = MutableLiveData<Pair<String, String>?>(null) // (modelName, modelFilename)
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -68,6 +69,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val thinkingEnabled: LiveData<Boolean> = _thinkingEnabled
     val generationParams: LiveData<GenerationParams> = _generationParams
     val maxContextSize: LiveData<Int> = _maxContextSize
+    val sessionModelHint: LiveData<Pair<String, String>?> = _sessionModelHint
 
     val uiState = ConversationUiState(
         initialMessages = emptyList()
@@ -212,6 +214,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _modelLoadingProgress.postValue(0f)
                 _loadedModelStatus.postValue(modelDescription)
                 _isModelReady.postValue(true)
+                _sessionModelHint.postValue(null)
 
                 // If there are existing messages, replay history into the new session
                 val messages = uiState.messages.toList()
@@ -494,6 +497,16 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _generationParams.value = params
             }
 
+            // Show model hint if session used a different model
+            if (sessionEntity != null &&
+                sessionEntity.modelFilename.isNotEmpty() &&
+                sessionEntity.modelFilename != _loadedModel.value?.filename
+            ) {
+                _sessionModelHint.value = Pair(sessionEntity.modelName, sessionEntity.modelFilename)
+            } else {
+                _sessionModelHint.value = null
+            }
+
             uiState.setMessages(uiMessages)
 
             // Recreate native session with restored params and replay history
@@ -520,6 +533,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             generatingJob = null
 
             _currentSessionId.value = null
+            _sessionModelHint.value = null
             uiState.resetMessages()
 
             // Recreate native session with clean KV cache
@@ -565,6 +579,18 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     @MainThread
     fun cancelGeneration() {
         generatingJob?.cancel()
+    }
+
+    fun dismissSessionModelHint() {
+        _sessionModelHint.value = null
+    }
+
+    @MainThread
+    fun loadModelByFilename(filename: String) {
+        _sessionModelHint.value = null
+        val modelInfo = ModelInfoProvider.getByFilename(filename)
+            ?: ModelInfoProvider.createCustomModelInfo(filename, filename.removeSuffix(".gguf"), 0)
+        loadModel(modelInfo)
     }
 
     fun getReport(): String? {

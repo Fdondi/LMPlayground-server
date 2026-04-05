@@ -85,6 +85,7 @@ class ConversationFragment : Fragment() {
             val currentSessionId by viewModel.currentSessionId.observeAsState()
             val generationParams by viewModel.generationParams.observeAsState(GenerationParams())
             val maxContextSize by viewModel.maxContextSize.observeAsState(4096)
+            val sessionModelHint by viewModel.sessionModelHint.observeAsState()
             var showParamsSheet by remember { mutableStateOf(false) }
 
             // Storage configuration state
@@ -363,6 +364,13 @@ class ConversationFragment : Fragment() {
                                     modifier = Modifier.weight(1f),
                                     scrollState = scrollState,
                                     isGenerating = isGenerating == true,
+                                    sessionModelHint = sessionModelHint,
+                                    onSessionModelHintClick = { filename ->
+                                        viewModel.loadModelByFilename(filename)
+                                    },
+                                    onSessionModelHintDismiss = {
+                                        viewModel.dismissSessionModelHint()
+                                    },
                                     onTokenCountClicked = {
                                         modelReport = viewModel.getReport()
                                     }
