@@ -124,14 +124,6 @@ fun ChatItemBubble(
                 }
             }
 
-            if (isGenerating && message.responseTokens > 0) {
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = formatResponseStats(message),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.outline
-                )
-            }
         }
 
         message.image?.let {
