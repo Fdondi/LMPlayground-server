@@ -1,0 +1,7 @@
+- Show response time and generation speed (tok/s)
+- Thinking budget and multi-format thinking support
+- Persist generation params per model
+- Previously used model hint on conversation load
+- New model: LFM2.5 350M
+- Updated llama.cpp engine
+- Crash fixes

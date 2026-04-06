@@ -1,0 +1,52 @@
+name: Deploy to Google Play Internal
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '21'
+        cache: 'gradle'
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Decode keystore
+      run: |
+        mkdir -p ~/.android
+        echo "${{ secrets.RELEASE_KEYSTORE_BASE64 }}" | base64 -d > ~/.android/keystore.jks
+
+    - name: Build release bundle
+      run: ./gradlew bundleRelease
+      env:
+        STORE_PASSWORD: ${{ secrets.STORE_PASSWORD }}
+        LM_PLAYGROUND_KEY_ALIAS: ${{ secrets.LM_PLAYGROUND_KEY_ALIAS }}
+        LM_PLAYGROUND_KEY_PASSWORD: ${{ secrets.LM_PLAYGROUND_KEY_PASSWORD }}
+
+    - name: Upload to Google Play Internal
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        packageName: com.druk.lmplayground
+        releaseFiles: app/build/outputs/bundle/release/app-release.aab
+        track: internal
+        whatsNewDirectory: fastlane/metadata/android/en-US/changelogs
+
+    - name: Cleanup keystore
+      if: always()
+      run: rm -f ~/.android/keystore.jks
