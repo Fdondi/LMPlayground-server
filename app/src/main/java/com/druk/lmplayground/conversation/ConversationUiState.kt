@@ -37,13 +37,31 @@ class ConversationUiState(
             message.thinkingDurationSeconds
         }
 
+        val responseDuration = if (message.responseStartTimeMs > 0) {
+            (System.currentTimeMillis() - message.responseStartTimeMs) / 1000f
+        } else {
+            message.responseDurationSeconds
+        }
+
         _messages[_messages.size - 1] = message.copy(
             content = msg,
             thinkingDurationSeconds = duration,
             thinkingStartTimeMs = if (thinkingJustEnded) 0L else message.thinkingStartTimeMs,
             thinkingTokens = thinkingTokens,
-            responseTokens = responseTokens
+            responseTokens = responseTokens,
+            responseDurationSeconds = responseDuration
         )
+    }
+
+    fun finalizeLastMessage() {
+        if (_messages.isEmpty()) return
+        val message = _messages.last()
+        if (message.responseStartTimeMs > 0) {
+            _messages[_messages.size - 1] = message.copy(
+                responseDurationSeconds = (System.currentTimeMillis() - message.responseStartTimeMs) / 1000f,
+                responseStartTimeMs = 0L
+            )
+        }
     }
 
     fun setMessages(messages: List<Message>) {
@@ -69,6 +87,8 @@ data class Message(
     val thinkingStartTimeMs: Long = 0,
     val thinkingTokens: Int = 0,
     val responseTokens: Int = 0,
+    val responseStartTimeMs: Long = 0,
+    val responseDurationSeconds: Float = 0f,
     val timestamp: Long = System.currentTimeMillis(),
     val id: Long = messageIdCounter.incrementAndGet()
 )

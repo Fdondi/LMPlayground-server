@@ -25,5 +25,6 @@ data class ChatMessageEntity(
     val thinkingDurationSeconds: Int = 0,
     val thinkingTokens: Int = 0,
     val responseTokens: Int = 0,
+    val responseDurationSeconds: Float = 0f,
     val timestamp: Long
 )

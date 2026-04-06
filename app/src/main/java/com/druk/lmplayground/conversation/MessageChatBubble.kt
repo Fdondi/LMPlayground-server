@@ -123,6 +123,15 @@ fun ChatItemBubble(
                     )
                 }
             }
+
+            if (isGenerating && message.responseTokens > 0) {
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = formatResponseStats(message),
+                    style = MaterialTheme.typography.labelSmall,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
         }
 
         message.image?.let {
@@ -169,7 +178,7 @@ fun ChatItemBubble(
                 }
                 if (message.responseTokens > 0) {
                     Text(
-                        text = "${message.responseTokens} tokens",
+                        text = formatResponseStats(message),
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier
@@ -189,6 +198,18 @@ fun ChatItemBubble(
 
     if (showRatingSheet) {
         RatingBottomSheet(onDismiss = { showRatingSheet = false })
+    }
+}
+
+private fun formatResponseStats(message: Message): String {
+    return buildString {
+        append("${message.responseTokens} tokens")
+        val duration = message.responseDurationSeconds
+        if (duration > 0f) {
+            append(" \u00B7 ${formatDuration(duration.toInt())}")
+            val speed = message.responseTokens / duration
+            append(" \u00B7 ${"%.1f".format(speed)} tok/s")
+        }
     }
 }
 

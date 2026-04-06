@@ -349,11 +349,13 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val enableThinking = _thinkingEnabled.value == true
         Snapshot.withMutableSnapshot {
             uiState.addMessage(message)
+            val now = System.currentTimeMillis()
             uiState.addMessage(
                 Message(
                     "Assistant",
                     "",
-                    thinkingStartTimeMs = if (enableThinking) System.currentTimeMillis() else 0L
+                    thinkingStartTimeMs = if (enableThinking) now else 0L,
+                    responseStartTimeMs = now
                 )
             )
         }
@@ -408,6 +410,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // wait for the response
                 }
                 llamaSession.printReport()
+                Snapshot.withMutableSnapshot {
+                    uiState.finalizeLastMessage()
+                }
                 _isGenerating.postValue(false)
 
                 // Persist assistant response
@@ -460,6 +465,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 thinkingDurationSeconds = message.thinkingDurationSeconds,
                 thinkingTokens = message.thinkingTokens,
                 responseTokens = message.responseTokens,
+                responseDurationSeconds = message.responseDurationSeconds,
                 timestamp = message.timestamp
             )
         )
@@ -477,6 +483,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     thinkingDurationSeconds = entity.thinkingDurationSeconds,
                     thinkingTokens = entity.thinkingTokens,
                     responseTokens = entity.responseTokens,
+                    responseDurationSeconds = entity.responseDurationSeconds,
                     timestamp = entity.timestamp
                 )
             }
