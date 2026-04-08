@@ -290,7 +290,30 @@ extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_
 
     return session->generate(
             [env, onFullResponseId, callback](const std::string &fullResponse) {
-                jstring jResponse = env->NewStringUTF(fullResponse.c_str());
+                // Strip trailing incomplete UTF-8 sequence to avoid
+                // NewStringUTF crash on invalid Modified UTF-8.
+                std::string safe = fullResponse;
+                while (!safe.empty()) {
+                    unsigned char last = safe.back();
+                    if ((last & 0x80) == 0) break;       // ASCII — complete
+                    if ((last & 0xC0) == 0xC0) {          // Start byte without continuation
+                        safe.pop_back();
+                        break;
+                    }
+                    // Continuation byte — count how many
+                    size_t pos = safe.size() - 1;
+                    while (pos > 0 && (((unsigned char)safe[pos]) & 0xC0) == 0x80) pos--;
+                    unsigned char start = safe[pos];
+                    int expected;
+                    if ((start & 0xE0) == 0xC0) expected = 2;
+                    else if ((start & 0xF0) == 0xE0) expected = 3;
+                    else if ((start & 0xF8) == 0xF0) expected = 4;
+                    else { safe.resize(pos); break; }
+                    int actual = (int)(safe.size() - pos);
+                    if (actual < expected) safe.resize(pos);
+                    break;
+                }
+                jstring jResponse = env->NewStringUTF(safe.c_str());
                 if (jResponse != nullptr) {
                     env->CallVoidMethod(callback, onFullResponseId, jResponse);
                     env->DeleteLocalRef(jResponse);

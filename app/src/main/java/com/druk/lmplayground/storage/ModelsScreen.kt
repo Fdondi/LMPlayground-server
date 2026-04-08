@@ -54,6 +54,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.foundation.background
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -401,12 +403,19 @@ private fun DownloadedModelItem(
             Spacer(modifier = Modifier.width(12.dp))
         }
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = model.name,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = model.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = if (model.isVision) Modifier.weight(1f, fill = false) else Modifier
+                )
+                if (model.isVision) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    VisionBadge()
+                }
+            }
             Text(
                 text = model.description,
                 style = MaterialTheme.typography.bodySmall,
@@ -457,12 +466,19 @@ private fun AvailableModelItem(
             Spacer(modifier = Modifier.width(12.dp))
         }
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = model.name,
-                style = MaterialTheme.typography.bodyLarge,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = model.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = if (model.isVision) Modifier.weight(1f, fill = false) else Modifier
+                )
+                if (model.isVision) {
+                    Spacer(modifier = Modifier.width(6.dp))
+                    VisionBadge()
+                }
+            }
             if (downloadProgress != null) {
                 Text(
                     text = formatDownloadStats(context, downloadProgress),
@@ -562,6 +578,21 @@ private fun formatEta(seconds: Long): String {
             "${hours}h ${mins}m left"
         }
     }
+}
+
+@Composable
+private fun VisionBadge() {
+    Text(
+        text = "Vision",
+        style = MaterialTheme.typography.labelSmall,
+        color = MaterialTheme.colorScheme.onTertiaryContainer,
+        modifier = Modifier
+            .background(
+                color = MaterialTheme.colorScheme.tertiaryContainer,
+                shape = RoundedCornerShape(4.dp)
+            )
+            .padding(horizontal = 6.dp, vertical = 2.dp)
+    )
 }
 
 @Preview

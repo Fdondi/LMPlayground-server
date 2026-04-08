@@ -12,6 +12,7 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import com.druk.llamacpp.LlamaGenerationSession
 import com.druk.llamacpp.LlamaModel
 import java.io.File
@@ -314,7 +315,7 @@ class ModelGenerationTest {
         model.loadMmprojModel(mmprojFile!!.absolutePath)
         assertTrue("Model should support vision", model.supportsVision())
 
-        val session = model.createSession()
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         val imageBytes = imageFile.readBytes()
@@ -337,7 +338,7 @@ class ModelGenerationTest {
         val model = loadModel(modelFile!!)
         model.loadMmprojModel(mmprojFile!!.absolutePath)
 
-        val session = model.createSession()
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         // Text-only message to a vision model should work normally
@@ -359,7 +360,7 @@ class ModelGenerationTest {
         val model = loadModel(modelFile!!)
         model.loadMmprojModel(mmprojFile!!.absolutePath)
 
-        val session = model.createSession()
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
         // Turn 1: image + text
@@ -537,6 +538,88 @@ class ModelGenerationTest {
                 thinkContent.length < 500
             )
         }
+    }
+
+    // ── Vision tests with embedded asset images ──────────────────────────
+
+    private fun loadAssetImage(name: String): ByteArray {
+        val context = InstrumentationRegistry.getInstrumentation().context
+        return context.assets.open(name).use { it.readBytes() }
+    }
+
+    private fun setupVisionSession(): LlamaGenerationSession {
+        val modelFile = findSpecificModel("Qwen3.5")
+        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojFile()
+        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+
+        val model = loadModel(modelFile!!)
+        model.loadMmprojModel(mmprojFile!!.absolutePath)
+        assertTrue("Model should support vision", model.supportsVision())
+
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, 42, -1)!!
+        this.session = session
+        return session
+    }
+
+    @Test(timeout = 300_000)
+    fun testVisionDescribesCat() {
+        val session = setupVisionSession()
+        val imageBytes = loadAssetImage("test_cat.jpg")
+        Log.d(TAG, "Cat image: ${imageBytes.size} bytes")
+
+        session.setImageData(imageBytes)
+        session.addMessage("What animal is in this image? Answer briefly.", false)
+
+        val raw = generateFullResponse(session, maxTokens = 256, timeoutMs = 120_000)
+        Log.d(TAG, "Vision cat response (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+
+        val lower = raw.lowercase()
+        assertTrue(
+            "Response should mention cat/kitten, got: $raw",
+            lower.contains("cat") || lower.contains("kitten")
+        )
+    }
+
+    @Test(timeout = 300_000)
+    fun testVisionDescribesTree() {
+        val session = setupVisionSession()
+        val imageBytes = loadAssetImage("test_tree.jpg")
+        Log.d(TAG, "Tree image: ${imageBytes.size} bytes")
+
+        session.setImageData(imageBytes)
+        session.addMessage("What do you see in this image? Answer briefly.", false)
+
+        val raw = generateFullResponse(session, maxTokens = 256, timeoutMs = 120_000)
+        Log.d(TAG, "Vision tree response (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+
+        val lower = raw.lowercase()
+        assertTrue(
+            "Response should mention tree/sunset/sky, got: $raw",
+            lower.contains("tree") || lower.contains("sunset") || lower.contains("sky")
+        )
+    }
+
+    @Test(timeout = 300_000)
+    fun testVisionDescribesFood() {
+        val session = setupVisionSession()
+        val imageBytes = loadAssetImage("test_food.jpg")
+        Log.d(TAG, "Food image: ${imageBytes.size} bytes")
+
+        session.setImageData(imageBytes)
+        session.addMessage("What food is shown in this image? Answer briefly.", false)
+
+        val raw = generateFullResponse(session, maxTokens = 256, timeoutMs = 120_000)
+        Log.d(TAG, "Vision food response (${raw.length} chars):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+
+        val lower = raw.lowercase()
+        assertTrue(
+            "Response should mention pizza/food, got: $raw",
+            lower.contains("pizza") || lower.contains("food")
+        )
     }
 
 }
