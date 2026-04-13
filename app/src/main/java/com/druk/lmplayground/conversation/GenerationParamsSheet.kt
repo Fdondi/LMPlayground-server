@@ -145,7 +145,7 @@ fun GenerationParamsSheet(
                     style = MaterialTheme.typography.titleSmall
                 )
                 Text(
-                    text = "Active when thinking is on",
+                    text = "Model can call these during generation",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )

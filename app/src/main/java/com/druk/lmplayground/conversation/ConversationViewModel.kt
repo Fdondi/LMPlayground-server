@@ -387,9 +387,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             withContext(Dispatchers.Default) {
                 val llamaSession = llamaSession ?: return@withContext
 
-                // Tools are active when thinking is on, model supports it, and user has tools enabled
-                val toolsActive = enableThinking
-                    && _supportsToolCalling.value == true
+                // Tools are active when model supports it and user has tools enabled
+                val toolsActive = _supportsToolCalling.value == true
                     && toolRegistry.hasEnabledTools()
                 if (toolsActive) {
                     llamaSession.setTools(toolRegistry.toOpenAIToolsJson())
@@ -459,13 +458,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             uiState.addToolCallsToLastMessage(toolCallInfoList)
                         }
 
-                        val thinkingForResponse = _supportsThinking.value == true
-                        llamaSession.submitToolResults(toolResults, thinkingForResponse)
+                        llamaSession.submitToolResults(toolResults, enableThinking)
 
                         callback.totalTokens = 0
                         callback.thinkingTokenCount = 0
-                        callback.thinkingComplete = !thinkingForResponse
-                        callback.modelIsThinking = thinkingForResponse
+                        callback.thinkingComplete = !enableThinking
+                        callback.modelIsThinking = enableThinking
                     }
                 } while (this.isActive && generateResult == 2 && toolRounds < maxToolRounds)
 
