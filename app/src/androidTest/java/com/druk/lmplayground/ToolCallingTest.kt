@@ -10,8 +10,10 @@ import com.druk.lmplayground.tools.CalculatorTool
 import com.druk.lmplayground.tools.DateTimeTool
 import com.druk.lmplayground.tools.ToolRegistry
 import com.druk.lmplayground.tools.WebSearchTool
+import com.druk.lmplayground.tools.JavaScriptTool
 import com.druk.lmplayground.tools.WebFetchTool
 import org.json.JSONArray
+import androidx.test.platform.app.InstrumentationRegistry
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Assume.assumeTrue
@@ -187,7 +189,7 @@ class ToolCallingTest {
 
     @Test
     fun testToolRegistryJsonFormat() {
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         val json = registry.toOpenAIToolsJson()
         Log.d(TAG, "Tools JSON:\n$json")
 
@@ -207,7 +209,7 @@ class ToolCallingTest {
 
     @Test
     fun testToolRegistryExecuteToolCalls() {
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         val toolCallsJson = """[{"id":"call_0","name":"calculate","arguments":"{\"expression\":\"42 * 37\"}"}]"""
         val results = registry.executeToolCalls(toolCallsJson)
         Log.d(TAG, "Execute result: $results")
@@ -223,7 +225,7 @@ class ToolCallingTest {
 
     @Test
     fun testToolRegistryUnknownTool() {
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         val toolCallsJson = """[{"id":"call_0","name":"nonexistent","arguments":"{}"}]"""
         val results = registry.executeToolCalls(toolCallsJson)
         Log.d(TAG, "Unknown tool result: $results")
@@ -264,7 +266,7 @@ class ToolCallingTest {
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
         // No crash = success. Tools are accepted by the native layer.
         Log.d(TAG, "setTools completed without error")
@@ -286,7 +288,7 @@ class ToolCallingTest {
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
         session.addMessage("What is 123 * 456? Use the calculate tool.", false)
 
@@ -326,7 +328,7 @@ class ToolCallingTest {
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
 
         // Use a very direct prompt to maximize chances of tool use
@@ -373,7 +375,7 @@ class ToolCallingTest {
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
 
         session.addMessage("Use the calculate tool to compute 7823 * 4519", false)
@@ -433,7 +435,7 @@ class ToolCallingTest {
         this.session = session
 
         // Set tools then clear them
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
         session.setTools("[]")
 
@@ -458,7 +460,7 @@ class ToolCallingTest {
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
 
         // KEY DIFFERENCE: thinking=true (matches app behavior)
@@ -501,7 +503,7 @@ class ToolCallingTest {
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
 
         session.addMessage("Use the calculate tool to compute 7823 * 4519", false)
@@ -532,7 +534,7 @@ class ToolCallingTest {
         val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
         this.session = session
 
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
 
         // Initial message with thinking disabled (user toggle off)
@@ -624,10 +626,57 @@ class ToolCallingTest {
 
     @Test
     fun testToolRegistryIncludesWebTools() {
-        val registry = ToolRegistry.createDefault()
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         val json = registry.toOpenAIToolsJson()
         assertTrue("Should include web_search", json.contains("web_search"))
         assertTrue("Should include web_fetch", json.contains("web_fetch"))
+        assertTrue("Should include run_javascript", json.contains("run_javascript"))
+    }
+
+    // -- JavaScript tool tests --
+
+    @Test
+    fun testJavaScriptBasicMath() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val result = tool.execute("""{"code":"2 + 2"}""")
+        Log.d(TAG, "JS basic math: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertEquals("4", json.getString("result"))
+    }
+
+    @Test
+    fun testJavaScriptStringResult() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val result = tool.execute("""{"code":"'hello ' + 'world'"}""")
+        Log.d(TAG, "JS string: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertEquals("hello world", json.getString("result"))
+    }
+
+    @Test
+    fun testJavaScriptComplexCode() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val code = "const fib = (n) => { const a = [0,1]; for(let i=2;i<n;i++) a.push(a[i-1]+a[i-2]); return a; }; JSON.stringify(fib(10))"
+        val result = tool.execute("""{"code":${org.json.JSONObject.quote(code)}}""")
+        Log.d(TAG, "JS complex: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertTrue("Should contain fibonacci", json.getString("result").contains("[0,1,1,2,3,5,8,13,21,34]"))
+    }
+
+    @Test
+    fun testJavaScriptSyntaxError() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val result = tool.execute("""{"code":"function("}""")
+        Log.d(TAG, "JS syntax error: $result")
+        val json = org.json.JSONObject(result)
+        assertTrue("Should have error for syntax error", json.has("error"))
     }
 
     // -- Diagnostic test: reports all model capabilities --

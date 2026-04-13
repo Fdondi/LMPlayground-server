@@ -1,5 +1,6 @@
 package com.druk.lmplayground.tools
 
+import android.content.Context
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -64,12 +65,13 @@ class ToolRegistry {
     }
 
     companion object {
-        fun createDefault(): ToolRegistry {
+        fun createDefault(context: Context): ToolRegistry {
             return ToolRegistry().apply {
                 register(DateTimeTool())
                 register(CalculatorTool())
                 register(WebSearchTool())
                 register(WebFetchTool())
+                register(JavaScriptTool(context))
             }
         }
     }

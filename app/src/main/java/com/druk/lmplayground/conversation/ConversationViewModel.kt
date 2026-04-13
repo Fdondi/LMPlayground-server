@@ -59,7 +59,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _sessionModelHint = MutableLiveData<Pair<String, String>?>(null) // (modelName, modelFilename)
     private val _supportsToolCalling = MutableLiveData(false)
     private val _toolEnabledStates = MutableLiveData<Map<String, Boolean>>(emptyMap())
-    val toolRegistry = ToolRegistry.createDefault()
+    val toolRegistry = ToolRegistry.createDefault(app)
     val toolEnabledStates: LiveData<Map<String, Boolean>> = _toolEnabledStates
 
     private val storagePreferences = StoragePreferences(app)
