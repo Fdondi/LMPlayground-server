@@ -40,7 +40,9 @@ class ModelGenerationTest {
             "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
             "Qwen_Qwen3.5-2B-Q3_K_M.gguf",
             "DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf",
-            "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf"
+            "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
+            "gemma-4-E2B-it-Q4_K_M.gguf",
+            "gemma-4-E4B-it-Q4_K_M.gguf"
         )
         private const val MODELS_PATH = "/data/local/tmp"
     }
@@ -279,7 +281,10 @@ class ModelGenerationTest {
     private val CANDIDATE_MMPROJ = listOf(
         "mmproj-Qwen_Qwen3.5-0.8B-f16.gguf",
         "mmproj-Qwen_Qwen3.5-2B-f16.gguf",
-        "mmproj-Qwen_Qwen3.5-4B-f16.gguf"
+        "mmproj-Qwen_Qwen3.5-4B-f16.gguf",
+        "mmproj-gemma-4-E2B-it-BF16.gguf",
+        "mmproj-gemma-4-E4B-it-BF16.gguf",
+        "gemma-3-4b-it-mmproj-f16.gguf"
     )
 
     private fun findMmprojFile(): File? {
@@ -292,22 +297,23 @@ class ModelGenerationTest {
 
     @Test(timeout = 180_000)
     fun testVisionModelSupportsVision() {
-        val modelFile = findSpecificModel("Qwen3.5")
-        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
-        val mmprojFile = findMmprojFile()
-        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+        val modelFile = findVisionModel()
+        assumeTrue("No vision model found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojForModel(modelFile!!)
+        assumeTrue("No mmproj file found for ${modelFile.name}", mmprojFile != null)
 
-        val model = loadModel(modelFile!!)
-        model.loadMmprojModel(mmprojFile!!.absolutePath)
+        Log.d(TAG, "testVisionModelSupportsVision: model=${modelFile.name}, mmproj=${mmprojFile!!.name}")
+        val model = loadModel(modelFile)
+        model.loadMmprojModel(mmprojFile.absolutePath)
         assertTrue("Model with mmproj should support vision", model.supportsVision())
     }
 
     @Test(timeout = 300_000)
     fun testVisionGeneration() {
-        val modelFile = findSpecificModel("Qwen3.5")
-        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
-        val mmprojFile = findMmprojFile()
-        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+        val modelFile = findVisionModel()
+        assumeTrue("No vision model found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojForModel(modelFile!!)
+        assumeTrue("No mmproj file found for ${modelFile.name}", mmprojFile != null)
         val imageFile = File(MODELS_PATH, "test_image.png")
         assumeTrue("Test image not found at ${imageFile.absolutePath}", imageFile.exists())
 
@@ -330,12 +336,12 @@ class ModelGenerationTest {
 
     @Test(timeout = 300_000)
     fun testVisionModelTextOnly() {
-        val modelFile = findSpecificModel("Qwen3.5")
-        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
-        val mmprojFile = findMmprojFile()
-        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+        val modelFile = findVisionModel()
+        assumeTrue("No vision model found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojForModel(modelFile!!)
+        assumeTrue("No mmproj file found for ${modelFile.name}", mmprojFile != null)
 
-        val model = loadModel(modelFile!!)
+        val model = loadModel(modelFile)
         model.loadMmprojModel(mmprojFile!!.absolutePath)
 
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
@@ -350,14 +356,14 @@ class ModelGenerationTest {
 
     @Test(timeout = 300_000)
     fun testVisionMultiTurn() {
-        val modelFile = findSpecificModel("Qwen3.5")
-        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
-        val mmprojFile = findMmprojFile()
-        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+        val modelFile = findVisionModel()
+        assumeTrue("No vision model found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojForModel(modelFile!!)
+        assumeTrue("No mmproj file found for ${modelFile.name}", mmprojFile != null)
         val imageFile = File(MODELS_PATH, "test_image.png")
         assumeTrue("Test image not found", imageFile.exists())
 
-        val model = loadModel(modelFile!!)
+        val model = loadModel(modelFile)
         model.loadMmprojModel(mmprojFile!!.absolutePath)
 
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
@@ -547,15 +553,45 @@ class ModelGenerationTest {
         return context.assets.open(name).use { it.readBytes() }
     }
 
-    private fun setupVisionSession(): LlamaGenerationSession {
-        val modelFile = findSpecificModel("Qwen3.5")
-        assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
-        val mmprojFile = findMmprojFile()
-        assumeTrue("No mmproj file found in $MODELS_PATH", mmprojFile != null)
+    private fun findVisionModel(): File? {
+        for (fragment in listOf("gemma-4-E2B", "gemma-4-E4B", "Qwen3.5")) {
+            val file = findSpecificModel(fragment)
+            if (file != null) return file
+        }
+        return null
+    }
 
-        val model = loadModel(modelFile!!)
-        model.loadMmprojModel(mmprojFile!!.absolutePath)
-        assertTrue("Model should support vision", model.supportsVision())
+    private fun findMmprojForModel(modelFile: File): File? {
+        // Match mmproj to model by name prefix
+        val name = modelFile.name
+        for (mmproj in CANDIDATE_MMPROJ) {
+            // e.g. model "gemma-4-E2B-it-Q4_K_M.gguf" matches "mmproj-gemma-4-E2B-it-BF16.gguf"
+            val modelPrefix = name.substringBefore("-Q").substringBefore("-q")
+            val mmprojPrefix = mmproj.removePrefix("mmproj-").substringBefore("-f16").substringBefore("-F16").substringBefore("-BF16")
+            if (modelPrefix == mmprojPrefix) {
+                val file = File(MODELS_PATH, mmproj)
+                if (file.exists() && file.canRead()) return file
+            }
+        }
+        // Fallback: any available mmproj
+        return findMmprojFile()
+    }
+
+    private fun setupVisionSession(): LlamaGenerationSession {
+        val modelFile = findVisionModel()
+        assumeTrue("No vision model found in $MODELS_PATH", modelFile != null)
+        val mmprojFile = findMmprojForModel(modelFile!!)
+        assumeTrue("No mmproj file found in $MODELS_PATH for ${modelFile.name}", mmprojFile != null)
+
+        Log.d(TAG, "Vision model: ${modelFile.name}")
+        Log.d(TAG, "Vision mmproj: ${mmprojFile!!.name}")
+
+        val model = loadModel(modelFile)
+        model.loadMmprojModel(mmprojFile.absolutePath)
+
+        val supportsVision = model.supportsVision()
+        Log.d(TAG, "supportsVision: $supportsVision")
+        assertTrue("Model should support vision after loading mmproj", supportsVision)
 
         val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, 42, -1)!!
         this.session = session
@@ -619,6 +655,28 @@ class ModelGenerationTest {
         assertTrue(
             "Response should mention pizza/food, got: $raw",
             lower.contains("pizza") || lower.contains("food")
+        )
+    }
+
+    @Test(timeout = 300_000)
+    fun testVisionDescribesDog() {
+        val session = setupVisionSession()
+        val imageBytes = loadAssetImage("test_dog.jpg")
+        Log.d(TAG, "Dog image: ${imageBytes.size} bytes")
+
+        val startTime = System.currentTimeMillis()
+        session.setImageData(imageBytes)
+        session.addMessage("What is in this photo? Answer briefly.", false)
+
+        val raw = generateFullResponse(session, maxTokens = 256, timeoutMs = 180_000)
+        val totalTime = System.currentTimeMillis() - startTime
+        Log.d(TAG, "Vision dog response (${raw.length} chars, ${totalTime}ms):\n$raw")
+        assertTrue("Response should not be empty", raw.isNotBlank())
+
+        val lower = raw.lowercase()
+        assertTrue(
+            "Response should mention dog, got: $raw",
+            lower.contains("dog") || lower.contains("puppy") || lower.contains("canine")
         )
     }
 

@@ -24,6 +24,12 @@ endif()
 add_library(ggml_override STATIC
         ggml_fopen_override.c)
 
+# Build ggml/llama/mtmd as static libraries so they share the same
+# backend registry and global state (Vulkan device, log callback).
+# Without this, libmtmd.so has a separate ggml backend registry and
+# cannot find the Vulkan GPU device registered by libllama.so.
+set(BUILD_SHARED_LIBS OFF)
+
 # Include llama.cpp subdirectory
 add_subdirectory(llama.cpp)
 

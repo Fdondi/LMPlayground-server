@@ -28,6 +28,9 @@ android {
                 arguments += "-DLLAMA_OPENSSL=OFF"
                 arguments += "-DGGML_LLAMAFILE=OFF"
                 arguments += "-DGGML_NATIVE=OFF"
+                arguments += "-DGGML_VULKAN=ON"
+                arguments += "-DVulkan_GLSLC_EXECUTABLE=/Users/admin/Library/Android/sdk/ndk/27.2.12479018/shader-tools/darwin-x86_64/glslc"
+                arguments += "-DVulkan_INCLUDE_DIR=/opt/homebrew/opt/vulkan-headers/include"
                 arguments += "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
             }
         }

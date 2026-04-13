@@ -221,18 +221,22 @@ object ModelInfoProvider {
         ModelInfo(
             name = "Gemma 4 E2B",
             filename = "gemma-4-E2B-it-Q4_K_M.gguf",
-            remoteUri = Uri.parse("https://huggingface.co/unsloth/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_K_M.gguf"),
+            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2026-03-25"),
-            description = "Google \u00B7 Efficient on-device model \u00B7 3.11Gb",
-            logoRes = R.drawable.logo_google
+            description = "Google \u00B7 Efficient vision model \u00B7 3.43Gb + 987Mb mmproj",
+            logoRes = R.drawable.logo_google,
+            mmprojFilename = "mmproj-gemma-4-E2B-it-BF16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-4-E2B-it-GGUF/resolve/main/mmproj-gemma-4-E2B-it-BF16.gguf")
         ),
         ModelInfo(
             name = "Gemma 4 E4B",
             filename = "gemma-4-E4B-it-Q4_K_M.gguf",
-            remoteUri = Uri.parse("https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_M.gguf"),
+            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_M.gguf"),
             releaseDate = LocalDate.parse("2026-03-25"),
-            description = "Google \u00B7 Efficient on-device model \u00B7 4.98Gb",
-            logoRes = R.drawable.logo_google
+            description = "Google \u00B7 Efficient vision model \u00B7 5.34Gb + 992Mb mmproj",
+            logoRes = R.drawable.logo_google,
+            mmprojFilename = "mmproj-gemma-4-E4B-it-BF16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/resolve/main/mmproj-gemma-4-E4B-it-BF16.gguf")
         ),
         ModelInfo(
             name = "Qwen2.5 0.5B",

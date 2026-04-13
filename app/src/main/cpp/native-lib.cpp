@@ -44,10 +44,11 @@ protected:
 
 #define TAG "llama-android.cpp"
 static void log_callback(ggml_log_level level, const char * fmt, void * data) {
-    if (level == GGML_LOG_LEVEL_ERROR)     __android_log_print(ANDROID_LOG_ERROR, TAG, fmt, data);
-    else if (level == GGML_LOG_LEVEL_INFO) __android_log_print(ANDROID_LOG_INFO, TAG, fmt, data);
-    else if (level == GGML_LOG_LEVEL_WARN) __android_log_print(ANDROID_LOG_WARN, TAG, fmt, data);
-    else __android_log_print(ANDROID_LOG_DEFAULT, TAG, fmt, data);
+    // fmt is already formatted by llama.cpp — use %s to avoid interpreting % in the message
+    if (level == GGML_LOG_LEVEL_ERROR)     __android_log_print(ANDROID_LOG_ERROR, TAG, "%s", fmt);
+    else if (level == GGML_LOG_LEVEL_INFO) __android_log_print(ANDROID_LOG_INFO, TAG, "%s", fmt);
+    else if (level == GGML_LOG_LEVEL_WARN) __android_log_print(ANDROID_LOG_WARN, TAG, "%s", fmt);
+    else __android_log_print(ANDROID_LOG_DEFAULT, TAG, "%s", fmt);
 }
 
 extern "C"
@@ -97,7 +98,14 @@ Java_com_druk_llamacpp_LlamaCpp_init(JNIEnv *env, jobject object) {
     // (e.g. ggml_compute_forward_gated_delta_net, mul_mat with KleidiAI)
     setenv("OMP_STACKSIZE", "8M", 0);
 
+    // Force CLIP vision encoder to use Vulkan GPU by name.
+    // ggml_backend_init_by_type(GPU) fails in libmtmd.so on Android,
+    // but init_by_name("Vulkan0") works. MTMD_BACKEND_DEVICE overrides
+    // the default backend selection in clip.cpp.
+    setenv("MTMD_BACKEND_DEVICE", "Vulkan0", 0);
+
     llama_log_set(log_callback, NULL);
+    ggml_log_set(log_callback, NULL);
     llama_backend_init();
     return 0;
 }

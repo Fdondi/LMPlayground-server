@@ -25,6 +25,7 @@ LM Playground is an Android application for running Large Language Models locall
 |--------|-------|----------|
 | Qwen 3.5 | 0.8B, 2B, 4B (all vision) | Alibaba |
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
+| Gemma 4 | E2B, E4B (vision) | Google |
 | Gemma 3n | E2B, E4B | Google |
 | Gemma 3 | 1B, 4B (vision) | Google |
 | Nemotron 3 Nano | 4B | NVIDIA |

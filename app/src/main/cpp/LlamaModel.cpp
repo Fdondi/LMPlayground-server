@@ -34,6 +34,7 @@
 
 #define TAG "llama-android.cpp"
 #define LOGi(...) __android_log_print(ANDROID_LOG_INFO, TAG, __VA_ARGS__)
+#define LOGe(...) __android_log_print(ANDROID_LOG_ERROR, TAG, __VA_ARGS__)
 
 void LlamaModel::loadModel(const std::string &modelPath,
                            int32_t n_gpu_layers,
@@ -42,7 +43,8 @@ void LlamaModel::loadModel(const std::string &modelPath,
 
     // initialize the model
     llama_model_params model_params = llama_model_default_params();
-    // model_params.n_gpu_layers = n_gpu_layers;
+    // Keep LLM on CPU — GPU is reserved for the vision/CLIP encoder
+    model_params.n_gpu_layers = 0;
     model_params.progress_callback = progress_callback;
     model_params.progress_callback_user_data = progress_callback_user_data;
     model = llama_model_load_from_file(modelPath.c_str(), model_params);
@@ -60,18 +62,48 @@ void LlamaModel::loadMmprojModel(const std::string &mmprojPath) {
     }
 
     mtmd_context_params params = mtmd_context_params_default();
-    params.use_gpu = false;
     params.n_threads = std::max(1, std::min(8, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
     params.warmup = false;
-    // Limit image tokens for faster processing on mobile devices
-    params.image_max_tokens = 384;
+    params.print_timings = true;
+    // Use model defaults for image tokens (-1). Some models like Gemma 4
+    // have high minimum pixel requirements that reject low token caps.
 
-    mtmd_ctx = mtmd_init_from_file(mmprojPath.c_str(), model, params);
-    if (mtmd_ctx == nullptr) {
-        LOG_ERR("%s: failed to load mmproj model '%s'\n", __func__, mmprojPath.c_str());
-    } else {
-        LOGi("Loaded mmproj model, vision support: %d", mtmd_support_vision(mtmd_ctx));
+    LOGi("loadMmprojModel: loading %s (use_gpu=%d, n_threads=%d, image_max_tokens=%d)",
+         mmprojPath.c_str(), params.use_gpu, params.n_threads, params.image_max_tokens);
+
+    // mtmd_init_from_file catches exceptions internally and returns null,
+    // but its LOG_ERR may not reach Android logcat reliably. Wrap again to be safe.
+    try {
+        mtmd_ctx = mtmd_init_from_file(mmprojPath.c_str(), model, params);
+    } catch (const std::exception &e) {
+        LOGe("loadMmprojModel EXCEPTION: %s", e.what());
+        mtmd_ctx = nullptr;
+    } catch (...) {
+        LOGe("loadMmprojModel UNKNOWN EXCEPTION");
+        mtmd_ctx = nullptr;
     }
+
+    // Also check n_embd match manually for better diagnostics
+    if (mtmd_ctx == nullptr) {
+        int n_embd_text = llama_model_n_embd(model);
+        LOGe("loadMmprojModel: FAILED (text model n_embd=%d). "
+             "The mmproj may be incompatible with this text model.", n_embd_text);
+    }
+
+    if (mtmd_ctx == nullptr) {
+        LOGe("loadMmprojModel: FAILED to load mmproj model '%s'", mmprojPath.c_str());
+    } else {
+        LOGi("loadMmprojModel: OK, vision=%d", mtmd_support_vision(mtmd_ctx));
+    }
+}
+
+bool LlamaModel::supportsToolCalling() {
+    if (!chat_tmpls) {
+        return false;
+    }
+    auto caps = common_chat_templates_get_caps(chat_tmpls.get());
+    auto it = caps.find("supports_tools");
+    return it != caps.end() && it->second;
 }
 
 bool LlamaModel::supportsVision() {
