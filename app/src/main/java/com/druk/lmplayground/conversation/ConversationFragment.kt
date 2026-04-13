@@ -256,7 +256,9 @@ class ConversationFragment : Fragment() {
                             onSettingsClicked = {
                                 scope.launch {
                                     drawerState.close()
-                                    findNavController().navigate(R.id.action_home_to_settings)
+                                    if (findNavController().currentDestination?.id == R.id.nav_home) {
+                                        findNavController().navigate(R.id.action_home_to_settings)
+                                    }
                                 }
                             }
                         )
@@ -305,7 +307,9 @@ class ConversationFragment : Fragment() {
                                     // No downloaded models - go directly to Models screen
                                     LaunchedEffect(Unit) {
                                         viewModel.resetModelList()
-                                        findNavController().navigate(R.id.action_home_to_models)
+                                        if (findNavController().currentDestination?.id == R.id.nav_home) {
+                                            findNavController().navigate(R.id.action_home_to_models)
+                                        }
                                     }
                                 }
                             } else if (modelReport != null) {
