@@ -78,6 +78,8 @@ class ConversationFragment : Fragment() {
             val modelInfo by viewModel.loadedModel.observeAsState()
             val modelStatus by viewModel.loadedModelStatus.observeAsState()
             val supportsThinking by viewModel.supportsThinking.observeAsState(false)
+            val supportsToolCalling by viewModel.supportsToolCalling.observeAsState(false)
+            val toolEnabledStates by viewModel.toolEnabledStates.observeAsState(emptyMap())
             val thinkingEnabled by viewModel.thinkingEnabled.observeAsState(false)
             val isModelReady by viewModel.isModelReady.observeAsState(false)
             val models by viewModel.models.observeAsState(emptyList())
@@ -229,6 +231,10 @@ class ConversationFragment : Fragment() {
                         params = generationParams,
                         maxContextSize = maxContextSize,
                         supportsThinking = supportsThinking,
+                        supportsToolCalling = supportsToolCalling,
+                        tools = viewModel.toolRegistry.getAllTools(),
+                        toolEnabledStates = toolEnabledStates,
+                        onToolEnabledChanged = { name, enabled -> viewModel.setToolEnabled(name, enabled) },
                         onParamsChanged = { viewModel.updateGenerationParams(it) },
                         onDismiss = { showParamsSheet = false }
                     )

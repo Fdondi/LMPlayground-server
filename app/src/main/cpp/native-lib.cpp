@@ -349,6 +349,54 @@ Java_com_druk_llamacpp_LlamaGenerationSession_replayHistory(JNIEnv *env,
     session->replayHistory(history);
 }
 
+extern "C"
+JNIEXPORT jboolean JNICALL
+Java_com_druk_llamacpp_LlamaModel_supportsToolCalling(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) return JNI_FALSE;
+    return model->supportsToolCalling() ? JNI_TRUE : JNI_FALSE;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_druk_llamacpp_LlamaGenerationSession_setTools(JNIEnv *env, jobject thiz, jstring toolsJson) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) return;
+    const char* utfJson = env->GetStringUTFChars(toolsJson, nullptr);
+    session->setTools(utfJson);
+    env->ReleaseStringUTFChars(toolsJson, utfJson);
+}
+
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_druk_llamacpp_LlamaGenerationSession_getToolCallsJson(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) return env->NewStringUTF("[]");
+    auto json = session->getToolCallsJson();
+    return env->NewStringUTF(json.c_str());
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_druk_llamacpp_LlamaGenerationSession_submitToolResults(JNIEnv *env, jobject thiz,
+                                                                 jstring resultsJson,
+                                                                 jboolean enableThinking) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) return 1;
+    const char* utfJson = env->GetStringUTFChars(resultsJson, nullptr);
+    int result = session->submitToolResults(utfJson, enableThinking);
+    env->ReleaseStringUTFChars(resultsJson, utfJson);
+    return result;
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_destroy
         (JNIEnv *env, jobject obj) {
     jclass clazz = env->GetObjectClass(obj);

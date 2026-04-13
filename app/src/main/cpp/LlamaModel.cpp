@@ -80,6 +80,15 @@ bool LlamaModel::supportsThinking() {
     return common_chat_templates_support_enable_thinking(chat_tmpls.get());
 }
 
+bool LlamaModel::supportsToolCalling() {
+    if (!chat_tmpls) {
+        return false;
+    }
+    auto caps = common_chat_templates_get_caps(chat_tmpls.get());
+    auto it = caps.find("supports_tools");
+    return it != caps.end() && it->second;
+}
+
 std::string LlamaModel::getModelReport() {
     if (model == nullptr) {
         return "";

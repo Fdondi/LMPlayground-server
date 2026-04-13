@@ -22,9 +22,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
+import com.druk.lmplayground.tools.Tool
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,6 +44,10 @@ fun GenerationParamsSheet(
     params: GenerationParams,
     maxContextSize: Int,
     supportsThinking: Boolean = false,
+    supportsToolCalling: Boolean = false,
+    tools: List<Tool> = emptyList(),
+    toolEnabledStates: Map<String, Boolean> = emptyMap(),
+    onToolEnabledChanged: (String, Boolean) -> Unit = { _, _ -> },
     onParamsChanged: (GenerationParams) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -129,6 +135,47 @@ fun GenerationParamsSheet(
                         )
                     }
                 )
+            }
+
+            // Tools section (only for models that support tool calling)
+            if (supportsToolCalling && tools.isNotEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Tools",
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = "Active when thinking is on",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                for (tool in tools) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 2.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = tool.name,
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            Text(
+                                text = tool.description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                maxLines = 1
+                            )
+                        }
+                        Switch(
+                            checked = toolEnabledStates[tool.name] ?: true,
+                            onCheckedChange = { onToolEnabledChanged(tool.name, it) }
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             // Temperature

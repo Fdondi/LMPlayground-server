@@ -54,60 +54,71 @@ fun ChatItemBubble(
     var showRatingSheet by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
 
-    val isWaitingForResponse = !showActions && message.content.isEmpty()
+    val hasToolCalls = !message.toolCalls.isNullOrEmpty()
+    val isWaitingForResponse = !showActions
+        && message.content.isEmpty()
+        && !hasToolCalls
+        && message.preToolContent.isEmpty()
+    val isGenerating = !showActions
 
     Column {
         if (isWaitingForResponse) {
             ThinkingIndicator()
         } else {
+            // ① Pre-tool thinking (from generation phase before tool calls)
+            if (hasToolCalls && message.preToolContent.isNotEmpty()) {
+                val preToolSplit = remember(message.preToolContent) {
+                    splitThinking(message.preToolContent)
+                }
+                if (preToolSplit.thinkingContent.isNotEmpty()) {
+                    CollapsibleSection(
+                        label = buildString {
+                            append("Thinking \u00B7 ${formatDuration(message.preToolThinkingDurationSeconds)}")
+                            if (message.preToolThinkingTokens > 0) {
+                                append(" \u00B7 ${message.preToolThinkingTokens} tokens")
+                            }
+                        },
+                        content = preToolSplit.thinkingContent
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
+            }
+
+            // ② Tool calls — collapsible rows like thinking
+            if (hasToolCalls) {
+                for (toolCall in message.toolCalls!!) {
+                    val durationSec = (toolCall.durationMs / 1000).toInt().coerceAtLeast(
+                        if (toolCall.durationMs > 0) 1 else 0
+                    )
+                    CollapsibleSection(
+                        label = "Tool: ${toolCall.name} \u00B7 ${formatDuration(durationSec)}",
+                        content = toolCall.result
+                    )
+                }
+                Spacer(modifier = Modifier.height(6.dp))
+            }
+
+            // ③ If still generating after tool calls, show thinking indicator
+            if (isGenerating && hasToolCalls && message.content.isEmpty()) {
+                ThinkingIndicator()
+            }
+
+            // ④ Post-tool thinking + ⑤ Response (from content)
             val split = remember(message.content) { splitThinking(message.content) }
             val hasThinking = split.thinkingContent.isNotEmpty()
-            val isGenerating = !showActions
 
             if (hasThinking) {
-                var expanded by remember { mutableStateOf(false) }
-                val thinkingDuration = formatDuration(message.thinkingDurationSeconds)
-
-                Row(
-                    modifier = Modifier
-                        .clickable { expanded = !expanded }
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = if (expanded) "Collapse thinking" else "Expand thinking",
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-                    val thinkingLabel = buildString {
-                        append("Thinking \u00B7 $thinkingDuration")
+                CollapsibleSection(
+                    label = buildString {
+                        append("Thinking \u00B7 ${formatDuration(message.thinkingDurationSeconds)}")
                         if (message.thinkingTokens > 0) {
                             append(" \u00B7 ${message.thinkingTokens} tokens")
                         }
-                    }
-                    Text(
-                        text = thinkingLabel,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
-                }
-                AnimatedVisibility(visible = expanded) {
-                    Surface {
-                        SelectionContainer {
-                            Text(
-                                text = split.thinkingContent,
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontStyle = FontStyle.Italic,
-                                    color = MaterialTheme.colorScheme.outline
-                                )
-                            )
-                        }
-                    }
-                }
+                    },
+                    content = split.thinkingContent
+                )
                 if (split.responseContent.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(18.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
 
@@ -123,7 +134,6 @@ fun ChatItemBubble(
                     )
                 }
             }
-
         }
 
         message.image?.let {
@@ -190,6 +200,51 @@ fun ChatItemBubble(
 
     if (showRatingSheet) {
         RatingBottomSheet(onDismiss = { showRatingSheet = false })
+    }
+}
+
+/**
+ * Reusable collapsible section with arrow icon, label, and expandable content.
+ * Used for both thinking blocks and tool call results.
+ */
+@Composable
+private fun CollapsibleSection(
+    label: String,
+    content: String
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .clickable { expanded = !expanded }
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
+            contentDescription = if (expanded) "Collapse" else "Expand",
+            modifier = Modifier.size(16.dp),
+            tint = MaterialTheme.colorScheme.outline
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.outline,
+            modifier = Modifier.padding(start = 4.dp)
+        )
+    }
+    AnimatedVisibility(visible = expanded) {
+        Surface {
+            SelectionContainer {
+                Text(
+                    text = content,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                )
+            }
+        }
     }
 }
 

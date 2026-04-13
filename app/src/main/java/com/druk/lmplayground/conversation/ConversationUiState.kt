@@ -1,5 +1,6 @@
 package com.druk.lmplayground.conversation
 
+import android.net.Uri
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.snapshots.Snapshot
 import androidx.compose.runtime.toMutableStateList
@@ -53,6 +54,22 @@ class ConversationUiState(
         )
     }
 
+    fun addToolCallsToLastMessage(calls: List<ToolCallInfo>) {
+        if (_messages.isEmpty()) return
+        val message = _messages.last()
+        _messages[_messages.size - 1] = message.copy(
+            preToolContent = message.content,
+            preToolThinkingDurationSeconds = message.thinkingDurationSeconds,
+            preToolThinkingTokens = message.thinkingTokens,
+            content = "",
+            thinkingDurationSeconds = 0,
+            thinkingStartTimeMs = 0,
+            thinkingTokens = 0,
+            toolCalls = (message.toolCalls.orEmpty()) + calls,
+            responseStartTimeMs = System.currentTimeMillis()
+        )
+    }
+
     fun finalizeLastMessage() {
         if (_messages.isEmpty()) return
         val message = _messages.last()
@@ -79,10 +96,19 @@ class ConversationUiState(
 private val messageIdCounter = AtomicLong(0)
 
 @Immutable
+data class ToolCallInfo(
+    val name: String,
+    val arguments: String,
+    val result: String,
+    val durationMs: Long = 0
+)
+
+@Immutable
 data class Message(
     val author: String,
     val content: String,
     val image: Int? = null,
+    val imageUri: Uri? = null,
     val thinkingDurationSeconds: Int = 0,
     val thinkingStartTimeMs: Long = 0,
     val thinkingTokens: Int = 0,
@@ -90,5 +116,9 @@ data class Message(
     val responseStartTimeMs: Long = 0,
     val responseDurationSeconds: Float = 0f,
     val timestamp: Long = System.currentTimeMillis(),
-    val id: Long = messageIdCounter.incrementAndGet()
+    val id: Long = messageIdCounter.incrementAndGet(),
+    val toolCalls: List<ToolCallInfo>? = null,
+    val preToolContent: String = "",
+    val preToolThinkingDurationSeconds: Int = 0,
+    val preToolThinkingTokens: Int = 0
 )

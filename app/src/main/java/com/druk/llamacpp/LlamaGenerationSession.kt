@@ -32,6 +32,14 @@ class LlamaGenerationSession {
     external fun addMessage(message: String, enableThinking: Boolean)
 
     /**
+     * Sets image data to be included with the next addMessage call.
+     * Must be called before addMessage when sending an image.
+     *
+     * @param imageData Raw image bytes (JPEG, PNG, etc.)
+     */
+    external fun setImageData(imageData: ByteArray)
+
+    /**
      * Prints a report about the current state of the generation session to the console.
      */
     external fun printReport()
@@ -51,6 +59,30 @@ class LlamaGenerationSession {
      * @param assistantMessages Array of assistant responses, paired by index with userMessages.
      */
     external fun replayHistory(userMessages: Array<String>, assistantMessages: Array<String>)
+
+    /**
+     * Sets the available tools for function calling. Pass an OpenAI-compatible
+     * JSON array of tool definitions.
+     *
+     * @param toolsJson JSON array string of tool definitions.
+     */
+    external fun setTools(toolsJson: String)
+
+    /**
+     * Returns the pending tool calls as a JSON array string after generate() returns 2.
+     * Each element has "id", "name", and "arguments" fields.
+     */
+    external fun getToolCallsJson(): String
+
+    /**
+     * Submits tool execution results back to the session.
+     * Must be called after generate() returns 2 and tools have been executed.
+     *
+     * @param resultsJson JSON array of results, each with "id", "name", "content" fields.
+     * @param enableThinking Whether thinking mode is enabled for the next generation.
+     * @return 0 on success, 1 on error.
+     */
+    external fun submitToolResults(resultsJson: String, enableThinking: Boolean): Int
 
     /**
      * Destroys the generation session and releases associated resources.

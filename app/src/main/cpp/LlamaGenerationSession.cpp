@@ -13,6 +13,7 @@
 #include "llama.h"
 #include "log.h"
 #include "reasoning-budget.h"
+#include "nlohmann/json.hpp"
 
 #include <cassert>
 #include <cinttypes>
@@ -181,15 +182,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     messages.push_back(user_msg);
 
     auto renderPrompt = [&](bool enableThinking) -> common_chat_params {
-        common_chat_templates_inputs inputs;
-        inputs.messages = messages;
-        inputs.add_generation_prompt = true;
-        inputs.use_jinja = true;
-        inputs.enable_thinking = enableThinking;
-        if (enableThinking) {
-            inputs.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
-        }
-        return common_chat_templates_apply(chat_tmpls, inputs);
+        return renderTemplate(enableThinking);
     };
 
     prev_enable_thinking = enableThinking;
@@ -336,7 +329,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         parser_params = common_chat_parser_params(result);
         parser_params.reasoning_format = enableThinking
             ? COMMON_REASONING_FORMAT_DEEPSEEK : COMMON_REASONING_FORMAT_NONE;
-        parser_params.parse_tool_calls = false;
+        parser_params.parse_tool_calls = tools_enabled;
         parser_params.parser.load(result.parser);
         parser_initialized = true;
     } else {
@@ -423,13 +416,7 @@ void LlamaGenerationSession::finalizeResponse() {
     }
 
     try {
-        common_chat_templates_inputs inputs;
-        inputs.messages = messages;
-        inputs.add_generation_prompt = false;
-        inputs.use_jinja = true;
-        inputs.enable_thinking = prev_enable_thinking;
-
-        auto result = common_chat_templates_apply(chat_tmpls, inputs);
+        auto result = renderTemplate(prev_enable_thinking, /*addGenerationPrompt=*/false);
         prev_rendered_prompt = result.prompt;
         prev_len = (int)prev_rendered_prompt.size();
     } catch (const std::exception &e) {
@@ -534,6 +521,30 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         }
     }
 
+    // Check for tool calls before finalizing
+    if (tools_enabled && parser_initialized) {
+        auto parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
+        if (!parsed.tool_calls.empty()) {
+            std::vector<std::string> ids_cache;
+            auto gen_id = [this]() -> std::string {
+                return "call_" + std::to_string(tool_call_counter++);
+            };
+
+            common_chat_msg assistant_msg;
+            assistant_msg.role = "assistant";
+            assistant_msg.content = parsed.content;
+            assistant_msg.reasoning_content = parsed.reasoning_content;
+            assistant_msg.tool_calls = parsed.tool_calls;
+            assistant_msg.set_tool_call_ids(ids_cache, gen_id);
+            pending_tool_calls = assistant_msg.tool_calls;
+            messages.push_back(assistant_msg);
+
+            LOGi("Tool calls detected: %zu calls", pending_tool_calls.size());
+            response.clear();
+            return 2;
+        }
+    }
+
     finalizeResponse();
     return 1;
 }
@@ -564,6 +575,117 @@ void LlamaGenerationSession::replayHistory(const std::vector<std::pair<std::stri
         llama_memory_clear(llama_get_memory(ctx), true);
     }
     LOGi("Replayed %zu turns of history", history.size());
+}
+
+common_chat_params LlamaGenerationSession::renderTemplate(bool enableThinking, bool addGenerationPrompt) {
+    common_chat_templates_inputs inputs;
+    inputs.messages = messages;
+    inputs.add_generation_prompt = addGenerationPrompt;
+    inputs.use_jinja = true;
+    inputs.enable_thinking = enableThinking;
+    if (enableThinking) {
+        inputs.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
+    }
+    if (tools_enabled) {
+        inputs.tools = tools;
+        inputs.tool_choice = COMMON_CHAT_TOOL_CHOICE_AUTO;
+    }
+    return common_chat_templates_apply(chat_tmpls, inputs);
+}
+
+void LlamaGenerationSession::setTools(const char *toolsJson) {
+    pending_tool_calls.clear();
+    if (toolsJson == nullptr || strlen(toolsJson) == 0 || strcmp(toolsJson, "[]") == 0) {
+        tools.clear();
+        tools_enabled = false;
+        return;
+    }
+    try {
+        auto j = nlohmann::ordered_json::parse(toolsJson);
+        tools = common_chat_tools_parse_oaicompat(j);
+        tools_enabled = !tools.empty();
+        LOGi("Tools set: %zu tools, enabled: %d", tools.size(), (int)tools_enabled);
+    } catch (const std::exception &e) {
+        LOGe("Failed to parse tools JSON: %s", e.what());
+        tools.clear();
+        tools_enabled = false;
+    }
+}
+
+std::string LlamaGenerationSession::getToolCallsJson() {
+    nlohmann::ordered_json arr = nlohmann::ordered_json::array();
+    for (const auto &tc : pending_tool_calls) {
+        nlohmann::ordered_json obj;
+        obj["id"] = tc.id;
+        obj["name"] = tc.name;
+        obj["arguments"] = tc.arguments;
+        arr.push_back(obj);
+    }
+    return arr.dump();
+}
+
+int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enableThinking) {
+    if (chat_tmpls == nullptr || ctx == nullptr) {
+        LOGe("submitToolResults called on uninitialized session");
+        return 1;
+    }
+
+    try {
+        auto results = nlohmann::ordered_json::parse(resultsJson);
+        for (const auto &result : results) {
+            common_chat_msg tool_msg;
+            tool_msg.role = "tool";
+            tool_msg.content = result["content"].get<std::string>();
+            tool_msg.tool_call_id = result["id"].get<std::string>();
+            tool_msg.tool_name = result["name"].get<std::string>();
+            messages.push_back(tool_msg);
+        }
+    } catch (const std::exception &e) {
+        LOGe("Failed to parse tool results JSON: %s", e.what());
+        return 1;
+    }
+
+    pending_tool_calls.clear();
+    prev_enable_thinking = enableThinking;
+
+    common_chat_params result;
+    try {
+        result = renderTemplate(enableThinking);
+    } catch (const std::exception &e) {
+        LOGe("Failed to render template after tool results: %s", e.what());
+        return 1;
+    } catch (...) {
+        LOGe("Failed to render template after tool results: unknown error");
+        return 1;
+    }
+
+    std::string full_prompt = result.prompt;
+    additional_stops = result.additional_stops;
+    response.clear();
+
+    llama_memory_clear(llama_get_memory(ctx), true);
+    prev_len = 0;
+
+    int n_prompt_tokens = -llama_tokenize(vocab, full_prompt.c_str(), full_prompt.size(), NULL, 0, true, true);
+    prompt_tokens.resize(n_prompt_tokens);
+    if (llama_tokenize(vocab, full_prompt.c_str(), full_prompt.size(), prompt_tokens.data(), prompt_tokens.size(), true, true) < 0) {
+        LOGe("failed to tokenize prompt after tool results");
+        return 1;
+    }
+
+    batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
+
+    if (!result.parser.empty()) {
+        parser_params = common_chat_parser_params(result);
+        parser_params.reasoning_format = enableThinking
+            ? COMMON_REASONING_FORMAT_DEEPSEEK : COMMON_REASONING_FORMAT_NONE;
+        parser_params.parse_tool_calls = tools_enabled;
+        parser_params.parser.load(result.parser);
+        parser_initialized = true;
+    }
+
+    LOGi("Tool results submitted, re-tokenized prompt: %d tokens", n_prompt_tokens);
+    return 0;
 }
 
 std::string LlamaGenerationSession::getReport() {

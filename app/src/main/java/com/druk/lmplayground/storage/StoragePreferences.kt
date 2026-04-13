@@ -47,6 +47,14 @@ class StoragePreferences(context: Context) {
         prefs.edit { putString("gen_params_$filename", encoded) }
     }
 
+    fun isToolEnabled(toolName: String): Boolean {
+        return prefs.getBoolean("tool_enabled_$toolName", true)
+    }
+
+    fun setToolEnabled(toolName: String, enabled: Boolean) {
+        prefs.edit { putBoolean("tool_enabled_$toolName", enabled) }
+    }
+
     fun clear() {
         prefs.edit { clear() }
     }

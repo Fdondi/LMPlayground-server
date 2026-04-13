@@ -49,6 +49,27 @@ class LlamaModel {
     external fun supportsThinking(): Boolean
 
     /**
+     * Checks if the model's chat template supports tool/function calling.
+     *
+     * @return true if the model supports tool calling.
+     */
+    external fun supportsToolCalling(): Boolean
+
+    /**
+     * Loads a multimodal projector model for vision support.
+     *
+     * @param mmprojPath The path to the mmproj GGUF file.
+     */
+    external fun loadMmprojModel(mmprojPath: String)
+
+    /**
+     * Checks if the model supports vision input (image analysis).
+     *
+     * @return true if a multimodal projector is loaded and supports vision.
+     */
+    external fun supportsVision(): Boolean
+
+    /**
      * Unloads the model from memory and releases associated resources.
      */
     external fun unloadModel()

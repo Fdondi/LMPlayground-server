@@ -32,6 +32,7 @@ public:
 
     void printReport();
 
+    // Returns: 0 = more tokens, 1 = done, 2 = tool calls detected
     int generate(const ResponseCallback& callback);
 
     int addMessage(const char *string, bool enableThinking);
@@ -40,8 +41,15 @@ public:
 
     void replayHistory(const std::vector<std::pair<std::string, std::string>>& history);
 
+    // Tool calling
+    void setTools(const char *toolsJson);
+    std::string getToolCallsJson();
+    int submitToolResults(const char *resultsJson, bool enableThinking);
+
 private:
     void finalizeResponse();
+    common_chat_params renderTemplate(bool enableThinking, bool addGenerationPrompt = true);
+
     const struct llama_vocab * vocab = nullptr;
     llama_context * ctx = nullptr;
     llama_sampler * smpl = nullptr;
@@ -60,6 +68,12 @@ private:
     bool parser_initialized = false;
     SamplerParams sampler_params;
     bool budget_sampler_added = false;
+
+    // Tool calling state
+    std::vector<common_chat_tool> tools;
+    bool tools_enabled = false;
+    std::vector<common_chat_tool_call> pending_tool_calls;
+    int tool_call_counter = 0;
 };
 
 class LlamaModel {
@@ -79,6 +93,8 @@ public:
     std::string getModelReport();
 
     bool supportsThinking();
+
+    bool supportsToolCalling();
 
     void unloadModel();
 

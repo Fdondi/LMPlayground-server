@@ -21,6 +21,8 @@ import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
 import com.druk.lmplayground.storage.StoragePreferences
 import com.druk.lmplayground.storage.StorageRepository
+import com.druk.lmplayground.tools.ToolRegistry
+import org.json.JSONArray
 import androidx.compose.runtime.snapshots.Snapshot
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -55,6 +57,10 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _generationParams = MutableLiveData(GenerationParams())
     private val _maxContextSize = MutableLiveData(4096)
     private val _sessionModelHint = MutableLiveData<Pair<String, String>?>(null) // (modelName, modelFilename)
+    private val _supportsToolCalling = MutableLiveData(false)
+    private val _toolEnabledStates = MutableLiveData<Map<String, Boolean>>(emptyMap())
+    val toolRegistry = ToolRegistry.createDefault()
+    val toolEnabledStates: LiveData<Map<String, Boolean>> = _toolEnabledStates
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -70,6 +76,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val generationParams: LiveData<GenerationParams> = _generationParams
     val maxContextSize: LiveData<Int> = _maxContextSize
     val sessionModelHint: LiveData<Pair<String, String>?> = _sessionModelHint
+    val supportsToolCalling: LiveData<Boolean> = _supportsToolCalling
 
     val uiState = ConversationUiState(
         initialMessages = emptyList()
@@ -211,6 +218,17 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 this@ConversationViewModel.llamaModel = llamaModel
                 this@ConversationViewModel.llamaSession = llamaSession
                 _supportsThinking.postValue(llamaModel.supportsThinking())
+                val toolCallingSupported = llamaModel.supportsToolCalling()
+                _supportsToolCalling.postValue(toolCallingSupported)
+                if (toolCallingSupported) {
+                    val states = mutableMapOf<String, Boolean>()
+                    for (tool in toolRegistry.getAllTools()) {
+                        val enabled = storagePreferences.isToolEnabled(tool.name)
+                        toolRegistry.setToolEnabled(tool.name, enabled)
+                        states[tool.name] = enabled
+                    }
+                    _toolEnabledStates.postValue(states)
+                }
                 _modelLoadingProgress.postValue(0f)
                 _loadedModelStatus.postValue(modelDescription)
                 _isModelReady.postValue(true)
@@ -368,6 +386,17 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
             withContext(Dispatchers.Default) {
                 val llamaSession = llamaSession ?: return@withContext
+
+                // Tools are active when thinking is on, model supports it, and user has tools enabled
+                val toolsActive = enableThinking
+                    && _supportsToolCalling.value == true
+                    && toolRegistry.hasEnabledTools()
+                if (toolsActive) {
+                    llamaSession.setTools(toolRegistry.toOpenAIToolsJson())
+                } else {
+                    llamaSession.setTools("[]")
+                }
+
                 llamaSession.addMessage(message.content, enableThinking)
 
                 val callback = object: LlamaGenerationCallback {
@@ -406,9 +435,40 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         }
                     }
                 }
-                while (this.isActive && llamaSession.generate(callback) == 0) {
-                    // wait for the response
-                }
+                var generateResult: Int
+                var toolRounds = 0
+                val maxToolRounds = 5
+
+                do {
+                    do {
+                        generateResult = llamaSession.generate(callback)
+                    } while (this.isActive && generateResult == 0)
+
+                    if (generateResult == 2 && toolRounds < maxToolRounds && this.isActive) {
+                        toolRounds++
+                        val toolCallsJson = llamaSession.getToolCallsJson()
+                        android.util.Log.d("ConversationVM", "Tool calls (round $toolRounds): $toolCallsJson")
+
+                        val toolStartTime = System.currentTimeMillis()
+                        val toolResults = toolRegistry.executeToolCalls(toolCallsJson)
+                        val toolDurationMs = System.currentTimeMillis() - toolStartTime
+                        android.util.Log.d("ConversationVM", "Tool results (${toolDurationMs}ms): $toolResults")
+
+                        val toolCallInfoList = buildToolCallInfoList(toolCallsJson, toolResults, toolDurationMs)
+                        Snapshot.withMutableSnapshot {
+                            uiState.addToolCallsToLastMessage(toolCallInfoList)
+                        }
+
+                        val thinkingForResponse = _supportsThinking.value == true
+                        llamaSession.submitToolResults(toolResults, thinkingForResponse)
+
+                        callback.totalTokens = 0
+                        callback.thinkingTokenCount = 0
+                        callback.thinkingComplete = !thinkingForResponse
+                        callback.modelIsThinking = thinkingForResponse
+                    }
+                } while (this.isActive && generateResult == 2 && toolRounds < maxToolRounds)
+
                 llamaSession.printReport()
                 Snapshot.withMutableSnapshot {
                     uiState.finalizeLastMessage()
@@ -632,7 +692,43 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 _loadedModelStatus.postValue(null)
                 _isModelReady.postValue(false)
                 _supportsThinking.postValue(false)
+                _supportsToolCalling.postValue(false)
             }
+        }
+    }
+
+    @MainThread
+    fun setToolEnabled(toolName: String, enabled: Boolean) {
+        toolRegistry.setToolEnabled(toolName, enabled)
+        storagePreferences.setToolEnabled(toolName, enabled)
+        val states = _toolEnabledStates.value.orEmpty().toMutableMap()
+        states[toolName] = enabled
+        _toolEnabledStates.value = states
+    }
+
+    private fun buildToolCallInfoList(
+        toolCallsJson: String,
+        toolResultsJson: String,
+        totalDurationMs: Long
+    ): List<ToolCallInfo> {
+        val calls = JSONArray(toolCallsJson)
+        val results = JSONArray(toolResultsJson)
+        val resultMap = mutableMapOf<String, String>()
+        for (i in 0 until results.length()) {
+            val r = results.getJSONObject(i)
+            resultMap[r.getString("id")] = r.getString("content")
+        }
+        val count = calls.length().coerceAtLeast(1)
+        val perCallMs = totalDurationMs / count
+        return (0 until calls.length()).map { i ->
+            val call = calls.getJSONObject(i)
+            val id = call.getString("id")
+            ToolCallInfo(
+                name = call.getString("name"),
+                arguments = call.getString("arguments"),
+                result = resultMap[id] ?: "",
+                durationMs = perCallMs
+            )
         }
     }
 
