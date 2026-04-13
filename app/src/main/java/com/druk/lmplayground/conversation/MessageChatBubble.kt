@@ -168,7 +168,7 @@ fun ChatItemBubble(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                if (message.responseTokens > 0) {
+                if (message.responseTokens + message.thinkingTokens > 0) {
                     Text(
                         text = formatResponseStats(message),
                         style = MaterialTheme.typography.labelSmall,
@@ -194,12 +194,13 @@ fun ChatItemBubble(
 }
 
 private fun formatResponseStats(message: Message): String {
+    val totalTokens = message.responseTokens + message.thinkingTokens
     return buildString {
-        append("${message.responseTokens} tokens")
+        append("$totalTokens tokens")
         val duration = message.responseDurationSeconds
         if (duration > 0f) {
             append(" \u00B7 ${formatDuration(duration.toInt())}")
-            val speed = message.responseTokens / duration
+            val speed = totalTokens / duration
             append(" \u00B7 ${"%.1f".format(speed)} tok/s")
         }
     }
