@@ -143,6 +143,7 @@ dependencies {
 
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.okhttp3)
+    implementation(libs.jsoup)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)

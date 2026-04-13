@@ -68,6 +68,8 @@ class ToolRegistry {
             return ToolRegistry().apply {
                 register(DateTimeTool())
                 register(CalculatorTool())
+                register(WebSearchTool())
+                register(WebFetchTool())
             }
         }
     }
