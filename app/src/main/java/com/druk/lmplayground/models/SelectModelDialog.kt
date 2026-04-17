@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -70,13 +71,13 @@ fun SelectModelDialog(
                         )
                     }
                 } else {
-                    for (index in downloadedModels.indices) {
-                        val modelWithStatus = downloadedModels[index]
-                        item {
-                            Model(model = modelWithStatus.model) {
-                                onDismissRequest()
-                                onLoadModel(modelWithStatus.model)
-                            }
+                    items(
+                        items = downloadedModels,
+                        key = { it.model.filename }
+                    ) { modelWithStatus ->
+                        Model(model = modelWithStatus.model) {
+                            onDismissRequest()
+                            onLoadModel(modelWithStatus.model)
                         }
                     }
                 }
