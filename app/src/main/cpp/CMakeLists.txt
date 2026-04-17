@@ -63,7 +63,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         ggml_override
         -Wl,--no-whole-archive
         # List libraries link to the target library
-        common
+        llama-common
         llama
         android
         log)
