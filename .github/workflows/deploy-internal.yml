@@ -50,14 +50,16 @@ jobs:
       run: echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > "$RUNNER_TEMP/play-sa.json"
 
     # Fastlane looks for fastlane/metadata/android/*/changelogs/{versionCode}.txt.
-    # We keep one file per versionName (e.g. 10500.txt for 1.5.x) and copy it
-    # to the exact versionCode filename only for tagged releases, so CI builds
-    # on main don't spam new "What's New" entries on the Play Store.
-    - name: Stage changelog for tagged release
-      if: startsWith(github.ref, 'refs/tags/')
+    # We keep one file per versionName (e.g. 10500.txt for 1.5.0) and copy it
+    # to the exact versionCode filename so every deploy ships release notes.
+    # Version is the single source of truth in version.properties (shared with gradle).
+    - name: Stage changelog for build
       run: |
-        VERSION_CODE=$((10500 * 1000 + $GITHUB_RUN_NUMBER))
-        SOURCE_NAME="10500.txt"
+        source version.properties
+        BASE=$((major * 10000 + minor * 100 + patch))
+        VERSION_CODE=$((BASE * 1000 + GITHUB_RUN_NUMBER))
+        SOURCE_NAME="${BASE}.txt"
+        echo "version=$major.$minor.$patch, versionCode=$VERSION_CODE, source=$SOURCE_NAME"
         for dir in fastlane/metadata/android/*/changelogs; do
           if [ -f "$dir/$SOURCE_NAME" ]; then
             cp "$dir/$SOURCE_NAME" "$dir/${VERSION_CODE}.txt"

@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.ManagedVirtualDevice
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -16,10 +17,17 @@ android {
         applicationId = "com.druk.lmplayground"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        // Base version × 1000 + CI run number. Local builds use 0.
-        // Keeps ~1000 CI builds per patch before needing a versionName bump.
-        versionCode = 1_05_00 * 1000 + (System.getenv("GITHUB_RUN_NUMBER") ?: "0").toInt()
-        versionName = "1.5.0"
+        val versionProps = Properties().apply {
+            rootProject.file("version.properties").inputStream().use { load(it) }
+        }
+        val major = versionProps.getProperty("major").toInt()
+        val minor = versionProps.getProperty("minor").toInt()
+        val patch = versionProps.getProperty("patch").toInt()
+        versionName = "$major.$minor.$patch"
+        // versionCode = base × 1000 + CI run number. Local builds use 0.
+        // Keeps ~1000 CI builds per patch before needing a version bump.
+        versionCode = (major * 10000 + minor * 100 + patch) * 1000 +
+            (System.getenv("GITHUB_RUN_NUMBER") ?: "0").toInt()
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
