@@ -1,0 +1,3 @@
+- Prompty systemowe — zapisuj instrukcje wielokrotnego użytku i wybieraj właściwą dla każdego modelu, aby ton, rola lub format wyjścia były spójne między sesjami
+- 28 języków — aplikacja jest teraz dostępna w 28 językach, w tym arabskim, bengalskim, hebrajskim, hindi, japońskim, koreańskim, polskim, tajskim, ukraińskim, wietnamskim i wielu innych
+- Szybsze wnioskowanie dzięki najnowszej wersji llama.cpp oraz poprawki selektora modeli

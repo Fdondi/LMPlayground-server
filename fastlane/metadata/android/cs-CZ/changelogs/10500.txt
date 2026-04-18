@@ -1,0 +1,3 @@
+- Systémové prompty — ukládejte opakovatelné instrukce a pro každý model zvolte tu správnou, takže váš tón, role nebo formát výstupu zůstanou konzistentní napříč sezeními
+- 28 jazyků — aplikace je nyní lokalizována do 28 jazyků včetně arabštiny, bengálštiny, hebrejštiny, hindštiny, japonštiny, korejštiny, polštiny, thajštiny, ukrajinštiny, vietnamštiny a dalších
+- Rychlejší inference díky nejnovější llama.cpp a opravy výběru modelů

@@ -1,0 +1,3 @@
+- Lời nhắc hệ thống — lưu các chỉ dẫn có thể tái sử dụng và chọn lời nhắc phù hợp cho từng mô hình, để giọng điệu, vai trò hoặc định dạng đầu ra của bạn nhất quán qua các phiên
+- 28 ngôn ngữ — ứng dụng hiện đã được bản địa hóa sang 28 ngôn ngữ bao gồm Ả Rập, Bengali, Do Thái, Hindi, Nhật, Hàn, Ba Lan, Thái, Ukraina, Việt và nhiều hơn nữa
+- Suy luận nhanh hơn với llama.cpp mới nhất cùng các sửa lỗi bộ chọn mô hình

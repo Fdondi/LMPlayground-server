@@ -1,0 +1,3 @@
+- Systemprompter — spara återanvändbara instruktioner och välj rätt för varje modell, så att din ton, roll eller utdataformat håller mellan sessioner
+- 28 språk — appen är nu lokaliserad på 28 språk, inklusive arabiska, bengali, hebreiska, hindi, japanska, koreanska, polska, thai, ukrainska, vietnamesiska och fler
+- Snabbare inferens via senaste llama.cpp plus fixar i modellväljaren
