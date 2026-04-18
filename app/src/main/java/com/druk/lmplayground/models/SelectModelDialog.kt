@@ -116,7 +116,7 @@ fun SelectModelDialog(
                                 contentDescription = null,
                                 modifier = Modifier.padding(end = 8.dp)
                             )
-                            Text("Generation Parameters")
+                            Text(stringResource(R.string.generation_parameters))
                         }
                         TextButton(
                             onClick = {
@@ -132,7 +132,7 @@ fun SelectModelDialog(
                                 contentDescription = null,
                                 modifier = Modifier.padding(end = 8.dp)
                             )
-                            Text("Unload Model")
+                            Text(stringResource(R.string.unload_model))
                         }
                     }
                     Spacer(modifier = Modifier.height(8.dp))

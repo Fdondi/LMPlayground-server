@@ -38,8 +38,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.druk.lmplayground.R
 import com.druk.lmplayground.data.ChatSessionEntity
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -70,14 +72,14 @@ fun SessionListDrawer(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Conversations",
+                    text = stringResource(R.string.conversations),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier.weight(1f)
                 )
                 IconButton(onClick = onSettingsClicked) {
                     Icon(
                         imageVector = Icons.Outlined.Settings,
-                        contentDescription = "Settings",
+                        contentDescription = stringResource(R.string.settings),
                         tint = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
@@ -119,7 +121,7 @@ fun SessionListDrawer(
                                 Spacer(modifier = Modifier.width(6.dp))
                                 Icon(
                                     imageVector = Icons.Filled.PushPin,
-                                    contentDescription = "Pinned",
+                                    contentDescription = stringResource(R.string.pinned_label),
                                     modifier = Modifier.size(14.dp),
                                     tint = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
@@ -131,7 +133,7 @@ fun SessionListDrawer(
                             onDismissRequest = { contextMenuSessionId = null }
                         ) {
                             DropdownMenuItem(
-                                text = { Text(if (session.pinned) "Unpin" else "Pin") },
+                                text = { Text(if (session.pinned) stringResource(R.string.unpin) else stringResource(R.string.pin)) },
                                 onClick = {
                                     onPinSession(session.id, !session.pinned)
                                     contextMenuSessionId = null
@@ -144,7 +146,7 @@ fun SessionListDrawer(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Rename") },
+                                text = { Text(stringResource(R.string.rename)) },
                                 onClick = {
                                     renameDialogSession = session
                                     contextMenuSessionId = null
@@ -157,7 +159,7 @@ fun SessionListDrawer(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("Delete") },
+                                text = { Text(stringResource(R.string.delete)) },
                                 onClick = {
                                     onDeleteSession(session.id)
                                     contextMenuSessionId = null
@@ -182,7 +184,7 @@ fun SessionListDrawer(
         var text by remember(session.id) { mutableStateOf(session.title) }
         AlertDialog(
             onDismissRequest = { renameDialogSession = null },
-            title = { Text("Rename Conversation") },
+            title = { Text(stringResource(R.string.rename_conversation)) },
             text = {
                 OutlinedTextField(
                     value = text,
@@ -198,12 +200,12 @@ fun SessionListDrawer(
                     },
                     enabled = text.isNotBlank()
                 ) {
-                    Text("Rename")
+                    Text(stringResource(R.string.rename))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { renameDialogSession = null }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

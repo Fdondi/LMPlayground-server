@@ -1,0 +1,250 @@
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">Buksan ang navigation drawer</string>
+    <string name="navigation_drawer_close">Isara ang navigation drawer</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Mga setting</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="conversations">Mga usapan</string>
+    <string name="profile">Profile</string>
+    <string name="jumpBottom">Bumaba sa ibaba</string>
+    <string name="send">Ipadala</string>
+    <string name="author_me">ako</string>
+    <string name="members">%d mga miyembro</string>
+    <string name="textfield_hint">Mensahe</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; I-swipe upang kanselahin</string>
+    <string name="emojis_label">Mga Emoji</string>
+    <string name="stickers_label">Mga Sticker</string>
+
+    <string name="message">Mensahe</string>
+    <string name="edit_profile">I-edit ang Profile</string>
+    <string name="profile_error">Nagkaroon ng error sa paglo-load ng profile</string>
+    <string name="bio">Bio</string>
+    <string name="display_name">Display name</string>
+    <string name="status">Status</string>
+    <string name="timezone">Timezone</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">Mga karaniwang channel</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">Emoji selector</string>
+    <string name="emoji_selector_bt_desc">Ipakita ang Emoji selector</string>
+    <string name="dm_desc">Direct Message</string>
+    <string name="attach_photo_desc">Maglakip ng Larawan</string>
+    <string name="map_selector_desc">Tagapili ng lokasyon</string>
+    <string name="videochat_desc">Simulan ang videochat</string>
+    <string name="textfield_desc">Input ng teksto</string>
+    <string name="not_available">Kasalukuyang hindi available ang tampok</string>
+    <string name="not_available_subtitle">Kumuha ng inumin at bumalik mamaya!</string>
+    <string name="attached_image">Nakalakip na larawan</string>
+    <string name="search">Maghanap</string>
+    <string name="info">Impormasyon</string>
+    <string name="more_options">Higit pang mga opsyon</string>
+    <string name="touch_and_hold_to_record">Pindutin nang matagal upang mag-record</string>
+    <string name="record_message">Mag-record ng voice message</string>
+    <string name="stop">Ihinto</string>
+
+    <string name="copy">Kopyahin</string>
+    <string name="upvote">I-upvote</string>
+    <string name="downvote">I-downvote</string>
+    <string name="rating_question">Bakit mo pinili ang rating na ito?</string>
+    <string name="offensive_unsafe">Nakakasakit/Hindi ligtas</string>
+    <string name="not_correct">Hindi tama</string>
+    <string name="didnt_follow_instructions">Hindi sinunod ang mga tagubilin</string>
+    <string name="wrong_language">Maling wika</string>
+    <string name="other">Iba pa</string>
+
+    <!-- Settings -->
+    <string name="settings">Mga setting</string>
+    <string name="back">Bumalik</string>
+    <string name="version">Bersyon %s</string>
+    <string name="models_subtitle">Mag-download at pamahalaan ang mga modelo</string>
+    <string name="privacy_policy">Patakaran sa Privacy</string>
+    <string name="privacy_policy_effective_date">Petsa ng Pagkabisa: Marso 16, 2024</string>
+    <string name="privacy_policy_intro">Maligayang pagdating sa LM Playground! Nakatuon ako sa pagpapanatili ng tiwala at kumpiyansa ng lahat ng gumagamit ng aking app. Sa Patakaran sa Privacy na ito, nagbibigay ako ng detalyadong impormasyon kung kailan at bakit hindi ako nangongolekta ng personal na data, kung paano ko ginagamit ang tanging pahintulot na kinakailangan (Internet permission), at kung paano ko tinitiyak na protektado ang iyong privacy.</string>
+    <string name="privacy_policy_s1_title">1. Walang Pagkolekta ng Personal na Impormasyon</string>
+    <string name="privacy_policy_s1_body">Ako, si Andriy Druk, ang developer ng LM Playground, ay hindi nangongolekta, nag-iimbak, gumagamit, o nagbabahagi ng anumang personal na impormasyon mula sa mga gumagamit ng aking app. Ang aking app ay dinisenyo na may privacy mo bilang priyoridad, tinitiyak na magagamit mo ito nang hindi nakokompromiso ang iyong personal na data.</string>
+    <string name="privacy_policy_s2_title">2. Hindi Personal na Impormasyon</string>
+    <string name="privacy_policy_s2_body">Ang LM Playground ay dinisenyo sa paraang hindi ito nangongolekta o gumagamit ng anumang hindi personal na impormasyon mula sa mga gumagamit nito. Ang app ay gumagana nang malaya nang hindi nagta-track o nagsusuri ng data, pag-uugali, o kagustuhan ng user.</string>
+    <string name="privacy_policy_s3_title">3. Paggamit ng Internet Permission</string>
+    <string name="privacy_policy_s3_body">Ang tanging pahintulot na kinakailangan ng LM Playground ay para sa Internet access. Ang pahintulot na ito ay kinakailangan upang paganahin ang DownloadManager na mag-download ng mga file nang direkta sa app. Maging panatag na ang tungkuling ito ay hindi nagpapadala ng anumang data mula sa iyong device sa anumang server o nangongolekta ng impormasyon tungkol sa iyong mga gawi sa pag-browse.</string>
+    <string name="privacy_policy_s4_title">4. Mga Update sa Patakaran sa Privacy</string>
+    <string name="privacy_policy_s4_body">Bilang developer ng LM Playground, nagkakaroon ako ng karapatang i-update ang Patakaran sa Privacy na ito anumang oras. Ang anumang pagbabago ay magkakabisa kaagad pagkatapos mai-post ang na-update na patakaran sa pahinang ito. Hinihikayat ang mga user na madalas na suriin ang pahinang ito para sa anumang pagbabago at manatiling may kaalaman kung paano ako tumutulong na protektahan ang personal na impormasyon na hindi ko kinokolekta.</string>
+    <string name="privacy_policy_s5_title">5. Pagtanggap sa Patakarang Ito</string>
+    <string name="privacy_policy_s5_body">Sa paggamit ng LM Playground, kinikilala mo at sumasang-ayon sa Patakaran sa Privacy na ito. Kung hindi ka sumasang-ayon sa patakaran, mangyaring huwag gamitin ang app. Ang iyong patuloy na paggamit ng app kasunod ng pag-post ng anumang mga update o pagbabago sa patakarang ito ay ituturing na pagtanggap mo sa mga pagbabagong iyon.</string>
+    <string name="privacy_policy_s6_title">6. Makipag-ugnayan sa Akin</string>
+    <string name="privacy_policy_s6_body">Kung mayroon kang anumang mga tanong o mungkahi tungkol sa aking Patakaran sa Privacy, huwag mag-atubiling makipag-ugnayan sa akin.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">Magpadala ng Feedback</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_subtitle">Mga madalas itanong</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">Ano ang LM Playground?</string>
+    <string name="faq_a1">Ang LM Playground ay nagpapahintulot sa iyo na magpatakbo ng malalaking modelo ng wika nang direkta sa iyong Android device. Lahat ng pagpoproseso ay lokal na nangyayari \u2013 walang kailangan na cloud server.</string>
+    <string name="faq_q2">Anong mga modelo ang suportado?</string>
+    <string name="faq_a2">Sinusuportahan ng app ang mga modelo sa format na GGUF na may Q4_K_M quantization, kabilang ang Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini, at DeepSeek R1 Distill sa iba\'t ibang laki.</string>
+    <string name="faq_q3">Gaano karaming storage space ang kailangan ko?</string>
+    <string name="faq_a3">Ang mga laki ng modelo ay nag-iiba mula sa halos 500 MB (maliliit na modelo tulad ng Qwen 3 0.6B) hanggang ilang GB (mas malalaking modelo tulad ng DeepSeek R1 7B). Tiyaking may sapat kang libreng espasyo bago mag-download.</string>
+    <string name="faq_q4">Kailangan ba ng koneksyon sa internet ang app?</string>
+    <string name="faq_a4">Kailangan lang ng internet upang mag-download ng mga modelo. Kapag na-download na, ang mga modelo ay ganap na tumatakbo offline sa iyong device.</string>
+    <string name="faq_q5">Pribado ba ang aking data?</string>
+    <string name="faq_a5">Oo. Ang lahat ng usapan ay pinoproseso nang lokal sa iyong device. Walang data na ipinapadala sa mga panlabas na server. Tingnan ang Patakaran sa Privacy para sa mga detalye.</string>
+    <string name="faq_q6">Bakit mabagal ang paglo-load ng modelo?</string>
+    <string name="faq_a6">Ang mas malalaking modelo ay tumatagal upang ma-load sa memorya. Ang oras ng paglo-load ay nakadepende sa hardware ng iyong device. Kapag na-load na, ang modelo ay nananatili sa memorya hanggang sa i-unload mo ito.</string>
+    <string name="faq_q7">Anong mga device ang pinakamahusay na gumagana?</string>
+    <string name="faq_a7">Ang mga device na may mas maraming RAM ay maaaring magpatakbo ng mas malalaking modelo. Para sa pinakamahusay na pagganap, gumamit ng device na may hindi bababa sa 6 GB ng RAM para sa maliliit na modelo at 8+ GB para sa mas malalaki.</string>
+    <string name="faq_q8">Maaari ba akong mag-load ng custom na GGUF model?</string>
+    <string name="faq_a8">Oo. Ilagay ang iyong .gguf file sa storage folder na napili sa Mga setting \u2192 Mga Modelo (ang parehong folder na ginagamit para sa mga pag-download). Awtomatikong madedetek ito ng app at ipapakita ito sa model selector kasama ng built-in na catalog. Ang chat template at mga setting ng tokenizer ay nababasa mula sa GGUF metadata. Kung hindi gumagana ang isang partikular na modelo, mangyaring magbukas ng issue sa GitHub.</string>
+    <string name="faq_q9">Maaari ko bang baguhin kung saan naka-imbak ang mga modelo?</string>
+    <string name="faq_a9">Oo. Pumunta sa Mga Setting, pagkatapos ay Mga Modelo, at gamitin ang opsyong \u201CBaguhin ang Folder\u201D upang pumili ng ibang lokasyon ng storage.</string>
+    <string name="faq_q10">Paano ako magtanggal ng modelo?</string>
+    <string name="faq_a10">Pumunta sa Mga Setting, pagkatapos ay Mga Modelo. Sa seksyong \u201CNa-download\u201D, i-tap ang icon ng pagtanggal sa tabi ng modelong gusto mong alisin.</string>
+
+    <!-- Models Screen -->
+    <string name="models">Mga Modelo</string>
+    <string name="change_folder">Baguhin ang Folder</string>
+    <string name="delete_model">Tanggalin</string>
+    <string name="download_model">I-download</string>
+    <string name="storage_used_models">Mga Modelo: %s</string>
+    <string name="storage_available">%s available</string>
+    <string name="downloads_folder">Downloads folder</string>
+    <string name="custom_folder">Custom folder</string>
+    <string name="delete_model_confirm">Tanggalin ang %s?</string>
+    <string name="delete_model_message">Permanenteng aalisin nito ang file ng modelo.</string>
+    <string name="downloaded_models">Na-download</string>
+    <string name="available_models">Available sa Pag-download</string>
+    <string name="no_downloaded_models">Walang na-download na modelo pa</string>
+    <string name="browse_more_models">Mag-browse ng Mga Modelo</string>
+    <string name="cancel">Kanselahin</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Pag-download ng Modelo</string>
+    <string name="download_notification_channel_description">Nagpapakita ng pag-unlad para sa pag-download ng mga file ng modelo</string>
+    <string name="download_complete">Kumpleto na ang download</string>
+    <string name="moving_to_storage">Inililipat sa storage\u2026</string>
+    <string name="starting_download">Sinisimulan ang pag-download\u2026</string>
+    <string name="download_failed">Nabigo ang pag-download</string>
+    <string name="download_cancelled">Kinansela ang pag-download</string>
+    <string name="waiting_for_network">Naghihintay ng network\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">Ilipat ang Mga Modelo?</string>
+    <string name="migrate_models_message">Nakakita ng %1$d modelo (%2$s) sa nakaraang folder. Gusto mo bang kopyahin ang mga ito sa bagong lokasyon?</string>
+    <string name="migrate_models_from_downloads">Nakakita ng %1$d modelo (%2$s) sa iyong Downloads folder. Gusto mo bang ilipat ang mga ito sa napiling lokasyon ng storage?</string>
+    <string name="models_to_migrate">Mga Modelo:</string>
+    <string name="migrate">Ilipat</string>
+    <string name="skip">Laktawan</string>
+    <string name="migrating_models">Naglilipat ng Mga Modelo</string>
+    <string name="migration_progress">Kinokopya ang %1$d sa %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">Mga System Prompt</string>
+    <string name="system_prompts_subtitle">Magagamit muli na mga tagubilin para sa anumang modelo</string>
+    <string name="system_prompts_empty">Wala pang system prompt. I-tap ang + para magdagdag.</string>
+    <string name="system_prompt_new">Bagong system prompt</string>
+    <string name="system_prompt_edit">I-edit ang system prompt</string>
+    <string name="system_prompt_hint">hal.: Ikaw ay isang maikling assistant. Laging sumagot sa Pranses.</string>
+    <string name="system_prompt_current">Kasalukuyang system prompt</string>
+    <string name="system_prompt_current_empty">Walang system prompt — i-tap para magdagdag</string>
+    <string name="system_prompt_update">I-update</string>
+    <string name="save">I-save</string>
+    <string name="add">Idagdag</string>
+    <string name="clear">I-clear</string>
+
+    <!-- General UI -->
+    <string name="select_model">Pumili ng Modelo</string>
+    <string name="new_conversation">Bagong Usapan</string>
+    <string name="close">Isara</string>
+    <string name="pinned_label">Naka-pin</string>
+    <string name="unpin">Alisin ang pin</string>
+    <string name="pin">I-pin</string>
+    <string name="rename">Palitan ang pangalan</string>
+    <string name="delete">Tanggalin</string>
+    <string name="rename_conversation">Palitan ang Pangalan ng Usapan</string>
+    <string name="previously_used_model">Dati nang ginamit: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Pumili ng Storage Folder</string>
+    <string name="choose_storage_folder_message">Mangyaring pumili ng folder kung saan iimbakin ang mga modelo. Ito ay kinakailangan upang magamit ang app.</string>
+    <string name="choose_folder">Pumili ng Folder</string>
+
+    <!-- Session -->
+    <string name="session_info">Impormasyon ng Session</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Mga Parameter ng Paglikha</string>
+    <string name="reset">I-reset</string>
+    <string name="context_size">Laki ng Konteksto</string>
+    <string name="will_reset_conversation">Ire-reset ang usapan</string>
+    <string name="thinking_budget">Badyet sa Pag-iisip</string>
+    <string name="tokens_value">%d mga token</string>
+    <string name="temperature">Temperatura</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Parusa sa Pag-uulit</string>
+    <string name="advanced">Advanced</string>
+    <string name="collapse">I-collapse</string>
+    <string name="expand">Palawakin</string>
+    <string name="seed">Seed</string>
+    <string name="random">Random</string>
+    <string name="disabled_label">naka-disable</string>
+    <string name="unload_model">I-unload ang Modelo</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Nag-iisip</string>
+    <string name="collapse_thinking">I-collapse ang pag-iisip</string>
+    <string name="expand_thinking">Palawakin ang pag-iisip</string>
+    <string name="thoughts">Mga Iniisip</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Hindi available ang tampok \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI sa</string>
+    <string name="screenshot_hero_title_emphasis">iyong</string>
+    <string name="screenshot_hero_title_suffix">telepono</string>
+    <string name="screenshot_hero_subtitle">Pribado. Lokal. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ modelo mula sa:</string>
+    <string name="screenshot_choose_model">Pumili ng modelo</string>
+    <string name="screenshot_choose_model_sub">mula sa nangungunang mga AI provider</string>
+    <string name="screenshot_chat">Mag-chat nang pribado</string>
+    <string name="screenshot_chat_sub">sa iyong device</string>
+    <string name="screenshot_fine_tune">I-fine-tune</string>
+    <string name="screenshot_fine_tune_sub">ang mga parameter ng paglikha</string>
+    <string name="screenshot_download_models">I-download ang anumang modelo</string>
+    <string name="screenshot_download_models_sub">sa anumang folder na piliin mo</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">Ikaw ay isang maikling tagapagturo ng agham. Ipaliwanag ang mga ideya nang malinaw gamit ang mga halimbawa sa pang-araw-araw na buhay.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">Ano ang machine learning?</string>
+    <string name="screenshot_chat_response">Ang machine learning ay isang sangay ng artificial intelligence kung saan ang mga computer ay **natututo mula sa data** sa halip na tahasang programado.\n\nMga pangunahing konsepto:\n\n\u2022 **Pagsasanay**: pagbibigay ng data sa mga algorithm\n\u2022 **Mga Modelo**: mga natutunan na pattern mula sa data\n\u2022 **Inference**: paggawa ng mga hula sa bagong data</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Magaan na chat model</string>
+    <string name="model_category_general">Pangkalahatang chat model</string>
+    <string name="model_category_efficient">Mahusay na on-device model</string>
+    <string name="model_category_reasoning">Hybrid reasoning model</string>
+    <string name="model_category_ultra_lightweight">Sobrang gaan na chat model</string>
+    <string name="model_category_compact_reasoning">Compact reasoning model</string>
+    <string name="model_category_thinking">Modelong nag-iisip</string>
+    <string name="model_category_enterprise">Enterprise chat model</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">Ano ang Bago</string>
+    <string name="whats_new_item_1">Bagong mga Gemma 4 model (E2B, E4B)</string>
+    <string name="whats_new_item_2">Mga parameter ng paglikha bawat modelo</string>
+    <string name="whats_new_item_3">Pagkontrol sa badyet ng pag-iisip</string>
+
+</resources>

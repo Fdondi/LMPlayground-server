@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -150,9 +151,9 @@ class ConversationFragment : Fragment() {
                 if (showStorageSetupDialog && !isStorageConfigured && pendingMigration == null) {
                     AlertDialog(
                         onDismissRequest = { /* Cannot dismiss - must choose folder */ },
-                        title = { Text("Choose Storage Folder") },
+                        title = { Text(stringResource(R.string.choose_storage_folder)) },
                         text = {
-                            Text("Please select a folder where models will be stored. This is required to use the app.")
+                            Text(stringResource(R.string.choose_storage_folder_message))
                         },
                         confirmButton = {
                             TextButton(
@@ -165,7 +166,7 @@ class ConversationFragment : Fragment() {
                                     }
                                 }
                             ) {
-                                Text("Choose Folder")
+                                Text(stringResource(R.string.choose_folder))
                             }
                         }
                     )
@@ -178,26 +179,26 @@ class ConversationFragment : Fragment() {
 
                     AlertDialog(
                         onDismissRequest = { storageViewModel.cancelMigration() },
-                        title = { Text("Migrate Models?") },
+                        title = { Text(stringResource(R.string.migrate_models_title)) },
                         text = {
                             Column {
                                 Text(
                                     if (migration.isFromDownloads) {
-                                        "Found ${migration.modelsToMigrate.size} model(s) ($sizeFormatted) in your Downloads folder. Would you like to move them to the selected storage location?"
+                                        stringResource(R.string.migrate_models_from_downloads, migration.modelsToMigrate.size, sizeFormatted)
                                     } else {
-                                        "Found ${migration.modelsToMigrate.size} model(s) ($sizeFormatted) in the previous folder. Would you like to copy them to the new location?"
+                                        stringResource(R.string.migrate_models_message, migration.modelsToMigrate.size, sizeFormatted)
                                     }
                                 )
                             }
                         },
                         confirmButton = {
                             TextButton(onClick = { storageViewModel.confirmMigration() }) {
-                                Text("Migrate")
+                                Text(stringResource(R.string.migrate))
                             }
                         },
                         dismissButton = {
                             TextButton(onClick = { storageViewModel.skipMigration() }) {
-                                Text("Skip")
+                                Text(stringResource(R.string.skip))
                             }
                         }
                     )
@@ -207,7 +208,7 @@ class ConversationFragment : Fragment() {
                 migrationProgress?.let { progress ->
                     AlertDialog(
                         onDismissRequest = { /* Cannot dismiss while migrating */ },
-                        title = { Text("Migrating Models") },
+                        title = { Text(stringResource(R.string.migrating_models)) },
                         text = {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -215,7 +216,7 @@ class ConversationFragment : Fragment() {
                             ) {
                                 CircularProgressIndicator()
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Text("Copying ${progress.currentIndex} of ${progress.totalCount}")
+                                Text(stringResource(R.string.migration_progress, progress.currentIndex, progress.totalCount))
                                 Text(
                                     text = progress.currentModel,
                                     style = MaterialTheme.typography.bodySmall,
@@ -326,7 +327,7 @@ class ConversationFragment : Fragment() {
                                         modelReport = null
                                     },
                                     title = {
-                                        Text(text = "Session Info")
+                                        Text(text = stringResource(R.string.session_info))
                                     },
                                     text = {
                                         Text(
@@ -336,7 +337,7 @@ class ConversationFragment : Fragment() {
                                     },
                                     confirmButton = {
                                         TextButton(onClick = { modelReport = null }) {
-                                            Text(text = "CLOSE")
+                                            Text(text = stringResource(R.string.close))
                                         }
                                     }
                                 )

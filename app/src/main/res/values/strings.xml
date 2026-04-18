@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">LM Playground</string>
+    <string name="app_name" translatable="false">LM Playground</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Composer</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -31,7 +31,7 @@
     <string name="timezone">Timezone</string>
     <string name="twitter">Twitter</string>
     <string name="common_channels">Channels in common</string>
-    <string name="lorem">Lorem or Ipsum</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
 
     <!-- Accessibility descriptions -->
 
@@ -82,7 +82,7 @@
     <string name="privacy_policy_s5_body">By using LM Playground, you acknowledge and agree to this Privacy Policy. If you do not agree with the policy, please refrain from using the app. Your continued use of the app following the posting of any updates or changes to this policy will be deemed your acceptance of those changes.</string>
     <string name="privacy_policy_s6_title">6. Contact Me</string>
     <string name="privacy_policy_s6_body">If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me.</string>
-    <string name="privacy_policy_contact_email">andriydruk@gmail.com</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
     <string name="send_feedback">Send Feedback</string>
     <string name="faq">FAQ</string>
     <string name="faq_subtitle">Frequently asked questions</string>
@@ -103,7 +103,7 @@
     <string name="faq_q7">Which devices work best?</string>
     <string name="faq_a7">Devices with more RAM can run larger models. For best performance, use a device with at least 6 GB of RAM for small models and 8+ GB for larger ones.</string>
     <string name="faq_q8">Can I load a custom GGUF model?</string>
-    <string name="faq_a8">A model file alone is not enough for loading \u2013 each model requires a tailored, prebuilt configuration (chat template, tokenizer settings, etc.) that the app uses to run it correctly. If you\'d like to use a model not yet available in the app, please visit my GitHub repository and submit a request or contribute the configuration.</string>
+    <string name="faq_a8">Yes. Place your .gguf file in the storage folder selected in Settings \u2192 Models (the same folder used for downloads). The app will pick it up automatically and show it in the model selector alongside the built-in catalog. Chat template and tokenizer settings are read from the GGUF metadata. If a specific model doesn\'t work, please open an issue on GitHub.</string>
     <string name="faq_q9">Can I change where models are stored?</string>
     <string name="faq_a9">Yes. Go to Settings, then Models, and use the \u201CChange Folder\u201D option to select a different storage location.</string>
     <string name="faq_q10">How do I delete a model?</string>
@@ -157,8 +157,94 @@
     <string name="system_prompt_current_empty">No system prompt — tap to add</string>
     <string name="system_prompt_update">Update</string>
     <string name="save">Save</string>
-    <string name="delete">Delete</string>
     <string name="add">Add</string>
     <string name="clear">Clear</string>
+
+    <!-- General UI -->
+    <string name="select_model">Select Model</string>
+    <string name="new_conversation">New Conversation</string>
+    <string name="close">Close</string>
+    <string name="pinned_label">Pinned</string>
+    <string name="unpin">Unpin</string>
+    <string name="pin">Pin</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="rename_conversation">Rename Conversation</string>
+    <string name="previously_used_model">Previously used: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Choose Storage Folder</string>
+    <string name="choose_storage_folder_message">Please select a folder where models will be stored. This is required to use the app.</string>
+    <string name="choose_folder">Choose Folder</string>
+
+    <!-- Session -->
+    <string name="session_info">Session Info</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Generation Parameters</string>
+    <string name="reset">Reset</string>
+    <string name="context_size">Context Size</string>
+    <string name="will_reset_conversation">Will reset conversation</string>
+    <string name="thinking_budget">Thinking Budget</string>
+    <string name="tokens_value">%d tokens</string>
+    <string name="temperature">Temperature</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Repetition Penalty</string>
+    <string name="advanced">Advanced</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
+    <string name="seed">Seed</string>
+    <string name="random">Random</string>
+    <string name="disabled_label">disabled</string>
+    <string name="unload_model">Unload Model</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Thinking</string>
+    <string name="collapse_thinking">Collapse thinking</string>
+    <string name="expand_thinking">Expand thinking</string>
+    <string name="thoughts">Thoughts</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Functionality not available \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">Run models on</string>
+    <string name="screenshot_hero_title_emphasis">your</string>
+    <string name="screenshot_hero_title_suffix">phone</string>
+    <string name="screenshot_hero_subtitle">Private. Local. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ models from:</string>
+    <string name="screenshot_choose_model">Choose model</string>
+    <string name="screenshot_choose_model_sub">from leading AI providers</string>
+    <string name="screenshot_chat">Chat privately</string>
+    <string name="screenshot_chat_sub">on your device</string>
+    <string name="screenshot_fine_tune">Fine-tune</string>
+    <string name="screenshot_fine_tune_sub">generation parameters</string>
+    <string name="screenshot_download_models">Download any model</string>
+    <string name="screenshot_download_models_sub">to any folder you choose</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">You are a concise science tutor. Explain ideas clearly with everyday examples.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">What is machine learning?</string>
+    <string name="screenshot_chat_response">Machine learning is a branch of artificial intelligence where computers **learn from data** instead of being explicitly programmed.\n\nKey concepts:\n\n\u2022 **Training**: feeding data to algorithms\n\u2022 **Models**: learned patterns from data\n\u2022 **Inference**: making predictions on new data</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Lightweight chat model</string>
+    <string name="model_category_general">General-purpose chat model</string>
+    <string name="model_category_efficient">Efficient on-device model</string>
+    <string name="model_category_reasoning">Hybrid reasoning model</string>
+    <string name="model_category_ultra_lightweight">Ultra-lightweight chat model</string>
+    <string name="model_category_compact_reasoning">Compact reasoning model</string>
+    <string name="model_category_thinking">Thinking model</string>
+    <string name="model_category_enterprise">Enterprise chat model</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">What\'s New</string>
+    <string name="whats_new_item_1">New Gemma 4 models (E2B, E4B)</string>
+    <string name="whats_new_item_2">Per-model generation parameters</string>
+    <string name="whats_new_item_3">Thinking budget control</string>
 
 </resources>

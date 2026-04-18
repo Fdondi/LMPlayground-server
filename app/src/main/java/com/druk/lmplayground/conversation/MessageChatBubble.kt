@@ -76,12 +76,13 @@ fun ChatItemBubble(
                 ) {
                     Icon(
                         imageVector = if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = if (expanded) "Collapse thinking" else "Expand thinking",
+                        contentDescription = if (expanded) stringResource(R.string.collapse_thinking) else stringResource(R.string.expand_thinking),
                         modifier = Modifier.size(16.dp),
                         tint = MaterialTheme.colorScheme.outline
                     )
+                    val thinkingText = stringResource(R.string.thinking)
                     val thinkingLabel = buildString {
-                        append("Thinking \u00B7 $thinkingDuration")
+                        append("$thinkingText \u00B7 $thinkingDuration")
                         if (message.thinkingTokens > 0) {
                             append(" \u00B7 ${message.thinkingTokens} tokens")
                         }
@@ -229,8 +230,9 @@ private fun ThinkingIndicator() {
         label = "dots"
     )
     val dots = ".".repeat(dotCount.toInt().coerceIn(0, 3))
+    val thinkingText = stringResource(R.string.thinking)
     Text(
-        text = "Thinking$dots",
+        text = "$thinkingText$dots",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.outline,
         fontStyle = FontStyle.Italic

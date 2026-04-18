@@ -1,0 +1,250 @@
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">Åbn navigationsskuffe</string>
+    <string name="navigation_drawer_close">Luk navigationsskuffe</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigationsoverskrift</string>
+    <string name="action_settings">Indstillinger</string>
+
+    <string name="menu_home">Hjem</string>
+    <string name="menu_gallery">Galleri</string>
+    <string name="menu_slideshow">Diasshow</string>
+    <string name="conversations">Samtaler</string>
+    <string name="profile">Profil</string>
+    <string name="jumpBottom">Spring til bunden</string>
+    <string name="send">Send</string>
+    <string name="author_me">mig</string>
+    <string name="members">%d medlemmer</string>
+    <string name="textfield_hint">Besked</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; Stryg for at annullere</string>
+    <string name="emojis_label">Emojis</string>
+    <string name="stickers_label">Klistermærker</string>
+
+    <string name="message">Besked</string>
+    <string name="edit_profile">Rediger profil</string>
+    <string name="profile_error">Der opstod en fejl under indlæsning af profilen</string>
+    <string name="bio">Bio</string>
+    <string name="display_name">Visningsnavn</string>
+    <string name="status">Status</string>
+    <string name="timezone">Tidszone</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">Fælles kanaler</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">Emoji-vælger</string>
+    <string name="emoji_selector_bt_desc">Vis emoji-vælger</string>
+    <string name="dm_desc">Direkte besked</string>
+    <string name="attach_photo_desc">Vedhæft foto</string>
+    <string name="map_selector_desc">Stedsvælger</string>
+    <string name="videochat_desc">Start videochat</string>
+    <string name="textfield_desc">Tekstindtastning</string>
+    <string name="not_available">Funktionalitet er i øjeblikket ikke tilgængelig</string>
+    <string name="not_available_subtitle">Tag en drink og kig tilbage senere!</string>
+    <string name="attached_image">Vedhæftet billede</string>
+    <string name="search">Søg</string>
+    <string name="info">Information</string>
+    <string name="more_options">Flere muligheder</string>
+    <string name="touch_and_hold_to_record">Tryk og hold for at optage</string>
+    <string name="record_message">Optag talebesked</string>
+    <string name="stop">Stop</string>
+
+    <string name="copy">Kopier</string>
+    <string name="upvote">Stem op</string>
+    <string name="downvote">Stem ned</string>
+    <string name="rating_question">Hvorfor valgte du denne bedømmelse?</string>
+    <string name="offensive_unsafe">Stødende/utrygt</string>
+    <string name="not_correct">Ikke korrekt</string>
+    <string name="didnt_follow_instructions">Fulgte ikke instruktionerne</string>
+    <string name="wrong_language">Forkert sprog</string>
+    <string name="other">Andet</string>
+
+    <!-- Settings -->
+    <string name="settings">Indstillinger</string>
+    <string name="back">Tilbage</string>
+    <string name="version">Version %s</string>
+    <string name="models_subtitle">Download og administrer modeller</string>
+    <string name="privacy_policy">Privatlivspolitik</string>
+    <string name="privacy_policy_effective_date">Ikrafttrædelsesdato: 16. marts 2024</string>
+    <string name="privacy_policy_intro">Velkommen til LM Playground! Jeg er forpligtet til at opretholde tilliden og fortroligheden hos alle brugere af min app. I denne privatlivspolitik giver jeg detaljerede oplysninger om, hvornår og hvorfor jeg ikke indsamler personlige data, hvordan jeg bruger den eneste tilladelse, der kræves (Internettilladelse), og hvordan jeg sikrer, at dit privatliv er beskyttet.</string>
+    <string name="privacy_policy_s1_title">1. Ingen indsamling af personlige oplysninger</string>
+    <string name="privacy_policy_s1_body">Jeg, Andriy Druk, udvikleren af LM Playground, indsamler, opbevarer, bruger eller deler ikke personlige oplysninger fra brugerne af min app. Min app er designet med dit privatliv som prioritet og sikrer, at du kan bruge den uden at kompromittere dine personlige data.</string>
+    <string name="privacy_policy_s2_title">2. Ikke-personlige oplysninger</string>
+    <string name="privacy_policy_s2_body">LM Playground er designet på en sådan måde, at den ikke indsamler eller bruger nogen ikke-personlige oplysninger fra sine brugere. Appen fungerer uafhængigt uden at spore eller analysere brugerdata, adfærd eller præferencer.</string>
+    <string name="privacy_policy_s3_title">3. Brug af internettilladelse</string>
+    <string name="privacy_policy_s3_body">Den eneste tilladelse, der kræves af LM Playground, er til internetadgang. Denne tilladelse er nødvendig for at gøre det muligt for DownloadManager at downloade filer direkte til appen. Vær sikker på, at denne funktion ikke involverer at sende data fra din enhed til nogen servere eller at indsamle oplysninger om dine browsingvaner.</string>
+    <string name="privacy_policy_s4_title">4. Opdateringer af privatlivspolitikken</string>
+    <string name="privacy_policy_s4_body">Som udvikler af LM Playground forbeholder jeg mig retten til at opdatere denne privatlivspolitik til enhver tid. Eventuelle ændringer vil træde i kraft umiddelbart efter offentliggørelsen af den opdaterede politik på denne side. Brugere opfordres til ofte at tjekke denne side for eventuelle ændringer og holde sig informeret om, hvordan jeg hjælper med at beskytte de personlige oplysninger, jeg ikke indsamler.</string>
+    <string name="privacy_policy_s5_title">5. Accept af denne politik</string>
+    <string name="privacy_policy_s5_body">Ved at bruge LM Playground anerkender og accepterer du denne privatlivspolitik. Hvis du ikke er enig i politikken, bedes du afholde dig fra at bruge appen. Din fortsatte brug af appen efter offentliggørelsen af eventuelle opdateringer eller ændringer i denne politik vil blive anset som din accept af disse ændringer.</string>
+    <string name="privacy_policy_s6_title">6. Kontakt mig</string>
+    <string name="privacy_policy_s6_body">Hvis du har spørgsmål eller forslag til min privatlivspolitik, tøv ikke med at kontakte mig.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">Send feedback</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_subtitle">Ofte stillede spørgsmål</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">Hvad er LM Playground?</string>
+    <string name="faq_a1">LM Playground lader dig køre store sprogmodeller direkte på din Android-enhed. Al behandling foregår lokalt \u2013 ingen cloud-servere nødvendige.</string>
+    <string name="faq_q2">Hvilke modeller understøttes?</string>
+    <string name="faq_a2">Appen understøtter modeller i GGUF-format med Q4_K_M-kvantisering, herunder Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini og DeepSeek R1 Distill i forskellige størrelser.</string>
+    <string name="faq_q3">Hvor meget lagerplads har jeg brug for?</string>
+    <string name="faq_a3">Modelstørrelser varierer fra cirka 500 MB (små modeller som Qwen 3 0.6B) til flere GB (større modeller som DeepSeek R1 7B). Sørg for, at du har nok ledig plads før download.</string>
+    <string name="faq_q4">Kræver appen en internetforbindelse?</string>
+    <string name="faq_a4">Internet er kun nødvendigt for at downloade modeller. Når de er downloadet, kører modellerne helt offline på din enhed.</string>
+    <string name="faq_q5">Er mine data private?</string>
+    <string name="faq_a5">Ja. Alle samtaler behandles lokalt på din enhed. Ingen data sendes til eksterne servere. Se privatlivspolitikken for detaljer.</string>
+    <string name="faq_q6">Hvorfor er modelindlæsning langsom?</string>
+    <string name="faq_a6">Større modeller tager længere tid at indlæse i hukommelsen. Indlæsningstider afhænger af din enheds hardware. Når den er indlæst, forbliver modellen i hukommelsen, indtil du fjerner den.</string>
+    <string name="faq_q7">Hvilke enheder fungerer bedst?</string>
+    <string name="faq_a7">Enheder med mere RAM kan køre større modeller. For den bedste ydelse skal du bruge en enhed med mindst 6 GB RAM til små modeller og 8+ GB til større modeller.</string>
+    <string name="faq_q8">Kan jeg indlæse en brugerdefineret GGUF-model?</string>
+    <string name="faq_a8">Ja. Læg din .gguf-fil i den lagringsmappe, der er valgt under Indstillinger → Modeller (den samme mappe, der bruges til downloads). Appen finder den automatisk og viser den i modelvælgeren ved siden af det indbyggede katalog. Chatskabelon og tokenizer-indstillinger læses fra GGUF-metadataene. Hvis en bestemt model ikke virker, så opret venligst et issue på GitHub.</string>
+    <string name="faq_q9">Kan jeg ændre, hvor modeller er gemt?</string>
+    <string name="faq_a9">Ja. Gå til Indstillinger, derefter Modeller, og brug indstillingen \u201CSkift mappe\u201D for at vælge en anden lagerplacering.</string>
+    <string name="faq_q10">Hvordan sletter jeg en model?</string>
+    <string name="faq_a10">Gå til Indstillinger, derefter Modeller. I afsnittet \u201CDownloadet\u201D skal du trykke på sletteikonet ved siden af den model, du vil fjerne.</string>
+
+    <!-- Models Screen -->
+    <string name="models">Modeller</string>
+    <string name="change_folder">Skift mappe</string>
+    <string name="delete_model">Slet</string>
+    <string name="download_model">Download</string>
+    <string name="storage_used_models">Modeller: %s</string>
+    <string name="storage_available">%s tilgængelig</string>
+    <string name="downloads_folder">Downloadmappe</string>
+    <string name="custom_folder">Brugerdefineret mappe</string>
+    <string name="delete_model_confirm">Slet %s?</string>
+    <string name="delete_model_message">Dette vil permanent fjerne modelfilen.</string>
+    <string name="downloaded_models">Downloadet</string>
+    <string name="available_models">Tilgængelig til download</string>
+    <string name="no_downloaded_models">Ingen modeller downloadet endnu</string>
+    <string name="browse_more_models">Gennemse modeller</string>
+    <string name="cancel">Annuller</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Modeldownloads</string>
+    <string name="download_notification_channel_description">Viser fremskridt for download af modelfiler</string>
+    <string name="download_complete">Download fuldført</string>
+    <string name="moving_to_storage">Flytter til lager\u2026</string>
+    <string name="starting_download">Starter download\u2026</string>
+    <string name="download_failed">Download mislykkedes</string>
+    <string name="download_cancelled">Download annulleret</string>
+    <string name="waiting_for_network">Venter på netværk\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">Migrer modeller?</string>
+    <string name="migrate_models_message">Fandt %1$d model(ler) (%2$s) i den forrige mappe. Vil du kopiere dem til den nye placering?</string>
+    <string name="migrate_models_from_downloads">Fandt %1$d model(ler) (%2$s) i din downloadmappe. Vil du flytte dem til den valgte lagerplacering?</string>
+    <string name="models_to_migrate">Modeller:</string>
+    <string name="migrate">Migrer</string>
+    <string name="skip">Spring over</string>
+    <string name="migrating_models">Migrerer modeller</string>
+    <string name="migration_progress">Kopierer %1$d af %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">Systemprompter</string>
+    <string name="system_prompts_subtitle">Genbrugelige instruktioner til enhver model</string>
+    <string name="system_prompts_empty">Ingen systemprompter endnu. Tryk på + for at tilføje en.</string>
+    <string name="system_prompt_new">Ny systemprompt</string>
+    <string name="system_prompt_edit">Rediger systemprompt</string>
+    <string name="system_prompt_hint">f.eks. Du er en kortfattet assistent. Svar altid på fransk.</string>
+    <string name="system_prompt_current">Aktuel systemprompt</string>
+    <string name="system_prompt_current_empty">Ingen systemprompt — tryk for at tilføje</string>
+    <string name="system_prompt_update">Opdater</string>
+    <string name="save">Gem</string>
+    <string name="add">Tilføj</string>
+    <string name="clear">Ryd</string>
+
+    <!-- General UI -->
+    <string name="select_model">Vælg model</string>
+    <string name="new_conversation">Ny samtale</string>
+    <string name="close">Luk</string>
+    <string name="pinned_label">Fastgjort</string>
+    <string name="unpin">Frigør</string>
+    <string name="pin">Fastgør</string>
+    <string name="rename">Omdøb</string>
+    <string name="delete">Slet</string>
+    <string name="rename_conversation">Omdøb samtale</string>
+    <string name="previously_used_model">Tidligere brugt: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Vælg lagermappe</string>
+    <string name="choose_storage_folder_message">Vælg venligst en mappe, hvor modeller skal gemmes. Dette er nødvendigt for at bruge appen.</string>
+    <string name="choose_folder">Vælg mappe</string>
+
+    <!-- Session -->
+    <string name="session_info">Sessionsinformation</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Genereringsparametre</string>
+    <string name="reset">Nulstil</string>
+    <string name="context_size">Kontekststørrelse</string>
+    <string name="will_reset_conversation">Nulstiller samtalen</string>
+    <string name="thinking_budget">Tænkebudget</string>
+    <string name="tokens_value">%d tokens</string>
+    <string name="temperature">Temperatur</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Gentagelsesstraf</string>
+    <string name="advanced">Avanceret</string>
+    <string name="collapse">Skjul</string>
+    <string name="expand">Udvid</string>
+    <string name="seed">Frø</string>
+    <string name="random">Tilfældig</string>
+    <string name="disabled_label">deaktiveret</string>
+    <string name="unload_model">Afindlæs model</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Tænker</string>
+    <string name="collapse_thinking">Skjul tænkning</string>
+    <string name="expand_thinking">Udvid tænkning</string>
+    <string name="thoughts">Tanker</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Funktionalitet ikke tilgængelig \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI på</string>
+    <string name="screenshot_hero_title_emphasis">din</string>
+    <string name="screenshot_hero_title_suffix">telefon</string>
+    <string name="screenshot_hero_subtitle">Privat. Lokalt. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ modeller fra:</string>
+    <string name="screenshot_choose_model">Vælg model</string>
+    <string name="screenshot_choose_model_sub">fra førende AI-udbydere</string>
+    <string name="screenshot_chat">Chat privat</string>
+    <string name="screenshot_chat_sub">på din enhed</string>
+    <string name="screenshot_fine_tune">Finjuster</string>
+    <string name="screenshot_fine_tune_sub">genereringsparametre</string>
+    <string name="screenshot_download_models">Download enhver model</string>
+    <string name="screenshot_download_models_sub">til enhver mappe du vælger</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">Du er en kortfattet naturvidenskabslærer. Forklar idéer tydeligt med hverdagseksempler.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">Hvad er maskinlæring?</string>
+    <string name="screenshot_chat_response">Maskinlæring er en gren af kunstig intelligens, hvor computere **lærer af data** i stedet for at blive eksplicit programmeret.\n\nNøglebegreber:\n\n\u2022 **Træning**: fodrer algoritmer med data\n\u2022 **Modeller**: lærte mønstre fra data\n\u2022 **Inferens**: forudsigelser på nye data</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Letvægts chatmodel</string>
+    <string name="model_category_general">Alsidig chatmodel</string>
+    <string name="model_category_efficient">Effektiv enhedsmodel</string>
+    <string name="model_category_reasoning">Hybrid ræsonnementsmodel</string>
+    <string name="model_category_ultra_lightweight">Ultralet chatmodel</string>
+    <string name="model_category_compact_reasoning">Kompakt ræsonnementsmodel</string>
+    <string name="model_category_thinking">Tænkende model</string>
+    <string name="model_category_enterprise">Virksomhedschatmodel</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">Nyheder</string>
+    <string name="whats_new_item_1">Nye Gemma 4-modeller (E2B, E4B)</string>
+    <string name="whats_new_item_2">Genereringsparametre pr. model</string>
+    <string name="whats_new_item_3">Styring af tænkebudget</string>
+
+</resources>

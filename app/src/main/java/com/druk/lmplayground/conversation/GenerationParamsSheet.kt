@@ -88,14 +88,14 @@ fun GenerationParamsSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Generation Parameters",
+                    text = stringResource(R.string.generation_parameters),
                     style = MaterialTheme.typography.titleMedium
                 )
                 TextButton(onClick = {
                     val defaults = GenerationParams()
                     editedParams = defaults
                 }) {
-                    Text("Reset")
+                    Text(stringResource(R.string.reset))
                 }
             }
 
@@ -151,12 +151,12 @@ fun GenerationParamsSheet(
             // Context Size
             val contextWarning = editedParams.contextSize != params.contextSize
             ParamSlider(
-                label = "Context Size",
+                label = stringResource(R.string.context_size),
                 value = editedParams.contextSize.toFloat(),
                 valueRange = contextMin.toFloat()..contextMax.toFloat(),
                 steps = (((contextMax - contextMin) / contextStep) - 1).coerceAtLeast(0),
                 valueDisplay = "${editedParams.contextSize}",
-                warning = if (contextWarning) "Will reset conversation" else null,
+                warning = if (contextWarning) stringResource(R.string.will_reset_conversation) else null,
                 onValueChange = {
                     val snapped = (it / contextStep).roundToInt() * contextStep
                     val newContextSize = snapped.coerceIn(contextMin, contextMax)
@@ -177,11 +177,11 @@ fun GenerationParamsSheet(
                 val budgetMin = 64
                 val budgetMax = editedParams.contextSize
                 ParamSlider(
-                    label = "Thinking Budget",
+                    label = stringResource(R.string.thinking_budget),
                     value = editedParams.thinkingBudget.toFloat(),
                     valueRange = budgetMin.toFloat()..budgetMax.toFloat(),
                     steps = 0,
-                    valueDisplay = "${editedParams.thinkingBudget} tokens",
+                    valueDisplay = stringResource(R.string.tokens_value, editedParams.thinkingBudget),
                     onValueChange = {
                         val snapped = (it / 64).roundToInt() * 64
                         editedParams = editedParams.copy(
@@ -193,7 +193,7 @@ fun GenerationParamsSheet(
 
             // Temperature
             ParamSlider(
-                label = "Temperature",
+                label = stringResource(R.string.temperature),
                 value = editedParams.temperature,
                 valueRange = 0f..2f,
                 steps = 0,
@@ -205,12 +205,12 @@ fun GenerationParamsSheet(
 
             // Top-P
             ParamSlider(
-                label = "Top-P",
+                label = stringResource(R.string.top_p),
                 value = editedParams.topP,
                 valueRange = 0f..1f,
                 steps = 0,
                 valueDisplay = "%.2f".format(editedParams.topP),
-                subtitle = if (editedParams.topP >= 1f) "disabled" else null,
+                subtitle = if (editedParams.topP >= 1f) stringResource(R.string.disabled_label) else null,
                 onValueChange = {
                     editedParams = editedParams.copy(topP = (it * 100).roundToInt() / 100f)
                 }
@@ -218,12 +218,12 @@ fun GenerationParamsSheet(
 
             // Repetition Penalty
             ParamSlider(
-                label = "Repetition Penalty",
+                label = stringResource(R.string.repetition_penalty),
                 value = editedParams.repetitionPenalty,
                 valueRange = 1f..2f,
                 steps = 0,
                 valueDisplay = "%.2f".format(editedParams.repetitionPenalty),
-                subtitle = if (editedParams.repetitionPenalty <= 1f) "disabled" else null,
+                subtitle = if (editedParams.repetitionPenalty <= 1f) stringResource(R.string.disabled_label) else null,
                 onValueChange = {
                     editedParams = editedParams.copy(repetitionPenalty = (it * 100).roundToInt() / 100f)
                 }
@@ -239,13 +239,13 @@ fun GenerationParamsSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Advanced",
+                    text = stringResource(R.string.advanced),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
                     imageVector = if (showAdvanced) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = if (showAdvanced) "Collapse" else "Expand"
+                    contentDescription = if (showAdvanced) stringResource(R.string.collapse) else stringResource(R.string.expand)
                 )
             }
 
@@ -253,12 +253,12 @@ fun GenerationParamsSheet(
                 Column {
                     // Top-K
                     ParamSlider(
-                        label = "Top-K",
+                        label = stringResource(R.string.top_k),
                         value = editedParams.topK.toFloat(),
                         valueRange = 0f..200f,
                         steps = 0,
                         valueDisplay = "${editedParams.topK}",
-                        subtitle = if (editedParams.topK == 0) "disabled" else null,
+                        subtitle = if (editedParams.topK == 0) stringResource(R.string.disabled_label) else null,
                         onValueChange = {
                             editedParams = editedParams.copy(topK = it.roundToInt())
                         }
@@ -266,12 +266,12 @@ fun GenerationParamsSheet(
 
                     // Min-P
                     ParamSlider(
-                        label = "Min-P",
+                        label = stringResource(R.string.min_p),
                         value = editedParams.minP,
                         valueRange = 0f..0.5f,
                         steps = 0,
                         valueDisplay = "%.3f".format(editedParams.minP),
-                        subtitle = if (editedParams.minP <= 0f) "disabled" else null,
+                        subtitle = if (editedParams.minP <= 0f) stringResource(R.string.disabled_label) else null,
                         onValueChange = {
                             editedParams = editedParams.copy(minP = (it * 1000).roundToInt() / 1000f)
                         }
@@ -288,7 +288,7 @@ fun GenerationParamsSheet(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Seed",
+                            text = stringResource(R.string.seed),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)
                         )
@@ -302,7 +302,7 @@ fun GenerationParamsSheet(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(start = 16.dp),
-                            placeholder = { Text("Random") },
+                            placeholder = { Text(stringResource(R.string.random)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
                             textStyle = MaterialTheme.typography.bodyMedium
