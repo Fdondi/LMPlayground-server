@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
+    alias(libs.plugins.paparazzi)
 }
 
 android {
@@ -115,6 +116,63 @@ android {
         excludes += "/META-INF/AL2.0"
         excludes += "/META-INF/LGPL2.1"
     }
+}
+
+// ── Play Store screenshot organization ───────────────────────────────
+// Paparazzi writes files like "pkg_StoreScreenshots_scene0_hero[French].png"
+// Play Store expects fastlane/metadata/android/{locale}/images/phoneScreenshots/{n}_{name}.png
+val paparazziLocaleToPlayStore = mapOf(
+    "English" to "en-US", "Spanish" to "es-ES", "Portuguese" to "pt-BR",
+    "French" to "fr-FR", "German" to "de-DE", "Italian" to "it-IT",
+    "Polish" to "pl-PL", "Ukrainian" to "uk", "Romanian" to "ro",
+    "Turkish" to "tr-TR", "Arabic" to "ar", "Chinese" to "zh-CN",
+    "Japanese" to "ja-JP", "Korean" to "ko-KR", "Indonesian" to "id",
+    "Hindi" to "hi-IN", "Vietnamese" to "vi",
+    "Thai" to "th", "Dutch" to "nl-NL", "Hebrew" to "iw-IL",
+    "Czech" to "cs-CZ", "Swedish" to "sv-SE", "Bengali" to "bn-BD",
+    "Malay" to "ms", "Filipino" to "fil-PH", "Norwegian" to "nb-NO",
+    "Danish" to "da-DK", "Finnish" to "fi-FI"
+)
+
+val sceneRenames = mapOf(
+    "scene0_hero" to "0_hero",
+    "scene1_chooseModel" to "1_choose_model",
+    "scene2_chat" to "2_chat",
+    "scene3_generationParams" to "3_generation_params",
+    "scene4_modelsDownload" to "4_models_download"
+)
+
+tasks.register("organizeScreenshotsForPlayStore") {
+    group = "play store"
+    description = "Renames Paparazzi snapshots into fastlane/metadata phoneScreenshots layout."
+
+    val snapshotsDir = file("src/test/snapshots/images")
+    val fastlaneDir = rootProject.file("fastlane/metadata/android")
+    val regex = Regex("""_StoreScreenshots_(scene\d_\w+)\[(\w+)]\.png""")
+
+    inputs.dir(snapshotsDir)
+    outputs.dir(fastlaneDir)
+
+    doLast {
+        if (!snapshotsDir.exists()) {
+            logger.warn("No Paparazzi snapshots found at $snapshotsDir — run recordPaparazziDebug first.")
+            return@doLast
+        }
+        var copied = 0
+        snapshotsDir.listFiles()?.forEach { src ->
+            val match = regex.find(src.name) ?: return@forEach
+            val scene = sceneRenames[match.groupValues[1]] ?: return@forEach
+            val locale = paparazziLocaleToPlayStore[match.groupValues[2]] ?: return@forEach
+            val destDir = File(fastlaneDir, "$locale/images/phoneScreenshots").apply { mkdirs() }
+            src.copyTo(File(destDir, "$scene.png"), overwrite = true)
+            copied++
+        }
+        logger.lifecycle("Organized $copied screenshots into $fastlaneDir")
+    }
+}
+
+tasks.matching { it.name == "recordPaparazziDebug" }.configureEach {
+    finalizedBy("organizeScreenshotsForPlayStore")
 }
 
 dependencies {
