@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - 'fastlane/metadata/android/**'
+      - '!fastlane/metadata/android/**/changelogs/**'
   workflow_dispatch:
 
 jobs:
