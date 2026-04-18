@@ -16,8 +16,10 @@ android {
         applicationId = "com.druk.lmplayground"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 1_04_06
-        versionName = "1.4.6"
+        // Base version × 1000 + CI run number. Local builds use 0.
+        // Keeps ~1000 CI builds per patch before needing a versionName bump.
+        versionCode = 1_05_00 * 1000 + (System.getenv("GITHUB_RUN_NUMBER") ?: "0").toInt()
+        versionName = "1.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 

@@ -243,8 +243,8 @@
 
     <!-- What\'s New -->
     <string name="whats_new">What\'s New</string>
-    <string name="whats_new_item_1">New Gemma 4 models (E2B, E4B)</string>
-    <string name="whats_new_item_2">Per-model generation parameters</string>
-    <string name="whats_new_item_3">Thinking budget control</string>
+    <string name="whats_new_item_1">Reusable system prompts</string>
+    <string name="whats_new_item_2">Now available in 28 languages</string>
+    <string name="whats_new_item_3">Performance improvements</string>
 
 </resources>
