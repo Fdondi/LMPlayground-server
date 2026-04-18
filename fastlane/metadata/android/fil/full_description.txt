@@ -14,6 +14,8 @@ Pagsubaybay sa bilis ng generation — tingnan ang bilang ng token, oras ng gene
 
 Mga parameter bawat modelo — naaalala ng bawat modelo ang sarili nitong mga setting ng generation. I-fine-tune ang laki ng context, thinking budget, temperature, Top-P, Top-K, Min-P, repetition penalty, at seed.
 
+System prompts — i-save ang magagamit-muli na mga tagubilin nang isang beses at piliin ang tama para sa anumang modelo. Panatilihing pare-pareho ang tono, papel, o format ng output sa mga session.
+
 Mga custom na modelo — i-load ang iyong sariling GGUF model files mula sa anumang pinagmulan kasama ng built-in na katalogo.
 
 Maaasahang pag-download — custom na download engine na may mga notification ng pag-usad, pagpapakita ng bilis at ETA, at awtomatikong pag-resume sa mga pagkaantala ng network.

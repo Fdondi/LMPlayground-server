@@ -14,6 +14,8 @@ Generierungsgeschwindigkeit — sieh Token-Anzahl, Generierungszeit und Geschwin
 
 Parameter pro Modell — jedes Modell merkt sich seine eigenen Generierungseinstellungen. Passe Kontextgröße, Reasoning-Budget, Temperatur, Top-P, Top-K, Min-P, Wiederholungsstrafe und Seed individuell an.
 
+System-Prompts — speichere wiederverwendbare Anweisungen einmalig und wähle für jedes Modell die passende aus. Halte Tonfall, Rolle oder Ausgabeformat über Sitzungen hinweg konsistent.
+
 Eigene Modelle — lade deine eigenen GGUF-Modelldateien aus beliebigen Quellen neben dem integrierten Katalog.
 
 Zuverlässige Downloads — eigene Download-Engine mit Fortschrittsbenachrichtigungen, Geschwindigkeits- und ETA-Anzeige sowie automatischer Wiederaufnahme bei Netzwerkunterbrechungen.

@@ -14,6 +14,8 @@ Penjejakan kelajuan penjanaan — lihat kiraan token, masa penjanaan dan kelajua
 
 Parameter setiap model — setiap model mengingati tetapan penjanaannya sendiri. Perhalusi saiz konteks, belanjawan pemikiran, suhu, Top-P, Top-K, Min-P, penalti ulangan dan benih.
 
+Gesaan sistem — simpan arahan yang boleh digunakan semula sekali sahaja dan pilih yang sesuai untuk mana-mana model. Kekalkan nada, peranan atau format output konsisten merentas sesi.
+
 Model tersuai — muatkan fail model GGUF anda sendiri daripada mana-mana sumber bersama-sama katalog terbina dalam.
 
 Muat turun yang boleh dipercayai — enjin muat turun tersuai dengan pemberitahuan kemajuan, paparan kelajuan dan ETA, serta sambung semula automatik apabila rangkaian terputus.

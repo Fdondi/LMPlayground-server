@@ -14,6 +14,8 @@ Velocità di generazione — consulta il conteggio dei token, il tempo di genera
 
 Parametri per modello — ogni modello ricorda le proprie impostazioni di generazione. Regola dimensione del contesto, budget di ragionamento, temperatura, Top-P, Top-K, Min-P, penalità di ripetizione e seed.
 
+Prompt di sistema — salva istruzioni riutilizzabili una sola volta e scegli quella giusta per ogni modello. Mantieni tono, ruolo o formato di output coerenti tra le sessioni.
+
 Modelli personalizzati — carica i tuoi file di modello GGUF da qualsiasi fonte accanto al catalogo integrato.
 
 Download affidabili — motore di download personalizzato con notifiche di avanzamento, visualizzazione di velocità e tempo stimato, e ripresa automatica in caso di interruzioni di rete.

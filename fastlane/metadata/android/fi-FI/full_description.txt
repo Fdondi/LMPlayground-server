@@ -14,6 +14,8 @@ Generointinopeuden seuranta — näe tokenien määrä, generointiaika ja nopeus
 
 Mallikohtaiset parametrit — jokainen malli muistaa omat generointiasetuksensa. Hienosäädä kontekstin kokoa, ajattelubudjettia, lämpötilaa, Top-P, Top-K, Min-P, toistorangaistusta ja siementä.
 
+Järjestelmäkehotteet — tallenna uudelleenkäytettävät ohjeet kerran ja valitse sopiva mille tahansa mallille. Pidä sävy, rooli tai tulostusmuoto yhtenäisenä istuntojen välillä.
+
 Mukautetut mallit — lataa omia GGUF-mallitiedostojasi mistä tahansa lähteestä sisäänrakennetun luettelon rinnalle.
 
 Luotettavat lataukset — mukautettu latausmoottori edistymisilmoituksineen, nopeuden ja arvioidun ajan näytöllä sekä automaattisella jatkamisella verkkokatkoksissa.

@@ -14,6 +14,8 @@ Pelacakan kecepatan pembuatan — lihat jumlah token, waktu pembuatan, dan kecep
 
 Parameter per model — setiap model mengingat pengaturan pembuatannya sendiri. Sesuaikan ukuran konteks, anggaran berpikir, temperatur, Top-P, Top-K, Min-P, penalti pengulangan, dan seed.
 
+Prompt sistem — simpan instruksi yang dapat digunakan kembali sekali saja dan pilih yang tepat untuk model mana pun. Pertahankan konsistensi nada, peran, atau format keluaran di seluruh sesi.
+
 Model kustom — muat file model GGUF Anda sendiri dari sumber mana pun di samping katalog bawaan.
 
 Unduhan andal — mesin unduhan khusus dengan notifikasi progres, tampilan kecepatan dan perkiraan waktu, serta lanjutkan otomatis saat gangguan jaringan.

@@ -14,6 +14,8 @@ Generation speed tracking — see token count, generation time, and tok/s speed 
 
 Per-model parameters — each model remembers its own generation settings. Fine-tune context size, thinking budget, temperature, Top-P, Top-K, Min-P, repetition penalty, and seed.
 
+System prompts — save reusable instructions once and pick the right one for any model. Keep tone, role, or output format consistent across sessions.
+
 Custom models — load your own GGUF model files from any source alongside the built-in catalog.
 
 Reliable downloads — custom download engine with progress notifications, speed and ETA display, and automatic resume on network interruptions.

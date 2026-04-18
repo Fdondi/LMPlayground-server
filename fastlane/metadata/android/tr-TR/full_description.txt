@@ -14,6 +14,8 @@ Akıl yürütme modelleri — DeepSeek R1, Nemotron ve LFM2.5 Thinking gibi mode
 
 Model bazlı parametreler — her model kendi üretim ayarlarını hatırlar. Bağlam boyutu, düşünme bütçesi, sıcaklık, Top-P, Top-K, Min-P, tekrar cezası ve tohum değerini ince ayar yapın.
 
+Sistem istemleri — yeniden kullanılabilir talimatları bir kez kaydedin ve herhangi bir model için uygun olanı seçin. Ton, rol veya çıktı biçimini oturumlar arasında tutarlı tutun.
+
 Özel modeller — yerleşik katalog yanında herhangi bir kaynaktan kendi GGUF model dosyalarınızı yükleyin.
 
 Güvenilir indirmeler — ilerleme bildirimleri, hız ve tahmini süre gösterimi ve ağ kesintilerinde otomatik devam özellikli özel indirme motoru.

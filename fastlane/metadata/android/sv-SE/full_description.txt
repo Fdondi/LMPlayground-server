@@ -14,6 +14,8 @@ Spårning av genereringshastighet — se antal tokens, genereringstid och hastig
 
 Parametrar per modell — varje modell kommer ihåg sina egna genereringsinställningar. Finjustera kontextstorlek, tankebudget, temperatur, Top-P, Top-K, Min-P, repetitionsstraff och seed.
 
+Systemprompter — spara återanvändbara instruktioner en gång och välj rätt för varje modell. Håll ton, roll eller utmatningsformat konsekvent mellan sessioner.
+
 Anpassade modeller — ladda dina egna GGUF-modellfiler från valfri källa tillsammans med den inbyggda katalogen.
 
 Tillförlitliga nedladdningar — anpassad nedladdningsmotor med förloppsaviseringar, visning av hastighet och beräknad tid samt automatisk återupptagning vid nätverksavbrott.

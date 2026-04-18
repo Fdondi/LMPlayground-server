@@ -14,6 +14,8 @@ Sporing af genereringshastighed — se antal tokens, genereringstid og hastighed
 
 Parametre pr. model — hver model husker sine egne genereringsindstillinger. Finjuster kontekststørrelse, tænkebudget, temperatur, Top-P, Top-K, Min-P, gentagelsesstraf og seed.
 
+Systemprompter — gem genanvendelige instruktioner én gang og vælg den rette til enhver model. Hold tone, rolle eller outputformat konsistent på tværs af sessioner.
+
 Brugerdefinerede modeller — indlæs dine egne GGUF-modelfiler fra enhver kilde ved siden af det indbyggede katalog.
 
 Pålidelige downloads — brugerdefineret downloadmotor med forløbsnotifikationer, visning af hastighed og estimeret tid, og automatisk genoptagelse ved netværksafbrydelser.

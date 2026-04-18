@@ -14,6 +14,8 @@ Modele rozumowania — obserwuj proces myślowy modeli takich jak DeepSeek R1, N
 
 Parametry per model — każdy model zapamiętuje własne ustawienia generowania. Dostosuj rozmiar kontekstu, budżet rozumowania, temperaturę, Top-P, Top-K, Min-P, karę za powtórzenia i ziarno.
 
+Prompty systemowe — zapisz raz instrukcje do wielokrotnego użytku i wybierz odpowiednią dla każdego modelu. Zachowaj spójny ton, rolę lub format odpowiedzi w kolejnych sesjach.
+
 Własne modele — ładuj własne pliki modeli GGUF z dowolnego źródła obok wbudowanego katalogu.
 
 Niezawodne pobieranie — własny silnik pobierania z powiadomieniami o postępie, wyświetlaniem prędkości i szacowanego czasu, oraz automatycznym wznawianiem przy przerwach w sieci.

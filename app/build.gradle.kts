@@ -132,7 +132,7 @@ val paparazziLocaleToPlayStore = mapOf(
     "Hindi" to "hi-IN", "Vietnamese" to "vi",
     "Thai" to "th", "Dutch" to "nl-NL", "Hebrew" to "iw-IL",
     "Czech" to "cs-CZ", "Swedish" to "sv-SE", "Bengali" to "bn-BD",
-    "Malay" to "ms", "Filipino" to "fil-PH", "Norwegian" to "nb-NO",
+    "Malay" to "ms", "Filipino" to "fil", "Norwegian" to "nb-NO",
     "Danish" to "da-DK", "Finnish" to "fi-FI"
 )
 

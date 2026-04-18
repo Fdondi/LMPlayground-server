@@ -14,6 +14,8 @@ Suivi de la vitesse de génération — consultez le nombre de tokens, le temps 
 
 Paramètres par modèle — chaque modèle mémorise ses propres réglages de génération. Ajustez la taille du contexte, le budget de raisonnement, la température, Top-P, Top-K, Min-P, la pénalité de répétition et la graine.
 
+Invites système — enregistrez des instructions réutilisables une seule fois et choisissez la bonne pour chaque modèle. Conservez un ton, un rôle ou un format de sortie cohérents entre les sessions.
+
 Modèles personnalisés — chargez vos propres fichiers de modèle GGUF depuis n'importe quelle source aux côtés du catalogue intégré.
 
 Téléchargements fiables — moteur de téléchargement personnalisé avec notifications de progression, affichage de la vitesse et du temps estimé, et reprise automatique en cas d'interruptions réseau.

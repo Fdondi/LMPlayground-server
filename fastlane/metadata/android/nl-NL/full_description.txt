@@ -14,6 +14,8 @@ Bijhouden van generatiesnelheid — bekijk het aantal tokens, de generatietijd e
 
 Parameters per model — elk model onthoudt zijn eigen generatie-instellingen. Stel de contextgrootte, het denkbudget, temperature, Top-P, Top-K, Min-P, herhalingsboete en seed nauwkeurig in.
 
+Systeemprompts — sla herbruikbare instructies één keer op en kies de juiste voor elk model. Houd toon, rol of uitvoerformaat consistent tussen sessies.
+
 Aangepaste modellen — laad je eigen GGUF-modelbestanden uit elke bron naast de ingebouwde catalogus.
 
 Betrouwbare downloads — aangepaste download-engine met voortgangsmeldingen, weergave van snelheid en ETA, en automatische hervatting bij netwerkonderbrekingen.

@@ -14,6 +14,8 @@ Sledování rychlosti generování — zobrazte si počet tokenů, dobu generov�
 
 Parametry pro každý model — každý model si pamatuje vlastní nastavení generování. Dolaďte velikost kontextu, rozpočet uvažování, temperature, Top-P, Top-K, Min-P, postih za opakování a seed.
 
+Systémové prompty — uložte opakovaně použitelné pokyny jednou a vyberte ten správný pro libovolný model. Zachovejte konzistentní tón, roli nebo formát výstupu napříč relacemi.
+
 Vlastní modely — načítejte vlastní soubory modelů GGUF z jakéhokoli zdroje vedle vestavěného katalogu.
 
 Spolehlivé stahování — vlastní stahovací engine s oznámeními o průběhu, zobrazením rychlosti a odhadovaného času a automatickým pokračováním při přerušení sítě.

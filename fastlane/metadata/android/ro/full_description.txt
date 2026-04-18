@@ -14,6 +14,8 @@ Urmărirea vitezei de generare — vezi numărul de tokeni, timpul de generare �
 
 Parametri per model — fiecare model își amintește propriile setări de generare. Reglează dimensiunea contextului, bugetul de raționament, temperatura, Top-P, Top-K, Min-P, penalizarea pentru repetiție și seed-ul.
 
+Prompturi de sistem — salvează instrucțiuni reutilizabile o singură dată și alege-o pe cea potrivită pentru orice model. Păstrează un ton, rol sau format de ieșire consecvent între sesiuni.
+
 Modele personalizate — încarcă propriile fișiere de model GGUF din orice sursă alături de catalogul integrat.
 
 Descărcări fiabile — motor de descărcare personalizat cu notificări de progres, afișare a vitezei și timpului estimat, și reluare automată la întreruperi de rețea.

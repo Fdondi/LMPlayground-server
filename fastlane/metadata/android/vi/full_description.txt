@@ -14,6 +14,8 @@ Theo dõi tốc độ tạo — xem số lượng token, thời gian tạo và t
 
 Tham số theo mô hình — mỗi mô hình ghi nhớ cài đặt tạo riêng. Tinh chỉnh kích thước ngữ cảnh, ngân sách suy nghĩ, nhiệt độ, Top-P, Top-K, Min-P, hình phạt lặp lại và hạt giống.
 
+Lời nhắc hệ thống — lưu các hướng dẫn có thể tái sử dụng một lần và chọn cái phù hợp cho bất kỳ mô hình nào. Giữ giọng điệu, vai trò hoặc định dạng đầu ra nhất quán giữa các phiên.
+
 Mô hình tùy chỉnh — tải tệp mô hình GGUF của riêng bạn từ bất kỳ nguồn nào cùng với danh mục tích hợp.
 
 Tải xuống đáng tin cậy — công cụ tải xuống tùy chỉnh với thông báo tiến trình, hiển thị tốc độ và thời gian ước tính, và tự động tiếp tục khi mạng bị gián đoạn.
