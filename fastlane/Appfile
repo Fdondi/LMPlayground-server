@@ -1,0 +1,2 @@
+package_name("com.druk.lmplayground")
+json_key_file(ENV["GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_PATH"])
