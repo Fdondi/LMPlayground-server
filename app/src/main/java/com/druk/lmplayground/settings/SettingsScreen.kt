@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Policy
@@ -38,6 +39,7 @@ import com.druk.lmplayground.theme.PlaygroundTheme
 fun SettingsScreen(
     onBackClick: () -> Unit,
     onModelsClick: () -> Unit,
+    onSystemPromptsClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onFaqClick: () -> Unit,
     appVersion: String
@@ -65,6 +67,14 @@ fun SettingsScreen(
                 title = stringResource(R.string.models),
                 subtitle = stringResource(R.string.models_subtitle),
                 onClick = onModelsClick
+            )
+
+            // System Prompts row
+            SettingsRow(
+                icon = Icons.AutoMirrored.Outlined.Article,
+                title = stringResource(R.string.system_prompts),
+                subtitle = stringResource(R.string.system_prompts_subtitle),
+                onClick = onSystemPromptsClick
             )
 
             // Privacy Policy row
@@ -152,6 +162,7 @@ private fun SettingsScreenPreview() {
         SettingsScreen(
             onBackClick = {},
             onModelsClick = {},
+            onSystemPromptsClick = {},
             onPrivacyPolicyClick = {},
             onFaqClick = {},
             appVersion = "1.0.0"

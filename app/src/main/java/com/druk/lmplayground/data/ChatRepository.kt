@@ -34,6 +34,9 @@ class ChatRepository(private val dao: ChatDao) {
         thinkingBudget: Int
     ) = dao.updateSessionParams(sessionId, contextSize, temperature, topP, repetitionPenalty, topK, minP, seed, thinkingBudget)
 
+    suspend fun updateSessionSystemPrompt(sessionId: String, systemPrompt: String) =
+        dao.updateSessionSystemPrompt(sessionId, systemPrompt)
+
     suspend fun getSession(sessionId: String): ChatSessionEntity? =
         dao.getSession(sessionId)
 

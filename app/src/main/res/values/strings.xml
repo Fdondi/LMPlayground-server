@@ -146,4 +146,19 @@
     <string name="migrating_models">Migrating Models</string>
     <string name="migration_progress">Copying %1$d of %2$d</string>
 
+    <!-- System prompts -->
+    <string name="system_prompts">System Prompts</string>
+    <string name="system_prompts_subtitle">Reusable instructions for any model</string>
+    <string name="system_prompts_empty">No system prompts yet. Tap + to add one.</string>
+    <string name="system_prompt_new">New system prompt</string>
+    <string name="system_prompt_edit">Edit system prompt</string>
+    <string name="system_prompt_hint">e.g. You are a concise assistant. Always answer in French.</string>
+    <string name="system_prompt_current">Current system prompt</string>
+    <string name="system_prompt_current_empty">No system prompt — tap to add</string>
+    <string name="system_prompt_update">Update</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="add">Add</string>
+    <string name="clear">Clear</string>
+
 </resources>

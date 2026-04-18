@@ -116,7 +116,7 @@ class ReplayHistoryTest {
         val model = loadModel(modelFile!!)
 
         // --- Session A: build a 2-turn conversation ---
-        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionA
 
         // Turn 1
@@ -136,7 +136,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // --- Session B: new session, replay history, continue ---
-        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionB
 
         sessionB.replayHistory(
@@ -167,7 +167,7 @@ class ReplayHistoryTest {
         assumeTrue("No model in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Replay with empty arrays
@@ -194,7 +194,7 @@ class ReplayHistoryTest {
         val model = loadModel(modelFile!!)
 
         // Session A: one turn
-        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionA
 
         sessionA.addMessage("What is 5 + 5?", false)
@@ -206,7 +206,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // Session B: replay + continue
-        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionB
 
         sessionB.replayHistory(
@@ -236,7 +236,7 @@ class ReplayHistoryTest {
 
         // --- Load model and do one turn ---
         val model1 = loadModel(modelFile!!)
-        val session1 = model1.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session1 = model1.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session1
 
         session1.addMessage("The capital of France is Paris. Remember that.", false)
@@ -257,7 +257,7 @@ class ReplayHistoryTest {
         // --- Reload model from scratch ---
         Log.d(TAG, "Reloading model from scratch")
         val model2 = loadModel(modelFile)
-        val session2 = model2.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session2 = model2.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session2
 
         // Replay the saved history
@@ -289,7 +289,7 @@ class ReplayHistoryTest {
         assumeTrue("Model doesn't support thinking", model.supportsThinking())
 
         // Session A: thinking enabled
-        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionA
 
         sessionA.addMessage("What is 7 * 8?", true)
@@ -301,7 +301,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // Session B: replay and continue with thinking
-        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionB
 
         sessionB.replayHistory(

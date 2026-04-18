@@ -216,7 +216,8 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
                                                   jint topK,
                                                   jfloat minP,
                                                   jint seed,
-                                                  jint thinkingBudget) {
+                                                  jint thinkingBudget,
+                                                  jstring systemPrompt) {
 
     jclass clazz1 = env->GetObjectClass(thiz);
     jfieldID fid1 = env->GetFieldID(clazz1, "nativeHandle", "J");
@@ -234,6 +235,13 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
     params.min_p = minP;
     params.seed = (seed < 0) ? LLAMA_DEFAULT_SEED : static_cast<uint32_t>(seed);
     params.thinking_budget = thinkingBudget;
+    if (systemPrompt != nullptr) {
+        const char* utfSystemPrompt = env->GetStringUTFChars(systemPrompt, nullptr);
+        if (utfSystemPrompt != nullptr) {
+            params.system_prompt = utfSystemPrompt;
+            env->ReleaseStringUTFChars(systemPrompt, utfSystemPrompt);
+        }
+    }
 
     jclass clazz2 = env->FindClass("com/druk/llamacpp/LlamaGenerationSession");
     jmethodID constructor = env->GetMethodID(clazz2, "<init>", "()V");

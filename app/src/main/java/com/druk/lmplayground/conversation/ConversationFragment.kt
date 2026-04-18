@@ -86,6 +86,9 @@ class ConversationFragment : Fragment() {
             val generationParams by viewModel.generationParams.observeAsState(GenerationParams())
             val maxContextSize by viewModel.maxContextSize.observeAsState(4096)
             val sessionModelHint by viewModel.sessionModelHint.observeAsState()
+            val systemPrompt by viewModel.systemPrompt.observeAsState("")
+            val systemPromptId by viewModel.systemPromptId.observeAsState()
+            val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
             var showParamsSheet by remember { mutableStateOf(false) }
 
             // Storage configuration state
@@ -229,7 +232,12 @@ class ConversationFragment : Fragment() {
                         params = generationParams,
                         maxContextSize = maxContextSize,
                         supportsThinking = supportsThinking,
+                        systemPrompt = systemPrompt,
+                        canUpdateLinkedPrompt = systemPromptId != null,
                         onParamsChanged = { viewModel.updateGenerationParams(it) },
+                        onUpdateLinkedPrompt = { viewModel.updateLinkedSystemPrompt(it) },
+                        onSaveAsNewPrompt = { viewModel.createAndApplySystemPrompt(it) },
+                        onClearSystemPrompt = { viewModel.clearSystemPrompt() },
                         onDismiss = { showParamsSheet = false }
                     )
                 }
@@ -378,6 +386,38 @@ class ConversationFragment : Fragment() {
                                     onTokenCountClicked = {
                                         modelReport = viewModel.getReport()
                                     }
+                                )
+                            }
+                            // Picker sits just above the composer. Visible only when:
+                            //   - model is ready
+                            //   - chat is empty
+                            //   - library has entries
+                            //   - the session has no prompt selected yet
+                            // On pick: the picker row handles its own flight
+                            // animation per-card, then fires onPick — which flips
+                            // the visibility gate. Exit uses ExitTransition.None
+                            // so the row disappears immediately after the card
+                            // finishes flying (no double-animation).
+                            // On clear: the row slides back up and fades in.
+                            val pickerVisible = isModelReady &&
+                                messages.isEmpty() &&
+                                recentSystemPrompts.isNotEmpty() &&
+                                systemPrompt.isEmpty()
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = pickerVisible,
+                                enter = androidx.compose.animation.fadeIn(
+                                    animationSpec = androidx.compose.animation.core.tween(220)
+                                ) + androidx.compose.animation.slideInVertically(
+                                    animationSpec = androidx.compose.animation.core.tween(220),
+                                    initialOffsetY = { it / 2 }
+                                ),
+                                exit = androidx.compose.animation.ExitTransition.None
+                            ) {
+                                SystemPromptPickerRow(
+                                    prompts = recentSystemPrompts,
+                                    selectedText = systemPrompt,
+                                    onPick = { viewModel.applySystemPrompt(it.id, it.text) },
+                                    modifier = Modifier.padding(bottom = 8.dp)
                                 )
                             }
                             UserInput(

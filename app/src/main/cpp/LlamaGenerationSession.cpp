@@ -117,6 +117,13 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
 
     sampler_params = params;
 
+    if (!params.system_prompt.empty()) {
+        common_chat_msg system_msg;
+        system_msg.role = "system";
+        system_msg.content = params.system_prompt;
+        messages.push_back(system_msg);
+    }
+
     // Repetition penalty (only if > 1.0)
     if (params.repetition_penalty > 1.0f) {
         llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, params.repetition_penalty, 0.0f, 0.0f));
@@ -544,6 +551,12 @@ void LlamaGenerationSession::printReport() {
 
 void LlamaGenerationSession::replayHistory(const std::vector<std::pair<std::string, std::string>>& history) {
     messages.clear();
+    if (!sampler_params.system_prompt.empty()) {
+        common_chat_msg system_msg;
+        system_msg.role = "system";
+        system_msg.content = sampler_params.system_prompt;
+        messages.push_back(system_msg);
+    }
     for (const auto& pair : history) {
         common_chat_msg user_msg;
         user_msg.role = "user";

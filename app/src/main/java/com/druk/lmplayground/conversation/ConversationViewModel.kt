@@ -6,6 +6,7 @@ import androidx.annotation.MainThread
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.druk.llamacpp.LlamaCpp
 import com.druk.llamacpp.LlamaGenerationCallback
@@ -16,6 +17,8 @@ import com.druk.lmplayground.App
 import com.druk.lmplayground.data.ChatMessageEntity
 import com.druk.lmplayground.data.ChatRepository
 import com.druk.lmplayground.data.ChatSessionEntity
+import com.druk.lmplayground.data.SystemPromptEntity
+import com.druk.lmplayground.data.SystemPromptRepository
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
@@ -55,6 +58,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _generationParams = MutableLiveData(GenerationParams())
     private val _maxContextSize = MutableLiveData(4096)
     private val _sessionModelHint = MutableLiveData<Pair<String, String>?>(null) // (modelName, modelFilename)
+    private val _systemPrompt = MutableLiveData("")
+    private val _systemPromptId = MutableLiveData<String?>(null)
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -70,6 +75,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val generationParams: LiveData<GenerationParams> = _generationParams
     val maxContextSize: LiveData<Int> = _maxContextSize
     val sessionModelHint: LiveData<Pair<String, String>?> = _sessionModelHint
+    val systemPrompt: LiveData<String> = _systemPrompt
+    val systemPromptId: LiveData<String?> = _systemPromptId
 
     val uiState = ConversationUiState(
         initialMessages = emptyList()
@@ -77,10 +84,27 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     // Session persistence
     private val chatRepository: ChatRepository? = (app as? App)?.chatRepository
+    private val systemPromptRepository: SystemPromptRepository? =
+        (app as? App)?.systemPromptRepository
     private val _currentSessionId = MutableLiveData<String?>(null)
     val currentSessionId: LiveData<String?> = _currentSessionId
     val sessions: LiveData<List<ChatSessionEntity>> =
         chatRepository?.getAllSessions() ?: MutableLiveData(emptyList())
+    /**
+     * Per-model MRU list. When the loaded model changes, switchMap swaps in
+     * the corresponding query so the picker reflects "prompts I've used on
+     * *this* model" with the most-recently-used one first.
+     */
+    val recentSystemPrompts: LiveData<List<SystemPromptEntity>> =
+        _loadedModel.switchMap { model ->
+            val repo = systemPromptRepository
+            val filename = model?.filename
+            if (repo == null || filename.isNullOrEmpty()) {
+                MutableLiveData(emptyList())
+            } else {
+                repo.getRecentForModelLive(filename)
+            }
+        }
 
     override fun onCleared() {
         val job = generatingJob
@@ -202,7 +226,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     GenerationParams()
                 }
                 _generationParams.postValue(params)
-                val llamaSession = createSessionWithParams(llamaModel, params)
+                // Every model load starts without a system prompt. Per-model
+                // MRU is surfaced in the picker row so the user can one-tap
+                // re-apply their most-recent prompt for this model.
+                _systemPrompt.postValue("")
+                _systemPromptId.postValue(null)
+                val llamaSession = createSessionWithParams(llamaModel, params, "")
                 if (llamaSession == null) {
                     _loadedModelStatus.postValue("Failed to create session")
                     llamaModel.unloadModel()
@@ -262,7 +291,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         _thinkingEnabled.value = _thinkingEnabled.value != true
     }
 
-    private fun createSessionWithParams(model: LlamaModel, params: GenerationParams): LlamaGenerationSession? {
+    private fun createSessionWithParams(
+        model: LlamaModel,
+        params: GenerationParams,
+        systemPrompt: String = _systemPrompt.value.orEmpty()
+    ): LlamaGenerationSession? {
         return model.createSession(
             params.contextSize,
             params.temperature,
@@ -271,7 +304,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             params.topK,
             params.minP,
             params.seed,
-            params.thinkingBudget
+            params.thinkingBudget,
+            systemPrompt
         )
     }
 
@@ -449,7 +483,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 topK = params.topK,
                 minP = params.minP,
                 seed = params.seed,
-                thinkingBudget = params.thinkingBudget
+                thinkingBudget = params.thinkingBudget,
+                systemPrompt = _systemPrompt.value.orEmpty()
             )
         )
         _currentSessionId.postValue(id)
@@ -502,6 +537,17 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     thinkingBudget = sessionEntity.thinkingBudget
                 )
                 _generationParams.value = params
+                _systemPrompt.value = sessionEntity.systemPrompt
+                // Try to rehydrate the library id from the stored text so that
+                // "Update prompt" in the Generation Params sheet can target the
+                // same library entry when it still matches.
+                val stored = sessionEntity.systemPrompt
+                if (stored.isEmpty()) {
+                    _systemPromptId.value = null
+                } else {
+                    val entity = systemPromptRepository?.findByText(stored)
+                    _systemPromptId.value = entity?.id
+                }
             }
 
             // Show model hint if session used a different model
@@ -555,6 +601,113 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     this@ConversationViewModel.llamaSession = newSession
                 }
             }
+        }
+    }
+
+    /**
+     * Apply a system prompt to the current session. Recreates the native session
+     * so the new prompt takes effect, replays any existing messages, and bumps
+     * the library entry's `lastUsedAt` when [promptId] is non-null.
+     *
+     * The intended caller is the picker row on an empty conversation, but the
+     * method also supports mid-chat swaps (history replay handles it).
+     */
+    @MainThread
+    fun applySystemPrompt(promptId: String?, text: String) {
+        val current = _systemPrompt.value.orEmpty()
+        val currentId = _systemPromptId.value
+        if (current == text && currentId == promptId) return
+        _systemPrompt.value = text
+        _systemPromptId.value = promptId
+
+        // Persist on the active session row if one exists.
+        val sessionId = _currentSessionId.value
+        if (sessionId != null) {
+            viewModelScope.launch {
+                chatRepository?.updateSessionSystemPrompt(sessionId, text)
+            }
+        }
+
+        // Bump per-model MRU for library-sourced picks.
+        if (promptId != null) {
+            val modelFilename = _loadedModel.value?.filename
+            if (!modelFilename.isNullOrEmpty()) {
+                viewModelScope.launch {
+                    systemPromptRepository?.touchUsage(promptId, modelFilename)
+                }
+            }
+        }
+
+        // Recreate the native session so the prompt lands as message[0].
+        val model = llamaModel ?: return
+        val params = _generationParams.value ?: GenerationParams()
+        viewModelScope.launch {
+            generatingJob?.cancel()
+            generatingJob?.join()
+            generatingJob = null
+
+            val prevSession = llamaSession
+            llamaSession = null
+
+            withContext(Dispatchers.Default) {
+                prevSession?.destroy()
+                val newSession = createSessionWithParams(model, params, text)
+                    ?: return@withContext
+                this@ConversationViewModel.llamaSession = newSession
+                val messages = uiState.messages.toList()
+                if (messages.isNotEmpty()) {
+                    replayHistoryToSession(newSession, messages)
+                }
+            }
+        }
+    }
+
+    @MainThread
+    fun clearSystemPrompt() = applySystemPrompt(null, "")
+
+    /**
+     * Overwrite the text of the library entry currently backing this session
+     * (if any) and apply the new text to the session. Used by the
+     * Generation Params "Update prompt" button.
+     */
+    @MainThread
+    fun updateLinkedSystemPrompt(text: String) {
+        val trimmed = text.trim()
+        val id = _systemPromptId.value
+        val repo = systemPromptRepository
+        if (id == null || repo == null) {
+            applySystemPrompt(null, trimmed)
+            return
+        }
+        viewModelScope.launch {
+            val existing = repo.getById(id) ?: return@launch
+            repo.update(existing.copy(text = trimmed))
+            applySystemPrompt(id, trimmed)
+        }
+    }
+
+    /**
+     * Persist a brand-new system prompt to the library and apply it to the
+     * current session.
+     */
+    @MainThread
+    fun createAndApplySystemPrompt(text: String) {
+        val trimmed = text.trim()
+        if (trimmed.isEmpty()) return
+        val repo = systemPromptRepository ?: run {
+            applySystemPrompt(null, trimmed)
+            return
+        }
+        viewModelScope.launch {
+            val now = System.currentTimeMillis()
+            val entity = SystemPromptEntity(
+                id = UUID.randomUUID().toString(),
+                text = trimmed,
+                createdAt = now,
+                updatedAt = now
+            )
+            repo.insert(entity)
+            applySystemPrompt(entity.id, entity.text)
         }
     }
 

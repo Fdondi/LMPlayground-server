@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -32,8 +34,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.druk.lmplayground.R
+import com.druk.lmplayground.settings.SystemPromptEditorSheet
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -42,12 +49,18 @@ fun GenerationParamsSheet(
     params: GenerationParams,
     maxContextSize: Int,
     supportsThinking: Boolean = false,
+    systemPrompt: String = "",
+    canUpdateLinkedPrompt: Boolean = false,
     onParamsChanged: (GenerationParams) -> Unit,
+    onUpdateLinkedPrompt: (String) -> Unit = {},
+    onSaveAsNewPrompt: (String) -> Unit = {},
+    onClearSystemPrompt: () -> Unit = {},
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var editedParams by remember(params) { mutableStateOf(params) }
     var showAdvanced by remember { mutableStateOf(false) }
+    var showPromptReviser by remember { mutableStateOf(false) }
 
     val contextMin = 512
     val contextMax = maxContextSize.coerceAtLeast(512)
@@ -87,6 +100,53 @@ fun GenerationParamsSheet(
             }
 
             Spacer(modifier = Modifier.height(8.dp))
+
+            // Current System Prompt — always present; tap the card to author
+            // or edit the prompt for this session. The Clear button is always
+            // rendered so the header height is stable; only its visibility
+            // changes when a prompt is active.
+            val hasPrompt = systemPrompt.isNotEmpty()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.system_prompt_current),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                TextButton(
+                    onClick = onClearSystemPrompt,
+                    enabled = hasPrompt,
+                    modifier = Modifier.alpha(if (hasPrompt) 1f else 0f),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                        horizontal = 8.dp, vertical = 0.dp
+                    )
+                ) {
+                    Text(stringResource(R.string.clear))
+                }
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            OutlinedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showPromptReviser = true },
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = if (hasPrompt) systemPrompt
+                           else stringResource(R.string.system_prompt_current_empty),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (hasPrompt) MaterialTheme.colorScheme.onSurface
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
+                    minLines = 3,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
 
             // Context Size
             val contextWarning = editedParams.contextSize != params.contextSize
@@ -255,6 +315,28 @@ fun GenerationParamsSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+
+    if (showPromptReviser) {
+        SystemPromptEditorSheet(
+            initialText = systemPrompt,
+            title = stringResource(
+                if (systemPrompt.isEmpty()) R.string.system_prompt_new
+                else R.string.system_prompt_edit
+            ),
+            primaryLabel = stringResource(R.string.system_prompt_update),
+            onPrimary = { text ->
+                // If the current session prompt is backed by a library entry,
+                // update that entry in place; otherwise create a new library
+                // entry and link it to the session.
+                if (canUpdateLinkedPrompt && systemPrompt.isNotEmpty()) {
+                    onUpdateLinkedPrompt(text)
+                } else {
+                    onSaveAsNewPrompt(text)
+                }
+            },
+            onDismiss = { showPromptReviser = false }
+        )
     }
 }
 

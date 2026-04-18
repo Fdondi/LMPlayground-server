@@ -62,6 +62,10 @@ android {
     buildTypes {
         getByName("debug") {
             isJniDebuggable = false
+            // Use a distinct applicationId so debug + androidTest installs
+            // coexist with any Play Store / release-signed build on the device.
+            applicationIdSuffix = ".debug"
+            versionNameSuffix = "-debug"
         }
 
         getByName("release") {

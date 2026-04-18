@@ -6,14 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.druk.lmplayground.BuildConfig
-import com.druk.lmplayground.R
 import com.druk.lmplayground.theme.PlaygroundTheme
 
-class SettingsFragment : Fragment() {
+class SystemPromptsFragment : Fragment() {
+
+    private val viewModel: SystemPromptsViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -23,21 +26,13 @@ class SettingsFragment : Fragment() {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
         setContent {
             PlaygroundTheme {
-                SettingsScreen(
+                val prompts by viewModel.prompts.observeAsState(emptyList())
+                SystemPromptsScreen(
+                    prompts = prompts,
                     onBackClick = { findNavController().popBackStack() },
-                    onModelsClick = {
-                        findNavController().navigate(R.id.action_settings_to_models)
-                    },
-                    onSystemPromptsClick = {
-                        findNavController().navigate(R.id.action_settings_to_system_prompts)
-                    },
-                    onPrivacyPolicyClick = {
-                        findNavController().navigate(R.id.action_settings_to_privacy_policy)
-                    },
-                    onFaqClick = {
-                        findNavController().navigate(R.id.action_settings_to_faq)
-                    },
-                    appVersion = BuildConfig.VERSION_NAME
+                    onAdd = viewModel::addPrompt,
+                    onUpdate = viewModel::updatePrompt,
+                    onDelete = viewModel::deletePrompt
                 )
             }
         }
