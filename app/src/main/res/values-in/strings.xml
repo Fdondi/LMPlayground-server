@@ -208,4 +208,6 @@
     <string name="screenshot_chat_sub">di perangkatmu</string>
     <string name="screenshot_fine_tune_sub">parameter generasi</string>
     <string name="screenshot_download_models_sub">ke folder mana pun yang kamu pilih</string>
+    <string name="supports_your_language">Mendukung bahasa Anda</string>
+    <string name="other_models">Model lainnya</string>
 </resources>

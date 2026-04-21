@@ -17,6 +17,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.Locale
 
 /**
  * Represents download progress for a model
@@ -78,6 +79,8 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
     val isStorageConfigured: LiveData<Boolean> = _isStorageConfigured
 
     val downloadingModels: LiveData<Map<String, DownloadProgress>> = downloadRepo.observeDownloads()
+
+    val deviceLanguage: String = Locale.getDefault().language
     
     private val _snackbarMessage = MutableLiveData<String?>()
     val snackbarMessage: LiveData<String?> = _snackbarMessage

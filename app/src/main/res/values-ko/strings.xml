@@ -208,4 +208,6 @@
     <string name="screenshot_chat_sub">내 기기에서</string>
     <string name="screenshot_fine_tune_sub">생성 매개변수</string>
     <string name="screenshot_download_models_sub">원하는 폴더로</string>
+    <string name="supports_your_language">사용자 언어 지원</string>
+    <string name="other_models">기타 모델</string>
 </resources>

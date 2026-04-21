@@ -208,4 +208,6 @@
     <string name="screenshot_choose_model_sub">від провідних AI-провайдерів</string>
     <string name="screenshot_chat_sub">на твоєму пристрої</string>
     <string name="screenshot_fine_tune_sub">параметри генерації</string>
+    <string name="supports_your_language">Підтримує вашу мову</string>
+    <string name="other_models">Інші моделі</string>
 </resources>

@@ -122,6 +122,8 @@
     <string name="delete_model_message">This will permanently remove the model file.</string>
     <string name="downloaded_models">Downloaded</string>
     <string name="available_models">Available to Download</string>
+    <string name="supports_your_language">Supports your language</string>
+    <string name="other_models">Other models</string>
     <string name="no_downloaded_models">No models downloaded yet</string>
     <string name="browse_more_models">Browse Models</string>
     <string name="cancel">Cancel</string>

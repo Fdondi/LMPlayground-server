@@ -208,4 +208,6 @@
     <string name="screenshot_chat_sub">tr\u00EAn thi\u1EBFt b\u1ECB c\u1EE7a b\u1EA1n</string>
     <string name="screenshot_fine_tune_sub">tham s\u1ED1 t\u1EA1o</string>
     <string name="screenshot_download_models_sub">v\u00E0o th\u01B0 m\u1EE5c b\u1EA1n ch\u1ECDn</string>
+    <string name="supports_your_language">Hỗ trợ ngôn ngữ của bạn</string>
+    <string name="other_models">Các mô hình khác</string>
 </resources>

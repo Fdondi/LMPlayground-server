@@ -208,4 +208,6 @@
     <string name="screenshot_chat_sub">お使いのデバイスで</string>
     <string name="screenshot_fine_tune_sub">生成パラメータ</string>
     <string name="screenshot_download_models_sub">お好きなフォルダへ</string>
+    <string name="supports_your_language">お使いの言語に対応</string>
+    <string name="other_models">その他のモデル</string>
 </resources>

@@ -17,10 +17,14 @@ data class ModelInfo(
     val remoteUri: Uri? = null,
     val releaseDate: LocalDate? = null,
     val description: String,
-    @param:DrawableRes val logoRes: Int = 0
+    @param:DrawableRes val logoRes: Int = 0,
+    val supportedLanguages: List<String> = emptyList()
 ) {
     val isCustom: Boolean get() = remoteUri == null
 }
+
+fun ModelInfo.supportsLanguage(lang: String): Boolean =
+    supportedLanguages.isEmpty() || lang in supportedLanguages
 
 /**
  * Model with its download status

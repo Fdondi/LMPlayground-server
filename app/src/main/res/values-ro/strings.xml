@@ -208,4 +208,6 @@
     <string name="screenshot_choose_model_sub">de la principalii furnizori de AI</string>
     <string name="screenshot_chat_sub">pe dispozitivul t\u0103u</string>
     <string name="screenshot_fine_tune_sub">parametri de generare</string>
+    <string name="supports_your_language">Acceptă limba ta</string>
+    <string name="other_models">Alte modele</string>
 </resources>

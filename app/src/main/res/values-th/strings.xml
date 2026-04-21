@@ -248,4 +248,6 @@
     <string name="whats_new_item_2">พารามิเตอร์การสร้างเฉพาะโมเดล</string>
     <string name="whats_new_item_3">การควบคุมงบประมาณการคิด</string>
 
+    <string name="supports_your_language">รองรับภาษาของคุณ</string>
+    <string name="other_models">รุ่นอื่นๆ</string>
 </resources>

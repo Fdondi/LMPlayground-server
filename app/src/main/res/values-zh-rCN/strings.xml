@@ -208,4 +208,6 @@
     <string name="screenshot_chat_sub">在你的设备上</string>
     <string name="screenshot_fine_tune_sub">生成参数</string>
     <string name="screenshot_download_models_sub">到你选择的任意文件夹</string>
+    <string name="supports_your_language">支持您的语言</string>
+    <string name="other_models">其他模型</string>
 </resources>

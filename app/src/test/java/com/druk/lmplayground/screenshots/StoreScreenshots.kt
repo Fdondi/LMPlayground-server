@@ -705,6 +705,7 @@ class StoreScreenshots(
                         snackbarMessage = null,
                         pendingMigration = null,
                         migrationProgress = null,
+                        deviceLanguage = "en",
                         onBackClick = { },
                         onChangeFolderClick = { },
                         onDeleteModel = { },

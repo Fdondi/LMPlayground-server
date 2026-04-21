@@ -63,6 +63,7 @@ import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
 import com.druk.lmplayground.models.releaseDateLabel
+import com.druk.lmplayground.models.supportsLanguage
 import com.druk.lmplayground.theme.PlaygroundTheme
 
 @Composable
@@ -73,6 +74,7 @@ fun ModelsScreen(
     snackbarMessage: String?,
     pendingMigration: MigrationState?,
     migrationProgress: MigrationProgress?,
+    deviceLanguage: String,
     onBackClick: () -> Unit,
     onChangeFolderClick: () -> Unit,
     onDeleteModel: (ModelInfo) -> Unit,
@@ -97,6 +99,20 @@ fun ModelsScreen(
     // Split models into downloaded and available
     val downloadedModels = allModels.filter { it.isDownloaded }
     val availableModels = allModels.filter { !it.isDownloaded }
+
+    // When the device language is non-English, separate models that support the user's
+    // language from those that don't so users see relevant models first.
+    val splitByLanguage = deviceLanguage != "en"
+    val supportedModels = if (splitByLanguage) {
+        availableModels.filter { it.model.supportsLanguage(deviceLanguage) }
+    } else {
+        availableModels
+    }
+    val otherModels = if (splitByLanguage) {
+        availableModels.filterNot { it.model.supportsLanguage(deviceLanguage) }
+    } else {
+        emptyList()
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -158,18 +174,45 @@ fun ModelsScreen(
                 }
             }
             
-            // Available models section
-            if (availableModels.isNotEmpty()) {
+            // Available models — either a single section (English) or split into
+            // language-supported and other models (non-English locales).
+            if (supportedModels.isNotEmpty()) {
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = stringResource(R.string.available_models),
+                        text = stringResource(
+                            if (splitByLanguage) R.string.supports_your_language
+                            else R.string.available_models
+                        ),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
-                
-                items(availableModels, key = { it.model.name }) { modelWithStatus ->
+
+                items(supportedModels, key = { it.model.name }) { modelWithStatus ->
+                    val model = modelWithStatus.model
+                    val downloadProgress = downloadingModels[model.name]
+                    AvailableModelItem(
+                        model = model,
+                        downloadProgress = downloadProgress,
+                        onDownloadClick = { onDownloadModel(model) },
+                        onCancelClick = { onCancelDownload(model) }
+                    )
+                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                }
+            }
+
+            if (otherModels.isNotEmpty()) {
+                item {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = stringResource(R.string.other_models),
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                    )
+                }
+
+                items(otherModels, key = { it.model.name }) { modelWithStatus ->
                     val model = modelWithStatus.model
                     val downloadProgress = downloadingModels[model.name]
                     AvailableModelItem(
@@ -593,6 +636,7 @@ private fun ModelsScreenPreview() {
             snackbarMessage = null,
             pendingMigration = null,
             migrationProgress = null,
+            deviceLanguage = "en",
             onBackClick = {},
             onChangeFolderClick = {},
             onDeleteModel = {},

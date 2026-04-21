@@ -208,4 +208,6 @@
     <string name="screenshot_choose_model_sub">von f\u00FChrenden KI-Anbietern</string>
     <string name="screenshot_chat_sub">auf deinem Ger\u00E4t</string>
     <string name="screenshot_fine_tune_sub">Generierungsparameter</string>
+    <string name="supports_your_language">Unterstützt deine Sprache</string>
+    <string name="other_models">Andere Modelle</string>
 </resources>

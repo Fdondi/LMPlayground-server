@@ -208,4 +208,6 @@
     <string name="screenshot_chat_sub">cihaz\u0131n\u0131zda</string>
     <string name="screenshot_fine_tune_sub">\u00FCretim parametreleri</string>
     <string name="screenshot_download_models_sub">se\u00E7ti\u011Fin herhangi bir klas\u00F6re</string>
+    <string name="supports_your_language">Dilinizi destekler</string>
+    <string name="other_models">Diğer modeller</string>
 </resources>

@@ -208,4 +208,6 @@
     <string name="screenshot_choose_model_sub">de los principales proveedores de IA</string>
     <string name="screenshot_chat_sub">en tu dispositivo</string>
     <string name="screenshot_fine_tune_sub">par\u00E1metros de generaci\u00F3n</string>
+    <string name="supports_your_language">Admite tu idioma</string>
+    <string name="other_models">Otros modelos</string>
 </resources>
