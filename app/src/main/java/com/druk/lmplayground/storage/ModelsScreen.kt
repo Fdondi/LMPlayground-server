@@ -165,7 +165,7 @@ fun ModelsScreen(
                     )
                 }
             } else {
-                items(downloadedModels, key = { it.model.name }) { modelWithStatus ->
+                items(downloadedModels, key = { it.model.filename }) { modelWithStatus ->
                     DownloadedModelItem(
                         model = modelWithStatus.model,
                         onDeleteClick = { modelToDelete = modelWithStatus.model }
@@ -189,7 +189,7 @@ fun ModelsScreen(
                     )
                 }
 
-                items(supportedModels, key = { it.model.name }) { modelWithStatus ->
+                items(supportedModels, key = { it.model.filename }) { modelWithStatus ->
                     val model = modelWithStatus.model
                     val downloadProgress = downloadingModels[model.name]
                     AvailableModelItem(
@@ -212,7 +212,7 @@ fun ModelsScreen(
                     )
                 }
 
-                items(otherModels, key = { it.model.name }) { modelWithStatus ->
+                items(otherModels, key = { it.model.filename }) { modelWithStatus ->
                     val model = modelWithStatus.model
                     val downloadProgress = downloadingModels[model.name]
                     AvailableModelItem(
