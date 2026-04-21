@@ -1,1 +1,1 @@
-Aja tekoälykielimalleja yksityisesti Android-laitteellasi
+Aja kielimalleja yksityisesti puhelimessa. Ei pilveä, nettiä, seurantaa.

@@ -1,1 +1,1 @@
-Run AI language models privately on your Android device
+Run language models privately on your phone. No cloud, no internet, no tracking.
