@@ -210,4 +210,6 @@
     <string name="screenshot_download_models_sub">お好きなフォルダへ</string>
     <string name="supports_your_language">お使いの言語に対応</string>
     <string name="other_models">その他のモデル</string>
+    <string name="language">言語</string>
+    <string name="language_system_default">システムのデフォルト</string>
 </resources>

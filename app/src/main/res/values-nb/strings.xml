@@ -249,4 +249,6 @@
 
     <string name="supports_your_language">Støtter språket ditt</string>
     <string name="other_models">Andre modeller</string>
+    <string name="language">Språk</string>
+    <string name="language_system_default">Systemstandard</string>
 </resources>

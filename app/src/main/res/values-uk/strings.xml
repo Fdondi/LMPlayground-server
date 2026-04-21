@@ -210,4 +210,6 @@
     <string name="screenshot_fine_tune_sub">параметри генерації</string>
     <string name="supports_your_language">Підтримує вашу мову</string>
     <string name="other_models">Інші моделі</string>
+    <string name="language">Мова</string>
+    <string name="language_system_default">Системні за замовчуванням</string>
 </resources>

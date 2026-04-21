@@ -250,4 +250,6 @@
 
     <string name="supports_your_language">Podporuje váš jazyk</string>
     <string name="other_models">Ostatní modely</string>
+    <string name="language">Jazyk</string>
+    <string name="language_system_default">Výchozí nastavení systému</string>
 </resources>

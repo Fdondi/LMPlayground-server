@@ -210,4 +210,6 @@
     <string name="screenshot_download_models_sub">ke folder mana pun yang kamu pilih</string>
     <string name="supports_your_language">Mendukung bahasa Anda</string>
     <string name="other_models">Model lainnya</string>
+    <string name="language">Bahasa</string>
+    <string name="language_system_default">Default sistem</string>
 </resources>

@@ -210,4 +210,6 @@
     <string name="screenshot_download_models_sub">v\u00E0o th\u01B0 m\u1EE5c b\u1EA1n ch\u1ECDn</string>
     <string name="supports_your_language">Hỗ trợ ngôn ngữ của bạn</string>
     <string name="other_models">Các mô hình khác</string>
+    <string name="language">Ngôn ngữ</string>
+    <string name="language_system_default">Mặc định hệ thống</string>
 </resources>

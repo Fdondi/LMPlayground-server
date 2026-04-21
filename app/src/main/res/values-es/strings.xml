@@ -210,4 +210,6 @@
     <string name="screenshot_fine_tune_sub">par\u00E1metros de generaci\u00F3n</string>
     <string name="supports_your_language">Admite tu idioma</string>
     <string name="other_models">Otros modelos</string>
+    <string name="language">Idioma</string>
+    <string name="language_system_default">Predeterminado del sistema</string>
 </resources>

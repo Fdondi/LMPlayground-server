@@ -249,4 +249,6 @@
 
     <string name="supports_your_language">Sinusuportahan ang wika mo</string>
     <string name="other_models">Iba pang modelo</string>
+    <string name="language">Wika</string>
+    <string name="language_system_default">Default ng system</string>
 </resources>

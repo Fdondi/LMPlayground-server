@@ -249,4 +249,6 @@
 
     <string name="supports_your_language">আপনার ভাষা সমর্থিত</string>
     <string name="other_models">অন্যান্য মডেল</string>
+    <string name="language">ভাষা</string>
+    <string name="language_system_default">সিস্টেম ডিফল্ট</string>
 </resources>

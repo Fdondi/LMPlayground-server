@@ -210,4 +210,6 @@
     <string name="screenshot_fine_tune_sub">parametry generowania</string>
     <string name="supports_your_language">Obsługuje Twój język</string>
     <string name="other_models">Pozostałe modele</string>
+    <string name="language">Język</string>
+    <string name="language_system_default">Domyślne ustawienia systemu</string>
 </resources>

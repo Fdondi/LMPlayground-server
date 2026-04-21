@@ -250,4 +250,6 @@
 
     <string name="supports_your_language">รองรับภาษาของคุณ</string>
     <string name="other_models">รุ่นอื่นๆ</string>
+    <string name="language">ภาษา</string>
+    <string name="language_system_default">ค่าเริ่มต้นของระบบ</string>
 </resources>

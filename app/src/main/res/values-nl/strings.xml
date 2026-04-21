@@ -250,4 +250,6 @@
 
     <string name="supports_your_language">Ondersteunt jouw taal</string>
     <string name="other_models">Andere modellen</string>
+    <string name="language">Taal</string>
+    <string name="language_system_default">Systeemstandaard</string>
 </resources>

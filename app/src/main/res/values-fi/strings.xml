@@ -249,4 +249,6 @@
 
     <string name="supports_your_language">Tukee kieltäsi</string>
     <string name="other_models">Muut mallit</string>
+    <string name="language">Kieli</string>
+    <string name="language_system_default">Järjestelmän oletus</string>
 </resources>

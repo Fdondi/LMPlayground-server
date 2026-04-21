@@ -210,4 +210,6 @@
     <string name="screenshot_download_models_sub">se\u00E7ti\u011Fin herhangi bir klas\u00F6re</string>
     <string name="supports_your_language">Dilinizi destekler</string>
     <string name="other_models">Diğer modeller</string>
+    <string name="language">Dil</string>
+    <string name="language_system_default">Sistem varsayılanı</string>
 </resources>

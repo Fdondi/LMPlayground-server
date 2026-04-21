@@ -249,4 +249,6 @@
 
     <string name="supports_your_language">Menyokong bahasa anda</string>
     <string name="other_models">Model lain</string>
+    <string name="language">Bahasa</string>
+    <string name="language_system_default">Lalai sistem</string>
 </resources>

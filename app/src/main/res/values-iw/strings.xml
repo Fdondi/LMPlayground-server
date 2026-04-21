@@ -250,4 +250,6 @@
 
     <string name="supports_your_language">תומך בשפה שלך</string>
     <string name="other_models">דגמים אחרים</string>
+    <string name="language">שפה</string>
+    <string name="language_system_default">ברירת המחדל של המערכת</string>
 </resources>
