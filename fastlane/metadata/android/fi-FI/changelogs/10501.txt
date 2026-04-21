@@ -1,0 +1,3 @@
+- Järjestelmäkehotteet — tallenna uudelleenkäytettäviä ohjeita ja valitse kullekin mallille sopiva, jotta sävysi, roolisi tai tulostemuoto pysyvät samana istuntojen välillä
+- 28 kieltä — sovellus on nyt saatavilla 28 kielellä, mukaan lukien arabia, bengali, heprea, hindi, japani, korea, puola, thai, ukraina, vietnam ja muut
+- Nopeampi päättely uusimman llama.cpp:n ansiosta sekä mallivalitsimen korjaukset
