@@ -79,13 +79,18 @@
        paints over the nav's blur in just the dynamic-island / notch zone so
        the iOS 26 Liquid Glass status bar shows a solid color through its
        translucent material instead of blurred page content scrolling under
-       the sticky nav. Collapses to 0 height on desktop where the inset is 0. */
-    nav.top::before {
+       the sticky nav. Uses `position: fixed` on `body::after` instead of an
+       absolute pseudo-element on the nav itself, because iOS Safari has
+       compositing quirks with pseudo-elements inside a `backdrop-filter`
+       parent. z-index sits above the nav (50) and below the grain (100).
+       Collapses to 0 height on desktop where the inset is 0. */
+    body::after {
       content: '';
-      position: absolute;
+      position: fixed;
       top: 0; left: 0; right: 0;
       height: env(safe-area-inset-top);
       background: #0A0B10;
+      z-index: 60;
       pointer-events: none;
     }
     .nav-row {
