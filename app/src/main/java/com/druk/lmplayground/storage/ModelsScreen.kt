@@ -59,9 +59,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 import com.druk.lmplayground.R
+import com.druk.lmplayground.models.DeviceCapability
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
+import com.druk.lmplayground.models.RamWarningRow
 import com.druk.lmplayground.models.releaseDateLabel
 import com.druk.lmplayground.models.supportsLanguage
 import com.druk.lmplayground.theme.PlaygroundTheme
@@ -86,7 +88,15 @@ fun ModelsScreen(
     onCancelMigration: () -> Unit
 ) {
     var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
+    var modelToConfirmDownload by remember { mutableStateOf<ModelWithStatus?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
+
+    // Snapshot device RAM once per screen entry. The picker uses the
+    // same approach — fluctuating availMem isn't worth a recomposition
+    // dance for a row badge.
+    val context = LocalContext.current
+    val totalRamBytes = remember { DeviceCapability.totalRamBytes(context) }
+    val availRamBytes = remember { DeviceCapability.availableRamBytes(context) }
     
     // Show snackbar when message changes
     LaunchedEffect(snackbarMessage) {
@@ -190,13 +200,27 @@ fun ModelsScreen(
                 }
 
                 items(supportedModels, key = { it.model.filename }) { modelWithStatus ->
-                    val model = modelWithStatus.model
-                    val downloadProgress = downloadingModels[model.name]
                     AvailableModelItem(
-                        model = model,
-                        downloadProgress = downloadProgress,
-                        onDownloadClick = { onDownloadModel(model) },
-                        onCancelClick = { onCancelDownload(model) }
+                        modelWithStatus = modelWithStatus,
+                        downloadProgress = downloadingModels[modelWithStatus.model.name],
+                        totalRamBytes = totalRamBytes,
+                        availRamBytes = availRamBytes,
+                        onDownloadClick = {
+                            // Block download with a confirmation dialog
+                            // when the model can't run on this device,
+                            // so users don't waste a multi-GB download
+                            // on a model that's guaranteed to crash on
+                            // tap-to-load.
+                            if (DeviceCapability.evaluateFit(
+                                    modelWithStatus.sizeBytes, totalRamBytes, totalRamBytes
+                                ) == DeviceCapability.FitVerdict.WontFit
+                            ) {
+                                modelToConfirmDownload = modelWithStatus
+                            } else {
+                                onDownloadModel(modelWithStatus.model)
+                            }
+                        },
+                        onCancelClick = { onCancelDownload(modelWithStatus.model) }
                     )
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 }
@@ -213,18 +237,64 @@ fun ModelsScreen(
                 }
 
                 items(otherModels, key = { it.model.filename }) { modelWithStatus ->
-                    val model = modelWithStatus.model
-                    val downloadProgress = downloadingModels[model.name]
                     AvailableModelItem(
-                        model = model,
-                        downloadProgress = downloadProgress,
-                        onDownloadClick = { onDownloadModel(model) },
-                        onCancelClick = { onCancelDownload(model) }
+                        modelWithStatus = modelWithStatus,
+                        downloadProgress = downloadingModels[modelWithStatus.model.name],
+                        totalRamBytes = totalRamBytes,
+                        availRamBytes = availRamBytes,
+                        onDownloadClick = {
+                            if (DeviceCapability.evaluateFit(
+                                    modelWithStatus.sizeBytes, totalRamBytes, totalRamBytes
+                                ) == DeviceCapability.FitVerdict.WontFit
+                            ) {
+                                modelToConfirmDownload = modelWithStatus
+                            } else {
+                                onDownloadModel(modelWithStatus.model)
+                            }
+                        },
+                        onCancelClick = { onCancelDownload(modelWithStatus.model) }
                     )
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
                 }
             }
         }
+    }
+
+    // Won't-fit download confirmation dialog. Triggered when the user
+    // taps the download icon for a model whose declared size exceeds
+    // 70 % of total device RAM (DeviceCapability.FitVerdict.WontFit).
+    // The model can still be downloaded — the user might be planning
+    // to use it on another device — but defaulting the dialog to
+    // "Cancel" steers the common case away from a wasted multi-GB
+    // download.
+    modelToConfirmDownload?.let { mws ->
+        val sizeLabel = Formatter.formatFileSize(context, mws.sizeBytes)
+        val ramLabel = Formatter.formatFileSize(context, totalRamBytes)
+        AlertDialog(
+            onDismissRequest = { modelToConfirmDownload = null },
+            title = { Text(stringResource(R.string.download_wont_fit_title)) },
+            text = {
+                Text(stringResource(
+                    R.string.download_wont_fit_message,
+                    mws.model.name, sizeLabel, ramLabel
+                ))
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDownloadModel(mws.model)
+                        modelToConfirmDownload = null
+                    }
+                ) {
+                    Text(stringResource(R.string.download_anyway))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { modelToConfirmDownload = null }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 
     // Delete confirmation dialog
@@ -475,13 +545,22 @@ private fun DownloadedModelItem(
 
 @Composable
 private fun AvailableModelItem(
-    model: ModelInfo,
+    modelWithStatus: ModelWithStatus,
     downloadProgress: DownloadProgress?,
+    totalRamBytes: Long,
+    availRamBytes: Long,
     onDownloadClick: () -> Unit,
     onCancelClick: () -> Unit
 ) {
+    val model = modelWithStatus.model
     val context = LocalContext.current
+    val verdict = DeviceCapability.evaluateFit(
+        modelSizeBytes = modelWithStatus.sizeBytes,
+        totalRamBytes = totalRamBytes,
+        availRamBytes = availRamBytes,
+    )
 
+    Column {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -527,7 +606,7 @@ private fun AvailableModelItem(
                 )
             }
         }
-        
+
         if (downloadProgress != null) {
             Box(
                 modifier = Modifier.size(48.dp),
@@ -565,6 +644,19 @@ private fun AvailableModelItem(
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
+        }
+    }
+        // RAM-fit warning beneath the row, only when no download is in
+        // flight. The leading inset (48 dp logo + 12 dp spacer) lines
+        // the warning up under the model description, not under the logo.
+        if (downloadProgress == null) {
+            RamWarningRow(
+                verdict = verdict,
+                modelSizeBytes = modelWithStatus.sizeBytes,
+                totalRamBytes = totalRamBytes,
+                availRamBytes = availRamBytes,
+                startPadding = if (model.logoRes != 0) 64.dp else 16.dp,
+            )
         }
     }
 }
