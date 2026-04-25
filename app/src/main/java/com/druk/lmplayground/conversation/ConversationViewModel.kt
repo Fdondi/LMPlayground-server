@@ -782,6 +782,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun unloadModel() {
         viewModelScope.launch {
+            // Tear down native handles only when something is actually
+            // loaded — but always clear the user-visible LiveData state
+            // below. The failed-load case (e.g. RAM gate refused) leaves
+            // _loadedModel + _loadedModelStatus set with null native
+            // handles; without this, tapping Unload was a no-op for that
+            // path.
             if (modelFileHandle != null || llamaModel != null) {
                 generatingJob?.cancel()
                 generatingJob?.join()
@@ -801,12 +807,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 }
 
                 prevHandle?.close()
-
-                _loadedModel.postValue(null)
-                _loadedModelStatus.postValue(null)
-                _isModelReady.postValue(false)
-                _supportsThinking.postValue(false)
             }
+
+            _loadedModel.postValue(null)
+            _loadedModelStatus.postValue(null)
+            _isModelReady.postValue(false)
+            _supportsThinking.postValue(false)
         }
     }
 
