@@ -42,7 +42,10 @@
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
       letter-spacing: -0.005em;
-      overflow-x: hidden;
+      /* `overflow-x: hidden` on body would break `position: sticky` for the
+         nav on iOS Safari (it makes body a scroll container). `clip` blocks
+         horizontal scroll without creating one. iOS 16+. */
+      overflow-x: clip;
     }
     .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; font-feature-settings: "calt" 0; }
     a { color: inherit; text-decoration: none; }
