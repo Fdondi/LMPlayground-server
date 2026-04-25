@@ -300,16 +300,6 @@
     /* Typewriter: each char starts hidden, JS reveals sequentially */
     .lmp-anim-p1 .tc, .lmp-anim-p2 .tc { opacity: 0; }
     .lmp-anim-p1 .tc.on, .lmp-anim-p2 .tc.on { opacity: 1; }
-    /* Caret shown at the end of currently-typing paragraph */
-    .lmp-anim-p1.typing::after, .lmp-anim-p2.typing::after {
-      content: '';
-      display: inline-block;
-      width: 6px; height: 12px;
-      background: var(--accent-pale);
-      vertical-align: -2px;
-      margin-left: 2px;
-      animation: lmpDotBlink 0.9s ease-in-out infinite;
-    }
     @media (prefers-reduced-motion: reduce) {
       .lmp-anim-actions { opacity: 1; }
       .lmp-anim-p1 .tc, .lmp-anim-p2 .tc { opacity: 1; }
@@ -562,17 +552,102 @@
     }
     .final-cta h2 em { font-style: italic; color: var(--accent-pale); font-family: 'Instrument Serif', 'Georgia', serif; font-weight: 400; }
     .final-cta p { font-size: 18px; color: var(--fg-dim); max-width: 520px; margin: 0 auto 36px; }
-    .penrose-bg {
+    .penrose-field {
       position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 460px; height: 460px;
-      max-width: 80vw; max-height: 80vw;
-      opacity: 0.05;
-      color: var(--fg);
+      inset: 0;
       pointer-events: none;
-      user-select: none;
+      overflow: hidden;
     }
+    .penrose-particle {
+      position: absolute;
+      display: block;
+      top: var(--py);
+      left: var(--px);
+      width: var(--psize);
+      height: var(--psize);
+      color: var(--fg);
+      opacity: var(--popacity);
+      animation: penroseSpin var(--pdur) linear infinite;
+      animation-direction: var(--pdir, normal);
+      animation-delay: var(--pdelay, 0s);
+      will-change: transform;
+    }
+    @keyframes penroseSpin {
+      from { transform: rotate(0deg); }
+      to   { transform: rotate(360deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .penrose-particle { animation: none; }
+    }
+
+    /* ============== LANGUAGES ============== */
+    .lang-header { display: grid; grid-template-columns: 1fr auto; gap: 32px; align-items: end; margin-bottom: 56px; }
+    @media (max-width: 820px) { .lang-header { grid-template-columns: 1fr; } }
+    .lang-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--fg-mute);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 20px;
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+    }
+    .lang-counter .num {
+      font-size: 28px;
+      color: var(--fg);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      text-transform: none;
+    }
+    .lang-counter .num em { font-style: normal; color: var(--accent-pale); }
+
+    .lang-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+    @media (max-width: 1020px) { .lang-grid { grid-template-columns: repeat(3, 1fr); } }
+    @media (max-width: 720px)  { .lang-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 460px)  { .lang-grid { grid-template-columns: 1fr; } }
+
+    .lang-item {
+      background: var(--bg);
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .lang-item:hover { background: var(--bg-elev); }
+    .lang-code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--fg-mute);
+      min-width: 56px;
+      padding: 4px 8px;
+      background: var(--bg-elev-2);
+      border-radius: 6px;
+      text-align: center;
+      border: 1px solid var(--line);
+    }
+    .lang-item.default .lang-code { color: var(--accent-pale); border-color: var(--accent); }
+    .lang-name { font-size: 15px; color: var(--fg); font-weight: 400; letter-spacing: -0.005em; }
+
+    .lang-foot {
+      margin-top: 32px;
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 13px;
+      color: var(--fg-mute);
+      flex-wrap: wrap; gap: 12px;
+    }
+    .lang-foot .mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; }
+    .lang-foot a { color: var(--accent-pale); text-decoration: underline; text-underline-offset: 4px; }
 
     /* ============== FOOTER ============== */
     footer {
@@ -623,6 +698,7 @@
       <div class="nav-links">
         <a href="#models">Models</a>
         <a href="#how">How it works</a>
+        <a href="#languages">Languages</a>
         <a href="#specs">Under the hood</a>
         <a href="#faq">FAQ</a>
         <a href="https://github.com/andriydruk/LMPlayground" aria-label="GitHub" style="display:flex;align-items:center;gap:6px;">
@@ -927,6 +1003,28 @@
     </div>
   </section>
 
+  <!-- LANGUAGES -->
+  <section id="languages" style="padding-top:0;">
+    <div class="container">
+      <div class="lang-header">
+        <div>
+          <span class="eyebrow">Languages · 28</span>
+          <h2 class="section-title">Speaks your language.<br/>Right out of the box.</h2>
+          <p class="section-sub" style="margin-bottom:0;">The whole app is translated into 28 languages. On first launch, we'll pick a model that speaks yours.</p>
+        </div>
+        <div class="lang-counter">
+          <span class="num"><em>28</em> locales</span>
+        </div>
+      </div>
+
+      <div class="lang-grid" id="langGrid"></div>
+
+      <div class="lang-foot">
+        <span>Spotted a wrong translation? <a href="https://github.com/andriydruk/LMPlayground/tree/main/app/src/main/res">Please open a PR on GitHub</a>.</span>
+      </div>
+    </div>
+  </section>
+
   <!-- SPECS -->
   <section id="specs" style="padding-top:0;">
     <div class="container">
@@ -1034,13 +1132,9 @@
 
   <!-- FINAL CTA -->
   <section class="final-cta">
-    <svg class="penrose-bg" viewBox="0 0 108 108" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true">
-      <path d="M46.66,15.86L77.04,69.93L43.27,69.95L36.8,81.52L96.58,81.53L60.11,15.83L46.66,15.86z" fill-rule="evenodd"/>
-      <path d="M46.66,15.86L10.59,81.52L17.2,93.43L47.13,39.19L63.83,69.94L77.06,69.94L46.66,15.86z" fill-rule="evenodd"/>
-      <path d="M47.14,39.2L53.73,51.35L36.77,81.53L96.59,81.56L90.29,93.76L17.2,93.42L47.14,39.2z" fill="currentColor" fill-rule="evenodd"/>
-    </svg>
+    <div class="penrose-field" id="penroseField" aria-hidden="true"></div>
     <div class="container">
-      <h2>The whole model. <em>In your pocket.</em></h2>
+      <h2><em>Any</em> model in your pocket.</h2>
       <p>Seconds to install. Minutes to download a model. Then you're done with the cloud.</p>
       <div class="hero-ctas" style="justify-content:center;">
         <a href="https://play.google.com/store/apps/details?id=com.druk.lmplayground" class="btn btn-primary">
@@ -1067,6 +1161,7 @@
           <h4>Product</h4>
           <a href="#models">Supported models</a>
           <a href="#how">How it works</a>
+          <a href="#languages">Languages</a>
           <a href="#specs">Tech specs</a>
           <a href="#faq">FAQ</a>
         </div>
@@ -1185,6 +1280,48 @@
       }).join('');
     }
     renderModels();
+
+    // Languages — codes mirror Android resource qualifiers (res/values-<locale>/)
+    const LANGUAGES = [
+      { code: 'en',        name: 'English', isDefault: true },
+      { code: 'ar',        name: 'Arabic' },
+      { code: 'bn',        name: 'Bengali' },
+      { code: 'cs',        name: 'Czech' },
+      { code: 'da',        name: 'Danish' },
+      { code: 'de',        name: 'German' },
+      { code: 'es',        name: 'Spanish' },
+      { code: 'fi',        name: 'Finnish' },
+      { code: 'fil',       name: 'Filipino' },
+      { code: 'fr',        name: 'French' },
+      { code: 'hi',        name: 'Hindi' },
+      { code: 'in',        name: 'Indonesian' },
+      { code: 'it',        name: 'Italian' },
+      { code: 'iw',        name: 'Hebrew' },
+      { code: 'ja',        name: 'Japanese' },
+      { code: 'ko',        name: 'Korean' },
+      { code: 'ms',        name: 'Malay' },
+      { code: 'nb',        name: 'Norwegian' },
+      { code: 'nl',        name: 'Dutch' },
+      { code: 'pl',        name: 'Polish' },
+      { code: 'pt',        name: 'Portuguese' },
+      { code: 'ro',        name: 'Romanian' },
+      { code: 'sv',        name: 'Swedish' },
+      { code: 'th',        name: 'Thai' },
+      { code: 'tr',        name: 'Turkish' },
+      { code: 'uk',        name: 'Ukrainian' },
+      { code: 'vi',        name: 'Vietnamese' },
+      { code: 'zh',        name: 'Chinese' },
+    ];
+    (function renderLanguages() {
+      const grid = document.getElementById('langGrid');
+      if (!grid) return;
+      grid.innerHTML = LANGUAGES.map(l => `
+        <div class="lang-item${l.isDefault ? ' default' : ''}">
+          <span class="lang-code">${l.code}</span>
+          <span class="lang-name">${l.name}</span>
+        </div>
+      `).join('');
+    })();
 
     // Hero phone — typewriter reveal for assistant response (once per page load)
     (function() {
@@ -1312,6 +1449,116 @@
       applyTheme('light');
       try { window.parent.postMessage({type:'__edit_mode_set_keys', edits:{theme:'light'}}, '*'); } catch(e){}
     });
+
+    // Penrose field — scatter small triangles spinning at random speeds/directions.
+    // Collision: each spinning triangle sweeps a circle of radius ≈ size/2, so we
+    // reject any candidate whose bounding circle overlaps an already-placed one.
+    // Rebuilds on window resize (debounced) so density follows the new frame size.
+    function buildPenroseField() {
+      const field = document.getElementById('penroseField');
+      if (!field) return;
+      // clear previous population before re-seeding
+      while (field.firstChild) field.removeChild(field.firstChild);
+      const TRI_PATHS =
+        '<path d="M46.66,15.86L77.04,69.93L43.27,69.95L36.8,81.52L96.58,81.53L60.11,15.83L46.66,15.86z" fill-rule="evenodd"/>' +
+        '<path d="M46.66,15.86L10.59,81.52L17.2,93.43L47.13,39.19L63.83,69.94L77.06,69.94L46.66,15.86z" fill-rule="evenodd"/>' +
+        '<path d="M47.14,39.2L53.73,51.35L36.77,81.53L96.59,81.56L90.29,93.76L17.2,93.42L47.14,39.2z" fill="currentColor" fill-rule="evenodd"/>';
+
+      const rect = field.getBoundingClientRect();
+      const W = rect.width, H = rect.height;
+      if (W < 10 || H < 10) return;
+
+      const rnd = (a, b) => a + Math.random() * (b - a);
+      const MIN_SIZE = 26, MAX_SIZE = 78;
+      // Scale count with field area. Anchor: ~35 particles at 1440×480 (desktop
+      // baseline). Clamp so tiny phones still get a few and 4K doesn't flood.
+      const TARGET_N = Math.max(8, Math.min(60, Math.round(W * H / 20000)));
+      const MAX_ATTEMPTS_PER = 80;  // per-particle tries before giving up on this slot
+      const STOP_AFTER_FAILS = 12;  // consecutive failed slots → field is saturated
+      const GAP = 6;                // extra pixel gap between bounding circles
+      const EDGE = 2;               // keep bounding circle this many px inside the frame
+
+      // Clamp particle size so the full bounding circle always fits inside the frame.
+      const maxSize = Math.min(MAX_SIZE, W - 2 * EDGE, H - 2 * EDGE);
+      if (maxSize < MIN_SIZE) return;
+
+      const placed = [];            // { cx, cy, r }
+      const SVG_NS = 'http://www.w3.org/2000/svg';
+      const frag = document.createDocumentFragment();
+      let consecutiveFails = 0;
+
+      for (let i = 0; i < TARGET_N; i++) {
+        let accepted = null;
+        for (let a = 0; a < MAX_ATTEMPTS_PER; a++) {
+          const size = rnd(MIN_SIZE, maxSize);
+          const r = size / 2;
+          // fully inside the frame — center constrained so bounding circle never clips
+          const cx = rnd(r + EDGE, W - r - EDGE);
+          const cy = rnd(r + EDGE, H - r - EDGE);
+          let ok = true;
+          for (let k = 0; k < placed.length; k++) {
+            const p = placed[k];
+            const dx = cx - p.cx, dy = cy - p.cy;
+            const minD = r + p.r + GAP;
+            if (dx * dx + dy * dy < minD * minD) { ok = false; break; }
+          }
+          if (ok) { accepted = { cx, cy, r, size }; break; }
+        }
+        if (!accepted) {
+          if (++consecutiveFails >= STOP_AFTER_FAILS) break;
+          continue;
+        }
+        consecutiveFails = 0;
+        placed.push(accepted);
+
+        const size = accepted.size;
+        const left = accepted.cx - accepted.r;
+        const top  = accepted.cy - accepted.r;
+        const op    = rnd(0.05, 0.15);  // wider range for layered foreground/background feel
+        const dur   = rnd(10, 40);
+        const dir   = Math.random() < 0.5 ? 'normal' : 'reverse';
+        const delay = -rnd(0, dur); // negative so each starts mid-rotation
+
+        const svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 108 108');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-linejoin', 'round');
+        svg.setAttribute('aria-hidden', 'true');
+        svg.setAttribute('class', 'penrose-particle');
+        svg.style.setProperty('--psize', size.toFixed(1) + 'px');
+        svg.style.setProperty('--px', left.toFixed(1) + 'px');
+        svg.style.setProperty('--py', top.toFixed(1) + 'px');
+        svg.style.setProperty('--popacity', op.toFixed(3));
+        svg.style.setProperty('--pdur', dur.toFixed(1) + 's');
+        svg.style.setProperty('--pdir', dir);
+        svg.style.setProperty('--pdelay', delay.toFixed(1) + 's');
+        svg.innerHTML = TRI_PATHS;
+        frag.appendChild(svg);
+      }
+      field.appendChild(frag);
+    }
+
+    buildPenroseField();
+
+    // Rebuild on resize — only when the field's dimensions meaningfully change,
+    // and debounced so we don't thrash during a drag-resize.
+    (function watchResize() {
+      const field = document.getElementById('penroseField');
+      if (!field) return;
+      let lastW = field.clientWidth, lastH = field.clientHeight;
+      let t = null;
+      window.addEventListener('resize', () => {
+        clearTimeout(t);
+        t = setTimeout(() => {
+          const w = field.clientWidth, h = field.clientHeight;
+          if (Math.abs(w - lastW) < 20 && Math.abs(h - lastH) < 20) return;
+          lastW = w; lastH = h;
+          buildPenroseField();
+        }, 180);
+      });
+    })();
 
     // Edit mode protocol (register listener BEFORE announcing availability)
     window.addEventListener('message', (e) => {
