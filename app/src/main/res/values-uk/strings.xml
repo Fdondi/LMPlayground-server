@@ -180,7 +180,7 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Обирай модель</string>
     <string name="screenshot_chat">Спілкуйся приватно</string>
-    <string name="screenshot_fine_tune">Тонке налаштування</string>
+    <string name="screenshot_fine_tune">Налаштовуй</string>
     <string name="screenshot_download_models">Завантажуй будь-яку модель</string>
     <string name="screenshot_download_models_sub">у будь-яку обрану теку</string>
 

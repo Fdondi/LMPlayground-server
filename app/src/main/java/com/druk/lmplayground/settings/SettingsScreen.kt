@@ -77,6 +77,14 @@ fun SettingsScreen(
                 onClick = onModelsClick
             )
 
+            // System Prompts row
+            SettingsRow(
+                icon = Icons.AutoMirrored.Outlined.Article,
+                title = stringResource(R.string.system_prompts),
+                subtitle = stringResource(R.string.system_prompts_subtitle),
+                onClick = onSystemPromptsClick
+            )
+
             // Language row
             val currentTag = currentLanguageTag()
             val languageSubtitle = if (currentTag == null) {
@@ -97,14 +105,6 @@ fun SettingsScreen(
             if (showLanguageDialog) {
                 LanguageDialog(onDismiss = { showLanguageDialog = false })
             }
-
-            // System Prompts row
-            SettingsRow(
-                icon = Icons.AutoMirrored.Outlined.Article,
-                title = stringResource(R.string.system_prompts),
-                subtitle = stringResource(R.string.system_prompts_subtitle),
-                onClick = onSystemPromptsClick
-            )
 
             // Privacy Policy row
             SettingsRow(
