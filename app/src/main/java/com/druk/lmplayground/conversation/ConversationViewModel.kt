@@ -132,7 +132,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val modelFiles = storageRepository.getModelFiles()
-                val downloadedSizes = modelFiles.associate { it.name to it.sizeBytes }
+                val downloadedFilenames = modelFiles.map { it.name }.toSet()
                 val customModels = modelFiles
                     .filter { it.name !in ModelInfoProvider.knownFilenames }
                     .mapNotNull { file ->
@@ -142,7 +142,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         ModelInfoProvider.createCustomModelInfo(file.name, cached.first, file.sizeBytes)
                     }
                 _models.postValue(
-                    ModelInfoProvider.getModelsWithStatus(downloadedSizes, customModels)
+                    ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels)
                 )
             }
         }
@@ -197,8 +197,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 val fileSizeBytes = storageRepository.getModelFiles()
                     .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
                 val totalRamBytes = DeviceCapability.totalRamBytes(app)
-                if (DeviceCapability.evaluateFit(fileSizeBytes, totalRamBytes, totalRamBytes)
-                    == DeviceCapability.FitVerdict.WontFit) {
+                if (DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)) {
                     val needed = Formatter.formatFileSize(app, fileSizeBytes)
                     val total = Formatter.formatFileSize(app, totalRamBytes)
                     _loadedModelStatus.postValue(

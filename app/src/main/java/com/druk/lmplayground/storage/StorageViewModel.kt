@@ -110,9 +110,9 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
                 _storageInfo.postValue(repository.getStorageInfo())
                 val modelFiles = repository.getModelFiles()
                 _downloadedModels.postValue(modelFiles)
-                val downloadedSizes = modelFiles.associate { it.name to it.sizeBytes }
+                val downloadedFilenames = modelFiles.map { it.name }.toSet()
                 val customModels = discoverCustomModels(modelFiles)
-                _allModels.postValue(ModelInfoProvider.getModelsWithStatus(downloadedSizes, customModels))
+                _allModels.postValue(ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels))
             }
         }
     }

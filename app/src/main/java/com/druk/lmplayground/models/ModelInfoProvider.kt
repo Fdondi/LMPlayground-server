@@ -364,36 +364,21 @@ object ModelInfoProvider {
 
     /**
      * Get models with their download status.
-     *
-     * @param downloadedSizes maps a downloaded model's filename to its
-     *   actual on-disk size in bytes. Used to populate
-     *   [ModelWithStatus.sizeBytes] for the RAM-fit picker badge.
      */
     fun getModelsWithStatus(
-        downloadedSizes: Map<String, Long>,
+        downloadedFilenames: Set<String>,
         customModels: List<ModelInfo> = emptyList()
     ): List<ModelWithStatus> {
         val knownModels = allModels
             .sortedByDescending { it.releaseDate }
             .map { model ->
-                val isDownloaded = model.filename in downloadedSizes
-                val size = if (isDownloaded) {
-                    downloadedSizes[model.filename] ?: 0L
-                } else {
-                    DeviceCapability.parseDeclaredSizeBytes(model.description)
-                }
                 ModelWithStatus(
                     model = model,
-                    isDownloaded = isDownloaded,
-                    sizeBytes = size,
+                    isDownloaded = model.filename in downloadedFilenames,
                 )
             }
         val customWithStatus = customModels.map { model ->
-            ModelWithStatus(
-                model = model,
-                isDownloaded = true,
-                sizeBytes = downloadedSizes[model.filename] ?: 0L,
-            )
+            ModelWithStatus(model = model, isDownloaded = true)
         }
         return customWithStatus + knownModels
     }

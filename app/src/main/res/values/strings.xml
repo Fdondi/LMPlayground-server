@@ -129,15 +129,8 @@
     <string name="no_downloaded_models">No models downloaded yet</string>
     <string name="browse_more_models">Browse Models</string>
     <string name="cancel">Cancel</string>
-    <!-- RAM-fit warnings on the model picker. %1$s is a formatted size like "5.2 GB" or "4.0 GB". -->
-    <string name="ram_warning_wont_fit">Won\'t run on this device — needs ~%1$s RAM, you have %2$s</string>
-    <string name="ram_warning_tight">Low free RAM — may crash. Needs ~%1$s, %2$s free</string>
     <string name="model_load_failed_low_ram">Model needs ~%1$s RAM but this device only has %2$s total. Try a smaller model.</string>
-    <!-- Confirmation dialog when the user tries to download a model that won't run on this device. -->
-    <string name="download_wont_fit_title">Won\'t run on this device</string>
-    <string name="download_wont_fit_message">%1$s needs about %2$s of RAM to run, but this device only has %3$s total. The download will still work, but you won\'t be able to load the model here.</string>
-    <string name="download_anyway">Download anyway</string>
-    
+
     <!-- Download notifications -->
     <string name="download_notification_channel">Model Downloads</string>
     <string name="download_notification_channel_description">Shows progress for model file downloads</string>
