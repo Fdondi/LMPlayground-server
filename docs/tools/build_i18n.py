@@ -58,6 +58,11 @@ EN = {
     "models.sub": "Browse community-made models optimized for mobile — compact enough to fit on your phone, powerful enough to be useful.",
     "models.tab.all": "All", "models.tab.reason": "Reasoning", "models.tab.small": "Under 1GB",
 
+    # Section headers used when the models list is split by language support
+    # on non-English locales. Filled per-language from app strings.xml.
+    "models.supports_your_language": "Supports your language",
+    "models.other_models": "Other models",
+
     "strip.caption": "<b>Zero network traffic during inference.</b> After the model is downloaded, you can pull the SIM, turn off Wi-Fi, and keep chatting. There is no telemetry, no analytics, no \"helpful\" background sync.",
 
     "how.eyebrow": "How it works",
@@ -2049,6 +2054,8 @@ def fill_app_strings(d, lang):
         if f"faq_a{i}" in src: d[f"faq.a{i}"] = src[f"faq_a{i}"]
     if "screenshot_chat_question" in src: d["phone.q"] = src["screenshot_chat_question"]
     if "screenshot_chat_response" in src: d["phone.a"] = src["screenshot_chat_response"]
+    if "supports_your_language" in src: d["models.supports_your_language"] = src["supports_your_language"]
+    if "other_models" in src: d["models.other_models"] = src["other_models"]
     return d
 
 fill_app_strings(EN, "en")

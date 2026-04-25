@@ -376,6 +376,17 @@
     .models-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
     @media (max-width: 900px) { .models-grid { grid-template-columns: repeat(2, 1fr); } }
     @media (max-width: 560px) { .models-grid { grid-template-columns: 1fr; } }
+    .models-section-head {
+      grid-column: 1 / -1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--fg-mute);
+      margin-top: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px dashed var(--line-strong);
+    }
+    .models-section-head:first-child { margin-top: 0; }
+    .models-section-head .accent { color: var(--accent-pale); }
     .model-card {
       background: var(--bg-elev);
       border: 1px solid var(--line);
@@ -1068,70 +1079,112 @@
       "theme": "dark"
     }/*EDITMODE-END*/;
 
+    // Per-family supported-language sets. Mirrors ModelInfoProvider.kt
+    // (ISO 639-1 codes from each model's HF card / publisher blog).
+    const MULTILINGUAL_BROAD = ['en','ar','bg','cs','da','de','el','es','fi','fr','hi','hu','id','it','ja','ko','ms','nl','no','pl','pt','ro','ru','sv','th','tr','uk','vi','zh'];
+    const LLAMA_LANGS    = ['en','de','fr','it','pt','hi','es','th'];
+    const PHI_LANGS      = ['ar','zh','cs','da','nl','en','fi','fr','de','he','hu','it','ja','ko','no','pl','pt','ru','es','sv','th','tr','uk'];
+    const DEEPSEEK_LANGS = ['en','zh'];
+    const LFM_LANGS      = ['en','ar','zh','fr','de','ja','ko','es'];
+    const MISTRAL_LANGS  = ['en','fr','de','es','it','pt','nl','zh','ja','ko','ar'];
+    const GRANITE_LANGS  = ['en','de','es','fr','ja','pt','ar','cs','it','ko','nl','zh'];
+    const ENGLISH_ONLY   = ['en'];
+
+    // Map our website lang codes (mirroring Android resource folders) to the
+    // ISO codes used in the lang sets above. Only differ for the few legacy
+    // Android codes; everything else is identity.
+    const LANG_ISO = { iw:'he', in:'id', nb:'no', fil:'tl' };
+
     // Models data — sourced from app/src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt
     // Sorted by release date (newest first). Sizes are Q4_K_M except Qwen 3.5 (Q3_K_M).
     const MODELS = [
       // 2026-03-25
-      { name:'Gemma 4 E4B',              provider:'Google',    desc:'Efficient with thinking',         size:'4.98 GB', quant:'Q4_K_M', tags:['new','reason','chat'] },
-      { name:'Gemma 4 E2B',              provider:'Google',    desc:'Efficient with thinking',         size:'3.11 GB', quant:'Q4_K_M', tags:['new','reason','chat'] },
-      { name:'LFM2.5 350M',              provider:'Liquid AI', desc:'Ultra-lightweight chat',          size:'267 MB',  quant:'Q4_K_M', tags:['new','small','chat'] },
+      { name:'Gemma 4 E4B',              provider:'Google',    desc:'Efficient with thinking',         size:'4.98 GB', quant:'Q4_K_M', tags:['new','reason','chat'],         langs:MULTILINGUAL_BROAD },
+      { name:'Gemma 4 E2B',              provider:'Google',    desc:'Efficient with thinking',         size:'3.11 GB', quant:'Q4_K_M', tags:['new','reason','chat'],         langs:MULTILINGUAL_BROAD },
+      { name:'LFM2.5 350M',              provider:'Liquid AI', desc:'Ultra-lightweight chat',          size:'267 MB',  quant:'Q4_K_M', tags:['new','small','chat'],          langs:LFM_LANGS },
       // 2026-02-27
-      { name:'Qwen 3.5 4B',              provider:'Alibaba',   desc:'General-purpose with thinking',   size:'2.25 GB', quant:'Q3_K_M', tags:['new','reason','chat'] },
-      { name:'Qwen 3.5 2B',              provider:'Alibaba',   desc:'General-purpose with thinking',   size:'1.07 GB', quant:'Q3_K_M', tags:['new','reason','chat'] },
-      { name:'Qwen 3.5 0.8B',            provider:'Alibaba',   desc:'Lightweight with thinking',       size:'466 MB',  quant:'Q3_K_M', tags:['new','reason','small','chat'] },
+      { name:'Qwen 3.5 4B',              provider:'Alibaba',   desc:'General-purpose with thinking',   size:'2.25 GB', quant:'Q3_K_M', tags:['new','reason','chat'],         langs:MULTILINGUAL_BROAD },
+      { name:'Qwen 3.5 2B',              provider:'Alibaba',   desc:'General-purpose with thinking',   size:'1.07 GB', quant:'Q3_K_M', tags:['new','reason','chat'],         langs:MULTILINGUAL_BROAD },
+      { name:'Qwen 3.5 0.8B',            provider:'Alibaba',   desc:'Lightweight with thinking',       size:'466 MB',  quant:'Q3_K_M', tags:['new','reason','small','chat'], langs:MULTILINGUAL_BROAD },
       // 2025-12-15
-      { name:'Nemotron 3 Nano 4B',       provider:'NVIDIA',    desc:'Hybrid reasoning model',          size:'2.84 GB', quant:'Q4_K_M', tags:['reason'] },
+      { name:'Nemotron 3 Nano 4B',       provider:'NVIDIA',    desc:'Hybrid reasoning model',          size:'2.84 GB', quant:'Q4_K_M', tags:['reason'],                      langs:ENGLISH_ONLY },
       // 2025-05-14
-      { name:'Gemma 3n E4B',             provider:'Google',    desc:'Efficient with thinking',         size:'4.24 GB', quant:'Q4_K_M', tags:['reason','chat'] },
-      { name:'Gemma 3n E2B',             provider:'Google',    desc:'Efficient with thinking',         size:'2.79 GB', quant:'Q4_K_M', tags:['reason','chat'] },
+      { name:'Gemma 3n E4B',             provider:'Google',    desc:'Efficient with thinking',         size:'4.24 GB', quant:'Q4_K_M', tags:['reason','chat'],               langs:MULTILINGUAL_BROAD },
+      { name:'Gemma 3n E2B',             provider:'Google',    desc:'Efficient with thinking',         size:'2.79 GB', quant:'Q4_K_M', tags:['reason','chat'],               langs:MULTILINGUAL_BROAD },
       // 2025-04-29
-      { name:'Qwen 3 4B',                provider:'Alibaba',   desc:'General-purpose with thinking',   size:'2.5 GB',  quant:'Q4_K_M', tags:['reason','chat'] },
-      { name:'Qwen 3 1.7B',              provider:'Alibaba',   desc:'General-purpose with thinking',   size:'1.28 GB', quant:'Q4_K_M', tags:['reason','chat'] },
-      { name:'Qwen 3 0.6B',              provider:'Alibaba',   desc:'Lightweight with thinking',       size:'484 MB',  quant:'Q4_K_M', tags:['reason','small','chat'] },
+      { name:'Qwen 3 4B',                provider:'Alibaba',   desc:'General-purpose with thinking',   size:'2.5 GB',  quant:'Q4_K_M', tags:['reason','chat'],               langs:MULTILINGUAL_BROAD },
+      { name:'Qwen 3 1.7B',              provider:'Alibaba',   desc:'General-purpose with thinking',   size:'1.28 GB', quant:'Q4_K_M', tags:['reason','chat'],               langs:MULTILINGUAL_BROAD },
+      { name:'Qwen 3 0.6B',              provider:'Alibaba',   desc:'Lightweight with thinking',       size:'484 MB',  quant:'Q4_K_M', tags:['reason','small','chat'],       langs:MULTILINGUAL_BROAD },
       // 2025-03-12
-      { name:'Gemma 3 4B',               provider:'Google',    desc:'Instruction-tuned with thinking', size:'2.49 GB', quant:'Q4_K_M', tags:['reason','chat'] },
-      { name:'Gemma 3 1B',               provider:'Google',    desc:'Lightweight with thinking',       size:'806 MB',  quant:'Q4_K_M', tags:['reason','small','chat'] },
+      { name:'Gemma 3 4B',               provider:'Google',    desc:'Instruction-tuned with thinking', size:'2.49 GB', quant:'Q4_K_M', tags:['reason','chat'],               langs:MULTILINGUAL_BROAD },
+      { name:'Gemma 3 1B',               provider:'Google',    desc:'Lightweight with thinking',       size:'806 MB',  quant:'Q4_K_M', tags:['reason','small','chat'],       langs:MULTILINGUAL_BROAD },
       // 2025-02-26
-      { name:'Granite 4.0 H-Tiny',       provider:'IBM',       desc:'Hybrid enterprise model',         size:'4.23 GB', quant:'Q4_K_M', tags:['chat'] },
-      { name:'Granite 4.0 Micro',        provider:'IBM',       desc:'Enterprise chat model',           size:'2.1 GB',  quant:'Q4_K_M', tags:['chat'] },
+      { name:'Granite 4.0 H-Tiny',       provider:'IBM',       desc:'Hybrid enterprise model',         size:'4.23 GB', quant:'Q4_K_M', tags:['chat'],                        langs:GRANITE_LANGS },
+      { name:'Granite 4.0 Micro',        provider:'IBM',       desc:'Enterprise chat model',           size:'2.1 GB',  quant:'Q4_K_M', tags:['chat'],                        langs:GRANITE_LANGS },
       // 2025-01-20
-      { name:'DeepSeek R1 Distill 7B',   provider:'DeepSeek',  desc:'Advanced reasoning distill',      size:'4.68 GB', quant:'Q4_K_M', tags:['reason'] },
-      { name:'DeepSeek R1 Distill 1.5B', provider:'DeepSeek',  desc:'Compact reasoning distill',       size:'1.12 GB', quant:'Q4_K_M', tags:['reason'] },
+      { name:'DeepSeek R1 Distill 7B',   provider:'DeepSeek',  desc:'Advanced reasoning distill',      size:'4.68 GB', quant:'Q4_K_M', tags:['reason'],                      langs:DEEPSEEK_LANGS },
+      { name:'DeepSeek R1 Distill 1.5B', provider:'DeepSeek',  desc:'Compact reasoning distill',       size:'1.12 GB', quant:'Q4_K_M', tags:['reason'],                      langs:DEEPSEEK_LANGS },
       // 2025-01-15
-      { name:'Phi-4 mini',               provider:'Microsoft', desc:'Compact reasoning model',         size:'2.49 GB', quant:'Q4_K_M', tags:['reason'] },
+      { name:'Phi-4 mini',               provider:'Microsoft', desc:'Compact reasoning model',         size:'2.49 GB', quant:'Q4_K_M', tags:['reason'],                      langs:PHI_LANGS },
       // 2025-01-09
-      { name:'LFM2.5 1.2B Thinking',     provider:'Liquid AI', desc:'Compact thinking model',          size:'731 MB',  quant:'Q4_K_M', tags:['reason','small'] },
+      { name:'LFM2.5 1.2B Thinking',     provider:'Liquid AI', desc:'Compact thinking model',          size:'731 MB',  quant:'Q4_K_M', tags:['reason','small'],              langs:LFM_LANGS },
       // 2024-12-17
-      { name:'Ministral 3 8B Reasoning', provider:'Mistral',   desc:'Advanced reasoning',              size:'5.2 GB',  quant:'Q4_K_M', tags:['reason'] },
-      { name:'Ministral 3 8B Instruct',  provider:'Mistral',   desc:'General-purpose chat',            size:'5.2 GB',  quant:'Q4_K_M', tags:['chat'] },
-      { name:'Ministral 3 3B Reasoning', provider:'Mistral',   desc:'Lightweight reasoning',           size:'2.15 GB', quant:'Q4_K_M', tags:['reason'] },
-      { name:'Ministral 3 3B Instruct',  provider:'Mistral',   desc:'Lightweight chat',                size:'2.15 GB', quant:'Q4_K_M', tags:['chat'] },
+      { name:'Ministral 3 8B Reasoning', provider:'Mistral',   desc:'Advanced reasoning',              size:'5.2 GB',  quant:'Q4_K_M', tags:['reason'],                      langs:MISTRAL_LANGS },
+      { name:'Ministral 3 8B Instruct',  provider:'Mistral',   desc:'General-purpose chat',            size:'5.2 GB',  quant:'Q4_K_M', tags:['chat'],                        langs:MISTRAL_LANGS },
+      { name:'Ministral 3 3B Reasoning', provider:'Mistral',   desc:'Lightweight reasoning',           size:'2.15 GB', quant:'Q4_K_M', tags:['reason'],                      langs:MISTRAL_LANGS },
+      { name:'Ministral 3 3B Instruct',  provider:'Mistral',   desc:'Lightweight chat',                size:'2.15 GB', quant:'Q4_K_M', tags:['chat'],                        langs:MISTRAL_LANGS },
       // 2024-09-25
-      { name:'Llama 3.2 3B',             provider:'Meta',      desc:'Instruction-tuned chat',          size:'2.02 GB', quant:'Q4_K_M', tags:['chat'] },
-      { name:'Llama 3.2 1B',             provider:'Meta',      desc:'Lightweight instruction',         size:'808 MB',  quant:'Q4_K_M', tags:['small','chat'] },
+      { name:'Llama 3.2 3B',             provider:'Meta',      desc:'Instruction-tuned chat',          size:'2.02 GB', quant:'Q4_K_M', tags:['chat'],                        langs:LLAMA_LANGS },
+      { name:'Llama 3.2 1B',             provider:'Meta',      desc:'Lightweight instruction',         size:'808 MB',  quant:'Q4_K_M', tags:['small','chat'],                langs:LLAMA_LANGS },
     ];
     const badgeMap = { new:['badge-new','NEW'], reason:['badge-think','◇ THINK'], chat:['badge-chat','CHAT'] };
 
-    function renderModels(filter='all') {
+    // Track filter + lang globally so renderModels can re-render after either
+    // changes. (Lang gets set in applyTranslations; filter in tab handler.)
+    let currentFilter = 'all';
+
+    function cardHtml(m) {
+      const primary = m.tags.includes('reason') ? 'reason' : (m.tags.includes('new') ? 'new' : 'chat');
+      const [cls, label] = badgeMap[primary];
+      return '<div class="model-card">'
+        + '<div class="model-card-top">'
+        +   '<span class="model-provider">' + m.provider + '</span>'
+        +   '<span class="model-badge ' + cls + '">' + label + '</span>'
+        + '</div>'
+        + '<div class="model-name">' + m.name + '</div>'
+        + '<div class="model-desc">' + m.desc + '</div>'
+        + '<div class="model-card-bottom">'
+        +   '<span>' + m.quant + ' · <span class="size">' + m.size + '</span></span>'
+        + '</div>'
+      + '</div>';
+    }
+
+    function renderModels() {
       const grid = document.getElementById('modelsGrid');
-      const filtered = filter==='all' ? MODELS : MODELS.filter(m => m.tags.includes(filter));
-      grid.innerHTML = filtered.map(m => {
-        const primary = m.tags.includes('reason') ? 'reason' : (m.tags.includes('new') ? 'new' : 'chat');
-        const [cls,label] = badgeMap[primary];
-        return `
-          <div class="model-card">
-            <div class="model-card-top">
-              <span class="model-provider">${m.provider}</span>
-              <span class="model-badge ${cls}">${label}</span>
-            </div>
-            <div class="model-name">${m.name}</div>
-            <div class="model-desc">${m.desc}</div>
-            <div class="model-card-bottom">
-              <span>${m.quant} · <span class="size">${m.size}</span></span>
-            </div>
-          </div>
-        `;
-      }).join('');
+      const filter = currentFilter;
+      const lang = (typeof window.__lmpLang === 'string') ? window.__lmpLang : 'en';
+      const filtered = filter === 'all' ? MODELS : MODELS.filter(m => m.tags.includes(filter));
+
+      // For English (or any locale without an ISO mapping in our model lists)
+      // we don't split — every model "supports your language" trivially.
+      const iso = LANG_ISO[lang] || lang;
+      if (iso === 'en') {
+        grid.innerHTML = filtered.map(cardHtml).join('');
+        return;
+      }
+      const supports = filtered.filter(m => m.langs.includes(iso));
+      const others   = filtered.filter(m => !m.langs.includes(iso));
+      // If everything supports (or nothing does), skip the section headers.
+      if (others.length === 0 || supports.length === 0) {
+        grid.innerHTML = filtered.map(cardHtml).join('');
+        return;
+      }
+      const T = (key) => getTranslation(lang, key) || key;
+      grid.innerHTML =
+        '<div class="models-section-head"><span class="accent">' + T('models.supports_your_language') + '</span></div>'
+        + supports.map(cardHtml).join('')
+        + '<div class="models-section-head">' + T('models.other_models') + '</div>'
+        + others.map(cardHtml).join('');
     }
     renderModels();
 
@@ -1232,10 +1285,12 @@
         const v = getTranslation(lang, el.dataset.i18nHtml);
         if (v != null) el.innerHTML = v;
       });
-      // 3. Re-render dynamic blocks (FAQ, languages, hero chat)
+      // 3. Re-render dynamic blocks (FAQ, languages, hero chat, models grid)
+      window.__lmpLang = lang;
       renderFAQ(lang);
       renderLanguages(lang);
       renderHeroChat(lang);
+      renderModels();
     }
 
     function renderFAQ(lang) {
@@ -1378,7 +1433,8 @@
       t.addEventListener('click', () => {
         document.querySelectorAll('.models-tab').forEach(x => x.classList.remove('active'));
         t.classList.add('active');
-        renderModels(t.dataset.filter);
+        currentFilter = t.dataset.filter;
+        renderModels();
       });
     });
 

@@ -43,6 +43,9 @@ WANT = [
     'screenshot_chat_response',
     'screenshot_chat',
     'screenshot_chat_sub',
+    # Section headers used when the models list is split by language support.
+    'supports_your_language',
+    'other_models',
 ]
 
 def unescape(s):
