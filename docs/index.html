@@ -443,38 +443,6 @@
     .step-bubble.me { background: rgba(54,72,234,0.18); color: var(--accent-pale); align-self: flex-end; max-width: 80%; }
     .step-bubble.them { align-self: flex-start; max-width: 90%; }
 
-    /* ============== SPECS ============== */
-    .specs {
-      background: var(--bg-elev);
-      border: 1px solid var(--line);
-      border-radius: var(--radius-lg);
-      overflow: hidden;
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-    }
-    @media (max-width: 900px) { .specs { grid-template-columns: 1fr; } }
-    .specs-left { padding: 48px; border-right: 1px solid var(--line); }
-    @media (max-width: 900px) { .specs-left { border-right: none; border-bottom: 1px solid var(--line); padding: 32px; } }
-    .specs-right { padding: 0; background:
-      linear-gradient(var(--bg-elev-2), var(--bg-elev-2)) padding-box,
-      repeating-linear-gradient(0deg, var(--line) 0 1px, transparent 1px 32px),
-      repeating-linear-gradient(90deg, var(--line) 0 1px, transparent 1px 32px);
-    }
-    .specs h2 { font-size: 40px; font-weight: 500; letter-spacing: -0.025em; margin: 0 0 18px; line-height: 1.05; }
-    .specs p { color: var(--fg-dim); font-size: 16px; line-height: 1.6; margin: 0 0 28px; }
-    .spec-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; }
-    .spec-list li { display: flex; justify-content: space-between; padding: 14px 0; border-bottom: 1px dashed var(--line-strong); font-size: 14px; }
-    .spec-list li:last-child { border-bottom: none; }
-    .spec-list .k { color: var(--fg-dim); }
-    .spec-list .v { font-family: 'JetBrains Mono', monospace; color: var(--fg); font-size: 13px; }
-
-    .code-block { padding: 32px; font-family: 'JetBrains Mono', monospace; font-size: 13px; line-height: 1.7; color: var(--fg-dim); min-height: 100%; white-space: pre; overflow-x: auto; }
-    .code-block .kw { color: var(--accent-pale); }
-    .code-block .str { color: #9ACD68; }
-    .code-block .num { color: var(--yellow); }
-    .code-block .cm { color: var(--fg-mute); font-style: italic; }
-    .code-block .fn { color: var(--accent-bright); }
-
     /* ============== QUOTE / STRIP ============== */
     .strip {
       padding: 72px 0;
@@ -674,7 +642,6 @@
         <a href="#models" data-i18n="nav.models">Models</a>
         <a href="#how" data-i18n="nav.how">How it works</a>
         <a href="#languages" data-i18n="nav.languages">Languages</a>
-        <a href="#specs" data-i18n="nav.specs">Under the hood</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
         <a href="https://github.com/andriydruk/LMPlayground" aria-label="GitHub" style="display:flex;align-items:center;gap:6px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-1.97c-3.2.7-3.88-1.54-3.88-1.54-.52-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.67 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18.92-.26 1.91-.38 2.9-.39.98.01 1.97.13 2.9.39 2.21-1.49 3.18-1.18 3.18-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.4-2.69 5.38-5.25 5.66.41.36.78 1.05.78 2.12v3.14c0 .31.21.67.8.55C20.22 21.38 23.5 17.07 23.5 12 23.5 5.65 18.35.5 12 .5z"/></svg>
@@ -999,56 +966,6 @@
     </div>
   </section>
 
-  <!-- SPECS -->
-  <section id="specs" style="padding-top:0;">
-    <div class="container">
-      <div class="specs">
-        <div class="specs-left">
-          <span class="eyebrow" data-i18n="specs.eyebrow">Under the hood</span>
-          <h2 data-i18n-html="specs.title">Engineered for phones,<br/>not data centers.</h2>
-          <p data-i18n="specs.body">Built on llama.cpp with GGUF quantized models. Native C++ inference with ARM-optimized kernels means less heat, more tokens per second, and no unexpected background drain.</p>
-          <ul class="spec-list">
-            <li><span class="k" data-i18n="specs.engine">Inference engine</span><span class="v">llama.cpp</span></li>
-            <li><span class="k" data-i18n="specs.format">Model format</span><span class="v">GGUF · Q4_K_M</span></li>
-            <li><span class="k" data-i18n="specs.kernels">Kernels</span><span class="v">KleidiAI + OpenMP</span></li>
-            <li><span class="k" data-i18n="specs.android">Min Android</span><span class="v">API 30 (Android 11)</span></li>
-            <li><span class="k" data-i18n="specs.arch">Architecture</span><span class="v">arm64-v8a</span></li>
-            <li><span class="k" data-i18n="specs.ui">UI</span><span class="v">Jetpack Compose · Material 3</span></li>
-            <li><span class="k" data-i18n="specs.license">License</span><span class="v">MIT</span></li>
-          </ul>
-        </div>
-        <div class="specs-right">
-          <div class="code-block">
-<span class="cm">// LlamaCpp.kt — Kotlin ↔ C++ bridge to llama.cpp</span>
-<span class="kw">package</span> com.druk.llamacpp
-
-<span class="kw">class</span> <span class="fn">LlamaCpp</span> {
-
-    <span class="kw">companion object</span> {
-        <span class="kw">init</span> {
-            System.<span class="fn">loadLibrary</span>(<span class="str">"llamacpp"</span>)
-        }
-    }
-
-    <span class="kw">external fun</span> <span class="fn">init</span>(): <span class="kw">Int</span>
-
-    <span class="kw">external fun</span> <span class="fn">systemInfo</span>(): <span class="kw">String</span>
-
-    <span class="kw">external fun</span> <span class="fn">loadModel</span>(
-        path: <span class="kw">String</span>,
-        progressCallback: <span class="kw">LlamaProgressCallback</span>,
-    ): <span class="kw">LlamaModel</span>
-
-    <span class="kw">external fun</span> <span class="fn">probeModelMetadata</span>(path: <span class="kw">String</span>): <span class="kw">Array</span>&lt;<span class="kw">String</span>&gt;?
-}
-
-<span class="cm">// no network, no telemetry, no keys.</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
   <!-- FAQ -->
   <section id="faq">
     <div class="container">
@@ -1095,7 +1012,6 @@
           <a href="#models" data-i18n="footer.product.models">Supported models</a>
           <a href="#how" data-i18n="footer.product.how">How it works</a>
           <a href="#languages" data-i18n="footer.product.languages">Languages</a>
-          <a href="#specs" data-i18n="footer.product.specs">Tech specs</a>
           <a href="#faq" data-i18n="footer.product.faq">FAQ</a>
         </div>
         <div class="footer-col">
