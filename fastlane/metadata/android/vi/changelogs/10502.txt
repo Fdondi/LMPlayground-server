@@ -1,0 +1,2 @@
+- Cải thiện hiệu suất và độ ổn định
+- Thêm cảnh báo cho các mô hình quá lớn so với thiết bị của bạn

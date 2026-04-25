@@ -1,0 +1,2 @@
+- Verbesserungen bei Leistung und Stabilität
+- Warnung bei Modellen, die für dein Gerät zu groß sind

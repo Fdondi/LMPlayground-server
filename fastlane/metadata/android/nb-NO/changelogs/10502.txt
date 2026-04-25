@@ -1,0 +1,2 @@
+- Forbedringer av ytelse og stabilitet
+- Advarsel for modeller som er for store for enheten din

@@ -1,0 +1,2 @@
+- Verbeteringen in prestaties en stabiliteit
+- Waarschuwing voor modellen die te groot zijn voor je apparaat

@@ -1,0 +1,2 @@
+- Améliorations des performances et de la stabilité
+- Avertissement pour les modèles trop volumineux pour votre appareil
