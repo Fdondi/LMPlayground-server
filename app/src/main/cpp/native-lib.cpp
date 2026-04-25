@@ -93,10 +93,6 @@ Java_com_druk_llamacpp_LlamaCpp_init(JNIEnv *env, jobject object) {
     AndroidLogBuf androidLogBuf;
     std::cerr.rdbuf(&androidLogBuf);
 
-    // Ensure OpenMP worker threads have sufficient stack for deep compute kernels
-    // (e.g. ggml_compute_forward_gated_delta_net, mul_mat with KleidiAI)
-    setenv("OMP_STACKSIZE", "8M", 0);
-
     llama_log_set(log_callback, NULL);
     llama_backend_init();
     return 0;
