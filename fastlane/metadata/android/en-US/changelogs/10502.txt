@@ -1,0 +1,5 @@
+- Fewer crashes — checks available device RAM before loading a model and refuses ones that won't fit, preventing the most common crash on low-end phones
+- Fixed a rare crash when starting a model download
+- Updated the llama.cpp inference engine to the latest release
+- Refreshed vendor logos in the model picker with sharper rendering
+- Settings reorganised — Language moved to the third row, after Models and System Prompts
