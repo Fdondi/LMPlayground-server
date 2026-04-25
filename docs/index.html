@@ -69,23 +69,24 @@
     /* ============== NAV ============== */
     nav.top {
       position: sticky; top: 0; z-index: 50;
+      padding-top: env(safe-area-inset-top);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       background: rgba(10,11,16,0.72);
       border-bottom: 1px solid var(--line);
     }
-    /* iOS-only: drop the blur and use a solid background so the nav qualifies
-       as Safari 26's toolbar-tint sampler (rgba + backdrop-filter disqualify
-       it) and so its background covers the safe-area strip above it under
-       Liquid Glass. `-webkit-touch-callout` is iOS WebKit only — Android,
-       macOS Safari, and desktop browsers don't match this @supports query. */
-    @supports (-webkit-touch-callout: none) {
-      nav.top {
-        padding-top: env(safe-area-inset-top);
-        backdrop-filter: none;
-        -webkit-backdrop-filter: none;
-        background: #0A0B10;
-      }
+    /* Solid cover for the iOS safe-area strip (apple.com / readdle.com pattern):
+       paints over the nav's blur in just the dynamic-island / notch zone so
+       the iOS 26 Liquid Glass status bar shows a solid color through its
+       translucent material instead of blurred page content scrolling under
+       the sticky nav. Collapses to 0 height on desktop where the inset is 0. */
+    nav.top::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: env(safe-area-inset-top);
+      background: #0A0B10;
+      pointer-events: none;
     }
     .nav-row {
       display: flex; align-items: center; justify-content: space-between;
