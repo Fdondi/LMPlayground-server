@@ -56,7 +56,47 @@ class DownloadWorker(
         .followSslRedirects(true)
         .build()
 
+    /**
+     * Override required for the framework to query our foreground info up-front
+     * (e.g. when running as expedited work) without relying on `doWork()` having
+     * reached its `setForeground()` call. Returning a fully-formed
+     * [ForegroundInfo] here is the documented `CoroutineWorker` pattern for
+     * avoiding `ForegroundServiceDidNotStartInTimeException`.
+     */
+    override suspend fun getForegroundInfo(): ForegroundInfo {
+        val modelName = inputData.getString(KEY_MODEL_NAME) ?: ""
+        val filename = inputData.getString(KEY_FILENAME) ?: ""
+        val workName = inputData.getString(KEY_WORK_NAME) ?: "download_$filename"
+        val notificationId = notificationManager.getNotificationId(modelName)
+        val notification = notificationManager.buildProgressNotification(
+            modelName = modelName,
+            progress = 0f,
+            bytesDownloaded = 0,
+            totalBytes = 0,
+            speedBytesPerSec = 0,
+            etaSeconds = 0,
+            workName = workName
+        )
+        return ForegroundInfo(
+            notificationId,
+            notification,
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
+        )
+    }
+
     override suspend fun doWork(): Result {
+        // Promote to foreground IMMEDIATELY, before any other work. The system
+        // gives us ~5s after startForegroundService() to call setForeground; on
+        // a cold-started low-end device the OkHttpClient construction and
+        // inputData reads below can eat into that budget. Building the
+        // ForegroundInfo in getForegroundInfo() also lets the framework promote
+        // us itself if it queries first.
+        try {
+            setForeground(getForegroundInfo())
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not set foreground: ${e.message}")
+        }
+
         val url = inputData.getString(KEY_URL) ?: return failure("Missing download URL")
         val filename = inputData.getString(KEY_FILENAME) ?: return failure("Missing filename")
         val modelName = inputData.getString(KEY_MODEL_NAME) ?: return failure("Missing model name")
@@ -67,19 +107,19 @@ class DownloadWorker(
         val notificationId = notificationManager.getNotificationId(modelName)
 
         try {
-            setForeground(createForegroundInfo(modelName, workName, notificationId))
-        } catch (e: Exception) {
-            Log.w(TAG, "Could not set foreground: ${e.message}")
-        }
-
-        try {
             val downloadResult = downloadFile(url, tempFile, modelName, workName, notificationId)
             if (!downloadResult) {
                 return failure("Download stopped")
             }
 
             reportStatus(modelName, -1f, "Moving to storage…", tempFile.length(), tempFile.length(), 0, 0)
-            updateForegroundNotification(notificationId, notificationManager.buildCopyingNotification(modelName))
+            // Update the pinned FGS notification directly; we are already a
+            // foreground service so notify() updates the existing notification
+            // rather than re-promoting via SystemForegroundService.
+            notificationManager.showNotification(
+                notificationId,
+                notificationManager.buildCopyingNotification(modelName)
+            )
 
             val storageUri = Uri.parse(storageUriString)
             val copyResult = copyToSafStorage(tempFile, filename, storageUri)
@@ -194,7 +234,14 @@ class DownloadWorker(
 
                     reportStatus(modelName, progress, "Downloading…", bytesDownloaded, totalBytes, speed, eta)
 
-                    updateForegroundNotification(
+                    // Update the pinned FGS notification directly. Calling
+                    // setForeground() every 500ms re-routes through
+                    // SystemForegroundService and reopens the overlap window
+                    // tracked in WorkManager bug b/432069314 (fixed in 2.10.5
+                    // but the cheaper notify() path is the right pattern
+                    // regardless). notify() updates the same notification ID
+                    // that's pinned to our FGS, so the FGS state is preserved.
+                    notificationManager.showNotification(
                         notificationId,
                         notificationManager.buildProgressNotification(
                             modelName, progress, bytesDownloaded, totalBytes, speed, eta, workName
@@ -248,35 +295,6 @@ class DownloadWorker(
         } ?: return false
 
         return true
-    }
-
-    private suspend fun updateForegroundNotification(notificationId: Int, notification: android.app.Notification) {
-        try {
-            setForeground(ForegroundInfo(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC))
-        } catch (e: Exception) {
-            notificationManager.showNotification(notificationId, notification)
-        }
-    }
-
-    private fun createForegroundInfo(
-        modelName: String,
-        workName: String,
-        notificationId: Int
-    ): ForegroundInfo {
-        val notification = notificationManager.buildProgressNotification(
-            modelName = modelName,
-            progress = 0f,
-            bytesDownloaded = 0,
-            totalBytes = 0,
-            speedBytesPerSec = 0,
-            etaSeconds = 0,
-            workName = workName
-        )
-        return ForegroundInfo(
-            notificationId,
-            notification,
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC
-        )
     }
 
     private fun failure(message: String): Result {
