@@ -1,5 +1,6 @@
 package com.druk.lmplayground.models
 
+import android.text.format.Formatter
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.Eject
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Tune
+import androidx.compose.material.icons.outlined.WarningAmber
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -26,12 +28,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Image
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -52,6 +56,12 @@ fun SelectModelDialog(
 ) {
     // Only show downloaded models
     val downloadedModels = models.filter { it.isDownloaded }
+
+    val context = LocalContext.current
+    // Snapshot RAM at dialog open time. Cheap to call repeatedly but
+    // dialog lifetime is short so once is fine.
+    val totalRamBytes = remember { DeviceCapability.totalRamBytes(context) }
+    val availRamBytes = remember { DeviceCapability.availableRamBytes(context) }
 
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
@@ -75,9 +85,26 @@ fun SelectModelDialog(
                         items = downloadedModels,
                         key = { it.model.filename }
                     ) { modelWithStatus ->
-                        Model(model = modelWithStatus.model) {
-                            onDismissRequest()
-                            onLoadModel(modelWithStatus.model)
+                        val verdict = DeviceCapability.evaluateFit(
+                            modelSizeBytes = modelWithStatus.sizeBytes,
+                            totalRamBytes = totalRamBytes,
+                            availRamBytes = availRamBytes,
+                        )
+                        Column {
+                            Model(model = modelWithStatus.model) {
+                                onDismissRequest()
+                                onLoadModel(modelWithStatus.model)
+                            }
+                            if (verdict != DeviceCapability.FitVerdict.Fit &&
+                                modelWithStatus.sizeBytes > 0
+                            ) {
+                                RamWarningRow(
+                                    verdict = verdict,
+                                    modelSizeBytes = modelWithStatus.sizeBytes,
+                                    totalRamBytes = totalRamBytes,
+                                    availRamBytes = availRamBytes,
+                                )
+                            }
                         }
                     }
                 }
@@ -199,6 +226,57 @@ fun Model(
             modifier = Modifier.padding(4.dp),
             tint = MaterialTheme.colorScheme.onSurface,
             contentDescription = null
+        )
+    }
+}
+
+/**
+ * Inline warning shown beneath a downloaded-model row when its RAM
+ * footprint is borderline (Tight) or exceeds the device's safe envelope
+ * (WontFit). The hard refusal happens later in
+ * [com.druk.lmplayground.conversation.ConversationViewModel.loadModel];
+ * this row is the user-visible heads-up so they can pick a smaller model
+ * before tapping.
+ */
+@Composable
+private fun RamWarningRow(
+    verdict: DeviceCapability.FitVerdict,
+    modelSizeBytes: Long,
+    totalRamBytes: Long,
+    availRamBytes: Long,
+) {
+    val context = LocalContext.current
+    val sizeLabel = Formatter.formatFileSize(context, modelSizeBytes)
+    val (text, tint) = when (verdict) {
+        DeviceCapability.FitVerdict.WontFit -> stringResource(
+            R.string.ram_warning_wont_fit,
+            sizeLabel,
+            Formatter.formatFileSize(context, totalRamBytes),
+        ) to MaterialTheme.colorScheme.error
+        DeviceCapability.FitVerdict.Tight -> stringResource(
+            R.string.ram_warning_tight,
+            sizeLabel,
+            Formatter.formatFileSize(context, availRamBytes),
+        ) to MaterialTheme.colorScheme.tertiary
+        DeviceCapability.FitVerdict.Fit -> return
+    }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 24.dp, end = 16.dp, bottom = 8.dp)
+    ) {
+        Icon(
+            imageVector = Icons.Outlined.WarningAmber,
+            contentDescription = null,
+            tint = tint,
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = tint,
         )
     }
 }

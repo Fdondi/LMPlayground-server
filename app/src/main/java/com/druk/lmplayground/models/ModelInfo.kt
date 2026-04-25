@@ -27,11 +27,15 @@ fun ModelInfo.supportsLanguage(lang: String): Boolean =
     supportedLanguages.isEmpty() || lang in supportedLanguages
 
 /**
- * Model with its download status
+ * Model with its download status. [sizeBytes] is the actual on-disk size
+ * for downloaded models, or the catalog-declared size parsed from
+ * [ModelInfo.description] for models still available to download. Zero
+ * means unknown.
  */
 data class ModelWithStatus(
     val model: ModelInfo,
-    val isDownloaded: Boolean
+    val isDownloaded: Boolean,
+    val sizeBytes: Long = 0L,
 )
 
 private val RELEASE_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US)

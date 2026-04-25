@@ -19,6 +19,7 @@ import com.druk.lmplayground.data.ChatRepository
 import com.druk.lmplayground.data.ChatSessionEntity
 import com.druk.lmplayground.data.SystemPromptEntity
 import com.druk.lmplayground.data.SystemPromptRepository
+import com.druk.lmplayground.models.DeviceCapability
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
@@ -131,7 +132,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val modelFiles = storageRepository.getModelFiles()
-                val downloadedFilenames = modelFiles.map { it.name }.toSet()
+                val downloadedSizes = modelFiles.associate { it.name to it.sizeBytes }
                 val customModels = modelFiles
                     .filter { it.name !in ModelInfoProvider.knownFilenames }
                     .mapNotNull { file ->
@@ -141,7 +142,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         ModelInfoProvider.createCustomModelInfo(file.name, cached.first, file.sizeBytes)
                     }
                 _models.postValue(
-                    ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels)
+                    ModelInfoProvider.getModelsWithStatus(downloadedSizes, customModels)
                 )
             }
         }
@@ -184,6 +185,26 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 val fileHandle = storageRepository.openModelFile(modelInfo.filename)
                 if (fileHandle == null) {
                     _loadedModelStatus.postValue("Cannot open file")
+                    return@withContext
+                }
+
+                // RAM-fit gate. If the model exceeds 70 % of total device
+                // RAM the kernel will evict mmap'd weight pages during
+                // mat-mul, leading to SIGSEGV in __memcpy_aarch64_simd —
+                // the dominant Google Play Vitals crash for v1.5.x. Refuse
+                // the load up front and surface the size mismatch to the
+                // user rather than letting the device crash.
+                val fileSizeBytes = storageRepository.getModelFiles()
+                    .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
+                val totalRamBytes = DeviceCapability.totalRamBytes(app)
+                if (DeviceCapability.evaluateFit(fileSizeBytes, totalRamBytes, totalRamBytes)
+                    == DeviceCapability.FitVerdict.WontFit) {
+                    val needed = Formatter.formatFileSize(app, fileSizeBytes)
+                    val total = Formatter.formatFileSize(app, totalRamBytes)
+                    _loadedModelStatus.postValue(
+                        app.getString(com.druk.lmplayground.R.string.model_load_failed_low_ram, needed, total)
+                    )
+                    fileHandle.close()
                     return@withContext
                 }
 
