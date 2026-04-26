@@ -2,12 +2,12 @@
 <h1 align="center">LM Playground</h1>
 
 <p align="center">
-<img src="art/logo.png"/>
+<img src="logo.png"/>
 </p>
 
 LM Playground is an Android application for running Large Language Models locally on-device. Download models, load them in one tap, and chat - all offline, all private. Powered by [llama.cpp](https://github.com/ggml-org/llama.cpp) with GGUF-format models from [Hugging Face](https://huggingface.co/).
 
-![preview](art/Preview.png)
+![preview](docs/banner.png)
 
 ## Features
 

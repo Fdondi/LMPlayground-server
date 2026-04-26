@@ -7,10 +7,25 @@
   <meta name="theme-color" content="#0A0B10" />
   <title>LM Playground — Run LLMs locally on Android</title>
   <meta name="description" content="Free, open-source Android app for running large language models on-device with llama.cpp. Offline, private, no API keys." />
+  <link rel="canonical" href="https://lmplayground.app/" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta property="og:title" content="LM Playground — Run LLMs locally on Android" />
   <meta property="og:description" content="Free, open-source Android app for running LLMs on-device with llama.cpp. Offline and private." />
-  <meta property="og:image" content="assets/logo.png" />
+  <meta property="og:image" content="https://lmplayground.app/banner.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="LM Playground — model picker and on-device chat shown on two Android phones" />
   <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://lmplayground.app/" />
+  <meta property="og:site_name" content="LM Playground" />
+  <meta property="og:locale" content="en_US" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="LM Playground — Run LLMs locally on Android" />
+  <meta name="twitter:description" content="Free, open-source Android app for running LLMs on-device with llama.cpp. Offline, private, no API keys." />
+  <meta name="twitter:image" content="https://lmplayground.app/banner.png" />
+  <meta name="twitter:image:alt" content="LM Playground — model picker and on-device chat shown on two Android phones" />
+  <meta name="twitter:site" content="@AndriyDruk" />
+  <meta name="twitter:creator" content="@AndriyDruk" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -660,6 +675,133 @@
     .tw-sw.on { border-color: var(--fg); }
     .tw-sw:hover { transform: scale(1.08); }
   </style>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "MobileApplication",
+    "name": "LM Playground",
+    "operatingSystem": "ANDROID",
+    "applicationCategory": "ProductivityApplication",
+    "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+    "downloadUrl": "https://play.google.com/store/apps/details?id=com.druk.lmplayground",
+    "installUrl": "https://play.google.com/store/apps/details?id=com.druk.lmplayground",
+    "url": "https://lmplayground.app/",
+    "softwareVersion": "1.5.1",
+    "description": "Free, open-source Android app for running large language models on-device with llama.cpp. Offline, private, no API keys.",
+    "image": "https://lmplayground.app/banner.png",
+    "author": {
+      "@type": "Person",
+      "name": "Andrew Druk",
+      "url": "https://druk.me",
+      "sameAs": [
+        "https://github.com/andriydruk",
+        "https://x.com/AndriyDruk",
+        "https://mastodon.social/@andriydruk"
+      ]
+    }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "LM Playground",
+    "url": "https://lmplayground.app/",
+    "logo": "https://lmplayground.app/assets/logo.png",
+    "sameAs": [
+      "https://github.com/andriydruk/LMPlayground",
+      "https://play.google.com/store/apps/details?id=com.druk.lmplayground"
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is LM Playground?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "LM Playground lets you run large language models directly on your Android device. All processing happens locally – no cloud servers needed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What models are supported?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The app supports models in GGUF format with Q4_K_M quantization, including Qwen 3, Gemma 3, Llama 3.2, Phi-4 mini, and DeepSeek R1 Distill in various sizes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much storage space do I need?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Model sizes vary from about 500 MB (small models like Qwen 3 0.6B) to several GB (larger models like DeepSeek R1 7B). Make sure you have enough free space before downloading."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does the app require an internet connection?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Internet is only needed to download models. Once downloaded, models run completely offline on your device."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is my data private?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. All conversations are processed locally on your device. No data is sent to external servers. See the Privacy Policy for details."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is model loading slow?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Larger models take more time to load into memory. Loading times depend on your device's hardware. Once loaded, the model stays in memory until you unload it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which devices work best?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Devices with more RAM can run larger models. For best performance, use a device with at least 6 GB of RAM for small models and 8+ GB for larger ones."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I load a custom GGUF model?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Place your .gguf file in the storage folder selected in Settings → Models (the same folder used for downloads). The app will pick it up automatically and show it in the model selector alongside the built-in catalog. Chat template and tokenizer settings are read from the GGUF metadata. If a specific model doesn't work, please open an issue on GitHub."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I change where models are stored?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Go to Settings, then Models, and use the “Change Folder” option to select a different storage location."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I delete a model?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Go to Settings, then Models. In the “Downloaded” section, tap the delete icon next to the model you want to remove."
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <!-- NAV -->
@@ -685,6 +827,8 @@
       </a>
     </div>
   </nav>
+
+  <main>
 
   <!-- HERO -->
   <header class="hero">
@@ -1026,6 +1170,8 @@
       </div>
     </div>
   </section>
+
+  </main>
 
   <!-- FOOTER -->
   <footer>
