@@ -342,15 +342,20 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 // llama.cpp only reports progress during tensor pointer setup,
                 // which is near-instant with mmap. The slow parts (GGUF metadata
                 // parsing, mmap init, buffer allocation) report nothing.
-                // Animate estimated progress during loading for smooth UX.
+                // Animate estimated progress as a fallback so the bar moves
+                // during the silent phases; the real callback overrides as
+                // soon as the first real value arrives.
+                val realProgressSeen = java.util.concurrent.atomic.AtomicBoolean(false)
                 val progressJob = CoroutineScope(Dispatchers.Main).launch {
                     val startTime = System.currentTimeMillis()
                     while (isActive) {
-                        val elapsed = (System.currentTimeMillis() - startTime) / 1000f
-                        // Logarithmic curve: rises quickly then slows, caps at 0.9
-                        val estimated = min(0.9f, ln(1f + elapsed) / ln(1f + 30f))
-                        _modelLoadingProgress.postValue(estimated)
-                        _loadedModelStatus.postValue("${round(100 * estimated).toInt()}%")
+                        if (!realProgressSeen.get()) {
+                            val elapsed = (System.currentTimeMillis() - startTime) / 1000f
+                            // Logarithmic curve: rises quickly then slows, caps at 0.9
+                            val estimated = min(0.9f, ln(1f + elapsed) / ln(1f + 30f))
+                            _modelLoadingProgress.postValue(estimated)
+                            _loadedModelStatus.postValue("${round(100 * estimated).toInt()}%")
+                        }
                         delay(100)
                     }
                 }
@@ -371,7 +376,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         fileHandle.pfd,
                         object: LlamaProgressCallback {
                             override fun onProgress(progress: Float) {
-                                // Real progress from llama.cpp (0→1 during load_all_data)
+                                realProgressSeen.set(true)
+                                _modelLoadingProgress.postValue(progress)
+                                _loadedModelStatus.postValue(
+                                    "${round(100 * progress).toInt()}%"
+                                )
                             }
                         }
                     )
