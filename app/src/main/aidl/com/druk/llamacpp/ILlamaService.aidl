@@ -88,6 +88,16 @@ interface ILlamaService {
     void releaseForeground();
 
     /**
+     * Update the FGS notification's title and text. Called by the UI
+     * process after a successful load so the (otherwise hidden) MIN-
+     * priority notification surfaces the user-facing model name and the
+     * formatted RAM footprint when expanded from the Silent group.
+     * Either field may be null to keep the previous value (or fall back
+     * to the default at first promote).
+     */
+    void setForegroundContent(in @nullable String title, in @nullable String text);
+
+    /**
      * Debug-only fault injection: kills the service process via
      * Process.killProcess(myPid). Used by instrumented tests to verify
      * crash isolation (the death recipient on the app side should fire,

@@ -212,4 +212,16 @@
     <string name="other_models">Pozostałe modele</string>
     <string name="language">Język</string>
     <string name="language_system_default">Domyślne ustawienia systemu</string>
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Silnik wnioskowania</string>
+    <string name="inference_notification_channel_description">Utrzymuje model AI załadowany i gotowy do odpowiedzi.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model załadowany — gotowy do rozmowy.</string>
+    <string name="inference_notification_loaded_title">Model załadowany</string>
+    <string name="inference_engine_crashed">Ups — coś poszło nie tak.\nWczytaj model ponownie.</string>
+    <string name="message_too_large">Wiadomość ma %1$d KB i przekracza limit %2$d KB. Spróbuj wysłać krótszą wiadomość.</string>
+    <string name="replay_history_too_large">Historia rozmowy jest zbyt duża, aby ją ponownie wczytać do tego modelu. Rozpocznij nowy czat, aby kontynuować.</string>
+    <string name="system_prompt_too_large">Prompt systemowy ma %1$d KB i przekracza limit %2$d KB. Spróbuj krótszego promptu.</string>
+    <string name="history_message_too_large">Zapisana wiadomość w tej rozmowie jest zbyt duża, aby ją ponownie wczytać. Rozpocznij nowy czat, aby kontynuować.</string>
 </resources>

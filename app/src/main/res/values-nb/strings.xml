@@ -251,4 +251,18 @@
     <string name="other_models">Andre modeller</string>
     <string name="language">Språk</string>
     <string name="language_system_default">Systemstandard</string>
+
+    <!-- Varsel for inferensmotor-tjenesten (forgrunnstjeneste mens
+         en modell er lastet inn, slik at systemet ikke avslutter
+         :llama-prosessen). -->
+    <string name="inference_notification_channel_name">Inferensmotor</string>
+    <string name="inference_notification_channel_description">Holder AI-modellen lastet inn og klar til å svare.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Modell lastet inn — klar for chat.</string>
+    <string name="inference_notification_loaded_title">Modell lastet inn</string>
+    <string name="inference_engine_crashed">Oi, noe gikk galt.\nLast inn modellen på nytt.</string>
+    <string name="message_too_large">Meldingen er på %1$d KB og overskrider grensen på %2$d KB. Prøv å sende en kortere melding.</string>
+    <string name="replay_history_too_large">Samtalehistorikken er for stor til å lastes inn i denne modellen. Start en ny chat for å fortsette.</string>
+    <string name="system_prompt_too_large">Systemprompten er på %1$d KB og overskrider grensen på %2$d KB. Prøv en kortere prompt.</string>
+    <string name="history_message_too_large">En lagret melding i denne samtalen er for stor til å lastes inn igjen. Start en ny chat for å fortsette.</string>
 </resources>

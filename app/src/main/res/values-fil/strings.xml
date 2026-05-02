@@ -251,4 +251,17 @@
     <string name="other_models">Iba pang modelo</string>
     <string name="language">Wika</string>
     <string name="language_system_default">Default ng system</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Inference engine</string>
+    <string name="inference_notification_channel_description">Pinananatiling naka-load at handang tumugon ang AI model.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Naka-load ang modelo — handa nang mag-chat.</string>
+    <string name="inference_notification_loaded_title">Naka-load ang modelo</string>
+    <string name="inference_engine_crashed">Naku — may nangyaring mali.\nMangyaring i-reload ang modelo.</string>
+    <string name="message_too_large">Ang mensahe ay %1$d KB, lumampas sa limitasyong %2$d KB. Subukang magpadala ng mas maikling mensahe.</string>
+    <string name="replay_history_too_large">Masyadong malaki ang kasaysayan ng pag-uusap upang i-load muli sa modelong ito. Magsimula ng bagong chat upang magpatuloy.</string>
+    <string name="system_prompt_too_large">Ang system prompt ay %1$d KB, lumampas sa limitasyong %2$d KB. Subukan ang mas maikling prompt.</string>
+    <string name="history_message_too_large">May naka-save na mensahe sa pag-uusap na ito na masyadong malaki upang i-load muli. Magsimula ng bagong chat upang magpatuloy.</string>
 </resources>

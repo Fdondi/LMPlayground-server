@@ -212,4 +212,17 @@
     <string name="other_models">النماذج الأخرى</string>
     <string name="language">اللغة</string>
     <string name="language_system_default">الافتراضي للنظام</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">محرك الاستدلال</string>
+    <string name="inference_notification_channel_description">يُبقي نموذج الذكاء الاصطناعي محمَّلاً وجاهزاً للرد.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">تم تحميل النموذج — جاهز للمحادثة.</string>
+    <string name="inference_notification_loaded_title">تم تحميل النموذج</string>
+    <string name="inference_engine_crashed">عذراً، حدث خطأ ما.\nيرجى إعادة تحميل النموذج.</string>
+    <string name="message_too_large">حجم الرسالة %1$d كيلوبايت، ويتجاوز الحد %2$d كيلوبايت. حاول إرسال رسالة أقصر.</string>
+    <string name="replay_history_too_large">سجل المحادثة كبير جداً ولا يمكن إعادة تحميله في هذا النموذج. ابدأ محادثة جديدة للمتابعة.</string>
+    <string name="system_prompt_too_large">حجم موجّه النظام %1$d كيلوبايت، ويتجاوز الحد %2$d كيلوبايت. جرّب موجّهاً أقصر.</string>
+    <string name="history_message_too_large">إحدى الرسائل المحفوظة في هذه المحادثة كبيرة جداً ولا يمكن إعادة تحميلها. ابدأ محادثة جديدة للمتابعة.</string>
 </resources>

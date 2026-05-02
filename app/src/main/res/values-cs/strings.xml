@@ -252,4 +252,16 @@
     <string name="other_models">Ostatní modely</string>
     <string name="language">Jazyk</string>
     <string name="language_system_default">Výchozí nastavení systému</string>
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Inferenční engine</string>
+    <string name="inference_notification_channel_description">Udržuje model AI načtený a připravený odpovídat.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model načten — připraven k chatu.</string>
+    <string name="inference_notification_loaded_title">Model načten</string>
+    <string name="inference_engine_crashed">Jejda — něco se pokazilo.\nProsím načtěte model znovu.</string>
+    <string name="message_too_large">Zpráva má %1$d KB, což překračuje limit %2$d KB. Zkuste poslat kratší zprávu.</string>
+    <string name="replay_history_too_large">Historie konverzace je příliš velká pro načtení do tohoto modelu. Pokračujte zahájením nového chatu.</string>
+    <string name="system_prompt_too_large">Systémový prompt má %1$d KB, což překračuje limit %2$d KB. Zkuste kratší prompt.</string>
+    <string name="history_message_too_large">Uložená zpráva v této konverzaci je příliš velká pro opětovné načtení. Pokračujte zahájením nového chatu.</string>
 </resources>

@@ -212,4 +212,18 @@
     <string name="other_models">Autres modèles</string>
     <string name="language">Langue</string>
     <string name="language_system_default">Paramètre système</string>
+
+    <!-- Notification du service du moteur d\'inférence (service de
+         premier plan pendant qu\'un modèle est chargé afin que le
+         système n\'arrête pas le processus :llama). -->
+    <string name="inference_notification_channel_name">Moteur d\'inférence</string>
+    <string name="inference_notification_channel_description">Garde le modèle d\'IA chargé et prêt à répondre.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Modèle chargé — prêt à discuter.</string>
+    <string name="inference_notification_loaded_title">Modèle chargé</string>
+    <string name="inference_engine_crashed">Oups, une erreur s\'est produite.\nVeuillez recharger le modèle.</string>
+    <string name="message_too_large">Le message fait %1$d Ko et dépasse la limite de %2$d Ko. Essayez d\'envoyer un message plus court.</string>
+    <string name="replay_history_too_large">L\'historique de la conversation est trop volumineux pour être rechargé dans ce modèle. Démarrez une nouvelle discussion pour continuer.</string>
+    <string name="system_prompt_too_large">L\'invite système fait %1$d Ko et dépasse la limite de %2$d Ko. Essayez une invite plus courte.</string>
+    <string name="history_message_too_large">Un message enregistré dans cette conversation est trop volumineux pour être rechargé. Démarrez une nouvelle discussion pour continuer.</string>
 </resources>

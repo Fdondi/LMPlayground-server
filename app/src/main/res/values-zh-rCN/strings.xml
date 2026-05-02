@@ -212,4 +212,17 @@
     <string name="other_models">其他模型</string>
     <string name="language">语言</string>
     <string name="language_system_default">系统默认</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">推理引擎</string>
+    <string name="inference_notification_channel_description">保持 AI 模型加载，可随时响应。</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">模型已加载 — 可以开始聊天。</string>
+    <string name="inference_notification_loaded_title">模型已加载</string>
+    <string name="inference_engine_crashed">糟糕，出了点问题。\n请重新加载模型。</string>
+    <string name="message_too_large">消息为 %1$d KB，超过 %2$d KB 的限制。请尝试发送更短的消息。</string>
+    <string name="replay_history_too_large">对话历史过大，无法重新加载到此模型。请新建对话以继续。</string>
+    <string name="system_prompt_too_large">系统提示词为 %1$d KB，超过 %2$d KB 的限制。请尝试更短的提示词。</string>
+    <string name="history_message_too_large">此对话中的某条已保存消息过大，无法重新加载。请新建对话以继续。</string>
 </resources>

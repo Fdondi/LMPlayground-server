@@ -212,4 +212,18 @@
     <string name="other_models">Outros modelos</string>
     <string name="language">Idioma</string>
     <string name="language_system_default">Padrão do sistema</string>
+
+    <!-- Notificação do serviço do motor de inferência (serviço em
+         primeiro plano enquanto um modelo está carregado para que o
+         sistema não encerre o processo :llama). -->
+    <string name="inference_notification_channel_name">Motor de inferência</string>
+    <string name="inference_notification_channel_description">Mantém o modelo de IA carregado e pronto para responder.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Modelo carregado — pronto para conversar.</string>
+    <string name="inference_notification_loaded_title">Modelo carregado</string>
+    <string name="inference_engine_crashed">Ops, algo deu errado.\nRecarregue o modelo.</string>
+    <string name="message_too_large">A mensagem tem %1$d KB e excede o limite de %2$d KB. Tente enviar uma mensagem mais curta.</string>
+    <string name="replay_history_too_large">O histórico da conversa é grande demais para recarregar neste modelo. Inicie um novo chat para continuar.</string>
+    <string name="system_prompt_too_large">O prompt do sistema tem %1$d KB e excede o limite de %2$d KB. Tente um prompt mais curto.</string>
+    <string name="history_message_too_large">Uma mensagem salva nesta conversa é grande demais para recarregar. Inicie um novo chat para continuar.</string>
 </resources>

@@ -212,4 +212,18 @@
     <string name="other_models">Alte modele</string>
     <string name="language">Limbă</string>
     <string name="language_system_default">Implicit sistem</string>
+
+    <!-- Notificare a serviciului motorului de inferență (serviciu în
+         prim-plan cât timp un model este încărcat, pentru ca sistemul
+         să nu oprească procesul :llama). -->
+    <string name="inference_notification_channel_name">Motor de inferență</string>
+    <string name="inference_notification_channel_description">Menține modelul de IA încărcat și pregătit să răspundă.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model încărcat — gata pentru chat.</string>
+    <string name="inference_notification_loaded_title">Model încărcat</string>
+    <string name="inference_engine_crashed">Hopa, ceva nu a mers bine.\nReîncarcă modelul.</string>
+    <string name="message_too_large">Mesajul are %1$d KB și depășește limita de %2$d KB. Încearcă să trimiți un mesaj mai scurt.</string>
+    <string name="replay_history_too_large">Istoricul conversației este prea mare pentru a fi reîncărcat în acest model. Începe un chat nou pentru a continua.</string>
+    <string name="system_prompt_too_large">Promptul de sistem are %1$d KB și depășește limita de %2$d KB. Încearcă un prompt mai scurt.</string>
+    <string name="history_message_too_large">Un mesaj salvat din această conversație este prea mare pentru a fi reîncărcat. Începe un chat nou pentru a continua.</string>
 </resources>

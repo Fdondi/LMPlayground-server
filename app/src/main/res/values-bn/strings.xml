@@ -251,4 +251,17 @@
     <string name="other_models">অন্যান্য মডেল</string>
     <string name="language">ভাষা</string>
     <string name="language_system_default">সিস্টেম ডিফল্ট</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">ইনফারেন্স ইঞ্জিন</string>
+    <string name="inference_notification_channel_description">AI মডেলটিকে লোড করে এবং প্রতিক্রিয়া জানাতে প্রস্তুত রাখে।</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">মডেল লোড হয়েছে — চ্যাট করার জন্য প্রস্তুত।</string>
+    <string name="inference_notification_loaded_title">মডেল লোড হয়েছে</string>
+    <string name="inference_engine_crashed">উফ — কিছু একটা ভুল হয়েছে।\nঅনুগ্রহ করে মডেলটি আবার লোড করুন।</string>
+    <string name="message_too_large">বার্তাটি %1$d KB, যা %2$d KB সীমা ছাড়িয়েছে। আরও ছোট বার্তা পাঠিয়ে দেখুন।</string>
+    <string name="replay_history_too_large">কথোপকথনের ইতিহাস এই মডেলে পুনরায় লোড করার জন্য অনেক বড়। চালিয়ে যেতে নতুন চ্যাট শুরু করুন।</string>
+    <string name="system_prompt_too_large">সিস্টেম প্রম্পট %1$d KB, যা %2$d KB সীমা ছাড়িয়েছে। ছোট প্রম্পট চেষ্টা করুন।</string>
+    <string name="history_message_too_large">এই কথোপকথনে সংরক্ষিত একটি বার্তা পুনরায় লোড করার জন্য অনেক বড়। চালিয়ে যেতে নতুন চ্যাট শুরু করুন।</string>
 </resources>

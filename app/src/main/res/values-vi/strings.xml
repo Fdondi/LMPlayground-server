@@ -212,4 +212,17 @@
     <string name="other_models">Các mô hình khác</string>
     <string name="language">Ngôn ngữ</string>
     <string name="language_system_default">Mặc định hệ thống</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Công cụ suy luận</string>
+    <string name="inference_notification_channel_description">Giữ mô hình AI được tải và sẵn sàng phản hồi.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Đã tải mô hình — sẵn sàng trò chuyện.</string>
+    <string name="inference_notification_loaded_title">Đã tải mô hình</string>
+    <string name="inference_engine_crashed">Rất tiếc — đã xảy ra sự cố.\nVui lòng tải lại mô hình.</string>
+    <string name="message_too_large">Tin nhắn dài %1$d KB, vượt quá giới hạn %2$d KB. Hãy thử gửi tin nhắn ngắn hơn.</string>
+    <string name="replay_history_too_large">Lịch sử trò chuyện quá lớn để tải lại vào mô hình này. Hãy bắt đầu cuộc trò chuyện mới để tiếp tục.</string>
+    <string name="system_prompt_too_large">Lời nhắc hệ thống dài %1$d KB, vượt quá giới hạn %2$d KB. Hãy thử lời nhắc ngắn hơn.</string>
+    <string name="history_message_too_large">Một tin nhắn đã lưu trong cuộc trò chuyện này quá lớn để tải lại. Hãy bắt đầu cuộc trò chuyện mới để tiếp tục.</string>
 </resources>

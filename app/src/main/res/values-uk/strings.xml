@@ -212,4 +212,16 @@
     <string name="other_models">Інші моделі</string>
     <string name="language">Мова</string>
     <string name="language_system_default">Системні за замовчуванням</string>
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Рушій інференсу</string>
+    <string name="inference_notification_channel_description">Тримає модель ШІ завантаженою та готовою відповідати.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Модель завантажено — готова до спілкування.</string>
+    <string name="inference_notification_loaded_title">Модель завантажено</string>
+    <string name="inference_engine_crashed">Ой — щось пішло не так.\nБудь ласка, перезавантажте модель.</string>
+    <string name="message_too_large">Повідомлення має %1$d КБ, що перевищує ліміт %2$d КБ. Спробуйте надіслати коротше повідомлення.</string>
+    <string name="replay_history_too_large">Історія розмови завелика, щоб перезавантажити її в цю модель. Розпочніть новий чат, щоб продовжити.</string>
+    <string name="system_prompt_too_large">Системний промпт має %1$d КБ, що перевищує ліміт %2$d КБ. Спробуйте коротший промпт.</string>
+    <string name="history_message_too_large">Збережене повідомлення в цій розмові завелике для перезавантаження. Розпочніть новий чат, щоб продовжити.</string>
 </resources>

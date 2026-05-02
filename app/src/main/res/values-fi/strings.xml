@@ -251,4 +251,16 @@
     <string name="other_models">Muut mallit</string>
     <string name="language">Kieli</string>
     <string name="language_system_default">Järjestelmän oletus</string>
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Päättelymoottori</string>
+    <string name="inference_notification_channel_description">Pitää tekoälymallin ladattuna ja valmiina vastaamaan.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Malli ladattu — valmis keskusteluun.</string>
+    <string name="inference_notification_loaded_title">Malli ladattu</string>
+    <string name="inference_engine_crashed">Hupsis — jokin meni pieleen.\nLataa malli uudelleen.</string>
+    <string name="message_too_large">Viesti on %1$d kt, mikä ylittää %2$d kt:n rajan. Kokeile lähettää lyhyempi viesti.</string>
+    <string name="replay_history_too_large">Keskusteluhistoria on liian suuri ladattavaksi tähän malliin. Aloita uusi keskustelu jatkaaksesi.</string>
+    <string name="system_prompt_too_large">Järjestelmäkehote on %1$d kt, mikä ylittää %2$d kt:n rajan. Kokeile lyhyempää kehotetta.</string>
+    <string name="history_message_too_large">Tähän keskusteluun tallennettu viesti on liian suuri ladattavaksi uudelleen. Aloita uusi keskustelu jatkaaksesi.</string>
 </resources>

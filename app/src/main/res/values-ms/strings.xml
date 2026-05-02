@@ -251,4 +251,17 @@
     <string name="other_models">Model lain</string>
     <string name="language">Bahasa</string>
     <string name="language_system_default">Lalai sistem</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Enjin inferens</string>
+    <string name="inference_notification_channel_description">Mengekalkan model AI dimuatkan dan sedia memberi respons.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model dimuatkan — sedia untuk bersembang.</string>
+    <string name="inference_notification_loaded_title">Model dimuatkan</string>
+    <string name="inference_engine_crashed">Alamak — sesuatu telah berlaku.\nSila muatkan semula model.</string>
+    <string name="message_too_large">Mesej bersaiz %1$d KB, melebihi had %2$d KB. Cuba hantar mesej yang lebih pendek.</string>
+    <string name="replay_history_too_large">Sejarah perbualan terlalu besar untuk dimuatkan semula ke dalam model ini. Mulakan sembang baharu untuk meneruskan.</string>
+    <string name="system_prompt_too_large">Prom sistem bersaiz %1$d KB, melebihi had %2$d KB. Cuba prom yang lebih pendek.</string>
+    <string name="history_message_too_large">Mesej tersimpan dalam perbualan ini terlalu besar untuk dimuatkan semula. Mulakan sembang baharu untuk meneruskan.</string>
 </resources>

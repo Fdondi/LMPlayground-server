@@ -252,4 +252,17 @@
     <string name="other_models">דגמים אחרים</string>
     <string name="language">שפה</string>
     <string name="language_system_default">ברירת המחדל של המערכת</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">מנוע היסק</string>
+    <string name="inference_notification_channel_description">שומר על מודל ה-AI טעון ומוכן להגיב.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">המודל נטען — מוכן לשיחה.</string>
+    <string name="inference_notification_loaded_title">המודל נטען</string>
+    <string name="inference_engine_crashed">אופס — משהו השתבש.\nטען מחדש את המודל.</string>
+    <string name="message_too_large">ההודעה היא %1$d KB, חורגת מהמגבלה של %2$d KB. נסה לשלוח הודעה קצרה יותר.</string>
+    <string name="replay_history_too_large">היסטוריית השיחה גדולה מדי לטעינה מחדש במודל זה. התחל שיחה חדשה כדי להמשיך.</string>
+    <string name="system_prompt_too_large">הנחיית המערכת היא %1$d KB, חורגת מהמגבלה של %2$d KB. נסה הנחיה קצרה יותר.</string>
+    <string name="history_message_too_large">הודעה שמורה בשיחה זו גדולה מדי לטעינה מחדש. התחל שיחה חדשה כדי להמשיך.</string>
 </resources>

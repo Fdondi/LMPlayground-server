@@ -251,4 +251,18 @@
     <string name="other_models">Andre modeller</string>
     <string name="language">Sprog</string>
     <string name="language_system_default">Systemstandard</string>
+
+    <!-- Notifikation for inferensmotortjenesten (forgrundstjeneste,
+         mens en model er indlæst, så systemet ikke afslutter
+         :llama-processen). -->
+    <string name="inference_notification_channel_name">Inferensmotor</string>
+    <string name="inference_notification_channel_description">Holder AI-modellen indlæst og klar til at svare.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model indlæst — klar til chat.</string>
+    <string name="inference_notification_loaded_title">Model indlæst</string>
+    <string name="inference_engine_crashed">Ups, noget gik galt.\nIndlæs modellen igen.</string>
+    <string name="message_too_large">Beskeden fylder %1$d KB og overskrider grænsen på %2$d KB. Prøv at sende en kortere besked.</string>
+    <string name="replay_history_too_large">Samtalehistorikken er for stor til at blive indlæst igen i denne model. Start en ny chat for at fortsætte.</string>
+    <string name="system_prompt_too_large">Systemprompten fylder %1$d KB og overskrider grænsen på %2$d KB. Prøv en kortere prompt.</string>
+    <string name="history_message_too_large">En gemt besked i denne samtale er for stor til at blive indlæst igen. Start en ny chat for at fortsætte.</string>
 </resources>

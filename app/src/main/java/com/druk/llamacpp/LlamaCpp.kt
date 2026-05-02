@@ -47,6 +47,21 @@ class LlamaCpp(private val client: InferenceClient) {
     fun probeModelMetadata(pfd: ParcelFileDescriptor): Array<String>? =
         client.requireConnected().probeModelMetadata(null, pfd)
 
+    /**
+     * Replace the foreground-service notification's title and text. Use
+     * after a successful load to surface the loaded model's user-facing
+     * name and RAM footprint when the user expands the Silent group in
+     * the shade. Either argument may be null to keep the previous value.
+     */
+    fun setForegroundContent(title: String?, text: String?) {
+        try {
+            client.requireConnected().setForegroundContent(title, text)
+        } catch (_: Throwable) {
+            // No-op — the FGS will keep whatever content it had, and the
+            // next successful call will overwrite it.
+        }
+    }
+
     private fun wrapProgress(cb: LlamaProgressCallback) = object : ILlamaProgressCallback.Stub() {
         override fun onProgress(progress: Float) = cb.onProgress(progress)
     }

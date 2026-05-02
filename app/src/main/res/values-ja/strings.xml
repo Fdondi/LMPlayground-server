@@ -212,4 +212,17 @@
     <string name="other_models">その他のモデル</string>
     <string name="language">言語</string>
     <string name="language_system_default">システムのデフォルト</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">推論エンジン</string>
+    <string name="inference_notification_channel_description">AI モデルを読み込んだ状態に保ち、すぐ応答できるようにします。</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">モデルを読み込みました — チャットの準備完了。</string>
+    <string name="inference_notification_loaded_title">モデルを読み込みました</string>
+    <string name="inference_engine_crashed">おっと、問題が発生しました。\nモデルを再読み込みしてください。</string>
+    <string name="message_too_large">メッセージが %1$d KB で、上限の %2$d KB を超えています。もっと短いメッセージを送ってください。</string>
+    <string name="replay_history_too_large">会話履歴が大きすぎて、このモデルに再読み込みできません。新しいチャットを開始して続けてください。</string>
+    <string name="system_prompt_too_large">システムプロンプトが %1$d KB で、上限の %2$d KB を超えています。もっと短いプロンプトをお試しください。</string>
+    <string name="history_message_too_large">この会話に保存されているメッセージが大きすぎて再読み込みできません。新しいチャットを開始して続けてください。</string>
 </resources>

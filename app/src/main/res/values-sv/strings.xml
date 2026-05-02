@@ -251,4 +251,18 @@
     <string name="other_models">Andra modeller</string>
     <string name="language">Språk</string>
     <string name="language_system_default">Systemstandard</string>
+
+    <!-- Avisering för inferensmotorns tjänst (förgrundstjänst medan
+         en modell är inläst, så att systemet inte avslutar
+         :llama-processen). -->
+    <string name="inference_notification_channel_name">Inferensmotor</string>
+    <string name="inference_notification_channel_description">Håller AI-modellen inläst och redo att svara.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Modell inläst — redo att chatta.</string>
+    <string name="inference_notification_loaded_title">Modell inläst</string>
+    <string name="inference_engine_crashed">Hoppsan, något gick fel.\nLäs in modellen igen.</string>
+    <string name="message_too_large">Meddelandet är %1$d KB och överskrider gränsen på %2$d KB. Prova att skicka ett kortare meddelande.</string>
+    <string name="replay_history_too_large">Konversationshistoriken är för stor för att läsas in i den här modellen. Starta en ny chatt för att fortsätta.</string>
+    <string name="system_prompt_too_large">Systemprompten är %1$d KB och överskrider gränsen på %2$d KB. Prova en kortare prompt.</string>
+    <string name="history_message_too_large">Ett sparat meddelande i den här konversationen är för stort för att läsas in igen. Starta en ny chatt för att fortsätta.</string>
 </resources>

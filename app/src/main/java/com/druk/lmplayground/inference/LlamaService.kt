@@ -1,5 +1,6 @@
 package com.druk.lmplayground.inference
 
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Intent
 import android.content.pm.ServiceInfo
@@ -438,6 +439,23 @@ class LlamaService : Service() {
         override fun requestForeground() = promoteToForeground()
         override fun releaseForeground() = demoteFromForeground()
 
+        override fun setForegroundContent(title: String?, text: String?) {
+            if (title != null) foregroundTitle = title
+            if (text != null) foregroundText = text
+            if (!isForeground) return
+            try {
+                val notification = InferenceNotification.build(
+                    this@LlamaService,
+                    foregroundTitle,
+                    foregroundText,
+                )
+                getSystemService(NotificationManager::class.java)
+                    ?.notify(InferenceNotification.NOTIFICATION_ID, notification)
+            } catch (t: Throwable) {
+                Log.w(TAG, "setForegroundContent notify failed", t)
+            }
+        }
+
         override fun crashForTest() {
             // Debug-only fault injection. In release builds this is a no-op
             // so production users can never trip the kill switch. Used by
@@ -452,12 +470,19 @@ class LlamaService : Service() {
     }
 
     @Volatile private var isForeground = false
+    // Last values seen via setForegroundContent. Null until the UI process
+    // calls in with the loaded model's name and formatted size; the build()
+    // helper falls back to the localized defaults when null.
+    @Volatile private var foregroundTitle: String? = null
+    @Volatile private var foregroundText: String? = null
 
     @Synchronized
     private fun promoteToForeground() {
         if (isForeground) return
         try {
-            val notification = InferenceNotification.build(this)
+            val notification = InferenceNotification.build(
+                this, foregroundTitle, foregroundText,
+            )
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                 startForeground(
                     InferenceNotification.NOTIFICATION_ID,
@@ -479,6 +504,10 @@ class LlamaService : Service() {
         try {
             stopForeground(STOP_FOREGROUND_REMOVE)
             isForeground = false
+            // Clear so the next promote starts from the localized default
+            // again until the UI updates with a fresh model name + size.
+            foregroundTitle = null
+            foregroundText = null
         } catch (t: Throwable) {
             Log.w(TAG, "stopForeground failed", t)
         }

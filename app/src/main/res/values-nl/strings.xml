@@ -252,4 +252,18 @@
     <string name="other_models">Andere modellen</string>
     <string name="language">Taal</string>
     <string name="language_system_default">Systeemstandaard</string>
+
+    <!-- Melding van de inferentie-engineservice (voorgrondservice
+         terwijl een model is geladen, zodat het systeem het
+         :llama-proces niet afsluit). -->
+    <string name="inference_notification_channel_name">Inferentie-engine</string>
+    <string name="inference_notification_channel_description">Houdt het AI-model geladen en klaar om te reageren.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model geladen — klaar om te chatten.</string>
+    <string name="inference_notification_loaded_title">Model geladen</string>
+    <string name="inference_engine_crashed">Oeps, er ging iets mis.\nLaad het model opnieuw.</string>
+    <string name="message_too_large">Het bericht is %1$d KB en overschrijdt de limiet van %2$d KB. Probeer een korter bericht te sturen.</string>
+    <string name="replay_history_too_large">De gespreksgeschiedenis is te groot om in dit model opnieuw te laden. Start een nieuwe chat om verder te gaan.</string>
+    <string name="system_prompt_too_large">De systeemprompt is %1$d KB en overschrijdt de limiet van %2$d KB. Probeer een kortere prompt.</string>
+    <string name="history_message_too_large">Een opgeslagen bericht in dit gesprek is te groot om opnieuw te laden. Start een nieuwe chat om verder te gaan.</string>
 </resources>

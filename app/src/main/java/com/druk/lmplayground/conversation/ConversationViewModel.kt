@@ -386,6 +386,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     )
                     val modelSize = llamaModel.getModelSize()
                     val modelDescription = Formatter.formatFileSize(app, modelSize)
+                    // Surface "Model is loaded" + "<name> - <size>" in the
+                    // FGS notification (otherwise hidden under MIN importance,
+                    // but visible when the user expands the Silent group in
+                    // the shade).
+                    llamaCpp.setForegroundContent(
+                        app.getString(com.druk.lmplayground.R.string.inference_notification_loaded_title),
+                        "${modelInfo.name} - $modelDescription",
+                    )
                     val nCtxTrain = llamaModel.getContextTrainSize()
                     _maxContextSize.postValue(minOf(nCtxTrain, 16384))
                     // Load saved per-model params, or use defaults

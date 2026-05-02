@@ -252,4 +252,17 @@
     <string name="other_models">รุ่นอื่นๆ</string>
     <string name="language">ภาษา</string>
     <string name="language_system_default">ค่าเริ่มต้นของระบบ</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">เครื่องมือประมวลผล AI</string>
+    <string name="inference_notification_channel_description">รักษาโมเดล AI ให้โหลดอยู่และพร้อมตอบสนอง</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">โหลดโมเดลแล้ว — พร้อมแชท</string>
+    <string name="inference_notification_loaded_title">โหลดโมเดลแล้ว</string>
+    <string name="inference_engine_crashed">อุ๊ปส์ — เกิดข้อผิดพลาด\nโปรดโหลดโมเดลอีกครั้ง</string>
+    <string name="message_too_large">ข้อความมีขนาด %1$d KB เกินขีดจำกัด %2$d KB ลองส่งข้อความที่สั้นกว่านี้</string>
+    <string name="replay_history_too_large">ประวัติการสนทนาใหญ่เกินกว่าจะโหลดเข้าโมเดลนี้ใหม่ เริ่มแชทใหม่เพื่อดำเนินการต่อ</string>
+    <string name="system_prompt_too_large">พรอมต์ระบบมีขนาด %1$d KB เกินขีดจำกัด %2$d KB ลองพรอมต์ที่สั้นกว่านี้</string>
+    <string name="history_message_too_large">ข้อความที่บันทึกไว้ในการสนทนานี้ใหญ่เกินกว่าจะโหลดซ้ำได้ เริ่มแชทใหม่เพื่อดำเนินการต่อ</string>
 </resources>
