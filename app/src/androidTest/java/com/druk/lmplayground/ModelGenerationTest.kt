@@ -1,9 +1,11 @@
 package com.druk.lmplayground
 
 import android.util.Log
-import com.druk.llamacpp.LlamaCpp
 import com.druk.llamacpp.LlamaGenerationCallback
 import com.druk.llamacpp.LlamaProgressCallback
+import com.druk.llamacpp.jni.NativeLlamaCpp
+import com.druk.llamacpp.jni.NativeLlamaModel
+import com.druk.llamacpp.jni.NativeLlamaSession
 import com.druk.lmplayground.conversation.ResponseProcessor
 import org.junit.After
 import org.junit.Assert.*
@@ -12,8 +14,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.druk.llamacpp.LlamaGenerationSession
-import com.druk.llamacpp.LlamaModel
 import java.io.File
 
 /**
@@ -44,13 +44,13 @@ class ModelGenerationTest {
         private const val MODELS_PATH = "/data/local/tmp"
     }
 
-    private lateinit var llamaCpp: LlamaCpp
-    private var llamaModel: LlamaModel? = null
-    private var session: LlamaGenerationSession? = null
+    private lateinit var llamaCpp: NativeLlamaCpp
+    private var llamaModel: NativeLlamaModel? = null
+    private var session: NativeLlamaSession? = null
 
     @Before
     fun setUp() {
-        llamaCpp = LlamaCpp()
+        llamaCpp = NativeLlamaCpp()
         llamaCpp.init()
     }
 
@@ -72,7 +72,7 @@ class ModelGenerationTest {
         return null
     }
 
-    private fun loadModel(modelFile: File): LlamaModel {
+    private fun loadModel(modelFile: File): NativeLlamaModel {
         Log.d(TAG, "Loading model: ${modelFile.name} (${modelFile.length() / 1024 / 1024}MB)")
         val model = llamaCpp.loadModel(
             modelFile.absolutePath,
@@ -87,7 +87,7 @@ class ModelGenerationTest {
     }
 
     private fun generateFullResponse(
-        session: LlamaGenerationSession,
+        session: NativeLlamaSession,
         maxTokens: Int = 2048,
         timeoutMs: Long = 120_000
     ): String {

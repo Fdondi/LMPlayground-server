@@ -252,4 +252,23 @@
     <string name="whats_new_item_2">Now available in 28 languages</string>
     <string name="whats_new_item_3">Performance improvements</string>
 
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Inference engine</string>
+    <string name="inference_notification_channel_description">Keeps the AI model loaded and ready to respond.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model loaded — ready to chat.</string>
+    <string name="inference_engine_crashed">Whoops — something went wrong.\nPlease reload the model.</string>
+    <string name="message_too_large">Message is %1$d KB, exceeds the %2$d KB limit. Try sending a shorter message.</string>
+    <string name="replay_history_too_large">Conversation history is too large to reload into this model. Start a new chat to continue.</string>
+    <string name="system_prompt_too_large">System prompt is %1$d KB, exceeds the %2$d KB limit. Try a shorter prompt.</string>
+    <string name="history_message_too_large">A saved message in this conversation is too large to reload. Start a new chat to continue.</string>
+
+    <!-- Debug-only crash injection (only shown in debug builds — do not
+         translate, English only). -->
+    <string name="debug_crash_engine_title" translatable="false">Crash inference engine (debug)</string>
+    <string name="debug_crash_engine_subtitle" translatable="false">Kills the :llama process to verify crash isolation.</string>
+    <string name="debug_crash_engine_not_connected" translatable="false">Inference engine isn\'t connected.</string>
+    <string name="debug_crash_engine_done" translatable="false">Crash injected — check the chat for the recovery message.</string>
+
 </resources>

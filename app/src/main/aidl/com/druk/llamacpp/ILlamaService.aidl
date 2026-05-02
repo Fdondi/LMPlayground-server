@@ -1,0 +1,97 @@
+package com.druk.llamacpp;
+
+import com.druk.llamacpp.ILlamaGenerationCallback;
+import com.druk.llamacpp.ILlamaProgressCallback;
+import com.druk.llamacpp.SamplerParams;
+import android.os.ParcelFileDescriptor;
+
+/**
+ * Cross-process interface to the llama.cpp inference engine.
+ *
+ * Handles to native objects are exposed as opaque positive int IDs. The
+ * service maintains the int → native pointer maps; native pointers never
+ * cross the process boundary.
+ *
+ * Models can be loaded either from a regular filesystem path (for tests
+ * with /data/local/tmp models) or from a ParcelFileDescriptor (the SAF
+ * case in production — the service dups the FD into its own process and
+ * builds its own "fd:N" string for ggml_fopen_override).
+ */
+interface ILlamaService {
+    // ── Global ───────────────────────────────────────────────────────────
+    /** Initialize the llama backend. Idempotent. Returns 0 on success. */
+    int initBackend();
+
+    String systemInfo();
+
+    // ── Probing (no weight load) ─────────────────────────────────────────
+    /** Exactly one of (path, pfd) must be non-null. */
+    @nullable String[] probeModelMetadata(in @nullable String path,
+                                          in @nullable ParcelFileDescriptor pfd);
+
+    // ── Model lifecycle ──────────────────────────────────────────────────
+    /**
+     * Load weights and return a positive modelId, or 0 on failure.
+     * Exactly one of (path, pfd) must be non-null. The service holds the
+     * PFD alive for the model's lifetime.
+     */
+    int loadModel(in @nullable String path,
+                  in @nullable ParcelFileDescriptor pfd,
+                  ILlamaProgressCallback progress);
+
+    long getModelSize(int modelId);
+    String getModelReport(int modelId);
+    int getContextTrainSize(int modelId);
+    boolean supportsThinking(int modelId);
+    void unloadModel(int modelId);
+
+    // ── Session lifecycle ────────────────────────────────────────────────
+    /** Returns a positive sessionId, or 0 on failure. */
+    int createSession(int modelId, in SamplerParams params);
+    void addMessage(int sessionId, String message, boolean enableThinking);
+
+    /**
+     * Replay a conversation history into a fresh session. The full history
+     * may be too large for one binder transaction (~1 MB cap, shared with
+     * other framework traffic). Each AIDL call here carries **one** string
+     * at most so a per-string cap of 700 KB safely fits under the binder
+     * limit even when other binder traffic is in flight.
+     *
+     * Protocol: [beginReplayHistory] (clears any pending buffer), then
+     * for each turn call [appendReplayUser] followed by
+     * [appendReplayAssistant] — strict alternation, in chronological
+     * order. Conclude with exactly one [finalizeReplayHistory] which
+     * flushes the buffered messages into the native session.
+     */
+    void beginReplayHistory(int sessionId);
+    void appendReplayUser(int sessionId, String userMessage);
+    void appendReplayAssistant(int sessionId, String assistantMessage);
+    void finalizeReplayHistory(int sessionId);
+
+    /**
+     * Drives the generation loop on a service-owned worker thread, streaming
+     * deltas through `cb` until llama returns non-zero, cancelGeneration is
+     * called, or destroySession is called. Returns immediately. Termination
+     * is signalled via cb.onGenerationFinished.
+     */
+    void startGeneration(int sessionId, ILlamaGenerationCallback cb);
+
+    /** Idempotent. Sets a cancel flag the worker checks between tokens. */
+    void cancelGeneration(int sessionId);
+
+    String getSessionReport(int sessionId);
+    void printSessionReport(int sessionId);
+    void destroySession(int sessionId);
+
+    // ── Foreground promotion (called by the proxy on model load/unload) ──
+    void requestForeground();
+    void releaseForeground();
+
+    /**
+     * Debug-only fault injection: kills the service process via
+     * Process.killProcess(myPid). Used by instrumented tests to verify
+     * crash isolation (the death recipient on the app side should fire,
+     * the app should keep running, and the next call should rebind).
+     */
+    void crashForTest();
+}

@@ -1,25 +1,27 @@
 package com.druk.llamacpp
 
 /**
- * The `LlamaModel` class represents a loaded large language model (LLM) in the llama.cpp library.
- *
- * It provides methods for interacting with the model, such as creating generation sessions
- * and querying model properties.
+ * AIDL-proxy view of a loaded model. Holds an opaque positive [modelId]
+ * issued by the service; the native pointer never leaves the service
+ * process.
  */
-class LlamaModel {
+class LlamaModel internal constructor(
+    private val client: InferenceClient,
+    internal val modelId: Int,
+) {
+    fun getModelSize(): Long = client.requireConnected().getModelSize(modelId)
 
-    /**
-     * The native handle to the model in the llama.cpp library.
-     * This field is private and should not be modified directly.
-     */
-    private var nativeHandle: Long = 0
+    fun getModelReport(): String = client.requireConnected().getModelReport(modelId)
 
-    /**
-     * Creates a new generation session for the loaded model.
-     *
-     * @return A `LlamaGenerationSession` object for managing text generation.
-     */
-    external fun createSession(
+    fun getContextTrainSize(): Int = client.requireConnected().getContextTrainSize(modelId)
+
+    fun supportsThinking(): Boolean = client.requireConnected().supportsThinking(modelId)
+
+    fun unloadModel() {
+        client.requireConnected().unloadModel(modelId)
+    }
+
+    fun createSession(
         contextSize: Int,
         temperature: Float,
         topP: Float,
@@ -28,30 +30,22 @@ class LlamaModel {
         minP: Float,
         seed: Int,
         thinkingBudget: Int,
-        systemPrompt: String
-    ): LlamaGenerationSession?
-
-    external fun getContextTrainSize(): Int
-
-    /**
-     * Gets the size of the model in bytes.
-     *
-     * @return The size of the model.
-     */
-    external fun getModelSize(): Long
-
-    external fun getModelReport(): String
-
-    /**
-     * Checks if the model's chat template supports thinking/reasoning mode.
-     *
-     * @return true if the model supports thinking.
-     */
-    external fun supportsThinking(): Boolean
-
-    /**
-     * Unloads the model from memory and releases associated resources.
-     */
-    external fun unloadModel()
-
+        systemPrompt: String,
+    ): LlamaGenerationSession? {
+        InferenceLimits.requireWithinBudget(systemPrompt, "system prompt")
+        val params = SamplerParams(
+            contextSize = contextSize,
+            temperature = temperature,
+            topP = topP,
+            repetitionPenalty = repetitionPenalty,
+            topK = topK,
+            minP = minP,
+            seed = seed,
+            thinkingBudget = thinkingBudget,
+            systemPrompt = systemPrompt,
+        )
+        val sessionId = client.requireConnected().createSession(modelId, params)
+        if (sessionId == 0) return null
+        return LlamaGenerationSession(client, sessionId)
+    }
 }

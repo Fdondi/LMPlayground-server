@@ -127,7 +127,7 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
             } else {
                 val handle = repository.openModelFile(file.name) ?: return@mapNotNull null
                 try {
-                    val result = llamaCpp.probeModelMetadata(handle.path) ?: return@mapNotNull null
+                    val result = llamaCpp.probeModelMetadata(handle.pfd) ?: return@mapNotNull null
                     val probedName = result[0]
                     val probedHasTemplate = result[1].toBoolean()
                     prefs.setCustomModelMetadata(file.name, probedName, probedHasTemplate)

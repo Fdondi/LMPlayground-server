@@ -33,6 +33,18 @@
             android:exported="false"
             tools:node="merge" />
 
+        <!-- Inference engine service.
+             Runs in `:llama` so a SIGSEGV inside llama.cpp only kills this
+             process — the UI process catches the binder death via
+             InferenceClient.linkToDeath and surfaces a recoverable error.
+             Promoted to foreground while a model is loaded so Android does
+             not evict the process under memory pressure. -->
+        <service
+            android:name="com.druk.lmplayground.inference.LlamaService"
+            android:process=":llama"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
         <!-- AppCompat per-app language: enables automatic storage of the user's language
              preference on pre-Android 13 devices. On Android 13+ the system handles it
              via the android:localeConfig declaration above. -->

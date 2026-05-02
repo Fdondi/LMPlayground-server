@@ -2,6 +2,7 @@ package com.druk.lmplayground.conversation
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.Toast
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
@@ -46,6 +47,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -90,7 +92,18 @@ class ConversationFragment : Fragment() {
             val systemPrompt by viewModel.systemPrompt.observeAsState("")
             val systemPromptId by viewModel.systemPromptId.observeAsState()
             val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
+            val userError by viewModel.userError.observeAsState()
             var showParamsSheet by remember { mutableStateOf(false) }
+
+            // Surface transient ViewModel errors (e.g. message-too-large)
+            // as Toasts. The ViewModel can't show UI directly, so we
+            // observe a one-shot LiveData and clear it after consumption.
+            val toastContext = LocalContext.current
+            LaunchedEffect(userError) {
+                val msg = userError ?: return@LaunchedEffect
+                Toast.makeText(toastContext, msg, Toast.LENGTH_LONG).show()
+                viewModel.consumeUserError()
+            }
 
             // Storage configuration state
             val isStorageConfigured by storageViewModel.isStorageConfigured.observeAsState(true)

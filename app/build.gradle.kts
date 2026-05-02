@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.kotlin.parcelize)
     alias(libs.plugins.ksp)
     alias(libs.plugins.paparazzi)
 }
@@ -96,6 +97,7 @@ android {
         compose = true
         viewBinding = true
         buildConfig = true
+        aidl = true
     }
 
     splits {

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.Article
+import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Language
@@ -48,7 +49,14 @@ fun SettingsScreen(
     onSystemPromptsClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onFaqClick: () -> Unit,
-    appVersion: String
+    appVersion: String,
+    /**
+     * Debug-only: if non-null, renders a "Crash inference engine" row that
+     * triggers a SIGSEGV-equivalent in the `:llama` process. Used to
+     * exercise the crash-isolation + recovery flow on a real device. The
+     * settings fragment only wires this on debug builds.
+     */
+    onCrashEngineClick: (() -> Unit)? = null,
 ) {
     Scaffold(
         topBar = {
@@ -120,6 +128,16 @@ fun SettingsScreen(
                 subtitle = stringResource(R.string.faq_subtitle),
                 onClick = onFaqClick
             )
+
+            // Debug-only: crash the inference engine to verify isolation.
+            if (onCrashEngineClick != null) {
+                SettingsRow(
+                    icon = Icons.Outlined.BugReport,
+                    title = stringResource(R.string.debug_crash_engine_title),
+                    subtitle = stringResource(R.string.debug_crash_engine_subtitle),
+                    onClick = onCrashEngineClick,
+                )
+            }
 
             // Version row (static, not clickable)
             Row(
