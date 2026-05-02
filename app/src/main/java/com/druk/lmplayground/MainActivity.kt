@@ -7,10 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.viewinterop.AndroidViewBinding
-import com.druk.lmplayground.databinding.ContentMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,13 +35,6 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        setContentView(
-            ComposeView(this).apply {
-                consumeWindowInsets = false
-                setContent {
-                    AndroidViewBinding(ContentMainBinding::inflate)
-                }
-            }
-        )
+        setContentView(R.layout.content_main)
     }
 }
