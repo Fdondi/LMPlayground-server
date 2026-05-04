@@ -125,6 +125,9 @@
     <string name="no_downloaded_models">Tiada model dimuat turun lagi</string>
     <string name="browse_more_models">Layari Model</string>
     <string name="cancel">Batal</string>
+    <string name="low_ram_warning_title">Model mungkin tidak stabil</string>
+    <string name="low_ram_warning_message">Model memerlukan ~%1$s RAM tetapi peranti ini hanya mempunyai %2$s secara keseluruhan. Ia mungkin dimuatkan perlahan atau bertindak balas tanpa diduga.</string>
+    <string name="load_anyway">Muatkan juga</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">Muat Turun Model</string>

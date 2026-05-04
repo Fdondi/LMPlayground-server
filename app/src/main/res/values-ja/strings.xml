@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">ダウンロード済みのモデルはありません</string>
     <string name="browse_more_models">モデルを見る</string>
     <string name="cancel">キャンセル</string>
+    <string name="low_ram_warning_title">モデルが不安定になる可能性があります</string>
+    <string name="low_ram_warning_message">モデルには約 %1$s の RAM が必要ですが、このデバイスの総容量は %2$s しかありません。読み込みが遅くなったり、応答が予測できなかったりする可能性があります。</string>
+    <string name="load_anyway">それでも読み込む</string>
     <string name="download_notification_channel">モデルのダウンロード</string>
     <string name="download_notification_channel_description">モデルファイルのダウンロード進捗を表示します</string>
     <string name="download_complete">ダウンロード完了</string>

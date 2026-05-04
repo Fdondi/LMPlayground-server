@@ -70,6 +70,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
      * The UI shows a Toast and resets to null via [consumeUserError].
      */
     private val _userError = MutableLiveData<String?>(null)
+    /**
+     * Set when [loadModel] hits the RAM-fit gate. The UI surfaces a
+     * confirmation dialog so the user can override and load anyway.
+     * Carries the (modelInfo, neededRam, totalRam) tuple so the dialog
+     * can show concrete numbers without re-querying.
+     */
+    private val _pendingRamWarning =
+        MutableLiveData<RamWarning?>(null)
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
@@ -88,10 +96,21 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val systemPrompt: LiveData<String> = _systemPrompt
     val systemPromptId: LiveData<String?> = _systemPromptId
     val userError: LiveData<String?> = _userError
+    val pendingRamWarning: LiveData<RamWarning?> = _pendingRamWarning
 
     /** Called by the UI after surfacing the error (e.g. as a Toast). */
     @MainThread
     fun consumeUserError() { _userError.value = null }
+
+    @MainThread
+    fun dismissRamWarning() { _pendingRamWarning.value = null }
+
+    @MainThread
+    fun confirmLoadDespiteRamWarning() {
+        val pending = _pendingRamWarning.value ?: return
+        _pendingRamWarning.value = null
+        loadModel(pending.modelInfo, forceLoad = true)
+    }
 
     val uiState = ConversationUiState(
         initialMessages = emptyList()
@@ -251,8 +270,27 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     @MainThread
-    fun loadModel(modelInfo: ModelInfo) {
+    fun loadModel(modelInfo: ModelInfo, forceLoad: Boolean = false) {
         val llamaCpp = llamaCpp ?: return
+
+        // RAM-fit warning. Run BEFORE we tear down the currently-loaded
+        // model so the user can cancel the warning and keep their
+        // existing session intact. The actual load below still skips
+        // the check when forceLoad=true.
+        if (!forceLoad) {
+            val fileSizeBytes = storageRepository.getModelFiles()
+                .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
+            val totalRamBytes = DeviceCapability.totalRamBytes(app)
+            if (DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)) {
+                _pendingRamWarning.value = RamWarning(
+                    modelInfo = modelInfo,
+                    neededRam = Formatter.formatFileSize(app, fileSizeBytes),
+                    totalRam = Formatter.formatFileSize(app, totalRamBytes),
+                )
+                return
+            }
+        }
+
         _models.postValue(emptyList())
         _isModelReady.postValue(false)
 
@@ -310,30 +348,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 val fileHandle = storageRepository.openModelFile(modelInfo.filename)
                 if (fileHandle == null) {
                     _loadedModelStatus.postValue("Cannot open file")
-                    return@withContext
-                }
-
-                // RAM-fit gate. Moving llama.cpp to `:llama` only shifts
-                // which process dies on OOM; the kernel can still evict
-                // mmap'd weight pages mid-matmul under memory pressure
-                // and SIGSEGV the inference process. Refuse models that
-                // exceed ~70% of total device RAM up front and surface
-                // a clear "needs N MB, device has M MB" error instead
-                // of letting :llama crash-loop and showing the generic
-                // "Whoops, please reload" recovery message.
-                val fileSizeBytes = storageRepository.getModelFiles()
-                    .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
-                val totalRamBytes = DeviceCapability.totalRamBytes(app)
-                if (DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)) {
-                    val needed = Formatter.formatFileSize(app, fileSizeBytes)
-                    val total = Formatter.formatFileSize(app, totalRamBytes)
-                    _loadedModelStatus.postValue(
-                        app.getString(
-                            com.druk.lmplayground.R.string.model_load_failed_low_ram,
-                            needed, total,
-                        )
-                    )
-                    fileHandle.close()
                     return@withContext
                 }
 
@@ -1210,5 +1224,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun resetModelList() {
         _models.postValue(emptyList())
     }
+
+    data class RamWarning(
+        val modelInfo: ModelInfo,
+        val neededRam: String,
+        val totalRam: String,
+    )
 
 }

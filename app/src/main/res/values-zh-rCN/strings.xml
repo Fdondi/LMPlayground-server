@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">尚未下载任何模型</string>
     <string name="browse_more_models">浏览模型</string>
     <string name="cancel">取消</string>
+    <string name="low_ram_warning_title">模型可能不稳定</string>
+    <string name="low_ram_warning_message">模型大约需要 %1$s RAM，但此设备总共只有 %2$s。加载可能较慢或响应不可预测。</string>
+    <string name="load_anyway">仍然加载</string>
     <string name="download_notification_channel">模型下载</string>
     <string name="download_notification_channel_description">显示模型文件的下载进度</string>
     <string name="download_complete">下载完成</string>

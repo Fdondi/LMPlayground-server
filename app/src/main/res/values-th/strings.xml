@@ -126,6 +126,9 @@
     <string name="no_downloaded_models">ยังไม่มีโมเดลที่ดาวน์โหลด</string>
     <string name="browse_more_models">เรียกดูโมเดล</string>
     <string name="cancel">ยกเลิก</string>
+    <string name="low_ram_warning_title">โมเดลอาจไม่เสถียร</string>
+    <string name="low_ram_warning_message">โมเดลต้องการ RAM ประมาณ %1$s แต่อุปกรณ์นี้มีทั้งหมดเพียง %2$s อาจโหลดช้าหรือตอบสนองอย่างไม่คาดคิด</string>
+    <string name="load_anyway">โหลดต่อไป</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">การดาวน์โหลดโมเดล</string>

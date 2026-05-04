@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">Hen\u00FCz model indirilmedi</string>
     <string name="browse_more_models">Modellere G\u00F6z At</string>
     <string name="cancel">\u0130ptal</string>
+    <string name="low_ram_warning_title">Model kararsız olabilir</string>
+    <string name="low_ram_warning_message">Model yaklaşık %1$s RAM gerektirir, ancak bu cihazın toplam %2$s belleği var. Yavaş yüklenebilir veya beklenmedik şekilde yanıt verebilir.</string>
+    <string name="load_anyway">Yine de y\u00fckle</string>
     <string name="download_notification_channel">Model \u0130ndirmeleri</string>
     <string name="download_notification_channel_description">Model dosyalar\u0131n\u0131n indirme ilerlemesini g\u00F6sterir</string>
     <string name="download_complete">\u0130ndirme tamamland\u0131</string>

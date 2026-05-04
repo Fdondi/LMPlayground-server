@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">Aucun mod\u00E8le t\u00E9l\u00E9charg\u00E9</string>
     <string name="browse_more_models">Parcourir les mod\u00E8les</string>
     <string name="cancel">Annuler</string>
+    <string name="low_ram_warning_title">Le modèle pourrait être instable</string>
+    <string name="low_ram_warning_message">Le modèle nécessite environ %1$s de RAM, mais cet appareil n\'en a que %2$s au total. Le chargement peut être lent ou les réponses imprévisibles.</string>
+    <string name="load_anyway">Charger quand même</string>
     <string name="download_notification_channel">T\u00E9l\u00E9chargements de mod\u00E8les</string>
     <string name="download_notification_channel_description">Affiche la progression des t\u00E9l\u00E9chargements de mod\u00E8les</string>
     <string name="download_complete">T\u00E9l\u00E9chargement termin\u00E9</string>

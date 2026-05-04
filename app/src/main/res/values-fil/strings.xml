@@ -125,6 +125,9 @@
     <string name="no_downloaded_models">Walang na-download na modelo pa</string>
     <string name="browse_more_models">Mag-browse ng Mga Modelo</string>
     <string name="cancel">Kanselahin</string>
+    <string name="low_ram_warning_title">Maaaring hindi stable ang modelo</string>
+    <string name="low_ram_warning_message">Kailangan ng modelo ng ~%1$s na RAM ngunit ang device na ito ay may %2$s lang sa kabuuan. Maaaring mabagal mag-load o tumugon nang hindi inaasahan.</string>
+    <string name="load_anyway">I-load pa rin</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">Pag-download ng Modelo</string>

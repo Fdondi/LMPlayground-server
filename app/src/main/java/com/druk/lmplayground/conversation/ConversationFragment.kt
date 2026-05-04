@@ -93,6 +93,7 @@ class ConversationFragment : Fragment() {
             val systemPromptId by viewModel.systemPromptId.observeAsState()
             val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
             val userError by viewModel.userError.observeAsState()
+            val pendingRamWarning by viewModel.pendingRamWarning.observeAsState()
             var showParamsSheet by remember { mutableStateOf(false) }
 
             // Surface transient ViewModel errors (e.g. message-too-large)
@@ -238,6 +239,32 @@ class ConversationFragment : Fragment() {
                             }
                         },
                         confirmButton = { }
+                    )
+                }
+
+                pendingRamWarning?.let { warning ->
+                    AlertDialog(
+                        onDismissRequest = { viewModel.dismissRamWarning() },
+                        title = { Text(stringResource(R.string.low_ram_warning_title)) },
+                        text = {
+                            Text(
+                                stringResource(
+                                    R.string.low_ram_warning_message,
+                                    warning.neededRam,
+                                    warning.totalRam,
+                                )
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(onClick = { viewModel.confirmLoadDespiteRamWarning() }) {
+                                Text(stringResource(R.string.load_anyway))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { viewModel.dismissRamWarning() }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
                     )
                 }
 

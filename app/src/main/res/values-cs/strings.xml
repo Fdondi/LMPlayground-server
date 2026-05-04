@@ -126,6 +126,9 @@
     <string name="no_downloaded_models">Zatím žádné stažené modely</string>
     <string name="browse_more_models">Procházet modely</string>
     <string name="cancel">Zrušit</string>
+    <string name="low_ram_warning_title">Model může být nestabilní</string>
+    <string name="low_ram_warning_message">Model potřebuje ~%1$s RAM, ale toto zařízení má celkem pouze %2$s. Načítání může být pomalé nebo se chovat nepředvídatelně.</string>
+    <string name="load_anyway">Přesto načíst</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">Stahování modelů</string>

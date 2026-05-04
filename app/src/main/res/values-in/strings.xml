@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">Belum ada model yang diunduh</string>
     <string name="browse_more_models">Jelajahi Model</string>
     <string name="cancel">Batal</string>
+    <string name="low_ram_warning_title">Model mungkin tidak stabil</string>
+    <string name="low_ram_warning_message">Model membutuhkan ~%1$s RAM, tetapi perangkat ini hanya memiliki total %2$s. Pemuatan mungkin lambat atau respons tidak dapat diprediksi.</string>
+    <string name="load_anyway">Tetap muat</string>
     <string name="download_notification_channel">Unduhan Model</string>
     <string name="download_notification_channel_description">Menampilkan progres unduhan file model</string>
     <string name="download_complete">Unduhan selesai</string>

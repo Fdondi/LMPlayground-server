@@ -125,6 +125,9 @@
     <string name="no_downloaded_models">এখনো কোনো মডেল ডাউনলোড করা হয়নি</string>
     <string name="browse_more_models">মডেল ব্রাউজ করুন</string>
     <string name="cancel">বাতিল</string>
+    <string name="low_ram_warning_title">মডেলটি অস্থির হতে পারে</string>
+    <string name="low_ram_warning_message">মডেলের জন্য প্রায় %1$s RAM প্রয়োজন, কিন্তু এই ডিভাইসে মোট %2$s আছে। এটি ধীরে লোড হতে পারে বা অপ্রত্যাশিতভাবে সাড়া দিতে পারে।</string>
+    <string name="load_anyway">তবুও লোড করুন</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">মডেল ডাউনলোড</string>

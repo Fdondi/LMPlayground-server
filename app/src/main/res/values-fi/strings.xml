@@ -125,6 +125,9 @@
     <string name="no_downloaded_models">Ei vielä ladattuja malleja</string>
     <string name="browse_more_models">Selaa malleja</string>
     <string name="cancel">Peruuta</string>
+    <string name="low_ram_warning_title">Malli voi olla epävakaa</string>
+    <string name="low_ram_warning_message">Malli tarvitsee noin %1$s RAM-muistia, mutta tässä laitteessa on yhteensä vain %2$s. Lataus voi olla hidas tai vastaukset arvaamattomia.</string>
+    <string name="load_anyway">Lataa silti</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">Mallien lataukset</string>

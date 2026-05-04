@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">Моделі ще не завантажено</string>
     <string name="browse_more_models">Переглянути моделі</string>
     <string name="cancel">Скасувати</string>
+    <string name="low_ram_warning_title">Модель може бути нестабільною</string>
+    <string name="low_ram_warning_message">Моделі потрібно ~%1$s RAM, але цей пристрій має лише %2$s загалом. Вона може завантажуватися повільно або відповідати непередбачувано.</string>
+    <string name="load_anyway">Завантажити все одно</string>
     <string name="download_notification_channel">Завантаження моделей</string>
     <string name="download_notification_channel_description">Показує прогрес завантаження файлів моделей</string>
     <string name="download_complete">Завантаження завершено</string>

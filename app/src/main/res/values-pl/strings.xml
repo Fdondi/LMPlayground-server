@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">Nie pobrano jeszcze żadnych modeli</string>
     <string name="browse_more_models">Przeglądaj modele</string>
     <string name="cancel">Anuluj</string>
+    <string name="low_ram_warning_title">Model może być niestabilny</string>
+    <string name="low_ram_warning_message">Model wymaga ok. %1$s RAM, a to urządzenie ma łącznie tylko %2$s. Ładowanie może być wolne, a odpowiedzi nieprzewidywalne.</string>
+    <string name="load_anyway">Załaduj mimo to</string>
     <string name="download_notification_channel">Pobieranie modeli</string>
     <string name="download_notification_channel_description">Pokazuje postęp pobierania plików modeli</string>
     <string name="download_complete">Pobieranie zakończone</string>

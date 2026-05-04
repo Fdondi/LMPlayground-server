@@ -126,6 +126,9 @@
     <string name="no_downloaded_models">עדיין לא הורדו מודלים</string>
     <string name="browse_more_models">עיין במודלים</string>
     <string name="cancel">ביטול</string>
+    <string name="low_ram_warning_title">המודל עשוי להיות לא יציב</string>
+    <string name="low_ram_warning_message">המודל זקוק לכ-%1$s RAM, אך למכשיר זה יש בסך הכל %2$s בלבד. הטעינה עשויה להיות איטית או התגובות בלתי צפויות.</string>
+    <string name="load_anyway">טען בכל זאת</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">הורדות מודלים</string>

@@ -125,6 +125,9 @@
     <string name="no_downloaded_models">Ingen modeller downloadet endnu</string>
     <string name="browse_more_models">Gennemse modeller</string>
     <string name="cancel">Annuller</string>
+    <string name="low_ram_warning_title">Modellen kan være ustabil</string>
+    <string name="low_ram_warning_message">Modellen kræver ~%1$s RAM, men denne enhed har kun %2$s i alt. Den indlæses muligvis langsomt eller reagerer uforudsigeligt.</string>
+    <string name="load_anyway">Indlæs alligevel</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">Modeldownloads</string>

@@ -125,6 +125,9 @@
     <string name="no_downloaded_models">Inga modeller nedladdade än</string>
     <string name="browse_more_models">Bläddra bland modeller</string>
     <string name="cancel">Avbryt</string>
+    <string name="low_ram_warning_title">Modellen kan vara instabil</string>
+    <string name="low_ram_warning_message">Modellen behöver ~%1$s RAM, men den här enheten har bara %2$s totalt. Den kan laddas långsamt eller svara oförutsägbart.</string>
+    <string name="load_anyway">Läs in ändå</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">Modellnedladdningar</string>

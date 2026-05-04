@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">Ch\u01B0a c\u00F3 m\u00F4 h\u00ECnh n\u00E0o \u0111\u01B0\u1EE3c t\u1EA3i</string>
     <string name="browse_more_models">Duy\u1EC7t m\u00F4 h\u00ECnh</string>
     <string name="cancel">H\u1EE7y</string>
+    <string name="low_ram_warning_title">Mô hình có thể không ổn định</string>
+    <string name="low_ram_warning_message">Mô hình cần khoảng %1$s RAM nhưng thiết bị này chỉ có tổng cộng %2$s. Có thể tải chậm hoặc phản hồi không thể đoán trước.</string>
+    <string name="load_anyway">V\u1EABn t\u1EA3i</string>
     <string name="download_notification_channel">T\u1EA3i m\u00F4 h\u00ECnh</string>
     <string name="download_notification_channel_description">Hi\u1EC3n th\u1ECB ti\u1EBFn tr\u00ECnh t\u1EA3i t\u1EC7p m\u00F4 h\u00ECnh</string>
     <string name="download_complete">T\u1EA3i xu\u1ED1ng ho\u00E0n t\u1EA5t</string>

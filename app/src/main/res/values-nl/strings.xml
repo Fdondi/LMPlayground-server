@@ -126,6 +126,9 @@
     <string name="no_downloaded_models">Nog geen modellen gedownload</string>
     <string name="browse_more_models">Modellen bekijken</string>
     <string name="cancel">Annuleren</string>
+    <string name="low_ram_warning_title">Model kan instabiel zijn</string>
+    <string name="low_ram_warning_message">Het model heeft ~%1$s RAM nodig, maar dit apparaat heeft slechts %2$s in totaal. Het kan langzaam laden of onvoorspelbaar reageren.</string>
+    <string name="load_anyway">Toch laden</string>
 
     <!-- Download notifications -->
     <string name="download_notification_channel">Model-downloads</string>

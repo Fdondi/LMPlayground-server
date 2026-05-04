@@ -108,6 +108,9 @@
     <string name="no_downloaded_models">Niciun model desc\u0103rcat \u00EEnc\u0103</string>
     <string name="browse_more_models">R\u0103sfoie\u015Fte modele</string>
     <string name="cancel">Anuleaz\u0103</string>
+    <string name="low_ram_warning_title">Modelul ar putea fi instabil</string>
+    <string name="low_ram_warning_message">Modelul are nevoie de ~%1$s RAM, dar acest dispozitiv are doar %2$s în total. Se poate încărca lent sau poate răspunde imprevizibil.</string>
+    <string name="load_anyway">\u00cencarc\u0103 oricum</string>
     <string name="download_notification_channel">Desc\u0103rc\u0103ri de modele</string>
     <string name="download_notification_channel_description">Afi\u015Feaz\u0103 progresul desc\u0103rc\u0103rilor de modele</string>
     <string name="download_complete">Desc\u0103rcare finalizat\u0103</string>
