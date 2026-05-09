@@ -50,6 +50,9 @@ jobs:
     # Fastlane looks for fastlane/metadata/android/*/changelogs/{versionCode}.txt.
     # We keep one file per versionName (e.g. 10500.txt for 1.5.0) and copy it
     # to the exact versionCode filename so every deploy ships release notes.
+    # If a release has no version-specific changelog, fall back to the
+    # locale's default.txt ("performance and stability improvements") so
+    # internal-only patches still ship localized notes.
     # Version is the single source of truth in version.properties (shared with gradle).
     - name: Stage changelog for build
       run: |
@@ -61,6 +64,8 @@ jobs:
         for dir in fastlane/metadata/android/*/changelogs; do
           if [ -f "$dir/$SOURCE_NAME" ]; then
             cp "$dir/$SOURCE_NAME" "$dir/${VERSION_CODE}.txt"
+          elif [ -f "$dir/default.txt" ]; then
+            cp "$dir/default.txt" "$dir/${VERSION_CODE}.txt"
           fi
         done
 
