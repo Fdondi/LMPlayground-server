@@ -1,6 +1,7 @@
 package com.druk.lmplayground.storage
 
 import android.Manifest
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -20,6 +22,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.druk.lmplayground.R
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
 
@@ -119,7 +122,17 @@ class ModelsFragment : Fragment() {
                     migrationProgress = migrationProgress,
                     deviceLanguage = viewModel.deviceLanguage,
                     onBackClick = { findNavController().popBackStack() },
-                    onChangeFolderClick = { folderPickerLauncher.launch(null) },
+                    onChangeFolderClick = {
+                        try {
+                            folderPickerLauncher.launch(null)
+                        } catch (_: ActivityNotFoundException) {
+                            Toast.makeText(
+                                requireContext(),
+                                R.string.folder_picker_unavailable,
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        }
+                    },
                     onDeleteModel = { model ->
                         viewModel.deleteModel(model)
                     },

@@ -183,6 +183,7 @@
     <string name="choose_storage_folder">Choose Storage Folder</string>
     <string name="choose_storage_folder_message">Please select a folder where models will be stored. This is required to use the app.</string>
     <string name="choose_folder">Choose Folder</string>
+    <string name="folder_picker_unavailable">No app available to pick a folder. Install or enable the system Files / Documents app.</string>
 
     <!-- Session -->
     <string name="session_info">Session Info</string>
@@ -269,6 +270,7 @@
     <string name="replay_history_too_large">Conversation history is too large to reload into this model. Start a new chat to continue.</string>
     <string name="system_prompt_too_large">System prompt is %1$d KB, exceeds the %2$d KB limit. Try a shorter prompt.</string>
     <string name="history_message_too_large">A saved message in this conversation is too large to reload. Start a new chat to continue.</string>
+    <string name="inference_engine_unavailable">Inference engine is not available right now. Try again in a moment.</string>
 
     <!-- Debug-only crash injection (only shown in debug builds — do not
          translate, English only). -->
