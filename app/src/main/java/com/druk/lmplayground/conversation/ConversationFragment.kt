@@ -346,7 +346,13 @@ class ConversationFragment : Fragment() {
                                             showParamsSheet = true
                                         },
                                         onBrowseModels = {
-                                            findNavController().navigate(R.id.action_home_to_models)
+                                            // Guard against NavController throwing IllegalArgumentException
+                                            // when the user double-taps or another navigation moved us
+                                            // off nav_home before this callback fired.
+                                            val nav = findNavController()
+                                            if (nav.currentDestination?.id == R.id.nav_home) {
+                                                nav.navigate(R.id.action_home_to_models)
+                                            }
                                         },
                                         onDismissRequest = {
                                             viewModel.resetModelList()
