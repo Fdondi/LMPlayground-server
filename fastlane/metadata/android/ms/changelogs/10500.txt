@@ -1,0 +1,3 @@
+- Gesaan sistem — simpan arahan yang boleh digunakan semula dan pilih yang sesuai untuk setiap model, supaya nada, peranan atau format output anda kekal merentas sesi
+- 28 bahasa — aplikasi kini disetempatkan dalam 28 bahasa termasuk Arab, Bengali, Ibrani, Hindi, Jepun, Korea, Poland, Thai, Ukraine, Vietnam dan banyak lagi
+- Inferens lebih pantas menerusi llama.cpp terkini serta pembetulan pemilih model

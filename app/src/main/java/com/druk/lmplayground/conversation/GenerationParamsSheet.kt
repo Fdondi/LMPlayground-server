@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -20,6 +21,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Switch
@@ -34,8 +36,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.druk.lmplayground.R
+import com.druk.lmplayground.settings.SystemPromptEditorSheet
 import kotlin.math.roundToInt
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,12 +55,18 @@ fun GenerationParamsSheet(
     tools: List<Tool> = emptyList(),
     toolEnabledStates: Map<String, Boolean> = emptyMap(),
     onToolEnabledChanged: (String, Boolean) -> Unit = { _, _ -> },
+    systemPrompt: String = "",
+    canUpdateLinkedPrompt: Boolean = false,
     onParamsChanged: (GenerationParams) -> Unit,
+    onUpdateLinkedPrompt: (String) -> Unit = {},
+    onSaveAsNewPrompt: (String) -> Unit = {},
+    onClearSystemPrompt: () -> Unit = {},
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var editedParams by remember(params) { mutableStateOf(params) }
     var showAdvanced by remember { mutableStateOf(false) }
+    var showPromptReviser by remember { mutableStateOf(false) }
 
     val contextMin = 512
     val contextMax = maxContextSize.coerceAtLeast(512)
@@ -81,28 +94,75 @@ fun GenerationParamsSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Generation Parameters",
+                    text = stringResource(R.string.generation_parameters),
                     style = MaterialTheme.typography.titleMedium
                 )
                 TextButton(onClick = {
                     val defaults = GenerationParams()
                     editedParams = defaults
                 }) {
-                    Text("Reset")
+                    Text(stringResource(R.string.reset))
                 }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
+            // Current System Prompt — always present; tap the card to author
+            // or edit the prompt for this session. The Clear button is always
+            // rendered so the header height is stable; only its visibility
+            // changes when a prompt is active.
+            val hasPrompt = systemPrompt.isNotEmpty()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.system_prompt_current),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                TextButton(
+                    onClick = onClearSystemPrompt,
+                    enabled = hasPrompt,
+                    modifier = Modifier.alpha(if (hasPrompt) 1f else 0f),
+                    contentPadding = androidx.compose.foundation.layout.PaddingValues(
+                        horizontal = 8.dp, vertical = 0.dp
+                    )
+                ) {
+                    Text(stringResource(R.string.clear))
+                }
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            OutlinedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { showPromptReviser = true },
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Text(
+                    text = if (hasPrompt) systemPrompt
+                           else stringResource(R.string.system_prompt_current_empty),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = if (hasPrompt) MaterialTheme.colorScheme.onSurface
+                            else MaterialTheme.colorScheme.onSurfaceVariant,
+                    minLines = 3,
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+
             // Context Size
             val contextWarning = editedParams.contextSize != params.contextSize
             ParamSlider(
-                label = "Context Size",
+                label = stringResource(R.string.context_size),
                 value = editedParams.contextSize.toFloat(),
                 valueRange = contextMin.toFloat()..contextMax.toFloat(),
                 steps = (((contextMax - contextMin) / contextStep) - 1).coerceAtLeast(0),
                 valueDisplay = "${editedParams.contextSize}",
-                warning = if (contextWarning) "Will reset conversation" else null,
+                warning = if (contextWarning) stringResource(R.string.will_reset_conversation) else null,
                 onValueChange = {
                     val snapped = (it / contextStep).roundToInt() * contextStep
                     val newContextSize = snapped.coerceIn(contextMin, contextMax)
@@ -123,11 +183,11 @@ fun GenerationParamsSheet(
                 val budgetMin = 64
                 val budgetMax = editedParams.contextSize
                 ParamSlider(
-                    label = "Thinking Budget",
+                    label = stringResource(R.string.thinking_budget),
                     value = editedParams.thinkingBudget.toFloat(),
                     valueRange = budgetMin.toFloat()..budgetMax.toFloat(),
                     steps = 0,
-                    valueDisplay = "${editedParams.thinkingBudget} tokens",
+                    valueDisplay = stringResource(R.string.tokens_value, editedParams.thinkingBudget),
                     onValueChange = {
                         val snapped = (it / 64).roundToInt() * 64
                         editedParams = editedParams.copy(
@@ -180,7 +240,7 @@ fun GenerationParamsSheet(
 
             // Temperature
             ParamSlider(
-                label = "Temperature",
+                label = stringResource(R.string.temperature),
                 value = editedParams.temperature,
                 valueRange = 0f..2f,
                 steps = 0,
@@ -192,12 +252,12 @@ fun GenerationParamsSheet(
 
             // Top-P
             ParamSlider(
-                label = "Top-P",
+                label = stringResource(R.string.top_p),
                 value = editedParams.topP,
                 valueRange = 0f..1f,
                 steps = 0,
                 valueDisplay = "%.2f".format(editedParams.topP),
-                subtitle = if (editedParams.topP >= 1f) "disabled" else null,
+                subtitle = if (editedParams.topP >= 1f) stringResource(R.string.disabled_label) else null,
                 onValueChange = {
                     editedParams = editedParams.copy(topP = (it * 100).roundToInt() / 100f)
                 }
@@ -205,12 +265,12 @@ fun GenerationParamsSheet(
 
             // Repetition Penalty
             ParamSlider(
-                label = "Repetition Penalty",
+                label = stringResource(R.string.repetition_penalty),
                 value = editedParams.repetitionPenalty,
                 valueRange = 1f..2f,
                 steps = 0,
                 valueDisplay = "%.2f".format(editedParams.repetitionPenalty),
-                subtitle = if (editedParams.repetitionPenalty <= 1f) "disabled" else null,
+                subtitle = if (editedParams.repetitionPenalty <= 1f) stringResource(R.string.disabled_label) else null,
                 onValueChange = {
                     editedParams = editedParams.copy(repetitionPenalty = (it * 100).roundToInt() / 100f)
                 }
@@ -226,13 +286,13 @@ fun GenerationParamsSheet(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Advanced",
+                    text = stringResource(R.string.advanced),
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.weight(1f)
                 )
                 Icon(
                     imageVector = if (showAdvanced) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = if (showAdvanced) "Collapse" else "Expand"
+                    contentDescription = if (showAdvanced) stringResource(R.string.collapse) else stringResource(R.string.expand)
                 )
             }
 
@@ -240,12 +300,12 @@ fun GenerationParamsSheet(
                 Column {
                     // Top-K
                     ParamSlider(
-                        label = "Top-K",
+                        label = stringResource(R.string.top_k),
                         value = editedParams.topK.toFloat(),
                         valueRange = 0f..200f,
                         steps = 0,
                         valueDisplay = "${editedParams.topK}",
-                        subtitle = if (editedParams.topK == 0) "disabled" else null,
+                        subtitle = if (editedParams.topK == 0) stringResource(R.string.disabled_label) else null,
                         onValueChange = {
                             editedParams = editedParams.copy(topK = it.roundToInt())
                         }
@@ -253,12 +313,12 @@ fun GenerationParamsSheet(
 
                     // Min-P
                     ParamSlider(
-                        label = "Min-P",
+                        label = stringResource(R.string.min_p),
                         value = editedParams.minP,
                         valueRange = 0f..0.5f,
                         steps = 0,
                         valueDisplay = "%.3f".format(editedParams.minP),
-                        subtitle = if (editedParams.minP <= 0f) "disabled" else null,
+                        subtitle = if (editedParams.minP <= 0f) stringResource(R.string.disabled_label) else null,
                         onValueChange = {
                             editedParams = editedParams.copy(minP = (it * 1000).roundToInt() / 1000f)
                         }
@@ -275,7 +335,7 @@ fun GenerationParamsSheet(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "Seed",
+                            text = stringResource(R.string.seed),
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.weight(1f)
                         )
@@ -289,7 +349,7 @@ fun GenerationParamsSheet(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(start = 16.dp),
-                            placeholder = { Text("Random") },
+                            placeholder = { Text(stringResource(R.string.random)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             singleLine = true,
                             textStyle = MaterialTheme.typography.bodyMedium
@@ -302,6 +362,28 @@ fun GenerationParamsSheet(
 
             Spacer(modifier = Modifier.height(16.dp))
         }
+    }
+
+    if (showPromptReviser) {
+        SystemPromptEditorSheet(
+            initialText = systemPrompt,
+            title = stringResource(
+                if (systemPrompt.isEmpty()) R.string.system_prompt_new
+                else R.string.system_prompt_edit
+            ),
+            primaryLabel = stringResource(R.string.system_prompt_update),
+            onPrimary = { text ->
+                // If the current session prompt is backed by a library entry,
+                // update that entry in place; otherwise create a new library
+                // entry and link it to the session.
+                if (canUpdateLinkedPrompt && systemPrompt.isNotEmpty()) {
+                    onUpdateLinkedPrompt(text)
+                } else {
+                    onSaveAsNewPrompt(text)
+                }
+            },
+            onDismiss = { showPromptReviser = false }
+        )
     }
 }
 

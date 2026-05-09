@@ -19,5 +19,6 @@ data class ChatSessionEntity(
     val topK: Int = 40,
     val minP: Float = 0.05f,
     val seed: Int = -1,
-    val thinkingBudget: Int = 1024
+    val thinkingBudget: Int = 1024,
+    val systemPrompt: String = ""
 )

@@ -1,0 +1,2 @@
+- Penambahbaikan prestasi dan kestabilan
+- Menambah amaran untuk model yang terlalu besar untuk peranti anda

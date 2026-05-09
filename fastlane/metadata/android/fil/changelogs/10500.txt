@@ -1,0 +1,3 @@
+- System prompts — i-save ang mga maaaring gamiting muli na instruksyon at piliin ang tamang isa para sa bawat modelo, para manatili ang tono, papel, o format ng output sa bawat session
+- 28 wika — ang app ay naka-localize na sa 28 wika kabilang ang Arabic, Bengali, Hebrew, Hindi, Japanese, Korean, Polish, Thai, Ukrainian, Vietnamese, at iba pa
+- Mas mabilis na inference gamit ang pinakabagong llama.cpp at mga pag-aayos sa model selector

@@ -1,0 +1,3 @@
+- Prompt di sistema — salva istruzioni riutilizzabili e scegli quella giusta per ogni modello, così tono, ruolo o formato di output restano coerenti tra le sessioni
+- 28 lingue — l'app è ora localizzata in 28 lingue tra cui arabo, bengalese, ebraico, hindi, giapponese, coreano, polacco, thai, ucraino, vietnamita e altre
+- Inferenza più veloce grazie all'ultima versione di llama.cpp e correzioni al selettore dei modelli

@@ -1,0 +1,2 @@
+- Performance and stability improvements
+- Added warning for models too big for your device

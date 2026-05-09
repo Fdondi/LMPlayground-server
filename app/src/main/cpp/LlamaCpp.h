@@ -18,6 +18,7 @@ struct SamplerParams {
     float min_p;
     uint32_t seed;
     int32_t thinking_budget; // -1 = unlimited
+    std::string system_prompt;
 };
 
 class LlamaGenerationSession {

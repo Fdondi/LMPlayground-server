@@ -2,6 +2,7 @@ package com.druk.lmplayground.conversation
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.widget.Toast
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
@@ -46,6 +47,8 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -88,7 +91,22 @@ class ConversationFragment : Fragment() {
             val generationParams by viewModel.generationParams.observeAsState(GenerationParams())
             val maxContextSize by viewModel.maxContextSize.observeAsState(4096)
             val sessionModelHint by viewModel.sessionModelHint.observeAsState()
+            val systemPrompt by viewModel.systemPrompt.observeAsState("")
+            val systemPromptId by viewModel.systemPromptId.observeAsState()
+            val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
+            val userError by viewModel.userError.observeAsState()
+            val pendingRamWarning by viewModel.pendingRamWarning.observeAsState()
             var showParamsSheet by remember { mutableStateOf(false) }
+
+            // Surface transient ViewModel errors (e.g. message-too-large)
+            // as Toasts. The ViewModel can't show UI directly, so we
+            // observe a one-shot LiveData and clear it after consumption.
+            val toastContext = LocalContext.current
+            LaunchedEffect(userError) {
+                val msg = userError ?: return@LaunchedEffect
+                Toast.makeText(toastContext, msg, Toast.LENGTH_LONG).show()
+                viewModel.consumeUserError()
+            }
 
             // Storage configuration state
             val isStorageConfigured by storageViewModel.isStorageConfigured.observeAsState(true)
@@ -149,9 +167,9 @@ class ConversationFragment : Fragment() {
                 if (showStorageSetupDialog && !isStorageConfigured && pendingMigration == null) {
                     AlertDialog(
                         onDismissRequest = { /* Cannot dismiss - must choose folder */ },
-                        title = { Text("Choose Storage Folder") },
+                        title = { Text(stringResource(R.string.choose_storage_folder)) },
                         text = {
-                            Text("Please select a folder where models will be stored. This is required to use the app.")
+                            Text(stringResource(R.string.choose_storage_folder_message))
                         },
                         confirmButton = {
                             TextButton(
@@ -164,7 +182,7 @@ class ConversationFragment : Fragment() {
                                     }
                                 }
                             ) {
-                                Text("Choose Folder")
+                                Text(stringResource(R.string.choose_folder))
                             }
                         }
                     )
@@ -177,26 +195,26 @@ class ConversationFragment : Fragment() {
 
                     AlertDialog(
                         onDismissRequest = { storageViewModel.cancelMigration() },
-                        title = { Text("Migrate Models?") },
+                        title = { Text(stringResource(R.string.migrate_models_title)) },
                         text = {
                             Column {
                                 Text(
                                     if (migration.isFromDownloads) {
-                                        "Found ${migration.modelsToMigrate.size} model(s) ($sizeFormatted) in your Downloads folder. Would you like to move them to the selected storage location?"
+                                        stringResource(R.string.migrate_models_from_downloads, migration.modelsToMigrate.size, sizeFormatted)
                                     } else {
-                                        "Found ${migration.modelsToMigrate.size} model(s) ($sizeFormatted) in the previous folder. Would you like to copy them to the new location?"
+                                        stringResource(R.string.migrate_models_message, migration.modelsToMigrate.size, sizeFormatted)
                                     }
                                 )
                             }
                         },
                         confirmButton = {
                             TextButton(onClick = { storageViewModel.confirmMigration() }) {
-                                Text("Migrate")
+                                Text(stringResource(R.string.migrate))
                             }
                         },
                         dismissButton = {
                             TextButton(onClick = { storageViewModel.skipMigration() }) {
-                                Text("Skip")
+                                Text(stringResource(R.string.skip))
                             }
                         }
                     )
@@ -206,7 +224,7 @@ class ConversationFragment : Fragment() {
                 migrationProgress?.let { progress ->
                     AlertDialog(
                         onDismissRequest = { /* Cannot dismiss while migrating */ },
-                        title = { Text("Migrating Models") },
+                        title = { Text(stringResource(R.string.migrating_models)) },
                         text = {
                             Column(
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -214,7 +232,7 @@ class ConversationFragment : Fragment() {
                             ) {
                                 CircularProgressIndicator()
                                 Spacer(modifier = Modifier.height(16.dp))
-                                Text("Copying ${progress.currentIndex} of ${progress.totalCount}")
+                                Text(stringResource(R.string.migration_progress, progress.currentIndex, progress.totalCount))
                                 Text(
                                     text = progress.currentModel,
                                     style = MaterialTheme.typography.bodySmall,
@@ -223,6 +241,32 @@ class ConversationFragment : Fragment() {
                             }
                         },
                         confirmButton = { }
+                    )
+                }
+
+                pendingRamWarning?.let { warning ->
+                    AlertDialog(
+                        onDismissRequest = { viewModel.dismissRamWarning() },
+                        title = { Text(stringResource(R.string.low_ram_warning_title)) },
+                        text = {
+                            Text(
+                                stringResource(
+                                    R.string.low_ram_warning_message,
+                                    warning.neededRam,
+                                    warning.totalRam,
+                                )
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(onClick = { viewModel.confirmLoadDespiteRamWarning() }) {
+                                Text(stringResource(R.string.load_anyway))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { viewModel.dismissRamWarning() }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
                     )
                 }
 
@@ -235,7 +279,12 @@ class ConversationFragment : Fragment() {
                         tools = viewModel.toolRegistry.getAllTools(),
                         toolEnabledStates = toolEnabledStates,
                         onToolEnabledChanged = { name, enabled -> viewModel.setToolEnabled(name, enabled) },
+                        systemPrompt = systemPrompt,
+                        canUpdateLinkedPrompt = systemPromptId != null,
                         onParamsChanged = { viewModel.updateGenerationParams(it) },
+                        onUpdateLinkedPrompt = { viewModel.updateLinkedSystemPrompt(it) },
+                        onSaveAsNewPrompt = { viewModel.createAndApplySystemPrompt(it) },
+                        onClearSystemPrompt = { viewModel.clearSystemPrompt() },
                         onDismiss = { showParamsSheet = false }
                     )
                 }
@@ -324,7 +373,7 @@ class ConversationFragment : Fragment() {
                                         modelReport = null
                                     },
                                     title = {
-                                        Text(text = "Session Info")
+                                        Text(text = stringResource(R.string.session_info))
                                     },
                                     text = {
                                         Text(
@@ -334,7 +383,7 @@ class ConversationFragment : Fragment() {
                                     },
                                     confirmButton = {
                                         TextButton(onClick = { modelReport = null }) {
-                                            Text(text = "CLOSE")
+                                            Text(text = stringResource(R.string.close))
                                         }
                                     }
                                 )
@@ -384,6 +433,38 @@ class ConversationFragment : Fragment() {
                                     onTokenCountClicked = {
                                         modelReport = viewModel.getReport()
                                     }
+                                )
+                            }
+                            // Picker sits just above the composer. Visible only when:
+                            //   - model is ready
+                            //   - chat is empty
+                            //   - library has entries
+                            //   - the session has no prompt selected yet
+                            // On pick: the picker row handles its own flight
+                            // animation per-card, then fires onPick — which flips
+                            // the visibility gate. Exit uses ExitTransition.None
+                            // so the row disappears immediately after the card
+                            // finishes flying (no double-animation).
+                            // On clear: the row slides back up and fades in.
+                            val pickerVisible = isModelReady &&
+                                messages.isEmpty() &&
+                                recentSystemPrompts.isNotEmpty() &&
+                                systemPrompt.isEmpty()
+                            androidx.compose.animation.AnimatedVisibility(
+                                visible = pickerVisible,
+                                enter = androidx.compose.animation.fadeIn(
+                                    animationSpec = androidx.compose.animation.core.tween(220)
+                                ) + androidx.compose.animation.slideInVertically(
+                                    animationSpec = androidx.compose.animation.core.tween(220),
+                                    initialOffsetY = { it / 2 }
+                                ),
+                                exit = androidx.compose.animation.ExitTransition.None
+                            ) {
+                                SystemPromptPickerRow(
+                                    prompts = recentSystemPrompts,
+                                    selectedText = systemPrompt,
+                                    onPick = { viewModel.applySystemPrompt(it.id, it.text) },
+                                    modifier = Modifier.padding(bottom = 8.dp)
                                 )
                             }
                             UserInput(

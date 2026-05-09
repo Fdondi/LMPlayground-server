@@ -52,7 +52,7 @@ static void log_callback(ggml_log_level level, const char * fmt, void * data) {
 
 extern "C"
 JNIEXPORT jobjectArray JNICALL
-Java_com_druk_llamacpp_LlamaCpp_probeModelMetadata(JNIEnv *env, jobject thiz, jstring modelPath) {
+Java_com_druk_llamacpp_jni_NativeLlamaCpp_probeModelMetadata(JNIEnv *env, jobject thiz, jstring modelPath) {
     const char* path = env->GetStringUTFChars(modelPath, nullptr);
 
     struct gguf_init_params params = { /*.no_alloc =*/ true, /*.ctx =*/ nullptr };
@@ -87,15 +87,11 @@ Java_com_druk_llamacpp_LlamaCpp_probeModelMetadata(JNIEnv *env, jobject thiz, js
 
 extern "C" JNIEXPORT int
 JNICALL
-Java_com_druk_llamacpp_LlamaCpp_init(JNIEnv *env, jobject object) {
+Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object) {
 
     // Redirect std::cerr to logcat
     AndroidLogBuf androidLogBuf;
     std::cerr.rdbuf(&androidLogBuf);
-
-    // Ensure OpenMP worker threads have sufficient stack for deep compute kernels
-    // (e.g. ggml_compute_forward_gated_delta_net, mul_mat with KleidiAI)
-    setenv("OMP_STACKSIZE", "8M", 0);
 
     llama_log_set(log_callback, NULL);
     llama_backend_init();
@@ -104,13 +100,13 @@ Java_com_druk_llamacpp_LlamaCpp_init(JNIEnv *env, jobject object) {
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_druk_llamacpp_LlamaCpp_systemInfo(JNIEnv *env, jobject object) {
+Java_com_druk_llamacpp_jni_NativeLlamaCpp_systemInfo(JNIEnv *env, jobject object) {
     return env->NewStringUTF(llama_print_system_info());
 }
 
 extern "C" JNIEXPORT jobject
 JNICALL
-Java_com_druk_llamacpp_LlamaCpp_loadModel(JNIEnv *env,
+Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
                    jobject activity,
                    jstring modelPath,
                    jobject progressCallback) {
@@ -135,7 +131,7 @@ Java_com_druk_llamacpp_LlamaCpp_loadModel(JNIEnv *env,
                      &ctx
                      );
     env->ReleaseStringUTFChars(modelPath, utfModelPath);
-    jclass clazz = env->FindClass("com/druk/llamacpp/LlamaModel");
+    jclass clazz = env->FindClass("com/druk/llamacpp/jni/NativeLlamaModel");
     jmethodID constructor = env->GetMethodID(clazz, "<init>", "()V");
     jobject obj = env->NewObject(clazz, constructor);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
@@ -145,7 +141,7 @@ Java_com_druk_llamacpp_LlamaCpp_loadModel(JNIEnv *env,
 
 extern "C"
 JNIEXPORT jlong JNICALL
-Java_com_druk_llamacpp_LlamaModel_getModelSize(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaModel_getModelSize(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
@@ -157,7 +153,7 @@ Java_com_druk_llamacpp_LlamaModel_getModelSize(JNIEnv *env, jobject thiz) {
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_druk_llamacpp_LlamaModel_getModelReport(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaModel_getModelReport(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
@@ -170,7 +166,7 @@ Java_com_druk_llamacpp_LlamaModel_getModelReport(JNIEnv *env, jobject thiz) {
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_druk_llamacpp_LlamaModel_supportsThinking(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaModel_supportsThinking(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
@@ -182,7 +178,7 @@ Java_com_druk_llamacpp_LlamaModel_supportsThinking(JNIEnv *env, jobject thiz) {
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_druk_llamacpp_LlamaModel_unloadModel(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaModel_unloadModel(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
@@ -196,7 +192,7 @@ Java_com_druk_llamacpp_LlamaModel_unloadModel(JNIEnv *env, jobject thiz) {
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_druk_llamacpp_LlamaModel_getContextTrainSize(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaModel_getContextTrainSize(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
@@ -208,7 +204,7 @@ Java_com_druk_llamacpp_LlamaModel_getContextTrainSize(JNIEnv *env, jobject thiz)
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
+Java_com_druk_llamacpp_jni_NativeLlamaModel_createSession(JNIEnv *env, jobject thiz,
                                                   jint contextSize,
                                                   jfloat temperature,
                                                   jfloat topP,
@@ -216,7 +212,8 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
                                                   jint topK,
                                                   jfloat minP,
                                                   jint seed,
-                                                  jint thinkingBudget) {
+                                                  jint thinkingBudget,
+                                                  jstring systemPrompt) {
 
     jclass clazz1 = env->GetObjectClass(thiz);
     jfieldID fid1 = env->GetFieldID(clazz1, "nativeHandle", "J");
@@ -234,8 +231,15 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
     params.min_p = minP;
     params.seed = (seed < 0) ? LLAMA_DEFAULT_SEED : static_cast<uint32_t>(seed);
     params.thinking_budget = thinkingBudget;
+    if (systemPrompt != nullptr) {
+        const char* utfSystemPrompt = env->GetStringUTFChars(systemPrompt, nullptr);
+        if (utfSystemPrompt != nullptr) {
+            params.system_prompt = utfSystemPrompt;
+            env->ReleaseStringUTFChars(systemPrompt, utfSystemPrompt);
+        }
+    }
 
-    jclass clazz2 = env->FindClass("com/druk/llamacpp/LlamaGenerationSession");
+    jclass clazz2 = env->FindClass("com/druk/llamacpp/jni/NativeLlamaSession");
     jmethodID constructor = env->GetMethodID(clazz2, "<init>", "()V");
     jobject obj = env->NewObject(clazz2, constructor);
 
@@ -250,7 +254,7 @@ Java_com_druk_llamacpp_LlamaModel_createSession(JNIEnv *env, jobject thiz,
     return obj;
 }
 
-extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_generate
+extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_jni_NativeLlamaSession_generate
         (JNIEnv *env, jobject obj, jobject callback) {
     jclass clazz = env->GetObjectClass(obj);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
@@ -275,7 +279,7 @@ extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_druk_llamacpp_LlamaGenerationSession_addMessage(JNIEnv *env,
+Java_com_druk_llamacpp_jni_NativeLlamaSession_addMessage(JNIEnv *env,
                                                          jobject thiz,
                                                          jstring message,
                                                          jboolean enableThinking) {
@@ -293,7 +297,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_addMessage(JNIEnv *env,
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_druk_llamacpp_LlamaGenerationSession_printReport(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaSession_printReport(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
@@ -305,7 +309,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_printReport(JNIEnv *env, jobject t
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_druk_llamacpp_LlamaGenerationSession_getReport(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaSession_getReport(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
@@ -319,7 +323,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_getReport(JNIEnv *env, jobject thi
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_druk_llamacpp_LlamaGenerationSession_replayHistory(JNIEnv *env,
+Java_com_druk_llamacpp_jni_NativeLlamaSession_replayHistory(JNIEnv *env,
                                                              jobject thiz,
                                                              jobjectArray userMessages,
                                                              jobjectArray assistantMessages) {
@@ -351,7 +355,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_replayHistory(JNIEnv *env,
 
 extern "C"
 JNIEXPORT jboolean JNICALL
-Java_com_druk_llamacpp_LlamaModel_supportsToolCalling(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaModel_supportsToolCalling(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
@@ -361,7 +365,7 @@ Java_com_druk_llamacpp_LlamaModel_supportsToolCalling(JNIEnv *env, jobject thiz)
 
 extern "C"
 JNIEXPORT void JNICALL
-Java_com_druk_llamacpp_LlamaGenerationSession_setTools(JNIEnv *env, jobject thiz, jstring toolsJson) {
+Java_com_druk_llamacpp_jni_NativeLlamaSession_setTools(JNIEnv *env, jobject thiz, jstring toolsJson) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
@@ -373,7 +377,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_setTools(JNIEnv *env, jobject thiz
 
 extern "C"
 JNIEXPORT jstring JNICALL
-Java_com_druk_llamacpp_LlamaGenerationSession_getToolCallsJson(JNIEnv *env, jobject thiz) {
+Java_com_druk_llamacpp_jni_NativeLlamaSession_getToolCallsJson(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
     auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
@@ -384,7 +388,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_getToolCallsJson(JNIEnv *env, jobj
 
 extern "C"
 JNIEXPORT jint JNICALL
-Java_com_druk_llamacpp_LlamaGenerationSession_submitToolResults(JNIEnv *env, jobject thiz,
+Java_com_druk_llamacpp_jni_NativeLlamaSession_submitToolResults(JNIEnv *env, jobject thiz,
                                                                  jstring resultsJson,
                                                                  jboolean enableThinking) {
     jclass clazz = env->GetObjectClass(thiz);
@@ -397,7 +401,7 @@ Java_com_druk_llamacpp_LlamaGenerationSession_submitToolResults(JNIEnv *env, job
     return result;
 }
 
-extern "C" JNIEXPORT void JNICALL Java_com_druk_llamacpp_LlamaGenerationSession_destroy
+extern "C" JNIEXPORT void JNICALL Java_com_druk_llamacpp_jni_NativeLlamaSession_destroy
         (JNIEnv *env, jobject obj) {
     jclass clazz = env->GetObjectClass(obj);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");

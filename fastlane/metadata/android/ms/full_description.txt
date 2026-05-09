@@ -1,0 +1,43 @@
+LM Playground membolehkan anda menjalankan model bahasa besar terus pada peranti Android anda. Muat turun model, muatkannya dengan satu ketikan, dan berbual — semuanya luar talian, semuanya peribadi. Tiada pelayan awan, tiada kunci API, tiada data meninggalkan peranti anda.
+
+CIRI UTAMA
+
+Inferens pada peranti — semua pemprosesan berlaku secara tempatan pada peranti anda. Perbualan anda kekal peribadi dan tidak pernah meninggalkan telefon anda.
+
+Sejarah sembang — semua perbualan anda disimpan dan disusun. Sematkan, namakan semula atau padamkan sesi daripada bar sisi. Sambung semula mana-mana perbualan tepat di tempat anda berhenti.
+
+Pengalaman sembang yang kaya — respons dipaparkan dengan sokongan markdown penuh termasuk pengepala, blok kod, senarai, tebal, condong dan lain-lain.
+
+Model penaakulan — lihat proses pemikiran model seperti DeepSeek R1, Nemotron dan LFM2.5 Thinking dipaparkan dalam bahagian bergaya yang boleh dikuncupkan dengan belanjawan pemikiran yang boleh dilaraskan.
+
+Penjejakan kelajuan penjanaan — lihat kiraan token, masa penjanaan dan kelajuan tok/s untuk setiap respons.
+
+Parameter setiap model — setiap model mengingati tetapan penjanaannya sendiri. Perhalusi saiz konteks, belanjawan pemikiran, suhu, Top-P, Top-K, Min-P, penalti ulangan dan benih.
+
+Gesaan sistem — simpan arahan yang boleh digunakan semula sekali sahaja dan pilih yang sesuai untuk mana-mana model. Kekalkan nada, peranan atau format output konsisten merentas sesi.
+
+Model tersuai — muatkan fail model GGUF anda sendiri daripada mana-mana sumber bersama-sama katalog terbina dalam.
+
+Muat turun yang boleh dipercayai — enjin muat turun tersuai dengan pemberitahuan kemajuan, paparan kelajuan dan ETA, serta sambung semula automatik apabila rangkaian terputus.
+
+Storan fleksibel — pilih tempat untuk menyimpan fail model berbilang GB menggunakan Storage Access Framework Android. Pindahkan model antara lokasi dengan mudah.
+
+Prestasi dioptimumkan — dioptimumkan untuk ARM dengan kernel KleidiAI dan OpenMP untuk penjanaan lebih pantas pada peranti arm64.
+
+MODEL YANG DISOKONG
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+Bermula daripada hanya 267 MB untuk model terkecil. Model yang lebih besar (4B–8B) mendapat manfaat daripada RAM 8+ GB. Anda juga boleh memuatkan mana-mana model GGUF tersuai.
+
+SUMBER TERBUKA
+
+LM Playground adalah sumber terbuka di bawah Lesen MIT. Dikuasakan oleh llama.cpp dengan model daripada Hugging Face.

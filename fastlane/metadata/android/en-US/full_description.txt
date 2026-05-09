@@ -1,0 +1,43 @@
+LM Playground lets you run large language models directly on your Android device. Download models, load them in one tap, and chat — all offline, all private. No cloud servers, no API keys, no data leaving your device.
+
+KEY FEATURES
+
+On-device inference — all processing happens locally on your device. Your conversations stay private and never leave your phone.
+
+Chat history — all your conversations are saved and organized. Pin, rename, or delete sessions from the sidebar. Resume any conversation right where you left off.
+
+Rich chat experience — responses are rendered with full markdown support including headers, code blocks, lists, bold, italic, and more.
+
+Reasoning models — see the thinking process of models like DeepSeek R1, Nemotron, and LFM2.5 Thinking displayed in a styled, collapsible section with adjustable thinking budget.
+
+Generation speed tracking — see token count, generation time, and tok/s speed for every response.
+
+Per-model parameters — each model remembers its own generation settings. Fine-tune context size, thinking budget, temperature, Top-P, Top-K, Min-P, repetition penalty, and seed.
+
+System prompts — save reusable instructions once and pick the right one for any model. Keep tone, role, or output format consistent across sessions.
+
+Custom models — load your own GGUF model files from any source alongside the built-in catalog.
+
+Reliable downloads — custom download engine with progress notifications, speed and ETA display, and automatic resume on network interruptions.
+
+Flexible storage — choose where to store multi-GB model files using Android's Storage Access Framework. Easily move models between locations.
+
+Optimized performance — ARM-optimized with KleidiAI kernels and OpenMP for faster generation on arm64 devices.
+
+SUPPORTED MODELS
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+Starting from just 267 MB for the smallest model. Larger models (4B–8B) benefit from 8+ GB RAM. You can also load any custom GGUF model.
+
+OPEN SOURCE
+
+LM Playground is open source under the MIT License. Powered by llama.cpp with models from Hugging Face.

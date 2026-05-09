@@ -1,0 +1,3 @@
+- Systeemprompts — bewaar herbruikbare instructies en kies de juiste voor elk model, zodat je toon, rol of uitvoerformaat behouden blijft tussen sessies
+- 28 talen — de app is nu beschikbaar in 28 talen, waaronder Arabisch, Bengaals, Hebreeuws, Hindi, Japans, Koreaans, Pools, Thai, Oekraïens, Vietnamees en meer
+- Snellere inferentie via de nieuwste llama.cpp plus verbeteringen aan de modelkiezer

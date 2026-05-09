@@ -81,4 +81,5 @@ class StoragePreferencesTest {
         val loaded = GenerationParams.fromMap(prefs.getModelGenerationParams("model.gguf")!!)
         assertEquals(1.0f, loaded.temperature)
     }
+
 }

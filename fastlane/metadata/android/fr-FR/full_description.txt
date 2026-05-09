@@ -1,0 +1,43 @@
+LM Playground vous permet d'exécuter des modèles de langage directement sur votre appareil Android. Téléchargez des modèles, chargez-les en un appui et discutez — le tout hors ligne, en toute confidentialité. Aucun serveur cloud, aucune clé API, aucune donnée ne quitte votre appareil.
+
+FONCTIONNALITÉS CLÉS
+
+Inférence sur l'appareil — tout le traitement se fait localement sur votre appareil. Vos conversations restent privées et ne quittent jamais votre téléphone.
+
+Historique des conversations — toutes vos conversations sont sauvegardées et organisées. Épinglez, renommez ou supprimez des sessions depuis la barre latérale. Reprenez n'importe quelle conversation là où vous l'aviez laissée.
+
+Expérience de chat riche — les réponses sont rendues avec un support complet du markdown, incluant titres, blocs de code, listes, gras, italique et plus encore.
+
+Modèles de raisonnement — visualisez le processus de réflexion de modèles comme DeepSeek R1, Nemotron et LFM2.5 Thinking dans une section stylisée et repliable avec un budget de raisonnement ajustable.
+
+Suivi de la vitesse de génération — consultez le nombre de tokens, le temps de génération et la vitesse en tok/s pour chaque réponse.
+
+Paramètres par modèle — chaque modèle mémorise ses propres réglages de génération. Ajustez la taille du contexte, le budget de raisonnement, la température, Top-P, Top-K, Min-P, la pénalité de répétition et la graine.
+
+Invites système — enregistrez des instructions réutilisables une seule fois et choisissez la bonne pour chaque modèle. Conservez un ton, un rôle ou un format de sortie cohérents entre les sessions.
+
+Modèles personnalisés — chargez vos propres fichiers de modèle GGUF depuis n'importe quelle source aux côtés du catalogue intégré.
+
+Téléchargements fiables — moteur de téléchargement personnalisé avec notifications de progression, affichage de la vitesse et du temps estimé, et reprise automatique en cas d'interruptions réseau.
+
+Stockage flexible — choisissez où stocker les fichiers de modèles de plusieurs Go grâce au Storage Access Framework d'Android. Déplacez facilement les modèles entre les emplacements.
+
+Performances optimisées — optimisé pour ARM avec les kernels KleidiAI et OpenMP pour une génération plus rapide sur les appareils arm64.
+
+MODÈLES COMPATIBLES
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+À partir de seulement 267 Mo pour le plus petit modèle. Les modèles plus grands (4B–8B) bénéficient de 8+ Go de RAM. Vous pouvez aussi charger n'importe quel modèle GGUF personnalisé.
+
+OPEN SOURCE
+
+LM Playground est open source sous licence MIT. Propulsé par llama.cpp avec des modèles de Hugging Face.

@@ -1,0 +1,2 @@
+- Performans ve kararlılık iyileştirmeleri
+- Cihazınız için fazla büyük modeller hakkında uyarı eklendi

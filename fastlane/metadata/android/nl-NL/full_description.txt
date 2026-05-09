@@ -1,0 +1,43 @@
+Met LM Playground kun je grote taalmodellen rechtstreeks op je Android-apparaat draaien. Download modellen, laad ze met één tik en chat — allemaal offline, allemaal privé. Geen cloudservers, geen API-sleutels, geen data die je apparaat verlaat.
+
+BELANGRIJKSTE FUNCTIES
+
+Verwerking op het apparaat — alle verwerking gebeurt lokaal op je apparaat. Je gesprekken blijven privé en verlaten nooit je telefoon.
+
+Chatgeschiedenis — al je gesprekken worden opgeslagen en georganiseerd. Pin, hernoem of verwijder sessies vanuit de zijbalk. Hervat elk gesprek precies waar je gebleven was.
+
+Rijke chatervaring — antwoorden worden weergegeven met volledige markdown-ondersteuning, inclusief koppen, codeblokken, lijsten, vet, cursief en meer.
+
+Redeneermodellen — zie het denkproces van modellen zoals DeepSeek R1, Nemotron en LFM2.5 Thinking, weergegeven in een gestileerde, inklapbare sectie met aanpasbaar denkbudget.
+
+Bijhouden van generatiesnelheid — bekijk het aantal tokens, de generatietijd en de snelheid in tok/s voor elk antwoord.
+
+Parameters per model — elk model onthoudt zijn eigen generatie-instellingen. Stel de contextgrootte, het denkbudget, temperature, Top-P, Top-K, Min-P, herhalingsboete en seed nauwkeurig in.
+
+Systeemprompts — sla herbruikbare instructies één keer op en kies de juiste voor elk model. Houd toon, rol of uitvoerformaat consistent tussen sessies.
+
+Aangepaste modellen — laad je eigen GGUF-modelbestanden uit elke bron naast de ingebouwde catalogus.
+
+Betrouwbare downloads — aangepaste download-engine met voortgangsmeldingen, weergave van snelheid en ETA, en automatische hervatting bij netwerkonderbrekingen.
+
+Flexibele opslag — kies waar je modelbestanden van meerdere GB wilt opslaan met het Storage Access Framework van Android. Verplaats modellen eenvoudig tussen locaties.
+
+Geoptimaliseerde prestaties — ARM-geoptimaliseerd met KleidiAI-kernels en OpenMP voor snellere generatie op arm64-apparaten.
+
+ONDERSTEUNDE MODELLEN
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+Vanaf slechts 267 MB voor het kleinste model. Grotere modellen (4B–8B) profiteren van 8+ GB RAM. Je kunt ook elk aangepast GGUF-model laden.
+
+OPEN SOURCE
+
+LM Playground is open source onder de MIT-licentie. Aangedreven door llama.cpp met modellen van Hugging Face.

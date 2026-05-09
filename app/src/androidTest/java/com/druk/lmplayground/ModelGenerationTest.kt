@@ -1,9 +1,11 @@
 package com.druk.lmplayground
 
 import android.util.Log
-import com.druk.llamacpp.LlamaCpp
 import com.druk.llamacpp.LlamaGenerationCallback
 import com.druk.llamacpp.LlamaProgressCallback
+import com.druk.llamacpp.jni.NativeLlamaCpp
+import com.druk.llamacpp.jni.NativeLlamaModel
+import com.druk.llamacpp.jni.NativeLlamaSession
 import com.druk.lmplayground.conversation.ResponseProcessor
 import org.junit.After
 import org.junit.Assert.*
@@ -12,8 +14,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.druk.llamacpp.LlamaGenerationSession
-import com.druk.llamacpp.LlamaModel
 import java.io.File
 
 /**
@@ -44,13 +44,13 @@ class ModelGenerationTest {
         private const val MODELS_PATH = "/data/local/tmp"
     }
 
-    private lateinit var llamaCpp: LlamaCpp
-    private var llamaModel: LlamaModel? = null
-    private var session: LlamaGenerationSession? = null
+    private lateinit var llamaCpp: NativeLlamaCpp
+    private var llamaModel: NativeLlamaModel? = null
+    private var session: NativeLlamaSession? = null
 
     @Before
     fun setUp() {
-        llamaCpp = LlamaCpp()
+        llamaCpp = NativeLlamaCpp()
         llamaCpp.init()
     }
 
@@ -72,7 +72,7 @@ class ModelGenerationTest {
         return null
     }
 
-    private fun loadModel(modelFile: File): LlamaModel {
+    private fun loadModel(modelFile: File): NativeLlamaModel {
         Log.d(TAG, "Loading model: ${modelFile.name} (${modelFile.length() / 1024 / 1024}MB)")
         val model = llamaCpp.loadModel(
             modelFile.absolutePath,
@@ -87,7 +87,7 @@ class ModelGenerationTest {
     }
 
     private fun generateFullResponse(
-        session: LlamaGenerationSession,
+        session: NativeLlamaSession,
         maxTokens: Int = 2048,
         timeoutMs: Long = 120_000
     ): String {
@@ -142,7 +142,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", true)
@@ -169,7 +169,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", false)
@@ -185,7 +185,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", true)
@@ -208,7 +208,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // First turn
@@ -236,7 +236,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Turn 1
@@ -284,7 +284,7 @@ class ModelGenerationTest {
         Log.d(TAG, "supportsThinking: ${model.supportsThinking()}")
         assertTrue("Qwen 3.5 should support thinking", model.supportsThinking())
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", true)
@@ -302,7 +302,7 @@ class ModelGenerationTest {
         assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", false)
@@ -317,7 +317,7 @@ class ModelGenerationTest {
         assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Turn 1
@@ -348,7 +348,7 @@ class ModelGenerationTest {
         assertTrue("Model size should be > 0", model.getModelSize() > 0)
         Log.d(TAG, "Nemotron supportsThinking: ${model.supportsThinking()}")
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", false)
@@ -365,7 +365,7 @@ class ModelGenerationTest {
         val model = loadModel(modelFile!!)
         assumeTrue("Nemotron does not support thinking", model.supportsThinking())
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("What is 2+2?", true)
@@ -381,7 +381,7 @@ class ModelGenerationTest {
         assumeTrue("Nemotron model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello", false)
@@ -404,7 +404,7 @@ class ModelGenerationTest {
         assumeTrue("Model must support thinking", model.supportsThinking())
 
         val budget = 50
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, budget)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, budget, "")!!
         this.session = session
 
         session.addMessage("Explain quantum computing", true)

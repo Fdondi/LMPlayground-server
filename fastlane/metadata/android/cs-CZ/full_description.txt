@@ -1,0 +1,43 @@
+LM Playground vám umožňuje spouštět velké jazykové modely přímo na vašem zařízení Android. Stahujte modely, načítejte je jedním klepnutím a chatujte — vše offline, vše soukromě. Žádné cloudové servery, žádné API klíče, žádná data neopouštějí vaše zařízení.
+
+KLÍČOVÉ FUNKCE
+
+Zpracování v zařízení — veškeré zpracování probíhá lokálně na vašem zařízení. Vaše konverzace zůstávají soukromé a nikdy neopustí váš telefon.
+
+Historie konverzací — všechny vaše konverzace jsou uloženy a uspořádány. Připínejte, přejmenovávejte nebo mažte relace z postranního panelu. Pokračujte v jakékoli konverzaci přesně tam, kde jste skončili.
+
+Bohaté chatovací prostředí — odpovědi jsou vykreslovány s plnou podporou markdown včetně nadpisů, bloků kódu, seznamů, tučného písma, kurzívy a dalšího.
+
+Modely s uvažováním — sledujte myšlenkový proces modelů jako DeepSeek R1, Nemotron a LFM2.5 Thinking zobrazený ve stylizované, sbalitelné sekci s nastavitelným rozpočtem uvažování.
+
+Sledování rychlosti generování — zobrazte si počet tokenů, dobu generování a rychlost tok/s pro každou odpověď.
+
+Parametry pro každý model — každý model si pamatuje vlastní nastavení generování. Dolaďte velikost kontextu, rozpočet uvažování, temperature, Top-P, Top-K, Min-P, postih za opakování a seed.
+
+Systémové prompty — uložte opakovaně použitelné pokyny jednou a vyberte ten správný pro libovolný model. Zachovejte konzistentní tón, roli nebo formát výstupu napříč relacemi.
+
+Vlastní modely — načítejte vlastní soubory modelů GGUF z jakéhokoli zdroje vedle vestavěného katalogu.
+
+Spolehlivé stahování — vlastní stahovací engine s oznámeními o průběhu, zobrazením rychlosti a odhadovaného času a automatickým pokračováním při přerušení sítě.
+
+Flexibilní úložiště — zvolte, kam ukládat soubory modelů o velikosti několika GB pomocí Storage Access Framework systému Android. Snadno přesouvejte modely mezi umístěními.
+
+Optimalizovaný výkon — optimalizováno pro ARM s kernely KleidiAI a OpenMP pro rychlejší generování na zařízeních arm64.
+
+PODPOROVANÉ MODELY
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+Začíná již na 267 MB pro nejmenší model. Větší modely (4B–8B) těží z 8+ GB RAM. Můžete také načíst jakýkoli vlastní model GGUF.
+
+OPEN SOURCE
+
+LM Playground je open source pod licencí MIT. Poháněno llama.cpp s modely z Hugging Face.

@@ -13,8 +13,11 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
+import androidx.compose.material.icons.automirrored.outlined.Article
+import androidx.compose.material.icons.outlined.BugReport
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Info
+import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.Storage
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,6 +28,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,14 +40,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.druk.lmplayground.R
 import com.druk.lmplayground.theme.PlaygroundTheme
+import java.util.Locale
 
 @Composable
 fun SettingsScreen(
     onBackClick: () -> Unit,
     onModelsClick: () -> Unit,
+    onSystemPromptsClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onFaqClick: () -> Unit,
-    appVersion: String
+    appVersion: String,
+    /**
+     * Debug-only: if non-null, renders a "Crash inference engine" row that
+     * triggers a SIGSEGV-equivalent in the `:llama` process. Used to
+     * exercise the crash-isolation + recovery flow on a real device. The
+     * settings fragment only wires this on debug builds.
+     */
+    onCrashEngineClick: (() -> Unit)? = null,
 ) {
     Scaffold(
         topBar = {
@@ -54,6 +70,8 @@ fun SettingsScreen(
             )
         }
     ) { padding ->
+        var showLanguageDialog by remember { mutableStateOf(false) }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -66,6 +84,35 @@ fun SettingsScreen(
                 subtitle = stringResource(R.string.models_subtitle),
                 onClick = onModelsClick
             )
+
+            // System Prompts row
+            SettingsRow(
+                icon = Icons.AutoMirrored.Outlined.Article,
+                title = stringResource(R.string.system_prompts),
+                subtitle = stringResource(R.string.system_prompts_subtitle),
+                onClick = onSystemPromptsClick
+            )
+
+            // Language row
+            val currentTag = currentLanguageTag()
+            val languageSubtitle = if (currentTag == null) {
+                stringResource(R.string.language_system_default)
+            } else {
+                Locale.forLanguageTag(currentTag).let { locale ->
+                    locale.getDisplayName(locale)
+                        .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
+                }
+            }
+            SettingsRow(
+                icon = Icons.Outlined.Language,
+                title = stringResource(R.string.language),
+                subtitle = languageSubtitle,
+                onClick = { showLanguageDialog = true }
+            )
+
+            if (showLanguageDialog) {
+                LanguageDialog(onDismiss = { showLanguageDialog = false })
+            }
 
             // Privacy Policy row
             SettingsRow(
@@ -81,6 +128,16 @@ fun SettingsScreen(
                 subtitle = stringResource(R.string.faq_subtitle),
                 onClick = onFaqClick
             )
+
+            // Debug-only: crash the inference engine to verify isolation.
+            if (onCrashEngineClick != null) {
+                SettingsRow(
+                    icon = Icons.Outlined.BugReport,
+                    title = stringResource(R.string.debug_crash_engine_title),
+                    subtitle = stringResource(R.string.debug_crash_engine_subtitle),
+                    onClick = onCrashEngineClick,
+                )
+            }
 
             // Version row (static, not clickable)
             Row(
@@ -152,6 +209,7 @@ private fun SettingsScreenPreview() {
         SettingsScreen(
             onBackClick = {},
             onModelsClick = {},
+            onSystemPromptsClick = {},
             onPrivacyPolicyClick = {},
             onFaqClick = {},
             appVersion = "1.0.0"

@@ -1,0 +1,43 @@
+LM Playground cho phép bạn chạy các mô hình ngôn ngữ lớn trực tiếp trên thiết bị Android. Tải mô hình, nạp chỉ bằng một chạm và trò chuyện — tất cả ngoại tuyến, tất cả riêng tư. Không cần máy chủ đám mây, không cần khóa API, không có dữ liệu rời khỏi thiết bị của bạn.
+
+TÍNH NĂNG CHÍNH
+
+Suy luận trên thiết bị — toàn bộ xử lý diễn ra cục bộ trên thiết bị của bạn. Các cuộc hội thoại của bạn luôn riêng tư và không bao giờ rời khỏi điện thoại.
+
+Lịch sử trò chuyện — tất cả cuộc hội thoại được lưu và sắp xếp. Ghim, đổi tên hoặc xóa phiên từ thanh bên. Tiếp tục bất kỳ cuộc hội thoại nào ngay tại nơi bạn dừng lại.
+
+Trải nghiệm trò chuyện phong phú — phản hồi được hiển thị với hỗ trợ markdown đầy đủ bao gồm tiêu đề, khối mã, danh sách, in đậm, in nghiêng và nhiều hơn nữa.
+
+Mô hình suy luận — xem quá trình suy nghĩ của các mô hình như DeepSeek R1, Nemotron và LFM2.5 Thinking được hiển thị trong phần có kiểu dáng đẹp, có thể thu gọn với ngân sách suy nghĩ có thể điều chỉnh.
+
+Theo dõi tốc độ tạo — xem số lượng token, thời gian tạo và tốc độ tok/s cho mỗi phản hồi.
+
+Tham số theo mô hình — mỗi mô hình ghi nhớ cài đặt tạo riêng. Tinh chỉnh kích thước ngữ cảnh, ngân sách suy nghĩ, nhiệt độ, Top-P, Top-K, Min-P, hình phạt lặp lại và hạt giống.
+
+Lời nhắc hệ thống — lưu các hướng dẫn có thể tái sử dụng một lần và chọn cái phù hợp cho bất kỳ mô hình nào. Giữ giọng điệu, vai trò hoặc định dạng đầu ra nhất quán giữa các phiên.
+
+Mô hình tùy chỉnh — tải tệp mô hình GGUF của riêng bạn từ bất kỳ nguồn nào cùng với danh mục tích hợp.
+
+Tải xuống đáng tin cậy — công cụ tải xuống tùy chỉnh với thông báo tiến trình, hiển thị tốc độ và thời gian ước tính, và tự động tiếp tục khi mạng bị gián đoạn.
+
+Lưu trữ linh hoạt — chọn nơi lưu trữ các tệp mô hình nhiều GB bằng Storage Access Framework của Android. Dễ dàng di chuyển mô hình giữa các vị trí.
+
+Hiệu suất tối ưu — tối ưu hóa cho ARM với nhân KleidiAI và OpenMP để tạo nhanh hơn trên thiết bị arm64.
+
+MÔ HÌNH ĐƯỢC HỖ TRỢ
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+Bắt đầu từ chỉ 267 MB cho mô hình nhỏ nhất. Mô hình lớn hơn (4B–8B) cần RAM 8+ GB. Bạn cũng có thể tải bất kỳ mô hình GGUF tùy chỉnh nào.
+
+MÃ NGUỒN MỞ
+
+LM Playground là mã nguồn mở theo Giấy phép MIT. Được hỗ trợ bởi llama.cpp với các mô hình từ Hugging Face.

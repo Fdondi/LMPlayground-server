@@ -10,16 +10,18 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.druk.lmplayground.R
 
 @Composable
 fun WhatsNewText(modifier: Modifier = Modifier) {
     val items = listOf(
-        "New Gemma 4 models (E2B, E4B)",
-        "Per-model generation parameters",
-        "Thinking budget control"
+        stringResource(R.string.whats_new_item_1),
+        stringResource(R.string.whats_new_item_2),
+        stringResource(R.string.whats_new_item_3)
     )
 
     Column(
@@ -27,7 +29,7 @@ fun WhatsNewText(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "What's New",
+            text = stringResource(R.string.whats_new),
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.outline

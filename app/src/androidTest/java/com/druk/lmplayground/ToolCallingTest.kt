@@ -1,11 +1,11 @@
 package com.druk.lmplayground
 
 import android.util.Log
-import com.druk.llamacpp.LlamaCpp
 import com.druk.llamacpp.LlamaGenerationCallback
-import com.druk.llamacpp.LlamaGenerationSession
-import com.druk.llamacpp.LlamaModel
 import com.druk.llamacpp.LlamaProgressCallback
+import com.druk.llamacpp.jni.NativeLlamaCpp
+import com.druk.llamacpp.jni.NativeLlamaModel
+import com.druk.llamacpp.jni.NativeLlamaSession
 import com.druk.lmplayground.tools.CalculatorTool
 import com.druk.lmplayground.tools.DateTimeTool
 import com.druk.lmplayground.tools.ToolRegistry
@@ -48,13 +48,13 @@ class ToolCallingTest {
         private const val MODELS_PATH = "/data/local/tmp"
     }
 
-    private lateinit var llamaCpp: LlamaCpp
-    private var llamaModel: LlamaModel? = null
-    private var session: LlamaGenerationSession? = null
+    private lateinit var llamaCpp: NativeLlamaCpp
+    private var llamaModel: NativeLlamaModel? = null
+    private var session: NativeLlamaSession? = null
 
     @Before
     fun setUp() {
-        llamaCpp = LlamaCpp()
+        llamaCpp = NativeLlamaCpp()
         llamaCpp.init()
     }
 
@@ -74,7 +74,7 @@ class ToolCallingTest {
         return null
     }
 
-    private fun findToolCapableModel(): Pair<File, LlamaModel>? {
+    private fun findToolCapableModel(): Pair<File, NativeLlamaModel>? {
         for (name in CANDIDATE_MODELS) {
             val file = File(MODELS_PATH, name)
             if (!file.exists() || !file.canRead()) continue
@@ -92,7 +92,7 @@ class ToolCallingTest {
         return null
     }
 
-    private fun loadModel(modelFile: File): LlamaModel {
+    private fun loadModel(modelFile: File): NativeLlamaModel {
         Log.d(TAG, "Loading model: ${modelFile.name} (${modelFile.length() / 1024 / 1024}MB)")
         val model = llamaCpp.loadModel(
             modelFile.absolutePath,
@@ -111,7 +111,7 @@ class ToolCallingTest {
      * Return code: 1 = normal completion, 2 = tool calls detected.
      */
     private fun generateResponse(
-        session: LlamaGenerationSession,
+        session: NativeLlamaSession,
         maxTokens: Int = 2048,
         timeoutMs: Long = 120_000
     ): Pair<String, Int> {
@@ -263,7 +263,7 @@ class ToolCallingTest {
             model.supportsToolCalling()
         )
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
@@ -285,7 +285,7 @@ class ToolCallingTest {
             model.supportsToolCalling()
         )
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
@@ -325,7 +325,7 @@ class ToolCallingTest {
             model.supportsToolCalling()
         )
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
@@ -372,7 +372,7 @@ class ToolCallingTest {
             model.supportsToolCalling()
         )
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
@@ -414,7 +414,7 @@ class ToolCallingTest {
         assumeTrue("No model found", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Don't set tools - should work as before
@@ -431,7 +431,7 @@ class ToolCallingTest {
         assumeTrue("No model found", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Set tools then clear them
@@ -457,7 +457,7 @@ class ToolCallingTest {
             model.supportsToolCalling()
         )
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
@@ -500,7 +500,7 @@ class ToolCallingTest {
         val model = loadModel(modelFile!!)
         assumeTrue("Needs tool calling", model.supportsToolCalling())
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
@@ -531,7 +531,7 @@ class ToolCallingTest {
         val model = loadModel(modelFile!!)
         assumeTrue("Needs tool calling", model.supportsToolCalling())
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)

@@ -117,6 +117,7 @@ class ModelsFragment : Fragment() {
                     snackbarMessage = snackbarMessage,
                     pendingMigration = pendingMigration,
                     migrationProgress = migrationProgress,
+                    deviceLanguage = viewModel.deviceLanguage,
                     onBackClick = { findNavController().popBackStack() },
                     onChangeFolderClick = { folderPickerLauncher.launch(null) },
                     onDeleteModel = { model ->

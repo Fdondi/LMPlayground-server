@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">Navigatielade openen</string>
+    <string name="navigation_drawer_close">Navigatielade sluiten</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigatiekop</string>
+    <string name="action_settings">Instellingen</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Galerij</string>
+    <string name="menu_slideshow">Diavoorstelling</string>
+    <string name="conversations">Gesprekken</string>
+    <string name="profile">Profiel</string>
+    <string name="jumpBottom">Spring naar onderen</string>
+    <string name="send">Verzenden</string>
+    <string name="author_me">ik</string>
+    <string name="members">%d leden</string>
+    <string name="textfield_hint">Bericht</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; Veeg om te annuleren</string>
+    <string name="emojis_label">Emoji\'s</string>
+    <string name="stickers_label">Stickers</string>
+
+    <string name="message">Bericht</string>
+    <string name="edit_profile">Profiel bewerken</string>
+    <string name="profile_error">Er is een fout opgetreden bij het laden van het profiel</string>
+    <string name="bio">Bio</string>
+    <string name="display_name">Weergavenaam</string>
+    <string name="status">Status</string>
+    <string name="timezone">Tijdzone</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">Gemeenschappelijke kanalen</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">Emoji-selectie</string>
+    <string name="emoji_selector_bt_desc">Emoji-selectie tonen</string>
+    <string name="dm_desc">Privébericht</string>
+    <string name="attach_photo_desc">Foto bijvoegen</string>
+    <string name="map_selector_desc">Locatieselectie</string>
+    <string name="videochat_desc">Videochat starten</string>
+    <string name="textfield_desc">Tekstinvoer</string>
+    <string name="not_available">Functie momenteel niet beschikbaar</string>
+    <string name="not_available_subtitle">Pak een drankje en kom later nog eens terug!</string>
+    <string name="attached_image">Bijgevoegde afbeelding</string>
+    <string name="search">Zoeken</string>
+    <string name="info">Informatie</string>
+    <string name="more_options">Meer opties</string>
+    <string name="touch_and_hold_to_record">Houd ingedrukt om op te nemen</string>
+    <string name="record_message">Spraakbericht opnemen</string>
+    <string name="stop">Stoppen</string>
+
+    <string name="copy">Kopiëren</string>
+    <string name="upvote">Omhoog stemmen</string>
+    <string name="downvote">Omlaag stemmen</string>
+    <string name="rating_question">Waarom koos je deze beoordeling?</string>
+    <string name="offensive_unsafe">Beledigend/Onveilig</string>
+    <string name="not_correct">Niet correct</string>
+    <string name="didnt_follow_instructions">Volgde instructies niet</string>
+    <string name="wrong_language">Verkeerde taal</string>
+    <string name="other">Anders</string>
+
+    <!-- Settings -->
+    <string name="settings">Instellingen</string>
+    <string name="back">Terug</string>
+    <string name="version">Versie %s</string>
+    <string name="models_subtitle">Modellen downloaden en beheren</string>
+    <string name="privacy_policy">Privacybeleid</string>
+    <string name="privacy_policy_effective_date">Ingangsdatum: 16 maart 2024</string>
+    <string name="privacy_policy_intro">Welkom bij LM Playground! Ik zet me in om het vertrouwen van alle gebruikers van mijn app te behouden. In dit privacybeleid geef ik gedetailleerde informatie over wanneer en waarom ik geen persoonlijke gegevens verzamel, hoe ik de enige vereiste toestemming (internettoegang) gebruik en hoe ik ervoor zorg dat jouw privacy beschermd is.</string>
+    <string name="privacy_policy_s1_title">1. Geen verzameling van persoonlijke gegevens</string>
+    <string name="privacy_policy_s1_body">Ik, Andriy Druk, de ontwikkelaar van LM Playground, verzamel, bewaar, gebruik of deel geen persoonlijke gegevens van de gebruikers van mijn app. Mijn app is ontworpen met jouw privacy als prioriteit, zodat je hem kunt gebruiken zonder je persoonlijke gegevens in gevaar te brengen.</string>
+    <string name="privacy_policy_s2_title">2. Niet-persoonlijke informatie</string>
+    <string name="privacy_policy_s2_body">LM Playground is zo ontworpen dat het geen niet-persoonlijke informatie van zijn gebruikers verzamelt of gebruikt. De app werkt onafhankelijk zonder gebruikersgegevens, gedrag of voorkeuren te volgen of te analyseren.</string>
+    <string name="privacy_policy_s3_title">3. Gebruik van internettoestemming</string>
+    <string name="privacy_policy_s3_body">De enige toestemming die LM Playground vereist, is internettoegang. Deze toestemming is nodig om DownloadManager bestanden rechtstreeks in de app te laten downloaden. Wees gerust: deze functie omvat geen verzending van gegevens vanaf jouw apparaat naar welke server dan ook, noch het verzamelen van informatie over jouw surfgedrag.</string>
+    <string name="privacy_policy_s4_title">4. Updates van het privacybeleid</string>
+    <string name="privacy_policy_s4_body">Als ontwikkelaar van LM Playground behoud ik me het recht voor om dit privacybeleid op elk moment bij te werken. Wijzigingen worden van kracht zodra het bijgewerkte beleid op deze pagina wordt geplaatst. Gebruikers worden aangemoedigd om deze pagina regelmatig te controleren op wijzigingen en op de hoogte te blijven van hoe ik help de persoonlijke gegevens die ik niet verzamel te beschermen.</string>
+    <string name="privacy_policy_s5_title">5. Aanvaarding van dit beleid</string>
+    <string name="privacy_policy_s5_body">Door LM Playground te gebruiken, erken je en ga je akkoord met dit privacybeleid. Als je het niet eens bent met het beleid, gebruik de app dan niet. Je voortgezette gebruik van de app na het plaatsen van updates of wijzigingen aan dit beleid wordt beschouwd als jouw aanvaarding van die wijzigingen.</string>
+    <string name="privacy_policy_s6_title">6. Contact</string>
+    <string name="privacy_policy_s6_body">Als je vragen of suggesties hebt over mijn privacybeleid, aarzel dan niet om contact met me op te nemen.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">Feedback sturen</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_subtitle">Veelgestelde vragen</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">Wat is LM Playground?</string>
+    <string name="faq_a1">Met LM Playground kun je grote taalmodellen rechtstreeks op je Android-apparaat uitvoeren. Alle verwerking gebeurt lokaal \u2013 geen cloudservers nodig.</string>
+    <string name="faq_q2">Welke modellen worden ondersteund?</string>
+    <string name="faq_a2">De app ondersteunt modellen in GGUF-formaat met Q4_K_M-kwantisatie, waaronder Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini en DeepSeek R1 Distill in verschillende groottes.</string>
+    <string name="faq_q3">Hoeveel opslagruimte heb ik nodig?</string>
+    <string name="faq_a3">Modelgroottes variëren van ongeveer 500 MB (kleine modellen zoals Qwen 3 0.6B) tot meerdere GB (grotere modellen zoals DeepSeek R1 7B). Zorg dat je voldoende vrije ruimte hebt voor het downloaden.</string>
+    <string name="faq_q4">Heeft de app een internetverbinding nodig?</string>
+    <string name="faq_a4">Internet is alleen nodig om modellen te downloaden. Eenmaal gedownload, werken modellen volledig offline op je apparaat.</string>
+    <string name="faq_q5">Zijn mijn gegevens privé?</string>
+    <string name="faq_a5">Ja. Alle gesprekken worden lokaal op je apparaat verwerkt. Er worden geen gegevens naar externe servers verstuurd. Zie het privacybeleid voor details.</string>
+    <string name="faq_q6">Waarom is het laden van het model langzaam?</string>
+    <string name="faq_a6">Grotere modellen hebben meer tijd nodig om in het geheugen te laden. Laadtijden zijn afhankelijk van de hardware van je apparaat. Eenmaal geladen blijft het model in het geheugen totdat je het ontlaadt.</string>
+    <string name="faq_q7">Welke apparaten werken het beste?</string>
+    <string name="faq_a7">Apparaten met meer RAM kunnen grotere modellen draaien. Gebruik voor de beste prestaties een apparaat met minimaal 6 GB RAM voor kleine modellen en 8+ GB voor grotere.</string>
+    <string name="faq_q8">Kan ik een aangepast GGUF-model laden?</string>
+    <string name="faq_a8">Ja. Plaats je .gguf-bestand in de opslagmap die is geselecteerd in Instellingen → Modellen (dezelfde map die voor downloads wordt gebruikt). De app pikt het automatisch op en toont het in de modelkiezer naast de ingebouwde catalogus. Het chatsjabloon en de tokenizer-instellingen worden uit de GGUF-metadata gelezen. Als een specifiek model niet werkt, maak dan een issue aan op GitHub.</string>
+    <string name="faq_q9">Kan ik wijzigen waar modellen worden opgeslagen?</string>
+    <string name="faq_a9">Ja. Ga naar Instellingen, dan Modellen, en gebruik de optie \u201CMap wijzigen\u201D om een andere opslaglocatie te kiezen.</string>
+    <string name="faq_q10">Hoe verwijder ik een model?</string>
+    <string name="faq_a10">Ga naar Instellingen, dan Modellen. Tik in de sectie \u201CGedownload\u201D op het verwijderpictogram naast het model dat je wilt verwijderen.</string>
+
+    <!-- Models Screen -->
+    <string name="models">Modellen</string>
+    <string name="change_folder">Map wijzigen</string>
+    <string name="delete_model">Verwijderen</string>
+    <string name="download_model">Downloaden</string>
+    <string name="storage_used_models">Modellen: %s</string>
+    <string name="storage_available">%s beschikbaar</string>
+    <string name="downloads_folder">Downloadmap</string>
+    <string name="custom_folder">Aangepaste map</string>
+    <string name="delete_model_confirm">%s verwijderen?</string>
+    <string name="delete_model_message">Hiermee wordt het modelbestand permanent verwijderd.</string>
+    <string name="downloaded_models">Gedownload</string>
+    <string name="available_models">Beschikbaar om te downloaden</string>
+    <string name="no_downloaded_models">Nog geen modellen gedownload</string>
+    <string name="browse_more_models">Modellen bekijken</string>
+    <string name="cancel">Annuleren</string>
+    <string name="low_ram_warning_title">Model kan instabiel zijn</string>
+    <string name="low_ram_warning_message">Het model heeft ~%1$s RAM nodig, maar dit apparaat heeft slechts %2$s in totaal. Het kan langzaam laden of onvoorspelbaar reageren.</string>
+    <string name="load_anyway">Toch laden</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Model-downloads</string>
+    <string name="download_notification_channel_description">Toont voortgang voor downloads van modelbestanden</string>
+    <string name="download_complete">Download voltooid</string>
+    <string name="moving_to_storage">Verplaatsen naar opslag\u2026</string>
+    <string name="starting_download">Download starten\u2026</string>
+    <string name="download_failed">Download mislukt</string>
+    <string name="download_cancelled">Download geannuleerd</string>
+    <string name="waiting_for_network">Wachten op netwerk\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">Modellen migreren?</string>
+    <string name="migrate_models_message">%1$d model(len) (%2$s) gevonden in de vorige map. Wil je ze naar de nieuwe locatie kopiëren?</string>
+    <string name="migrate_models_from_downloads">%1$d model(len) (%2$s) gevonden in je Downloadmap. Wil je ze naar de gekozen opslaglocatie verplaatsen?</string>
+    <string name="models_to_migrate">Modellen:</string>
+    <string name="migrate">Migreren</string>
+    <string name="skip">Overslaan</string>
+    <string name="migrating_models">Modellen migreren</string>
+    <string name="migration_progress">%1$d van %2$d kopiëren</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">Systeemprompts</string>
+    <string name="system_prompts_subtitle">Herbruikbare instructies voor elk model</string>
+    <string name="system_prompts_empty">Nog geen systeemprompts. Tik op + om er een toe te voegen.</string>
+    <string name="system_prompt_new">Nieuwe systeemprompt</string>
+    <string name="system_prompt_edit">Systeemprompt bewerken</string>
+    <string name="system_prompt_hint">bijv. Je bent een bondige assistent. Antwoord altijd in het Nederlands.</string>
+    <string name="system_prompt_current">Huidige systeemprompt</string>
+    <string name="system_prompt_current_empty">Geen systeemprompt — tik om toe te voegen</string>
+    <string name="system_prompt_update">Bijwerken</string>
+    <string name="save">Opslaan</string>
+    <string name="add">Toevoegen</string>
+    <string name="clear">Wissen</string>
+
+    <!-- General UI -->
+    <string name="select_model">Model selecteren</string>
+    <string name="new_conversation">Nieuw gesprek</string>
+    <string name="close">Sluiten</string>
+    <string name="pinned_label">Vastgezet</string>
+    <string name="unpin">Losmaken</string>
+    <string name="pin">Vastzetten</string>
+    <string name="rename">Naam wijzigen</string>
+    <string name="delete">Verwijderen</string>
+    <string name="rename_conversation">Gesprek hernoemen</string>
+    <string name="previously_used_model">Eerder gebruikt: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Opslagmap kiezen</string>
+    <string name="choose_storage_folder_message">Kies een map waarin modellen worden opgeslagen. Dit is nodig om de app te gebruiken.</string>
+    <string name="choose_folder">Map kiezen</string>
+
+    <!-- Session -->
+    <string name="session_info">Sessie-info</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Generatieparameters</string>
+    <string name="reset">Resetten</string>
+    <string name="context_size">Contextgrootte</string>
+    <string name="will_reset_conversation">Gesprek wordt gereset</string>
+    <string name="thinking_budget">Denkbudget</string>
+    <string name="tokens_value">%d tokens</string>
+    <string name="temperature">Temperatuur</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Herhalingsstraf</string>
+    <string name="advanced">Geavanceerd</string>
+    <string name="collapse">Inklappen</string>
+    <string name="expand">Uitklappen</string>
+    <string name="seed">Seed</string>
+    <string name="random">Willekeurig</string>
+    <string name="disabled_label">uitgeschakeld</string>
+    <string name="unload_model">Model ontladen</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Denken</string>
+    <string name="collapse_thinking">Denken inklappen</string>
+    <string name="expand_thinking">Denken uitklappen</string>
+    <string name="thoughts">Gedachten</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Functie niet beschikbaar \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI op</string>
+    <string name="screenshot_hero_title_emphasis">je</string>
+    <string name="screenshot_hero_title_suffix">telefoon</string>
+    <string name="screenshot_hero_subtitle">Privé. Lokaal. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ modellen van:</string>
+    <string name="screenshot_choose_model">Kies een model</string>
+    <string name="screenshot_choose_model_sub">van toonaangevende AI-aanbieders</string>
+    <string name="screenshot_chat">Chat privé</string>
+    <string name="screenshot_chat_sub">op je apparaat</string>
+    <string name="screenshot_fine_tune">Fijn afstemmen</string>
+    <string name="screenshot_fine_tune_sub">generatieparameters</string>
+    <string name="screenshot_download_models">Download elk model</string>
+    <string name="screenshot_download_models_sub">naar een map naar keuze</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">Je bent een bondige wetenschapsleraar. Leg ideeën helder uit met alledaagse voorbeelden.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">Wat is machine learning?</string>
+    <string name="screenshot_chat_response">Machine learning is een tak van kunstmatige intelligentie waarbij computers **leren van gegevens** in plaats van expliciet geprogrammeerd te worden.\n\nKernbegrippen:\n\n\u2022 **Trainen**: gegevens aan algoritmen voeden\n\u2022 **Modellen**: patronen geleerd uit gegevens\n\u2022 **Inferentie**: voorspellingen doen op nieuwe gegevens</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Lichtgewicht chatmodel</string>
+    <string name="model_category_general">Chatmodel voor algemeen gebruik</string>
+    <string name="model_category_efficient">Efficiënt model op het apparaat</string>
+    <string name="model_category_reasoning">Hybride redeneermodel</string>
+    <string name="model_category_ultra_lightweight">Ultralichtgewicht chatmodel</string>
+    <string name="model_category_compact_reasoning">Compact redeneermodel</string>
+    <string name="model_category_thinking">Denkmodel</string>
+    <string name="model_category_enterprise">Zakelijk chatmodel</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">Wat is er nieuw</string>
+    <string name="whats_new_item_1">Nieuwe Gemma 4-modellen (E2B, E4B)</string>
+    <string name="whats_new_item_2">Generatieparameters per model</string>
+    <string name="whats_new_item_3">Besturing van denkbudget</string>
+
+    <string name="supports_your_language">Ondersteunt jouw taal</string>
+    <string name="other_models">Andere modellen</string>
+    <string name="language">Taal</string>
+    <string name="language_system_default">Systeemstandaard</string>
+
+    <!-- Melding van de inferentie-engineservice (voorgrondservice
+         terwijl een model is geladen, zodat het systeem het
+         :llama-proces niet afsluit). -->
+    <string name="inference_notification_channel_name">Inferentie-engine</string>
+    <string name="inference_notification_channel_description">Houdt het AI-model geladen en klaar om te reageren.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model geladen — klaar om te chatten.</string>
+    <string name="inference_notification_loaded_title">Model geladen</string>
+    <string name="inference_engine_crashed">Oeps, er ging iets mis.\nLaad het model opnieuw.</string>
+    <string name="message_too_large">Het bericht is %1$d KB en overschrijdt de limiet van %2$d KB. Probeer een korter bericht te sturen.</string>
+    <string name="replay_history_too_large">De gespreksgeschiedenis is te groot om in dit model opnieuw te laden. Start een nieuwe chat om verder te gaan.</string>
+    <string name="system_prompt_too_large">De systeemprompt is %1$d KB en overschrijdt de limiet van %2$d KB. Probeer een kortere prompt.</string>
+    <string name="history_message_too_large">Een opgeslagen bericht in dit gesprek is te groot om opnieuw te laden. Start een nieuwe chat om verder te gaan.</string>
+</resources>

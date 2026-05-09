@@ -5,6 +5,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
+import com.druk.lmplayground.R
 
 @Composable
 fun FunctionalityNotAvailablePopup(onDismiss: () -> Unit) {
@@ -12,13 +14,13 @@ fun FunctionalityNotAvailablePopup(onDismiss: () -> Unit) {
         onDismissRequest = onDismiss,
         text = {
             Text(
-                text = "Functionality not available \uD83D\uDE48",
+                text = stringResource(R.string.functionality_not_available),
                 style = MaterialTheme.typography.bodyMedium
             )
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(text = "CLOSE")
+                Text(text = stringResource(R.string.close))
             }
         }
     )

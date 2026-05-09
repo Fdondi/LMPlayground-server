@@ -1,0 +1,43 @@
+LM Playground 让您直接在 Android 设备上运行大型语言模型。下载模型，一键加载，即可对话——完全离线，完全私密。无需云服务器，无需 API 密钥，数据不会离开您的设备。
+
+主要功能
+
+设备端推理——所有处理都在您的设备上本地完成。您的对话保持私密，永远不会离开您的手机。
+
+聊天记录——所有对话都会保存并整理。从侧边栏固定、重命名或删除会话。随时从上次中断的地方继续任何对话。
+
+丰富的聊天体验——回复以完整的 markdown 格式呈现，包括标题、代码块、列表、粗体、斜体等。
+
+推理模型——查看 DeepSeek R1、Nemotron 和 LFM2.5 Thinking 等模型的思考过程，以精美的可折叠区域展示，支持可调节的思考预算。
+
+生成速度追踪——查看每条回复的 token 数量、生成时间和 tok/s 速度。
+
+模型独立参数——每个模型记住自己的生成设置。微调上下文大小、思考预算、温度、Top-P、Top-K、Min-P、重复惩罚和种子。
+
+系统提示词——保存可复用的指令，为任何模型挑选合适的一条。让语气、角色或输出格式在各个会话中保持一致。
+
+自定义模型——除内置目录外，还可从任何来源加载您自己的 GGUF 模型文件。
+
+可靠的下载——自定义下载引擎，提供进度通知、速度和预计时间显示，以及网络中断时自动恢复。
+
+灵活存储——使用 Android 的 Storage Access Framework 选择多 GB 模型文件的存储位置。轻松在不同位置之间移动模型。
+
+优化性能——使用 KleidiAI 内核和 OpenMP 针对 ARM 优化，在 arm64 设备上实现更快的生成速度。
+
+支持的模型
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+最小模型仅需 267 MB 起。较大模型（4B–8B）建议 8GB 以上 RAM。您还可以加载任何自定义 GGUF 模型。
+
+开源
+
+LM Playground 基于 MIT 许可证开源。由 llama.cpp 驱动，模型来自 Hugging Face。

@@ -1,0 +1,43 @@
+LM Playground, büyük dil modellerini doğrudan Android cihazınızda çalıştırmanıza olanak tanır. Modelleri indirin, tek dokunuşla yükleyin ve sohbet edin — tamamen çevrimdışı, tamamen gizli. Bulut sunucusu yok, API anahtarı yok, cihazınızdan veri çıkışı yok.
+
+TEMEL ÖZELLİKLER
+
+Cihaz üzerinde çıkarım — tüm işleme cihazınızda yerel olarak gerçekleşir. Konuşmalarınız gizli kalır ve telefonunuzdan asla çıkmaz.
+
+Sohbet geçmişi — tüm konuşmalarınız kaydedilir ve düzenlenir. Oturumları kenar çubuğundan sabitleyin, yeniden adlandırın veya silin. Herhangi bir konuşmaya kaldığınız yerden devam edin.
+
+Zengin sohbet deneyimi — yanıtlar başlıklar, kod blokları, listeler, kalın, italik ve daha fazlası dahil olmak üzere tam markdown desteğiyle işlenir.
+
+Akıl yürütme modelleri — DeepSeek R1, Nemotron ve LFM2.5 Thinking gibi modellerin düşünme sürecini, ayarlanabilir düşünme bütçesi ile şık ve katlanabilir bir bölümde görün.
+
+Üretim hızı takibi — her yanıt için token sayısı, üretim süresi ve tok/s hızını görün.
+
+Model bazlı parametreler — her model kendi üretim ayarlarını hatırlar. Bağlam boyutu, düşünme bütçesi, sıcaklık, Top-P, Top-K, Min-P, tekrar cezası ve tohum değerini ince ayar yapın.
+
+Sistem istemleri — yeniden kullanılabilir talimatları bir kez kaydedin ve herhangi bir model için uygun olanı seçin. Ton, rol veya çıktı biçimini oturumlar arasında tutarlı tutun.
+
+Özel modeller — yerleşik katalog yanında herhangi bir kaynaktan kendi GGUF model dosyalarınızı yükleyin.
+
+Güvenilir indirmeler — ilerleme bildirimleri, hız ve tahmini süre gösterimi ve ağ kesintilerinde otomatik devam özellikli özel indirme motoru.
+
+Esnek depolama — Android'in Storage Access Framework'ünü kullanarak çok GB'lık model dosyalarını nerede saklayacağınızı seçin. Modelleri konumlar arasında kolayca taşıyın.
+
+Optimize edilmiş performans — arm64 cihazlarda daha hızlı üretim için KleidiAI çekirdekleri ve OpenMP ile ARM için optimize edilmiştir.
+
+DESTEKLENEN MODELLER
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+En küçük model sadece 267 MB'dan başlar. Daha büyük modeller (4B–8B) 8+ GB RAM'den faydalanır. Ayrıca herhangi bir özel GGUF model yükleyebilirsiniz.
+
+AÇIK KAYNAK
+
+LM Playground, MIT Lisansı altında açık kaynaktır. Hugging Face'ten modellerle llama.cpp tarafından desteklenmektedir.

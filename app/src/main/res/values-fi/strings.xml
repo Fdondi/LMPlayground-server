@@ -1,0 +1,269 @@
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">Avaa navigointipaneeli</string>
+    <string name="navigation_drawer_close">Sulje navigointipaneeli</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigointiotsikko</string>
+    <string name="action_settings">Asetukset</string>
+
+    <string name="menu_home">Koti</string>
+    <string name="menu_gallery">Galleria</string>
+    <string name="menu_slideshow">Diaesitys</string>
+    <string name="conversations">Keskustelut</string>
+    <string name="profile">Profiili</string>
+    <string name="jumpBottom">Siirry alaosaan</string>
+    <string name="send">Lähetä</string>
+    <string name="author_me">minä</string>
+    <string name="members">%d jäsentä</string>
+    <string name="textfield_hint">Viesti</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; Pyyhkäise peruuttaaksesi</string>
+    <string name="emojis_label">Emojit</string>
+    <string name="stickers_label">Tarrat</string>
+
+    <string name="message">Viesti</string>
+    <string name="edit_profile">Muokkaa profiilia</string>
+    <string name="profile_error">Profiilin lataamisessa tapahtui virhe</string>
+    <string name="bio">Bio</string>
+    <string name="display_name">Näyttönimi</string>
+    <string name="status">Tila</string>
+    <string name="timezone">Aikavyöhyke</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">Yhteiset kanavat</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">Emojin valitsin</string>
+    <string name="emoji_selector_bt_desc">Näytä emojin valitsin</string>
+    <string name="dm_desc">Yksityisviesti</string>
+    <string name="attach_photo_desc">Liitä kuva</string>
+    <string name="map_selector_desc">Sijainnin valitsin</string>
+    <string name="videochat_desc">Aloita videopuhelu</string>
+    <string name="textfield_desc">Tekstinsyöttö</string>
+    <string name="not_available">Toiminto ei ole tällä hetkellä käytettävissä</string>
+    <string name="not_available_subtitle">Ota juoma ja palaa myöhemmin!</string>
+    <string name="attached_image">Liitetty kuva</string>
+    <string name="search">Haku</string>
+    <string name="info">Tiedot</string>
+    <string name="more_options">Lisää vaihtoehtoja</string>
+    <string name="touch_and_hold_to_record">Paina pitkään nauhoittaaksesi</string>
+    <string name="record_message">Nauhoita ääniviesti</string>
+    <string name="stop">Pysäytä</string>
+
+    <string name="copy">Kopioi</string>
+    <string name="upvote">Äänestä ylös</string>
+    <string name="downvote">Äänestä alas</string>
+    <string name="rating_question">Miksi valitsit tämän arvion?</string>
+    <string name="offensive_unsafe">Loukkaava/turvaton</string>
+    <string name="not_correct">Ei oikein</string>
+    <string name="didnt_follow_instructions">Ei noudattanut ohjeita</string>
+    <string name="wrong_language">Väärä kieli</string>
+    <string name="other">Muu</string>
+
+    <!-- Settings -->
+    <string name="settings">Asetukset</string>
+    <string name="back">Takaisin</string>
+    <string name="version">Versio %s</string>
+    <string name="models_subtitle">Lataa ja hallitse malleja</string>
+    <string name="privacy_policy">Tietosuojakäytäntö</string>
+    <string name="privacy_policy_effective_date">Voimaantulopäivä: 16. maaliskuuta 2024</string>
+    <string name="privacy_policy_intro">Tervetuloa LM Playgroundiin! Olen sitoutunut ylläpitämään sovellukseni kaikkien käyttäjien luottamusta. Tässä tietosuojakäytännössä annan yksityiskohtaista tietoa siitä, milloin ja miksi en kerää henkilötietoja, miten käytän ainoaa tarvittavaa lupaa (internetlupa) ja miten varmistan, että yksityisyytesi on suojattu.</string>
+    <string name="privacy_policy_s1_title">1. Ei henkilötietojen keräämistä</string>
+    <string name="privacy_policy_s1_body">Minä, Andriy Druk, LM Playgroundin kehittäjä, en kerää, tallenna, käytä tai jaa sovellukseni käyttäjien henkilötietoja. Sovellukseni on suunniteltu yksityisyytesi etusijalla, mikä varmistaa, että voit käyttää sitä vaarantamatta henkilötietojasi.</string>
+    <string name="privacy_policy_s2_title">2. Ei-henkilökohtaiset tiedot</string>
+    <string name="privacy_policy_s2_body">LM Playground on suunniteltu siten, että se ei kerää tai käytä mitään ei-henkilökohtaisia tietoja käyttäjiltään. Sovellus toimii itsenäisesti seuraamatta tai analysoimatta käyttäjätietoja, käyttäytymistä tai mieltymyksiä.</string>
+    <string name="privacy_policy_s3_title">3. Internetluvan käyttö</string>
+    <string name="privacy_policy_s3_body">Ainoa LM Playgroundin vaatima lupa on internetyhteys. Tämä lupa on välttämätön, jotta DownloadManager voi ladata tiedostoja suoraan sovellukseen. Ole varma, että tämä toiminto ei sisällä tietojen lähettämistä laitteeltasi millekään palvelimille tai tietojen keräämistä selaustottumuksistasi.</string>
+    <string name="privacy_policy_s4_title">4. Tietosuojakäytännön päivitykset</string>
+    <string name="privacy_policy_s4_body">LM Playgroundin kehittäjänä pidätän oikeuden päivittää tätä tietosuojakäytäntöä milloin tahansa. Muutokset tulevat voimaan välittömästi, kun päivitetty käytäntö julkaistaan tällä sivulla. Käyttäjiä kannustetaan tarkistamaan tämä sivu säännöllisesti muutosten varalta ja pysymään ajan tasalla siitä, miten autan suojaamaan henkilötietoja, joita en kerää.</string>
+    <string name="privacy_policy_s5_title">5. Tämän käytännön hyväksyminen</string>
+    <string name="privacy_policy_s5_body">Käyttämällä LM Playgroundia hyväksyt tämän tietosuojakäytännön. Jos et hyväksy käytäntöä, pidättäydy sovelluksen käytöstä. Sovelluksen jatkuvaa käyttöä tämän käytännön päivitysten tai muutosten julkaisemisen jälkeen pidetään hyväksymisenä näille muutoksille.</string>
+    <string name="privacy_policy_s6_title">6. Ota yhteyttä</string>
+    <string name="privacy_policy_s6_body">Jos sinulla on kysymyksiä tai ehdotuksia tietosuojakäytännöstäni, älä epäröi ottaa yhteyttä.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">Lähetä palaute</string>
+    <string name="faq">UKK</string>
+    <string name="faq_subtitle">Usein kysytyt kysymykset</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">Mikä on LM Playground?</string>
+    <string name="faq_a1">LM Playgroundin avulla voit ajaa suuria kielimalleja suoraan Android-laitteellasi. Kaikki käsittely tapahtuu paikallisesti \u2013 pilvipalvelimia ei tarvita.</string>
+    <string name="faq_q2">Mitä malleja tuetaan?</string>
+    <string name="faq_a2">Sovellus tukee GGUF-muotoisia malleja Q4_K_M-kvantisoinnilla, mukaan lukien Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini ja DeepSeek R1 Distill eri kokoisina.</string>
+    <string name="faq_q3">Kuinka paljon tallennustilaa tarvitsen?</string>
+    <string name="faq_a3">Mallien koot vaihtelevat noin 500 MB:stä (pienet mallit kuten Qwen 3 0.6B) useisiin gigatavuihin (suuremmat mallit kuten DeepSeek R1 7B). Varmista, että sinulla on tarpeeksi vapaata tilaa ennen lataamista.</string>
+    <string name="faq_q4">Vaatiiko sovellus internetyhteyden?</string>
+    <string name="faq_a4">Internetiä tarvitaan vain mallien lataamiseen. Kun mallit on ladattu, ne toimivat täysin offline-tilassa laitteellasi.</string>
+    <string name="faq_q5">Ovatko tietoni yksityisiä?</string>
+    <string name="faq_a5">Kyllä. Kaikki keskustelut käsitellään paikallisesti laitteellasi. Tietoja ei lähetetä ulkoisille palvelimille. Katso tietosuojakäytäntö saadaksesi lisätietoja.</string>
+    <string name="faq_q6">Miksi mallin lataaminen on hidasta?</string>
+    <string name="faq_a6">Suurempien mallien lataaminen muistiin kestää kauemmin. Latausajat riippuvat laitteesi laitteistosta. Kun malli on ladattu, se pysyy muistissa, kunnes poistat sen.</string>
+    <string name="faq_q7">Mitkä laitteet toimivat parhaiten?</string>
+    <string name="faq_a7">Laitteet, joissa on enemmän RAM-muistia, voivat ajaa suurempia malleja. Parhaan suorituskyvyn saamiseksi käytä laitetta, jossa on vähintään 6 GB RAM-muistia pienille malleille ja 8+ GB suuremmille.</string>
+    <string name="faq_q8">Voinko ladata mukautetun GGUF-mallin?</string>
+    <string name="faq_a8">Kyllä. Aseta .gguf-tiedostosi tallennuskansioon, joka on valittu kohdassa Asetukset \u2192 Mallit (sama kansio, jota käytetään latauksiin). Sovellus havaitsee sen automaattisesti ja näyttää sen mallivalitsimessa sisäänrakennetun luettelon rinnalla. Chat-mallin ja tokenizerin asetukset luetaan GGUF-metatiedoista. Jos tietty malli ei toimi, avaa issue GitHubissa.</string>
+    <string name="faq_q9">Voinko muuttaa, missä mallit tallennetaan?</string>
+    <string name="faq_a9">Kyllä. Siirry kohtaan Asetukset, sitten Mallit, ja käytä \u201CVaihda kansio\u201D -vaihtoehtoa valitaksesi toisen tallennuspaikan.</string>
+    <string name="faq_q10">Miten poistan mallin?</string>
+    <string name="faq_a10">Siirry kohtaan Asetukset, sitten Mallit. \u201CLadattu\u201D-osiossa napauta poistokuvaketta sen mallin vieressä, jonka haluat poistaa.</string>
+
+    <!-- Models Screen -->
+    <string name="models">Mallit</string>
+    <string name="change_folder">Vaihda kansio</string>
+    <string name="delete_model">Poista</string>
+    <string name="download_model">Lataa</string>
+    <string name="storage_used_models">Mallit: %s</string>
+    <string name="storage_available">%s saatavilla</string>
+    <string name="downloads_folder">Latauskansio</string>
+    <string name="custom_folder">Mukautettu kansio</string>
+    <string name="delete_model_confirm">Poista %s?</string>
+    <string name="delete_model_message">Tämä poistaa mallitiedoston pysyvästi.</string>
+    <string name="downloaded_models">Ladattu</string>
+    <string name="available_models">Saatavilla ladattavaksi</string>
+    <string name="no_downloaded_models">Ei vielä ladattuja malleja</string>
+    <string name="browse_more_models">Selaa malleja</string>
+    <string name="cancel">Peruuta</string>
+    <string name="low_ram_warning_title">Malli voi olla epävakaa</string>
+    <string name="low_ram_warning_message">Malli tarvitsee noin %1$s RAM-muistia, mutta tässä laitteessa on yhteensä vain %2$s. Lataus voi olla hidas tai vastaukset arvaamattomia.</string>
+    <string name="load_anyway">Lataa silti</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Mallien lataukset</string>
+    <string name="download_notification_channel_description">Näyttää mallitiedostojen latauksen edistymisen</string>
+    <string name="download_complete">Lataus valmis</string>
+    <string name="moving_to_storage">Siirretään tallennustilaan\u2026</string>
+    <string name="starting_download">Aloitetaan lataus\u2026</string>
+    <string name="download_failed">Lataus epäonnistui</string>
+    <string name="download_cancelled">Lataus peruutettu</string>
+    <string name="waiting_for_network">Odotetaan verkkoa\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">Siirretäänkö mallit?</string>
+    <string name="migrate_models_message">Löytyi %1$d malli(a) (%2$s) edellisestä kansiosta. Haluatko kopioida ne uuteen sijaintiin?</string>
+    <string name="migrate_models_from_downloads">Löytyi %1$d malli(a) (%2$s) latauskansiostasi. Haluatko siirtää ne valittuun tallennuspaikkaan?</string>
+    <string name="models_to_migrate">Mallit:</string>
+    <string name="migrate">Siirrä</string>
+    <string name="skip">Ohita</string>
+    <string name="migrating_models">Siirretään malleja</string>
+    <string name="migration_progress">Kopioidaan %1$d / %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">Järjestelmäkehotteet</string>
+    <string name="system_prompts_subtitle">Uudelleenkäytettävät ohjeet mille tahansa mallille</string>
+    <string name="system_prompts_empty">Ei vielä järjestelmäkehotteita. Napauta + lisätäksesi yhden.</string>
+    <string name="system_prompt_new">Uusi järjestelmäkehote</string>
+    <string name="system_prompt_edit">Muokkaa järjestelmäkehotetta</string>
+    <string name="system_prompt_hint">esim. Olet tiivis avustaja. Vastaa aina ranskaksi.</string>
+    <string name="system_prompt_current">Nykyinen järjestelmäkehote</string>
+    <string name="system_prompt_current_empty">Ei järjestelmäkehotetta — napauta lisätäksesi</string>
+    <string name="system_prompt_update">Päivitä</string>
+    <string name="save">Tallenna</string>
+    <string name="add">Lisää</string>
+    <string name="clear">Tyhjennä</string>
+
+    <!-- General UI -->
+    <string name="select_model">Valitse malli</string>
+    <string name="new_conversation">Uusi keskustelu</string>
+    <string name="close">Sulje</string>
+    <string name="pinned_label">Kiinnitetty</string>
+    <string name="unpin">Irrota</string>
+    <string name="pin">Kiinnitä</string>
+    <string name="rename">Nimeä uudelleen</string>
+    <string name="delete">Poista</string>
+    <string name="rename_conversation">Nimeä keskustelu uudelleen</string>
+    <string name="previously_used_model">Aiemmin käytetty: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Valitse tallennuskansio</string>
+    <string name="choose_storage_folder_message">Valitse kansio, johon mallit tallennetaan. Tämä on pakollista sovelluksen käyttämiseksi.</string>
+    <string name="choose_folder">Valitse kansio</string>
+
+    <!-- Session -->
+    <string name="session_info">Istunnon tiedot</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Generointiparametrit</string>
+    <string name="reset">Nollaa</string>
+    <string name="context_size">Kontekstin koko</string>
+    <string name="will_reset_conversation">Nollaa keskustelun</string>
+    <string name="thinking_budget">Ajattelubudjetti</string>
+    <string name="tokens_value">%d tokenia</string>
+    <string name="temperature">Lämpötila</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Toistosakko</string>
+    <string name="advanced">Lisäasetukset</string>
+    <string name="collapse">Kutista</string>
+    <string name="expand">Laajenna</string>
+    <string name="seed">Siemen</string>
+    <string name="random">Satunnainen</string>
+    <string name="disabled_label">poistettu käytöstä</string>
+    <string name="unload_model">Pura malli</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Ajattelee</string>
+    <string name="collapse_thinking">Kutista ajattelu</string>
+    <string name="expand_thinking">Laajenna ajattelu</string>
+    <string name="thoughts">Ajatukset</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Toiminto ei ole käytettävissä \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">Tekoäly</string>
+    <string name="screenshot_hero_title_emphasis">omassa</string>
+    <string name="screenshot_hero_title_suffix">puhelimessa</string>
+    <string name="screenshot_hero_subtitle">Yksityinen. Paikallinen. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ mallia:</string>
+    <string name="screenshot_choose_model">Valitse malli</string>
+    <string name="screenshot_choose_model_sub">johtavilta tekoälytoimittajilta</string>
+    <string name="screenshot_chat">Keskustele yksityisesti</string>
+    <string name="screenshot_chat_sub">laitteellasi</string>
+    <string name="screenshot_fine_tune">Hienosäädä</string>
+    <string name="screenshot_fine_tune_sub">generointiparametreja</string>
+    <string name="screenshot_download_models">Lataa mikä tahansa malli</string>
+    <string name="screenshot_download_models_sub">mihin tahansa valitsemaasi kansioon</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">Olet tiivis tiedeopettaja. Selitä ajatukset selkeästi arkipäiväisin esimerkein.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">Mitä on koneoppiminen?</string>
+    <string name="screenshot_chat_response">Koneoppiminen on tekoälyn ala, jossa tietokoneet **oppivat datasta** sen sijaan, että niitä ohjelmoitaisiin eksplisiittisesti.\n\nKeskeiset käsitteet:\n\n\u2022 **Koulutus**: datan syöttäminen algoritmeille\n\u2022 **Mallit**: opitut kuviot datasta\n\u2022 **Päättely**: ennusteiden tekeminen uudelle datalle</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Kevyt chat-malli</string>
+    <string name="model_category_general">Yleiskäyttöinen chat-malli</string>
+    <string name="model_category_efficient">Tehokas laitekohtainen malli</string>
+    <string name="model_category_reasoning">Hybridi-päättelymalli</string>
+    <string name="model_category_ultra_lightweight">Erittäin kevyt chat-malli</string>
+    <string name="model_category_compact_reasoning">Kompakti päättelymalli</string>
+    <string name="model_category_thinking">Ajatteleva malli</string>
+    <string name="model_category_enterprise">Yrityksen chat-malli</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">Uutta</string>
+    <string name="whats_new_item_1">Uudet Gemma 4 -mallit (E2B, E4B)</string>
+    <string name="whats_new_item_2">Mallikohtaiset generointiparametrit</string>
+    <string name="whats_new_item_3">Ajattelubudjetin hallinta</string>
+
+    <string name="supports_your_language">Tukee kieltäsi</string>
+    <string name="other_models">Muut mallit</string>
+    <string name="language">Kieli</string>
+    <string name="language_system_default">Järjestelmän oletus</string>
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Päättelymoottori</string>
+    <string name="inference_notification_channel_description">Pitää tekoälymallin ladattuna ja valmiina vastaamaan.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Malli ladattu — valmis keskusteluun.</string>
+    <string name="inference_notification_loaded_title">Malli ladattu</string>
+    <string name="inference_engine_crashed">Hupsis — jokin meni pieleen.\nLataa malli uudelleen.</string>
+    <string name="message_too_large">Viesti on %1$d kt, mikä ylittää %2$d kt:n rajan. Kokeile lähettää lyhyempi viesti.</string>
+    <string name="replay_history_too_large">Keskusteluhistoria on liian suuri ladattavaksi tähän malliin. Aloita uusi keskustelu jatkaaksesi.</string>
+    <string name="system_prompt_too_large">Järjestelmäkehote on %1$d kt, mikä ylittää %2$d kt:n rajan. Kokeile lyhyempää kehotetta.</string>
+    <string name="history_message_too_large">Tähän keskusteluun tallennettu viesti on liian suuri ladattavaksi uudelleen. Aloita uusi keskustelu jatkaaksesi.</string>
+</resources>

@@ -1,0 +1,2 @@
+- Poprawki wydajności i stabilności
+- Dodano ostrzeżenie o modelach zbyt dużych dla Twojego urządzenia

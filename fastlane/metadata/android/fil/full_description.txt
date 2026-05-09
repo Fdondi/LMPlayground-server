@@ -1,0 +1,43 @@
+Pinapayagan ka ng LM Playground na magpatakbo ng malalaking language model nang direkta sa iyong Android device. Mag-download ng mga modelo, i-load ang mga ito sa isang pag-tap, at mag-chat — lahat offline, lahat pribado. Walang cloud server, walang API key, walang data na umaalis sa iyong device.
+
+MGA PANGUNAHING TAMPOK
+
+On-device inference — lahat ng pagpoproseso ay nangyayari nang lokal sa iyong device. Nananatiling pribado ang iyong mga usapan at hindi kailanman umaalis sa iyong telepono.
+
+Kasaysayan ng chat — lahat ng iyong mga usapan ay nase-save at inaayos. I-pin, palitan ang pangalan, o tanggalin ang mga session mula sa sidebar. Ipagpatuloy ang anumang usapan kung saan ka huminto.
+
+Mayamang karanasan sa chat — ang mga tugon ay nire-render nang may buong suporta sa markdown kabilang ang mga header, code block, listahan, bold, italic, at higit pa.
+
+Reasoning models — tingnan ang proseso ng pag-iisip ng mga modelo tulad ng DeepSeek R1, Nemotron, at LFM2.5 Thinking na ipinapakita sa isang istilong, na-kokolaps na seksyon na may nababagay na thinking budget.
+
+Pagsubaybay sa bilis ng generation — tingnan ang bilang ng token, oras ng generation, at bilis na tok/s para sa bawat tugon.
+
+Mga parameter bawat modelo — naaalala ng bawat modelo ang sarili nitong mga setting ng generation. I-fine-tune ang laki ng context, thinking budget, temperature, Top-P, Top-K, Min-P, repetition penalty, at seed.
+
+System prompts — i-save ang magagamit-muli na mga tagubilin nang isang beses at piliin ang tama para sa anumang modelo. Panatilihing pare-pareho ang tono, papel, o format ng output sa mga session.
+
+Mga custom na modelo — i-load ang iyong sariling GGUF model files mula sa anumang pinagmulan kasama ng built-in na katalogo.
+
+Maaasahang pag-download — custom na download engine na may mga notification ng pag-usad, pagpapakita ng bilis at ETA, at awtomatikong pag-resume sa mga pagkaantala ng network.
+
+Flexible na storage — piliin kung saan iimbak ang multi-GB na model file gamit ang Storage Access Framework ng Android. Madaling ilipat ang mga modelo sa pagitan ng mga lokasyon.
+
+Na-optimize na pagganap — na-optimize para sa ARM gamit ang KleidiAI kernels at OpenMP para sa mas mabilis na generation sa mga arm64 device.
+
+MGA SINUSUPORTAHANG MODELO
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+Simula sa 267 MB lamang para sa pinakamaliit na modelo. Ang mas malalaking modelo (4B–8B) ay nakikinabang sa 8+ GB RAM. Maaari ka ring mag-load ng anumang custom GGUF model.
+
+OPEN SOURCE
+
+Ang LM Playground ay open source sa ilalim ng MIT License. Pinapagana ng llama.cpp na may mga modelo mula sa Hugging Face.

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.druk.lmplayground.conversation.ConversationFragment"
-        android:label="Conversation">
+        android:label="@string/conversations">
         <action
             android:id="@+id/action_home_to_settings"
             app:destination="@id/nav_settings"
@@ -24,7 +24,7 @@
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.druk.lmplayground.settings.SettingsFragment"
-        android:label="Settings">
+        android:label="@string/settings">
         <action
             android:id="@+id/action_settings_to_models"
             app:destination="@id/nav_models" />
@@ -34,21 +34,29 @@
         <action
             android:id="@+id/action_settings_to_privacy_policy"
             app:destination="@id/nav_privacy_policy" />
+        <action
+            android:id="@+id/action_settings_to_system_prompts"
+            app:destination="@id/nav_system_prompts" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_system_prompts"
+        android:name="com.druk.lmplayground.settings.SystemPromptsFragment"
+        android:label="System Prompts" />
 
     <fragment
         android:id="@+id/nav_models"
         android:name="com.druk.lmplayground.storage.ModelsFragment"
-        android:label="Models" />
+        android:label="@string/models" />
 
     <fragment
         android:id="@+id/nav_faq"
         android:name="com.druk.lmplayground.settings.FaqFragment"
-        android:label="FAQ" />
+        android:label="@string/faq" />
 
     <fragment
         android:id="@+id/nav_privacy_policy"
         android:name="com.druk.lmplayground.settings.PrivacyPolicyFragment"
-        android:label="Privacy Policy" />
+        android:label="@string/privacy_policy" />
 
 </navigation>

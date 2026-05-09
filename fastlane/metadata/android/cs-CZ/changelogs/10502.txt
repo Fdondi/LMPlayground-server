@@ -1,0 +1,2 @@
+- Vylepšení výkonu a stability
+- Přidáno upozornění na modely příliš velké pro vaše zařízení

@@ -71,9 +71,10 @@ fun ChatItemBubble(
                     splitThinking(message.preToolContent)
                 }
                 if (preToolSplit.thinkingContent.isNotEmpty()) {
+                    val thinkingText = stringResource(R.string.thinking)
                     CollapsibleSection(
                         label = buildString {
-                            append("Thinking \u00B7 ${formatDuration(message.preToolThinkingDurationSeconds)}")
+                            append("$thinkingText \u00B7 ${formatDuration(message.preToolThinkingDurationSeconds)}")
                             if (message.preToolThinkingTokens > 0) {
                                 append(" \u00B7 ${message.preToolThinkingTokens} tokens")
                             }
@@ -108,9 +109,10 @@ fun ChatItemBubble(
             val hasThinking = split.thinkingContent.isNotEmpty()
 
             if (hasThinking) {
+                val thinkingText = stringResource(R.string.thinking)
                 CollapsibleSection(
                     label = buildString {
-                        append("Thinking \u00B7 ${formatDuration(message.thinkingDurationSeconds)}")
+                        append("$thinkingText \u00B7 ${formatDuration(message.thinkingDurationSeconds)}")
                         if (message.thinkingTokens > 0) {
                             append(" \u00B7 ${message.thinkingTokens} tokens")
                         }
@@ -178,7 +180,7 @@ fun ChatItemBubble(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                if (message.responseTokens > 0) {
+                if (message.responseTokens + message.thinkingTokens > 0) {
                     Text(
                         text = formatResponseStats(message),
                         style = MaterialTheme.typography.labelSmall,
@@ -222,7 +224,7 @@ private fun CollapsibleSection(
     ) {
         Icon(
             imageVector = if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
-            contentDescription = if (expanded) "Collapse" else "Expand",
+            contentDescription = if (expanded) stringResource(R.string.collapse_thinking) else stringResource(R.string.expand_thinking),
             modifier = Modifier.size(16.dp),
             tint = MaterialTheme.colorScheme.outline
         )
@@ -249,12 +251,13 @@ private fun CollapsibleSection(
 }
 
 private fun formatResponseStats(message: Message): String {
+    val totalTokens = message.responseTokens + message.thinkingTokens
     return buildString {
-        append("${message.responseTokens} tokens")
+        append("$totalTokens tokens")
         val duration = message.responseDurationSeconds
         if (duration > 0f) {
             append(" \u00B7 ${formatDuration(duration.toInt())}")
-            val speed = message.responseTokens / duration
+            val speed = totalTokens / duration
             append(" \u00B7 ${"%.1f".format(speed)} tok/s")
         }
     }
@@ -283,8 +286,9 @@ private fun ThinkingIndicator() {
         label = "dots"
     )
     val dots = ".".repeat(dotCount.toInt().coerceIn(0, 3))
+    val thinkingText = stringResource(R.string.thinking)
     Text(
-        text = "Thinking$dots",
+        text = "$thinkingText$dots",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.outline,
         fontStyle = FontStyle.Italic

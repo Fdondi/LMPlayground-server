@@ -148,13 +148,20 @@ class StorageRepository(
      * Call close() when done with the model.
      */
     class ModelFileHandle(
+        /**
+         * Legacy `fd:N` path string referring to [pfd] in the *app* process.
+         * Still used by code paths that resolve the file in-process. Once the
+         * service moves to `:llama` (step 6) this string is no longer valid
+         * cross-process — pass [pfd] directly to AIDL instead.
+         */
         val path: String,
-        private val pfd: ParcelFileDescriptor
+        /**
+         * The open file descriptor for the model. Pass this across the
+         * binder when calling the inference service so the service can
+         * dup the FD into its own process and build its own `fd:N` string.
+         */
+        val pfd: ParcelFileDescriptor,
     ) {
-        // Strong reference to prevent GC
-        @Suppress("unused")
-        private val pfdRef = pfd
-        
         fun close() {
             try {
                 pfd.close()

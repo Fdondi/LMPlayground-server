@@ -1,0 +1,3 @@
+- Sistem promptları — yeniden kullanılabilir talimatlar kaydedin ve her model için doğru olanı seçin, böylece tonunuz, rolünüz veya çıktı formatınız oturumlar arasında korunsun
+- 28 dil — uygulama artık Arapça, Bengalce, İbranice, Hintçe, Japonca, Korece, Lehçe, Tayca, Ukraynaca, Vietnamca ve daha fazlası dahil 28 dilde kullanılabilir
+- En yeni llama.cpp ile daha hızlı çıkarım ve model seçici düzeltmeleri

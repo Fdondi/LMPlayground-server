@@ -13,6 +13,7 @@
         android:allowNativeHeapPointerTagging="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.NoActionBar">
 
@@ -31,6 +32,30 @@
             android:foregroundServiceType="dataSync"
             android:exported="false"
             tools:node="merge" />
+
+        <!-- Inference engine service.
+             Runs in `:llama` so a SIGSEGV inside llama.cpp only kills this
+             process — the UI process catches the binder death via
+             InferenceClient.linkToDeath and surfaces a recoverable error.
+             Promoted to foreground while a model is loaded so Android does
+             not evict the process under memory pressure. -->
+        <service
+            android:name="com.druk.lmplayground.inference.LlamaService"
+            android:process=":llama"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+        <!-- AppCompat per-app language: enables automatic storage of the user's language
+             preference on pre-Android 13 devices. On Android 13+ the system handles it
+             via the android:localeConfig declaration above. -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
 
         <receiver
             android:name="com.druk.lmplayground.download.DownloadNotificationManager$CancelDownloadReceiver"

@@ -17,17 +17,18 @@ data class ModelInfo(
     val remoteUri: Uri? = null,
     val releaseDate: LocalDate? = null,
     val description: String,
-    @param:DrawableRes val logoRes: Int = 0
+    @param:DrawableRes val logoRes: Int = 0,
+    val supportedLanguages: List<String> = emptyList()
 ) {
     val isCustom: Boolean get() = remoteUri == null
 }
 
-/**
- * Model with its download status
- */
+fun ModelInfo.supportsLanguage(lang: String): Boolean =
+    supportedLanguages.isEmpty() || lang in supportedLanguages
+
 data class ModelWithStatus(
     val model: ModelInfo,
-    val isDownloaded: Boolean
+    val isDownloaded: Boolean,
 )
 
 private val RELEASE_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US)

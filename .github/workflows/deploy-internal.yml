@@ -2,8 +2,8 @@ name: Deploy to Google Play Internal
 
 on:
   push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+'
+    branches:
+      - main
 
 jobs:
 
@@ -26,6 +26,12 @@ jobs:
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
 
+    - name: Setup Ruby (for fastlane)
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
+        bundler-cache: true
+
     - name: Decode keystore
       run: |
         mkdir -p ~/.android
@@ -38,15 +44,33 @@ jobs:
         LM_PLAYGROUND_KEY_ALIAS: ${{ secrets.LM_PLAYGROUND_KEY_ALIAS }}
         LM_PLAYGROUND_KEY_PASSWORD: ${{ secrets.LM_PLAYGROUND_KEY_PASSWORD }}
 
-    - name: Upload to Google Play Internal
-      uses: r0adkll/upload-google-play@v1
-      with:
-        serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
-        packageName: com.druk.lmplayground
-        releaseFiles: app/build/outputs/bundle/release/app-release.aab
-        track: internal
-        whatsNewDirectory: fastlane/metadata/android/en-US/changelogs
+    - name: Write service account JSON
+      run: echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > "$RUNNER_TEMP/play-sa.json"
 
-    - name: Cleanup keystore
+    # Fastlane looks for fastlane/metadata/android/*/changelogs/{versionCode}.txt.
+    # We keep one file per versionName (e.g. 10500.txt for 1.5.0) and copy it
+    # to the exact versionCode filename so every deploy ships release notes.
+    # Version is the single source of truth in version.properties (shared with gradle).
+    - name: Stage changelog for build
+      run: |
+        source version.properties
+        BASE=$((major * 10000 + minor * 100 + patch))
+        VERSION_CODE=$((BASE * 1000 + GITHUB_RUN_NUMBER))
+        SOURCE_NAME="${BASE}.txt"
+        echo "version=$major.$minor.$patch, versionCode=$VERSION_CODE, source=$SOURCE_NAME"
+        for dir in fastlane/metadata/android/*/changelogs; do
+          if [ -f "$dir/$SOURCE_NAME" ]; then
+            cp "$dir/$SOURCE_NAME" "$dir/${VERSION_CODE}.txt"
+          fi
+        done
+
+    - name: Upload AAB + changelog to Play Store
+      env:
+        GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_PATH: ${{ runner.temp }}/play-sa.json
+      run: bundle exec fastlane deploy_internal
+
+    - name: Cleanup secrets
       if: always()
-      run: rm -f ~/.android/keystore.jks
+      run: |
+        rm -f ~/.android/keystore.jks
+        rm -f "$RUNNER_TEMP/play-sa.json"

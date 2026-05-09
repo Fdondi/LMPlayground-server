@@ -1,0 +1,43 @@
+LM Playgroundin avulla voit ajaa suuria kielimalleja suoraan Android-laitteellasi. Lataa malleja, avaa ne yhdellä napautuksella ja keskustele — kaikki offline-tilassa ja yksityisesti. Ei pilvipalvelimia, ei API-avaimia, mikään data ei poistu laitteeltasi.
+
+TÄRKEIMMÄT OMINAISUUDET
+
+Laitteella tapahtuva päättely — kaikki käsittely tapahtuu paikallisesti laitteellasi. Keskustelusi pysyvät yksityisinä eivätkä koskaan poistu puhelimestasi.
+
+Keskusteluhistoria — kaikki keskustelusi tallennetaan ja järjestetään. Kiinnitä, nimeä uudelleen tai poista istuntoja sivupalkista. Jatka mitä tahansa keskustelua juuri siitä, mihin jäit.
+
+Rikas keskustelukokemus — vastaukset esitetään täydellä markdown-tuella, mukaan lukien otsikot, koodilohkot, luettelot, lihavointi, kursivointi ja paljon muuta.
+
+Päättelymallit — näe mallien kuten DeepSeek R1, Nemotron ja LFM2.5 Thinking ajatusprosessi tyylitellyssä, laskostuvassa osiossa, jossa on säädettävä ajattelubudjetti.
+
+Generointinopeuden seuranta — näe tokenien määrä, generointiaika ja nopeus tok/s jokaisesta vastauksesta.
+
+Mallikohtaiset parametrit — jokainen malli muistaa omat generointiasetuksensa. Hienosäädä kontekstin kokoa, ajattelubudjettia, lämpötilaa, Top-P, Top-K, Min-P, toistorangaistusta ja siementä.
+
+Järjestelmäkehotteet — tallenna uudelleenkäytettävät ohjeet kerran ja valitse sopiva mille tahansa mallille. Pidä sävy, rooli tai tulostusmuoto yhtenäisenä istuntojen välillä.
+
+Mukautetut mallit — lataa omia GGUF-mallitiedostojasi mistä tahansa lähteestä sisäänrakennetun luettelon rinnalle.
+
+Luotettavat lataukset — mukautettu latausmoottori edistymisilmoituksineen, nopeuden ja arvioidun ajan näytöllä sekä automaattisella jatkamisella verkkokatkoksissa.
+
+Joustava tallennus — valitse minne tallennat useiden gigatavujen mallitiedostot Androidin Storage Access Framework -kehyksen avulla. Siirrä malleja helposti sijaintien välillä.
+
+Optimoitu suorituskyky — ARM-optimoitu KleidiAI-ytimillä ja OpenMP:llä nopeampaan generointiin arm64-laitteilla.
+
+TUETUT MALLIT
+
+• Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
+• Gemma 4 (E2B, E4B) — Google
+• Nemotron 3 Nano (4B) — NVIDIA
+• Granite 4.0 (Micro, H-Tiny) — IBM
+• DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
+• Phi-4 mini (3.8B) — Microsoft
+• LFM2.5 (350M, 1.2B Thinking) — Liquid AI
+• Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
+• Llama 3.2 (1B, 3B) — Meta
+
+Alkaen vain 267 MB pienimmälle mallille. Suuremmat mallit (4B–8B) hyötyvät 8+ GB:n RAM-muistista. Voit myös ladata minkä tahansa mukautetun GGUF-mallin.
+
+AVOIN LÄHDEKOODI
+
+LM Playground on avointa lähdekoodia MIT-lisenssillä. Moottorina llama.cpp ja mallit Hugging Facesta.

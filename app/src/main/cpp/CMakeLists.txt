@@ -8,11 +8,16 @@ cmake_minimum_required(VERSION 3.31.6)
 # Declares the project name first
 project("llamacpp")
 
-# Per-ABI performance flags (must be set before add_subdirectory)
+# Per-ABI performance flags (must be set before add_subdirectory).
+# OpenMP is OFF on both ABIs: it's the upstream-recommended Android path
+# (see llama.cpp docs/android.md) and ggml's own pthread threadpool replaces
+# it with comparable performance. Disabling OpenMP also produces cleaner
+# native crash stacks (no libomp.so frames) and shrinks the APK by ~500 KB
+# (no libomp.so packaged).
 if(DEFINED ANDROID_ABI)
     if(ANDROID_ABI STREQUAL "arm64-v8a")
         set(GGML_CPU_KLEIDIAI ON)
-        set(GGML_OPENMP ON)
+        set(GGML_OPENMP OFF)
     elseif(ANDROID_ABI STREQUAL "x86_64")
         set(GGML_CPU_KLEIDIAI OFF)
         set(GGML_OPENMP OFF)
@@ -63,7 +68,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         ggml_override
         -Wl,--no-whole-archive
         # List libraries link to the target library
-        common
+        llama-common
         llama
         android
         log)
