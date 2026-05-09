@@ -252,11 +252,17 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
             if (messages[i].role == "assistant") {
                 // Use PEG parser to strip thinking from any format
                 if (parser_initialized) {
-                    auto parsed = common_chat_parse(messages[i].content, false, parser_params);
-                    if (!parsed.reasoning_content.empty()) {
-                        messages[i].content = parsed.content;
-                        messages[i].reasoning_content.clear();
-                        stripped_any = true;
+                    try {
+                        auto parsed = common_chat_parse(messages[i].content, false, parser_params);
+                        if (!parsed.reasoning_content.empty()) {
+                            messages[i].content = parsed.content;
+                            messages[i].reasoning_content.clear();
+                            stripped_any = true;
+                        }
+                    } catch (const std::exception &e) {
+                        LOGe("PEG parse failed while stripping older turn: %s", e.what());
+                    } catch (...) {
+                        LOGe("PEG parse failed while stripping older turn: unknown");
                     }
                 } else if (messages[i].content.find("<think>") != std::string::npos) {
                     messages[i].content = strip_think_tags(messages[i].content);
@@ -423,8 +429,16 @@ void LlamaGenerationSession::finalizeResponse() {
     messages.push_back(assistant_msg);
 
     if (parser_initialized) {
-        auto parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
-        prev_had_thinking = !parsed.reasoning_content.empty();
+        try {
+            auto parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
+            prev_had_thinking = !parsed.reasoning_content.empty();
+        } catch (const std::exception &e) {
+            LOGe("PEG parse failed in finalizeResponse: %s", e.what());
+            prev_had_thinking = response.find("</think>") != std::string::npos;
+        } catch (...) {
+            LOGe("PEG parse failed in finalizeResponse: unknown");
+            prev_had_thinking = response.find("</think>") != std::string::npos;
+        }
     } else {
         prev_had_thinking = response.find("</think>") != std::string::npos;
     }
@@ -522,17 +536,25 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         if (!is_eog) {
             // Use PEG parser to normalize thinking format for the UI
             if (parser_initialized) {
-                auto parsed = common_chat_parse(response, /*is_partial=*/true, parser_params);
-                std::string normalized;
-                if (!parsed.reasoning_content.empty()) {
-                    normalized = "<think>" + parsed.reasoning_content;
-                    if (!parsed.content.empty()) {
-                        normalized += "</think>" + parsed.content;
+                try {
+                    auto parsed = common_chat_parse(response, /*is_partial=*/true, parser_params);
+                    std::string normalized;
+                    if (!parsed.reasoning_content.empty()) {
+                        normalized = "<think>" + parsed.reasoning_content;
+                        if (!parsed.content.empty()) {
+                            normalized += "</think>" + parsed.content;
+                        }
+                    } else {
+                        normalized = parsed.content.empty() ? response : parsed.content;
                     }
-                } else {
-                    normalized = parsed.content.empty() ? response : parsed.content;
+                    callback(normalized);
+                } catch (const std::exception &e) {
+                    LOGe("PEG parse failed in generate (partial): %s", e.what());
+                    callback(response);
+                } catch (...) {
+                    LOGe("PEG parse failed in generate (partial): unknown");
+                    callback(response);
                 }
-                callback(normalized);
             } else {
                 callback(response);
             }
