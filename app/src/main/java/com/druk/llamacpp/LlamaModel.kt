@@ -9,16 +9,22 @@ class LlamaModel internal constructor(
     private val client: InferenceClient,
     internal val modelId: Int,
 ) {
-    fun getModelSize(): Long = client.requireConnected().getModelSize(modelId)
+    fun getModelSize(): Long = client.withService { it.getModelSize(modelId) }
 
-    fun getModelReport(): String = client.requireConnected().getModelReport(modelId)
+    fun getModelReport(): String = client.withService { it.getModelReport(modelId) }
 
-    fun getContextTrainSize(): Int = client.requireConnected().getContextTrainSize(modelId)
+    fun getContextTrainSize(): Int = client.withService { it.getContextTrainSize(modelId) }
 
-    fun supportsThinking(): Boolean = client.requireConnected().supportsThinking(modelId)
+    fun supportsThinking(): Boolean = client.withService { it.supportsThinking(modelId) }
 
     fun unloadModel() {
-        client.requireConnected().unloadModel(modelId)
+        try {
+            client.withService { it.unloadModel(modelId) }
+        } catch (_: InferenceUnavailableException) {
+            // Service is gone anyway — the model handle is implicitly
+            // released. Don't bubble this up; callers just want the
+            // unload to be cleaned up.
+        }
     }
 
     fun createSession(
@@ -44,7 +50,7 @@ class LlamaModel internal constructor(
             thinkingBudget = thinkingBudget,
             systemPrompt = systemPrompt,
         )
-        val sessionId = client.requireConnected().createSession(modelId, params)
+        val sessionId = client.withService { it.createSession(modelId, params) }
         if (sessionId == 0) return null
         return LlamaGenerationSession(client, sessionId)
     }

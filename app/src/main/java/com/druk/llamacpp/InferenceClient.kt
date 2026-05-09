@@ -4,8 +4,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.DeadObjectException
 import android.os.IBinder
 import android.os.IBinder.DeathRecipient
+import android.os.RemoteException
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -139,6 +141,38 @@ class InferenceClient(
             )
         }
         throw InferenceUnavailableException("Inference service is ${s::class.simpleName}")
+    }
+
+    /**
+     * Run [block] against a connected service, converting binder-death
+     * exceptions into [InferenceUnavailableException] and flipping the
+     * state to Crashed so observers can react. Use this from proxy
+     * classes (LlamaModel, LlamaCpp, LlamaGenerationSession) so callers
+     * see one exception type regardless of how the service went away.
+     */
+    fun <T> withService(block: (ILlamaService) -> T): T {
+        val svc = requireConnected()
+        try {
+            return block(svc)
+        } catch (e: DeadObjectException) {
+            handleBinderDeath(e)
+            throw InferenceUnavailableException("Inference service died: ${e.message}")
+        } catch (e: RemoteException) {
+            // Other RemoteExceptions are rarer but still indicate the
+            // transaction couldn't complete — treat the same as dead.
+            handleBinderDeath(e)
+            throw InferenceUnavailableException("Inference service transaction failed: ${e.message}")
+        }
+    }
+
+    private fun handleBinderDeath(cause: Throwable) {
+        Log.w(TAG, "AIDL call failed, marking service Crashed", cause)
+        synchronized(this) {
+            pendingService = null
+            if (_state.value !is InferenceState.Crashed) {
+                _state.value = InferenceState.Crashed("died")
+            }
+        }
     }
 
     fun unbind() {

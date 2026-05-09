@@ -16,7 +16,7 @@ class LlamaCpp(private val client: InferenceClient) {
     /** No-op — the service runs `initBackend()` automatically on bind. */
     fun init(): Int = 0
 
-    fun systemInfo(): String = client.requireConnected().systemInfo()
+    fun systemInfo(): String = client.withService { it.systemInfo() }
 
     /**
      * Load a model identified by a filesystem path. Use this for paths
@@ -25,7 +25,7 @@ class LlamaCpp(private val client: InferenceClient) {
      * containing `fd:N` are not valid cross-process.
      */
     fun loadModel(path: String, progressCallback: LlamaProgressCallback): LlamaModel {
-        val id = client.requireConnected().loadModel(path, null, wrapProgress(progressCallback))
+        val id = client.withService { it.loadModel(path, null, wrapProgress(progressCallback)) }
         if (id == 0) throw IllegalStateException("loadModel failed for $path")
         return LlamaModel(client, id)
     }
@@ -36,16 +36,16 @@ class LlamaCpp(private val client: InferenceClient) {
      * its dup and holds the PFD alive for the model's lifetime.
      */
     fun loadModel(pfd: ParcelFileDescriptor, progressCallback: LlamaProgressCallback): LlamaModel {
-        val id = client.requireConnected().loadModel(null, pfd, wrapProgress(progressCallback))
+        val id = client.withService { it.loadModel(null, pfd, wrapProgress(progressCallback)) }
         if (id == 0) throw IllegalStateException("loadModel failed for pfd")
         return LlamaModel(client, id)
     }
 
     fun probeModelMetadata(path: String): Array<String>? =
-        client.requireConnected().probeModelMetadata(path, null)
+        client.withService { it.probeModelMetadata(path, null) }
 
     fun probeModelMetadata(pfd: ParcelFileDescriptor): Array<String>? =
-        client.requireConnected().probeModelMetadata(null, pfd)
+        client.withService { it.probeModelMetadata(null, pfd) }
 
     /**
      * Replace the foreground-service notification's title and text. Use
@@ -55,7 +55,7 @@ class LlamaCpp(private val client: InferenceClient) {
      */
     fun setForegroundContent(title: String?, text: String?) {
         try {
-            client.requireConnected().setForegroundContent(title, text)
+            client.withService { it.setForegroundContent(title, text) }
         } catch (_: Throwable) {
             // No-op — the FGS will keep whatever content it had, and the
             // next successful call will overwrite it.
