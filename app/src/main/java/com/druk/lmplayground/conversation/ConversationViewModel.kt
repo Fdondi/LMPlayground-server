@@ -735,9 +735,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         // Marker on the assistant placeholder we just added — used by the
         // cleanup path below to confirm the still-active message in
         // uiState is OURS and not a placeholder for some later turn the
-        // user added after a crash + reload.
-        val ourResponseStart = (uiState.messages.lastOrNull() as? Message)?.responseStartTimeMs
-            ?: 0L
+        // user added after a crash + reload. Must be a field that
+        // *every* phase of the placeholder preserves: previously this
+        // was responseStartTimeMs, but addToolCallsToLastMessage resets
+        // it to start the post-tool timer, so after the first tool call
+        // the cleanup would always bail out and leave _isGenerating
+        // stuck at true. Message.id is auto-incremented and never
+        // changes through .copy() updates — the right identity field.
+        val ourMessageId = uiState.messages.lastOrNull()?.id ?: -1L
         generatingJob = viewModelScope.launch {
             val ourJob = coroutineContext[Job]
 
@@ -866,11 +871,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         val supersededByNewer = generatingJob !== ourJob
                         // Belt-and-suspenders: also confirm the last
                         // message in uiState is still our placeholder
-                        // by responseStartTimeMs identity.
+                        // by stable Message.id identity.
                         val last = uiState.messages.lastOrNull()
                         val stillOurMessage = last != null &&
                             last.author == "Assistant" &&
-                            last.responseStartTimeMs == ourResponseStart
+                            last.id == ourMessageId
                         if (supersededByNewer || !stillOurMessage) {
                             return@withContext
                         }
