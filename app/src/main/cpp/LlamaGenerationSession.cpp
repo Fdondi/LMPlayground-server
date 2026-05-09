@@ -221,6 +221,8 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
             LOGi("Prompt prefix mismatch, clearing KV cache");
             llama_memory_clear(llama_get_memory(ctx), true);
             prev_len = 0;
+            last_full_prompt.clear();
+            last_prompt_end_pos = 0;
         }
     }
 
@@ -320,6 +322,8 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         LOGi("Context compacted, clearing KV cache and reprocessing (%d tokens)", n_prompt_tokens);
         llama_memory_clear(llama_get_memory(ctx), true);
         prev_len = 0;
+        last_full_prompt.clear();
+        last_prompt_end_pos = 0;
         is_first = true;
     }
 
@@ -330,6 +334,14 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     }
 
     batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
+
+    // Save the rendered string we're about to feed so the tool-call
+    // path in generate() can roll back to this point on rc=2 and
+    // submitToolResults can string-prefix-match against it. Token
+    // count gets captured at the end of the first generate() call,
+    // after llama_decode has actually committed these tokens to the
+    // KV cache.
+    last_full_prompt = full_prompt;
 
     // Build PEG parser params for response parsing
     if (!result.parser.empty()) {
@@ -480,6 +492,11 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
             llama_sampler_accept(smpl, token);
         }
         prompt_tokens.clear();
+        // KV cache now contains the full prompt (everything llama_decode
+        // just committed). Snapshot this position — if the model emits
+        // a tool_call, we'll discard everything past it and feed only
+        // the tool-result delta instead of re-tokenizing the world.
+        last_prompt_end_pos = llama_memory_seq_pos_max(llama_get_memory(ctx), 0) + 1;
     }
 
     last_token = llama_sampler_sample(smpl, ctx, -1);
@@ -546,7 +563,26 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
             pending_tool_calls = assistant_msg.tool_calls;
             messages.push_back(assistant_msg);
 
-            LOGi("Tool calls detected: %zu calls", pending_tool_calls.size());
+            // KV cache reuse for the upcoming submitToolResults: the
+            // cache currently contains [last_full_prompt tokens] +
+            // [model's tool_call output tokens]. The model's output
+            // tokens will be re-rendered differently by the chat
+            // template in round 2 (template-specific tool_call
+            // formatting != raw bytes the model emitted), so they're
+            // not safe to keep. But the prompt prefix IS safe — roll
+            // back to that position so submitToolResults can feed only
+            // the tool-result delta. Saves a full prompt-eval pass on
+            // every tool round (huge on phone CPU where prompt-eval
+            // dominates wall time).
+            if (last_prompt_end_pos > 0 && !last_full_prompt.empty()) {
+                llama_memory_seq_rm(
+                    llama_get_memory(ctx), 0, last_prompt_end_pos, -1);
+                prev_rendered_prompt = last_full_prompt;
+                prev_len = (int)last_full_prompt.size();
+            }
+
+            LOGi("Tool calls detected: %zu calls (KV preserved at pos %d)",
+                 pending_tool_calls.size(), last_prompt_end_pos);
             response.clear();
             return 2;
         }
@@ -584,6 +620,8 @@ void LlamaGenerationSession::replayHistory(const std::vector<std::pair<std::stri
     prev_had_thinking = false;
     prev_enable_thinking = false;
     response.clear();
+    last_full_prompt.clear();
+    last_prompt_end_pos = 0;
     if (ctx != nullptr) {
         llama_memory_clear(llama_get_memory(ctx), true);
     }
@@ -676,17 +714,63 @@ int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enab
     additional_stops = result.additional_stops;
     response.clear();
 
-    llama_memory_clear(llama_get_memory(ctx), true);
-    prev_len = 0;
+    // Same prefix-reuse strategy as addMessage: if the new full prompt
+    // starts with [prev_rendered_prompt] (which generate()'s tool-call
+    // path set to last_full_prompt and rolled the KV cache back to),
+    // we feed only the delta and skip re-tokenizing the conversation.
+    // Mismatch can happen when the chat template re-renders earlier
+    // turns differently for round 2 (e.g. enableThinking flipped, or
+    // the template inlines reasoning content into the assistant turn).
+    // Fall back to clearing the cache in that case — correctness over
+    // speed.
+    bool prefix_match = false;
+    if (prev_len > 0) {
+        prefix_match = (int)full_prompt.size() >= prev_len &&
+                       full_prompt.compare(0, prev_len, prev_rendered_prompt) == 0;
+        if (!prefix_match) {
+            LOGi("submitToolResults: prefix mismatch, clearing KV cache");
+            llama_memory_clear(llama_get_memory(ctx), true);
+            prev_len = 0;
+            last_full_prompt.clear();
+            last_prompt_end_pos = 0;
+        }
+    } else {
+        // No prefix to reuse (e.g. tool_call detection rolled back
+        // before any prompt was fed, or the session was truncated).
+        // Clear to be safe and feed everything from scratch.
+        llama_memory_clear(llama_get_memory(ctx), true);
+        last_full_prompt.clear();
+        last_prompt_end_pos = 0;
+    }
 
-    int n_prompt_tokens = -llama_tokenize(vocab, full_prompt.c_str(), full_prompt.size(), NULL, 0, true, true);
+    std::string prompt = full_prompt.substr(prev_len);
+    bool is_first = (prev_len == 0);
+
+    int n_ctx = llama_n_ctx(ctx);
+    int n_ctx_used = is_first
+        ? 0
+        : (int)llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
+    int n_prompt_tokens = -llama_tokenize(
+        vocab, prompt.c_str(), prompt.size(), NULL, 0, is_first, true);
+
+    if (n_ctx_used + n_prompt_tokens > n_ctx) {
+        LOGe("Context overflow in submitToolResults: %d + %d > %d",
+             n_ctx_used, n_prompt_tokens, n_ctx);
+        return 1;
+    }
+
     prompt_tokens.resize(n_prompt_tokens);
-    if (llama_tokenize(vocab, full_prompt.c_str(), full_prompt.size(), prompt_tokens.data(), prompt_tokens.size(), true, true) < 0) {
+    if (llama_tokenize(vocab, prompt.c_str(), prompt.size(),
+                       prompt_tokens.data(), prompt_tokens.size(),
+                       is_first, true) < 0) {
         LOGe("failed to tokenize prompt after tool results");
         return 1;
     }
 
     batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
+
+    // Track the new full prompt for the next round's tool-call rollback.
+    last_full_prompt = full_prompt;
 
     if (!result.parser.empty()) {
         parser_params = common_chat_parser_params(result);
@@ -697,7 +781,9 @@ int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enab
         parser_initialized = true;
     }
 
-    LOGi("Tool results submitted, re-tokenized prompt: %d tokens", n_prompt_tokens);
+    LOGi("Tool results submitted: prefix_match=%d, fed %d delta tokens "
+         "(prompt now %zu bytes, %d tokens already in KV)",
+         prefix_match ? 1 : 0, n_prompt_tokens, full_prompt.size(), n_ctx_used);
     return 0;
 }
 

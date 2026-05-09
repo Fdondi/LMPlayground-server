@@ -62,6 +62,17 @@ private:
     std::vector<std::string> additional_stops;
     int prev_len = 0;
     std::vector<llama_token> prompt_tokens;
+    // Most recent full prompt rendered with addGenerationPrompt=true (the
+    // string we fed to the model right before generation started). Saved
+    // so submitToolResults can roll back to this point and reuse the KV
+    // cache, feeding only the tool-result delta instead of re-tokenizing
+    // the entire conversation. Empty until a turn has been fed.
+    std::string last_full_prompt;
+    // KV-cache position (in tokens) immediately after [last_full_prompt]
+    // was fed. Used by the tool-call detection path to truncate the
+    // model's generated tokens out of the cache while preserving the
+    // prompt prefix.
+    int last_prompt_end_pos = 0;
     llama_token last_token;
     llama_batch batch;
     std::string response;
