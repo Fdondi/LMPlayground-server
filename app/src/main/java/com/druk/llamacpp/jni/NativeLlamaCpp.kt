@@ -20,10 +20,16 @@ class NativeLlamaCpp {
 
     external fun systemInfo(): String
 
+    /**
+     * Returns `null` when the native load failed — e.g. the file is not a
+     * valid GGUF, the architecture isn't supported by this build of
+     * llama.cpp, or the file couldn't be opened. The wrapper is only
+     * constructed on success.
+     */
     external fun loadModel(
         path: String,
         progressCallback: LlamaProgressCallback
-    ): NativeLlamaModel
+    ): NativeLlamaModel?
 
     external fun probeModelMetadata(path: String): Array<String>?
 }

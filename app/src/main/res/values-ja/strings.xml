@@ -228,4 +228,8 @@
     <string name="replay_history_too_large">会話履歴が大きすぎて、このモデルに再読み込みできません。新しいチャットを開始して続けてください。</string>
     <string name="system_prompt_too_large">システムプロンプトが %1$d KB で、上限の %2$d KB を超えています。もっと短いプロンプトをお試しください。</string>
     <string name="history_message_too_large">この会話に保存されているメッセージが大きすぎて再読み込みできません。新しいチャットを開始して続けてください。</string>
+    <string name="model_load_failed_status">モデルを読み込めませんでした</string>
+    <string name="model_load_failed_title">モデルを読み込めませんでした</string>
+    <string name="model_load_failed_message">%1$s を読み込めませんでした。ファイルが破損しているか、このバージョンのアプリでまだ対応していないアーキテクチャが使われている可能性があります。別のモデルを試すか、アプリを更新してください。</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

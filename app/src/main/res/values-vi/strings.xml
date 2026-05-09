@@ -228,4 +228,8 @@
     <string name="replay_history_too_large">Lịch sử trò chuyện quá lớn để tải lại vào mô hình này. Hãy bắt đầu cuộc trò chuyện mới để tiếp tục.</string>
     <string name="system_prompt_too_large">Lời nhắc hệ thống dài %1$d KB, vượt quá giới hạn %2$d KB. Hãy thử lời nhắc ngắn hơn.</string>
     <string name="history_message_too_large">Một tin nhắn đã lưu trong cuộc trò chuyện này quá lớn để tải lại. Hãy bắt đầu cuộc trò chuyện mới để tiếp tục.</string>
+    <string name="model_load_failed_status">Không thể tải mô hình</string>
+    <string name="model_load_failed_title">Không thể tải mô hình</string>
+    <string name="model_load_failed_message">Không thể tải %1$s. Tệp có thể bị hỏng, hoặc nó sử dụng kiến trúc mà phiên bản ứng dụng này chưa hỗ trợ. Hãy thử một mô hình khác, hoặc cập nhật ứng dụng.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

@@ -268,4 +268,8 @@
     <string name="replay_history_too_large">היסטוריית השיחה גדולה מדי לטעינה מחדש במודל זה. התחל שיחה חדשה כדי להמשיך.</string>
     <string name="system_prompt_too_large">הנחיית המערכת היא %1$d KB, חורגת מהמגבלה של %2$d KB. נסה הנחיה קצרה יותר.</string>
     <string name="history_message_too_large">הודעה שמורה בשיחה זו גדולה מדי לטעינה מחדש. התחל שיחה חדשה כדי להמשיך.</string>
+    <string name="model_load_failed_status">לא ניתן לטעון את המודל</string>
+    <string name="model_load_failed_title">לא ניתן לטעון את המודל</string>
+    <string name="model_load_failed_message">לא ניתן לטעון את %1$s. ייתכן שהקובץ פגום, או שהוא משתמש בארכיטקטורה שגרסה זו של האפליקציה עדיין אינה תומכת בה. נסה מודל אחר, או עדכן את האפליקציה.</string>
+    <string name="model_load_failed_dismiss">אישור</string>
 </resources>

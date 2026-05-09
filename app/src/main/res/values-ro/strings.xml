@@ -229,4 +229,8 @@
     <string name="replay_history_too_large">Istoricul conversației este prea mare pentru a fi reîncărcat în acest model. Începe un chat nou pentru a continua.</string>
     <string name="system_prompt_too_large">Promptul de sistem are %1$d KB și depășește limita de %2$d KB. Încearcă un prompt mai scurt.</string>
     <string name="history_message_too_large">Un mesaj salvat din această conversație este prea mare pentru a fi reîncărcat. Începe un chat nou pentru a continua.</string>
+    <string name="model_load_failed_status">Modelul nu a putut fi încărcat</string>
+    <string name="model_load_failed_title">Modelul nu a putut fi încărcat</string>
+    <string name="model_load_failed_message">%1$s nu a putut fi încărcat. Fișierul poate fi corupt sau folosește o arhitectură pe care această versiune a aplicației nu o acceptă încă. Încearcă alt model sau actualizează aplicația.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

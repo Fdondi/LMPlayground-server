@@ -228,4 +228,8 @@
     <string name="replay_history_too_large">对话历史过大，无法重新加载到此模型。请新建对话以继续。</string>
     <string name="system_prompt_too_large">系统提示词为 %1$d KB，超过 %2$d KB 的限制。请尝试更短的提示词。</string>
     <string name="history_message_too_large">此对话中的某条已保存消息过大，无法重新加载。请新建对话以继续。</string>
+    <string name="model_load_failed_status">无法加载模型</string>
+    <string name="model_load_failed_title">无法加载模型</string>
+    <string name="model_load_failed_message">无法加载 %1$s。文件可能已损坏，或者使用了此版本应用尚不支持的架构。请尝试其他模型，或更新应用。</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

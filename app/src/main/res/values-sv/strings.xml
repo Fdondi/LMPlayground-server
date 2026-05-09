@@ -268,4 +268,8 @@
     <string name="replay_history_too_large">Konversationshistoriken är för stor för att läsas in i den här modellen. Starta en ny chatt för att fortsätta.</string>
     <string name="system_prompt_too_large">Systemprompten är %1$d KB och överskrider gränsen på %2$d KB. Prova en kortare prompt.</string>
     <string name="history_message_too_large">Ett sparat meddelande i den här konversationen är för stort för att läsas in igen. Starta en ny chatt för att fortsätta.</string>
+    <string name="model_load_failed_status">Det gick inte att läsa in modellen</string>
+    <string name="model_load_failed_title">Det gick inte att läsa in modellen</string>
+    <string name="model_load_failed_message">Det gick inte att läsa in %1$s. Filen kan vara skadad, eller så använder den en arkitektur som den här versionen av appen ännu inte stöder. Prova en annan modell eller uppdatera appen.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

@@ -268,4 +268,8 @@
     <string name="replay_history_too_large">Samtalehistorikken er for stor til å lastes inn i denne modellen. Start en ny chat for å fortsette.</string>
     <string name="system_prompt_too_large">Systemprompten er på %1$d KB og overskrider grensen på %2$d KB. Prøv en kortere prompt.</string>
     <string name="history_message_too_large">En lagret melding i denne samtalen er for stor til å lastes inn igjen. Start en ny chat for å fortsette.</string>
+    <string name="model_load_failed_status">Kunne ikke laste inn modellen</string>
+    <string name="model_load_failed_title">Kunne ikke laste inn modellen</string>
+    <string name="model_load_failed_message">Kunne ikke laste inn %1$s. Filen kan være skadet, eller den bruker en arkitektur denne versjonen av appen ennå ikke støtter. Prøv en annen modell, eller oppdater appen.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

@@ -131,6 +131,12 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
                      &ctx
                      );
     env->ReleaseStringUTFChars(modelPath, utfModelPath);
+
+    if (!model->isLoaded()) {
+        delete model;
+        return nullptr;
+    }
+
     jclass clazz = env->FindClass("com/druk/llamacpp/jni/NativeLlamaModel");
     jmethodID constructor = env->GetMethodID(clazz, "<init>", "()V");
     jobject obj = env->NewObject(clazz, constructor);

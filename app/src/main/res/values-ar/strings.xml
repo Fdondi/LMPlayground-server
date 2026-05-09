@@ -228,4 +228,8 @@
     <string name="replay_history_too_large">سجل المحادثة كبير جداً ولا يمكن إعادة تحميله في هذا النموذج. ابدأ محادثة جديدة للمتابعة.</string>
     <string name="system_prompt_too_large">حجم موجّه النظام %1$d كيلوبايت، ويتجاوز الحد %2$d كيلوبايت. جرّب موجّهاً أقصر.</string>
     <string name="history_message_too_large">إحدى الرسائل المحفوظة في هذه المحادثة كبيرة جداً ولا يمكن إعادة تحميلها. ابدأ محادثة جديدة للمتابعة.</string>
+    <string name="model_load_failed_status">تعذّر تحميل النموذج</string>
+    <string name="model_load_failed_title">تعذّر تحميل النموذج</string>
+    <string name="model_load_failed_message">تعذّر تحميل %1$s. قد يكون الملف تالفاً، أو يستخدم بنية لا يدعمها هذا الإصدار من التطبيق بعد. جرّب نموذجاً آخر، أو حدِّث التطبيق.</string>
+    <string name="model_load_failed_dismiss">حسناً</string>
 </resources>

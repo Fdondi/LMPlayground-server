@@ -81,6 +81,8 @@ public:
 
     bool supportsThinking();
 
+    bool isLoaded() const { return model != nullptr; }
+
     void unloadModel();
 
 private:

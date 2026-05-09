@@ -229,4 +229,8 @@
     <string name="replay_history_too_large">La cronologia della conversazione è troppo grande per essere ricaricata in questo modello. Avvia una nuova chat per continuare.</string>
     <string name="system_prompt_too_large">Il prompt di sistema è di %1$d KB e supera il limite di %2$d KB. Prova un prompt più breve.</string>
     <string name="history_message_too_large">Un messaggio salvato in questa conversazione è troppo grande da ricaricare. Avvia una nuova chat per continuare.</string>
+    <string name="model_load_failed_status">Impossibile caricare il modello</string>
+    <string name="model_load_failed_title">Impossibile caricare il modello</string>
+    <string name="model_load_failed_message">Impossibile caricare %1$s. Il file potrebbe essere danneggiato o utilizza un\'architettura non ancora supportata da questa versione dell\'app. Prova un altro modello o aggiorna l\'app.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

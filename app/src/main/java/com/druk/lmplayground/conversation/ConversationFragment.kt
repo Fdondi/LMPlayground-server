@@ -94,6 +94,7 @@ class ConversationFragment : Fragment() {
             val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
             val userError by viewModel.userError.observeAsState()
             val pendingRamWarning by viewModel.pendingRamWarning.observeAsState()
+            val modelLoadError by viewModel.modelLoadError.observeAsState()
             var showParamsSheet by remember { mutableStateOf(false) }
 
             // Surface transient ViewModel errors (e.g. message-too-large)
@@ -263,6 +264,19 @@ class ConversationFragment : Fragment() {
                         dismissButton = {
                             TextButton(onClick = { viewModel.dismissRamWarning() }) {
                                 Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
+
+                modelLoadError?.let { message ->
+                    AlertDialog(
+                        onDismissRequest = { viewModel.consumeModelLoadError() },
+                        title = { Text(stringResource(R.string.model_load_failed_title)) },
+                        text = { Text(message) },
+                        confirmButton = {
+                            TextButton(onClick = { viewModel.consumeModelLoadError() }) {
+                                Text(stringResource(R.string.model_load_failed_dismiss))
                             }
                         }
                     )

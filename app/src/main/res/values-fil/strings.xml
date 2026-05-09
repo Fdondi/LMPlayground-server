@@ -267,4 +267,8 @@
     <string name="replay_history_too_large">Masyadong malaki ang kasaysayan ng pag-uusap upang i-load muli sa modelong ito. Magsimula ng bagong chat upang magpatuloy.</string>
     <string name="system_prompt_too_large">Ang system prompt ay %1$d KB, lumampas sa limitasyong %2$d KB. Subukan ang mas maikling prompt.</string>
     <string name="history_message_too_large">May naka-save na mensahe sa pag-uusap na ito na masyadong malaki upang i-load muli. Magsimula ng bagong chat upang magpatuloy.</string>
+    <string name="model_load_failed_status">Hindi ma-load ang modelo</string>
+    <string name="model_load_failed_title">Hindi ma-load ang modelo</string>
+    <string name="model_load_failed_message">Hindi ma-load ang %1$s. Maaaring sira ang file, o gumagamit ito ng arkitekturang hindi pa sinusuportahan ng bersyong ito ng app. Subukan ang ibang modelo, o i-update ang app.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

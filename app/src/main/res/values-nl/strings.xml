@@ -269,4 +269,8 @@
     <string name="replay_history_too_large">De gespreksgeschiedenis is te groot om in dit model opnieuw te laden. Start een nieuwe chat om verder te gaan.</string>
     <string name="system_prompt_too_large">De systeemprompt is %1$d KB en overschrijdt de limiet van %2$d KB. Probeer een kortere prompt.</string>
     <string name="history_message_too_large">Een opgeslagen bericht in dit gesprek is te groot om opnieuw te laden. Start een nieuwe chat om verder te gaan.</string>
+    <string name="model_load_failed_status">Kan model niet laden</string>
+    <string name="model_load_failed_title">Kan model niet laden</string>
+    <string name="model_load_failed_message">Kan %1$s niet laden. Het bestand is mogelijk beschadigd of gebruikt een architectuur die deze versie van de app nog niet ondersteunt. Probeer een ander model of werk de app bij.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

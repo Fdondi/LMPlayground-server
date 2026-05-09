@@ -81,7 +81,7 @@ class ModelGenerationTest {
                     Log.d(TAG, "Loading: ${(progress * 100).toInt()}%")
                 }
             }
-        )
+        ) ?: error("native loadModel returned null for ${modelFile.absolutePath}")
         llamaModel = model
         return model
     }
