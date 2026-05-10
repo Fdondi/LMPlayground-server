@@ -786,11 +786,15 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 val toolsActive = _supportsToolCalling.value == true
                     && toolRegistry.hasEnabledTools()
                 try {
-                    if (toolsActive) {
-                        llamaSession.setTools(toolRegistry.toOpenAIToolsJson())
-                    } else {
-                        llamaSession.setTools("[]")
-                    }
+                    val toolsJson = if (toolsActive) toolRegistry.toOpenAIToolsJson() else "[]"
+                    llamaSession.setTools(toolsJson)
+                    // Persistent preamble KV cache: must be set after setTools
+                    // (the fingerprint covers the active tool set) and before
+                    // addMessage (the lazy load/save runs on the first
+                    // addMessage of the session). It's a no-op if the model
+                    // info is unavailable. Pruning the cache directory is
+                    // best-effort; failures don't block generation.
+                    applyPreambleCache(llamaSession, toolsJson)
                     llamaSession.addMessage(message.content, enableThinking)
                 } catch (e: InferenceUnavailableException) {
                     android.util.Log.w("ConversationViewModel", "addMessage failed: service unavailable", e)
@@ -1356,6 +1360,83 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         _toolEnabledStates.value = states
     }
 
+    /**
+     * Set up the persistent preamble (system prompt + tools) KV cache for
+     * [session]. Path is `<filesDir>/kv_preamble/<fingerprint>` where
+     * fingerprint is SHA-1 over (model filename, system prompt, tools
+     * JSON). Cache files are shared across sessions: any new conversation
+     * with the same model / sys prompt / tool set re-uses the same disk
+     * cache. LRU prune keeps disk footprint bounded ([KV_PREAMBLE_KEEP]
+     * most-recent files).
+     */
+    private fun applyPreambleCache(
+        session: LlamaGenerationSession,
+        toolsJson: String,
+    ) {
+        try {
+            val modelInfo = _loadedModel.value
+            val modelName = modelInfo?.filename
+            if (modelName.isNullOrEmpty()) {
+                // Model info isn't ready (shouldn't happen here but be safe).
+                session.setPreambleCachePath("", "")
+                return
+            }
+            // Include the loaded model's byte size in the fingerprint so a
+            // replaced-but-same-named model file invalidates stale caches.
+            // Filename alone wouldn't catch re-quantization or upgrades
+            // where the filename was kept; the byte size differs in
+            // virtually all real cases. getModelSize() is a cheap AIDL
+            // call backed by an in-memory llama_model field.
+            val modelSize = try { llamaModel?.getModelSize() ?: 0L } catch (_: Throwable) { 0L }
+            val modelKey = "$modelName:$modelSize"
+            val systemPrompt = _systemPrompt.value.orEmpty()
+            val fingerprint = sha1Hex(
+                "$modelKey $systemPrompt $toolsJson"
+            )
+            val dir = kvPreambleDir().apply { mkdirs() }
+            val path = java.io.File(dir, fingerprint).absolutePath
+            session.setPreambleCachePath(path, fingerprint)
+            pruneOldKvPreambles(KV_PREAMBLE_KEEP)
+        } catch (t: Throwable) {
+            android.util.Log.w(
+                "ConversationViewModel",
+                "applyPreambleCache failed (continuing without cache)", t
+            )
+            try { session.setPreambleCachePath("", "") } catch (_: Throwable) {}
+        }
+    }
+
+    private fun kvPreambleDir(): java.io.File =
+        java.io.File(app.filesDir, "kv_preamble")
+
+    private fun pruneOldKvPreambles(keep: Int) {
+        try {
+            val dir = kvPreambleDir()
+            val bins = dir.listFiles()?.filter { it.name.endsWith(".bin") } ?: return
+            if (bins.size <= keep) return
+            val ordered = bins.sortedByDescending { it.lastModified() }
+            for (i in keep until ordered.size) {
+                val bin = ordered[i]
+                bin.delete()
+                java.io.File(bin.absolutePath.removeSuffix(".bin") + ".json").delete()
+            }
+        } catch (t: Throwable) {
+            android.util.Log.w("ConversationViewModel", "pruneOldKvPreambles failed", t)
+        }
+    }
+
+    private fun sha1Hex(input: String): String {
+        val md = java.security.MessageDigest.getInstance("SHA-1")
+        val bytes = md.digest(input.toByteArray(Charsets.UTF_8))
+        val sb = StringBuilder(bytes.size * 2)
+        for (b in bytes) {
+            val v = b.toInt() and 0xff
+            sb.append(HEX[v ushr 4])
+            sb.append(HEX[v and 0x0f])
+        }
+        return sb.toString()
+    }
+
     private fun buildToolCallInfoList(
         toolCallsJson: String,
         toolResultsJson: String,
@@ -1392,4 +1473,15 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val totalRam: String,
     )
 
+    private companion object {
+        // Number of preamble cache files to retain (LRU by mtime). Each
+        // file is small relative to the model itself but scales with
+        // (system_prompt + tools_description) token count — typically a
+        // few KB to a few hundred KB. 8 covers "user has 8 different
+        // model + tool-set combinations they use regularly" without
+        // bloating /data.
+        private const val KV_PREAMBLE_KEEP = 8
+
+        private val HEX = "0123456789abcdef".toCharArray()
+    }
 }

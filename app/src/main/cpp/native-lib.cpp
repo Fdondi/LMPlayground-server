@@ -407,6 +407,34 @@ Java_com_druk_llamacpp_jni_NativeLlamaSession_submitToolResults(JNIEnv *env, job
     return result;
 }
 
+extern "C"
+JNIEXPORT jstring JNICALL
+Java_com_druk_llamacpp_jni_NativeLlamaSession_renderPreambleString(JNIEnv *env, jobject thiz,
+                                                                    jboolean enableThinking) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) return env->NewStringUTF("");
+    auto preamble = session->renderPreambleString(enableThinking);
+    return env->NewStringUTF(preamble.c_str());
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_druk_llamacpp_jni_NativeLlamaSession_setPreambleCachePath(JNIEnv *env, jobject thiz,
+                                                                    jstring path,
+                                                                    jstring fingerprint) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) return;
+    const char* utfPath = path != nullptr ? env->GetStringUTFChars(path, nullptr) : nullptr;
+    const char* utfFp   = fingerprint != nullptr ? env->GetStringUTFChars(fingerprint, nullptr) : nullptr;
+    session->setPreambleCachePath(utfPath, utfFp);
+    if (utfPath != nullptr) env->ReleaseStringUTFChars(path, utfPath);
+    if (utfFp   != nullptr) env->ReleaseStringUTFChars(fingerprint, utfFp);
+}
+
 extern "C" JNIEXPORT void JNICALL Java_com_druk_llamacpp_jni_NativeLlamaSession_destroy
         (JNIEnv *env, jobject obj) {
     jclass clazz = env->GetObjectClass(obj);

@@ -162,6 +162,15 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         return 1;
     }
 
+    // Lazy preamble KV-cache: on the first addMessage of a session, try
+    // to load (or just-save) the static system+tools prefix so the user
+    // delta can re-use the prefix-match fast path. Subsequent calls skip
+    // this — preamble_attempted is set after one go so we don't repeat
+    // the work after compaction-induced KV clears.
+    if (!preamble_attempted && prev_len == 0 && !preamble_cache_path.empty()) {
+        tryPreambleCache(enableThinking);
+    }
+
     common_chat_msg user_msg;
     user_msg.role = "user";
     user_msg.content = string;
@@ -645,6 +654,234 @@ common_chat_params LlamaGenerationSession::renderTemplate(bool enableThinking, b
         inputs.tool_choice = COMMON_CHAT_TOOL_CHOICE_AUTO;
     }
     return common_chat_templates_apply(chat_tmpls, inputs);
+}
+
+std::string LlamaGenerationSession::renderPreambleString(bool enableThinking) {
+    if (chat_tmpls == nullptr) return "";
+
+    // Swap messages aside so we can render in isolation, then restore.
+    auto saved = std::move(messages);
+    messages.clear();
+
+    // Strategy A: render with [system] alone, no generation prompt. Works
+    // for Gemma, Qwen3, LFM2.5. Some templates (e.g. Qwen3.5 multimodal)
+    // throw because they require at least one user turn — fall back to B.
+    std::string preamble;
+    if (!sampler_params.system_prompt.empty()) {
+        common_chat_msg sys;
+        sys.role = "system";
+        sys.content = sampler_params.system_prompt;
+        messages.push_back(sys);
+    }
+    try {
+        auto result = renderTemplate(enableThinking, /*addGenerationPrompt=*/false);
+        preamble = result.prompt;
+    } catch (const std::exception &e) {
+        LOGi("renderPreambleString A failed (%s), trying fallback", e.what());
+    } catch (...) {
+        LOGi("renderPreambleString A failed (unknown), trying fallback");
+    }
+
+    if (preamble.empty()) {
+        // Strategy B: render with [system?, user="<<__PREAMBLE_PROBE__>>"],
+        // find the unique probe in the rendered output, return everything
+        // up to and including the user-marker prefix that precedes it.
+        // We isolate the byte offset of the probe content; the preamble is
+        // [0, probe_start_in_output), but we want to KEEP the user-role
+        // marker that opens the user turn since it's part of the static
+        // structure that follows the preamble. Actually no — we DON'T want
+        // the user-marker, because the user turn marker varies (or could
+        // be reused). So preamble = [0, probe_start) — everything BEFORE
+        // the user-marker content. This gives us the static prefix.
+        //
+        // The fallback only succeeds if the probe sentinel ends up in the
+        // rendered output verbatim (it should, since templates pass user
+        // content through unchanged). If not, return empty.
+        messages.clear();
+        if (!sampler_params.system_prompt.empty()) {
+            common_chat_msg sys;
+            sys.role = "system";
+            sys.content = sampler_params.system_prompt;
+            messages.push_back(sys);
+        }
+        const std::string probe = "__PREAMBLE_PROBE_5MhEU3xQ__";
+        common_chat_msg user;
+        user.role = "user";
+        user.content = probe;
+        messages.push_back(user);
+        try {
+            auto result = renderTemplate(enableThinking, /*addGenerationPrompt=*/false);
+            const auto &rendered = result.prompt;
+            auto pos = rendered.find(probe);
+            if (pos == std::string::npos) {
+                LOGi("renderPreambleString fallback: probe not found in rendered output");
+            } else {
+                // Walk back through any user-role markers immediately
+                // preceding the probe so the preamble doesn't include the
+                // open-user-turn marker. Those markers are template-
+                // specific (e.g. "<|im_start|>user\n", "<start_of_turn>user\n"),
+                // so we just trim trailing newlines + a small heuristic
+                // window. Simpler & safe: report position right BEFORE
+                // the user marker (find the last "<" before pos).
+                auto marker_start = rendered.rfind('<', pos);
+                if (marker_start == std::string::npos || marker_start < pos - 80) {
+                    // Couldn't locate — fall back to "everything before the probe content".
+                    preamble = rendered.substr(0, pos);
+                } else {
+                    preamble = rendered.substr(0, marker_start);
+                }
+                LOGi("renderPreambleString fallback B succeeded: %zu bytes", preamble.size());
+            }
+        } catch (const std::exception &e) {
+            LOGe("renderPreambleString fallback failed: %s", e.what());
+        } catch (...) {
+            LOGe("renderPreambleString fallback failed: unknown");
+        }
+    }
+
+    messages = std::move(saved);
+    return preamble;
+}
+
+void LlamaGenerationSession::setPreambleCachePath(const char* path, const char* fingerprint) {
+    preamble_cache_path = (path != nullptr) ? path : "";
+    preamble_cache_fingerprint = (fingerprint != nullptr) ? fingerprint : "";
+    preamble_attempted = false;
+}
+
+bool LlamaGenerationSession::tryPreambleCache(bool enableThinking) {
+    preamble_attempted = true; // never retry per session, success or failure
+
+    if (ctx == nullptr || preamble_cache_path.empty()) {
+        return false;
+    }
+
+    // 1. Derive the preamble string. Returns "" if the template can't render in isolation.
+    const std::string preamble = renderPreambleString(enableThinking);
+    if (preamble.size() < 32) {
+        // Tiny preamble (probably system-only with no tools) — saving is more
+        // overhead than benefit. Disk write of an empty cache also burns one
+        // LRU slot for nothing. Skip.
+        LOGi("Preamble cache: preamble %zu B — too small, skipping", preamble.size());
+        return false;
+    }
+
+    const std::string bin_path  = preamble_cache_path + ".bin";
+    const std::string json_path = preamble_cache_path + ".json";
+
+    auto file_readable = [](const std::string &p) -> bool {
+        std::ifstream f(p);
+        return f.good();
+    };
+
+    // 2. Try cache hit
+    if (file_readable(bin_path) && file_readable(json_path)) {
+        try {
+            std::ifstream jf(json_path);
+            nlohmann::json manifest;
+            jf >> manifest;
+
+            const bool fp_ok      = manifest.value("fingerprint", "") == preamble_cache_fingerprint;
+            const bool ver_ok     = manifest.value("version", 0) == 1;
+            const bool ctx_ok     = manifest.value("n_ctx", -1) == llama_n_ctx(ctx);
+            const bool prelude_ok = manifest.value("preamble", "") == preamble;
+
+            if (fp_ok && ver_ok && ctx_ok && prelude_ok) {
+                std::vector<llama_token> tokens(llama_n_ctx(ctx));
+                size_t n_loaded = 0;
+                bool ok = llama_state_seq_load_file(ctx, bin_path.c_str(),
+                                                    /*dest_seq_id=*/0,
+                                                    tokens.data(), tokens.size(),
+                                                    &n_loaded);
+                if (ok && n_loaded > 0) {
+                    prev_rendered_prompt = preamble;
+                    prev_len = (int)preamble.size();
+                    LOGi("Preamble cache HIT: loaded %zu tokens from %s",
+                         n_loaded, bin_path.c_str());
+                    return true;
+                }
+                LOGi("Preamble cache: load returned ok=%d n_loaded=%zu, falling through to miss path",
+                     (int)ok, n_loaded);
+            } else {
+                LOGi("Preamble cache: manifest mismatch (fp=%d ver=%d ctx=%d preamble=%d), regenerating",
+                     (int)fp_ok, (int)ver_ok, (int)ctx_ok, (int)prelude_ok);
+            }
+        } catch (const std::exception &e) {
+            LOGi("Preamble cache: manifest read failed (%s), regenerating", e.what());
+        } catch (...) {
+            LOGi("Preamble cache: manifest read failed, regenerating");
+        }
+        // Stale or unreadable: clean up so we don't keep retrying.
+        unlink(bin_path.c_str());
+        unlink(json_path.c_str());
+    }
+
+    // 3. Cache miss: prefill the preamble alone, then save.
+    int n_ctx = llama_n_ctx(ctx);
+    int n_prompt_tokens = -llama_tokenize(vocab, preamble.c_str(), preamble.size(),
+                                           nullptr, 0, /*add_special=*/true, /*parse_special=*/true);
+    if (n_prompt_tokens <= 0 || n_prompt_tokens >= n_ctx) {
+        LOGi("Preamble cache: %d tokens too large for n_ctx=%d, skipping", n_prompt_tokens, n_ctx);
+        return false;
+    }
+
+    std::vector<llama_token> tokens(n_prompt_tokens);
+    if (llama_tokenize(vocab, preamble.c_str(), preamble.size(),
+                       tokens.data(), tokens.size(),
+                       /*add_special=*/true, /*parse_special=*/true) < 0) {
+        LOGi("Preamble cache: tokenize failed");
+        return false;
+    }
+
+    // Decode in batches matching n_batch from init().
+    const int n_batch = std::min(n_ctx, 512);
+    for (int i = 0; i < (int)tokens.size(); i += n_batch) {
+        int chunk = std::min(n_batch, (int)tokens.size() - i);
+        llama_batch b = llama_batch_get_one(tokens.data() + i, chunk);
+        if (llama_decode(ctx, b) != 0) {
+            LOGi("Preamble cache: decode failed at chunk %d, clearing KV", i);
+            llama_memory_clear(llama_get_memory(ctx), true);
+            return false;
+        }
+    }
+
+    // KV is now populated. Wire prefix-match state so addMessage's existing
+    // logic feeds only the user-message delta.
+    prev_rendered_prompt = preamble;
+    prev_len = (int)preamble.size();
+
+    // Save to disk. Best-effort: a save failure means no cache for next time
+    // but the in-memory state is correct, so the current turn benefits anyway.
+    if (!llama_state_seq_save_file(ctx, bin_path.c_str(),
+                                    /*seq_id=*/0,
+                                    tokens.data(), tokens.size())) {
+        LOGi("Preamble cache: save_file failed (continuing without cache)");
+        unlink(bin_path.c_str());
+        return true;
+    }
+
+    try {
+        nlohmann::ordered_json manifest;
+        manifest["version"]     = 1;
+        manifest["fingerprint"] = preamble_cache_fingerprint;
+        manifest["n_ctx"]       = n_ctx;
+        manifest["preamble"]    = preamble;
+        manifest["n_tokens"]    = (int)tokens.size();
+        std::ofstream out(json_path);
+        out << manifest.dump();
+        if (!out) {
+            LOGi("Preamble cache: manifest write failed, removing .bin to keep state consistent");
+            unlink(bin_path.c_str());
+        } else {
+            LOGi("Preamble cache MISS: prefilled & saved %zu tokens to %s",
+                 tokens.size(), bin_path.c_str());
+        }
+    } catch (const std::exception &e) {
+        LOGi("Preamble cache: manifest serialize failed (%s)", e.what());
+        unlink(bin_path.c_str());
+    }
+
+    return true;
 }
 
 void LlamaGenerationSession::setTools(const char *toolsJson) {

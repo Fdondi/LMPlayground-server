@@ -445,6 +445,14 @@ class LlamaService : Service() {
             return entry.nativeSession.submitToolResults(resultsJson, enableThinking)
         }
 
+        override fun setPreambleCachePath(
+            sessionId: Int,
+            path: String,
+            fingerprint: String,
+        ) {
+            sessions[sessionId]?.nativeSession?.setPreambleCachePath(path, fingerprint)
+        }
+
         // Self-managed via loadModel/unloadModel — kept here for the AIDL
         // contract; callers don't need to invoke them.
         override fun requestForeground() = promoteToForeground()

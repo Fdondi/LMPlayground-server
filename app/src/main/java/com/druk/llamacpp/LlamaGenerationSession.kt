@@ -98,6 +98,19 @@ class LlamaGenerationSession internal constructor(
         client.requireConnected().submitToolResults(sessionId, resultsJson, enableThinking)
 
     /**
+     * Wire up the persistent preamble (system prompt + tools) KV cache.
+     * Lazy: nothing happens on this call — the native side checks the
+     * file on the first [addMessage] of the session. Path is the cache
+     * prefix (the `.bin` and `.json` suffixes are appended natively).
+     * `fingerprint` must change whenever the model, system prompt or tool
+     * set changes; the cache is silently regenerated on mismatch. Pass
+     * empty path/fingerprint to disable for this session.
+     */
+    fun setPreambleCachePath(path: String, fingerprint: String) {
+        client.withService { it.setPreambleCachePath(sessionId, path, fingerprint) }
+    }
+
+    /**
      * Drives a full generation in a single AIDL call.
      *
      * Suspends until the service signals `onGenerationFinished`. Each

@@ -105,6 +105,17 @@ interface ILlamaService {
      */
     int submitToolResults(int sessionId, String resultsJson, boolean enableThinking);
 
+    /**
+     * Configure the persistent preamble (system prompt + tools) KV cache
+     * for this session. The native side reads/writes <path>.bin and
+     * <path>.json. fingerprint is an opaque content-hash that must match
+     * exactly between save and load — it covers (model, system prompt,
+     * tools) so the cache silently regenerates whenever any of those
+     * change. Lazy: actual disk I/O happens on the first addMessage()
+     * call. Pass empty path to disable.
+     */
+    void setPreambleCachePath(int sessionId, String path, String fingerprint);
+
     // ── Foreground promotion (called by the proxy on model load/unload) ──
     void requestForeground();
     void releaseForeground();

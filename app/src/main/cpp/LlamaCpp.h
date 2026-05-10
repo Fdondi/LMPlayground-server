@@ -47,9 +47,32 @@ public:
     std::string getToolCallsJson();
     int submitToolResults(const char *resultsJson, bool enableThinking);
 
+    // Render the preamble (system prompt + tools description) by applying
+    // the chat template with messages temporarily reduced to just the
+    // system message and add_generation_prompt=false. Returns the rendered
+    // preamble string, or empty on template failure / unsupported. Used by
+    // the preamble KV-cache feature to compute a stable cache key and
+    // boundary for the static prefix shared across all new sessions.
+    std::string renderPreambleString(bool enableThinking);
+
+    // Configure persistent preamble KV cache. Lazy: the actual load/save
+    // happens inside the first addMessage() call. Pass empty path to
+    // disable. Path is the cache prefix (we write <path>.bin and <path>.json).
+    void setPreambleCachePath(const char* path, const char* fingerprint);
+
 private:
     void finalizeResponse();
     common_chat_params renderTemplate(bool enableThinking, bool addGenerationPrompt = true);
+
+    // First-message-only: try to load a saved preamble KV state from
+    // [preamble_cache_path], or (on miss) prefill the preamble and save
+    // it for next time. On either success path, [prev_rendered_prompt]
+    // and [prev_len] are populated so the existing prefix-match logic in
+    // addMessage feeds only the user-message delta to the model. Returns
+    // true if the preamble was set up (cache hit OR miss-then-saved),
+    // false if the preamble couldn't be derived or fed (caching disabled
+    // for this turn — addMessage falls back to its normal full-prefill).
+    bool tryPreambleCache(bool enableThinking);
 
     const struct llama_vocab * vocab = nullptr;
     llama_context * ctx = nullptr;
@@ -86,6 +109,15 @@ private:
     bool tools_enabled = false;
     std::vector<common_chat_tool_call> pending_tool_calls;
     int tool_call_counter = 0;
+
+    // Persistent preamble cache. Set by setPreambleCachePath(). Consulted
+    // exactly once per session (the first time addMessage runs with
+    // prev_len == 0). preamble_attempted prevents retrying after a
+    // graceful skip — keeps subsequent addMessage calls fast and
+    // predictable.
+    std::string preamble_cache_path;
+    std::string preamble_cache_fingerprint;
+    bool preamble_attempted = false;
 };
 
 class LlamaModel {

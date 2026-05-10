@@ -22,5 +22,9 @@ class NativeLlamaSession {
 
     external fun submitToolResults(resultsJson: String, enableThinking: Boolean): Int
 
+    external fun renderPreambleString(enableThinking: Boolean): String
+
+    external fun setPreambleCachePath(path: String, fingerprint: String)
+
     external fun destroy()
 }
