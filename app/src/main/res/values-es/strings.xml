@@ -229,4 +229,8 @@
     <string name="replay_history_too_large">El historial de la conversación es demasiado grande para volver a cargarlo en este modelo. Inicia un nuevo chat para continuar.</string>
     <string name="system_prompt_too_large">El prompt del sistema ocupa %1$d KB, supera el límite de %2$d KB. Prueba con un prompt más corto.</string>
     <string name="history_message_too_large">Un mensaje guardado en esta conversación es demasiado grande para volver a cargarlo. Inicia un nuevo chat para continuar.</string>
+    <string name="model_load_failed_status">No se pudo cargar el modelo</string>
+    <string name="model_load_failed_title">No se pudo cargar el modelo</string>
+    <string name="model_load_failed_message">No se pudo cargar %1$s. Puede que el archivo esté dañado o que use una arquitectura que esta versión de la app aún no admite. Prueba con otro modelo o actualiza la app.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

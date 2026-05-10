@@ -228,4 +228,8 @@
     <string name="replay_history_too_large">Riwayat percakapan terlalu besar untuk dimuat ulang ke model ini. Mulai obrolan baru untuk melanjutkan.</string>
     <string name="system_prompt_too_large">Prompt sistem berukuran %1$d KB, melebihi batas %2$d KB. Coba prompt yang lebih pendek.</string>
     <string name="history_message_too_large">Sebuah pesan tersimpan dalam percakapan ini terlalu besar untuk dimuat ulang. Mulai obrolan baru untuk melanjutkan.</string>
+    <string name="model_load_failed_status">Tidak dapat memuat model</string>
+    <string name="model_load_failed_title">Tidak dapat memuat model</string>
+    <string name="model_load_failed_message">Tidak dapat memuat %1$s. File mungkin rusak, atau menggunakan arsitektur yang belum didukung versi aplikasi ini. Coba model lain, atau perbarui aplikasi.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

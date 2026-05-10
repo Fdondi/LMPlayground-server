@@ -234,20 +234,12 @@ class LlamaService : Service() {
             }
             return try {
                 val nativeModel = nativeLlamaCpp.loadModel(resolved, nativeProgress)
-                // NativeLlamaCpp.loadModel returns a wrapper even when the
-                // underlying C++ load failed (e.g. corrupt or missing GGUF).
-                // The wrapper's `nativeHandle` points at a LlamaModel whose
-                // internal `llama_model*` is null, and getModelSize() will
-                // return 0. Detect that here and surface the failure as
-                // the AIDL contract's `0` instead of returning an id that
-                // breaks on every subsequent call.
-                if (nativeModel.getModelSize() <= 0L) {
+                if (nativeModel == null) {
                     Log.e(
                         TAG,
-                        "native loadModel returned wrapper with no model state " +
-                            "(likely a corrupt or unreadable GGUF at $resolved)",
+                        "native loadModel returned null (corrupt GGUF or " +
+                            "unsupported architecture at $resolved)",
                     )
-                    try { nativeModel.unloadModel() } catch (_: Throwable) {}
                     pfd?.close()
                     return 0
                 }

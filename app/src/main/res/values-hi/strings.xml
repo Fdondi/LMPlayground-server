@@ -228,4 +228,8 @@
     <string name="replay_history_too_large">बातचीत का इतिहास इस मॉडल में फिर से लोड करने के लिए बहुत बड़ा है। जारी रखने के लिए नई चैट शुरू करें।</string>
     <string name="system_prompt_too_large">सिस्टम प्रॉम्प्ट %1$d KB का है, %2$d KB की सीमा से अधिक। छोटा प्रॉम्प्ट आज़माएँ।</string>
     <string name="history_message_too_large">इस बातचीत में सहेजा गया एक संदेश फिर से लोड करने के लिए बहुत बड़ा है। जारी रखने के लिए नई चैट शुरू करें।</string>
+    <string name="model_load_failed_status">मॉडल लोड नहीं हो सका</string>
+    <string name="model_load_failed_title">मॉडल लोड नहीं हो सका</string>
+    <string name="model_load_failed_message">%1$s लोड नहीं हो सका। फ़ाइल खराब हो सकती है, या यह ऐसी आर्किटेक्चर का उपयोग करती है जिसे ऐप का यह संस्करण अभी समर्थन नहीं करता। कोई दूसरा मॉडल आज़माएँ, या ऐप अपडेट करें।</string>
+    <string name="model_load_failed_dismiss">ठीक है</string>
 </resources>

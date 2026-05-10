@@ -268,4 +268,8 @@
     <string name="replay_history_too_large">ประวัติการสนทนาใหญ่เกินกว่าจะโหลดเข้าโมเดลนี้ใหม่ เริ่มแชทใหม่เพื่อดำเนินการต่อ</string>
     <string name="system_prompt_too_large">พรอมต์ระบบมีขนาด %1$d KB เกินขีดจำกัด %2$d KB ลองพรอมต์ที่สั้นกว่านี้</string>
     <string name="history_message_too_large">ข้อความที่บันทึกไว้ในการสนทนานี้ใหญ่เกินกว่าจะโหลดซ้ำได้ เริ่มแชทใหม่เพื่อดำเนินการต่อ</string>
+    <string name="model_load_failed_status">โหลดโมเดลไม่สำเร็จ</string>
+    <string name="model_load_failed_title">โหลดโมเดลไม่สำเร็จ</string>
+    <string name="model_load_failed_message">ไม่สามารถโหลด %1$s ได้ ไฟล์อาจเสียหาย หรือใช้สถาปัตยกรรมที่แอปเวอร์ชันนี้ยังไม่รองรับ ลองใช้โมเดลอื่น หรืออัปเดตแอป</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

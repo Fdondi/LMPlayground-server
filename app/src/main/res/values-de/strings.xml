@@ -229,4 +229,8 @@
     <string name="replay_history_too_large">Der Gesprächsverlauf ist zu groß, um in dieses Modell zurückgeladen zu werden. Starte einen neuen Chat, um fortzufahren.</string>
     <string name="system_prompt_too_large">Der System-Prompt ist %1$d KB groß und überschreitet das Limit von %2$d KB. Versuche es mit einem kürzeren Prompt.</string>
     <string name="history_message_too_large">Eine gespeicherte Nachricht in dieser Unterhaltung ist zu groß, um neu geladen zu werden. Starte einen neuen Chat, um fortzufahren.</string>
+    <string name="model_load_failed_status">Modell konnte nicht geladen werden</string>
+    <string name="model_load_failed_title">Modell konnte nicht geladen werden</string>
+    <string name="model_load_failed_message">%1$s konnte nicht geladen werden. Die Datei ist möglicherweise beschädigt oder verwendet eine Architektur, die diese Version der App noch nicht unterstützt. Versuche es mit einem anderen Modell oder aktualisiere die App.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

@@ -10,6 +10,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.druk.llamacpp.InferenceLimits
 import com.druk.llamacpp.InferenceState
+import com.druk.llamacpp.InferenceUnavailableException
 import com.druk.llamacpp.LlamaCpp
 import com.druk.llamacpp.LlamaGenerationCallback
 import com.druk.llamacpp.LlamaGenerationSession
@@ -85,6 +86,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _pendingRamWarning =
         MutableLiveData<RamWarning?>(null)
 
+    /**
+     * Set when the native loader returns null — the GGUF is corrupt,
+     * unreadable, or uses an architecture this build of llama.cpp
+     * doesn't recognize. The UI surfaces a one-shot AlertDialog and
+     * resets to null via [consumeModelLoadError].
+     */
+    private val _modelLoadError = MutableLiveData<String?>(null)
+
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
 
@@ -104,10 +113,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val systemPromptId: LiveData<String?> = _systemPromptId
     val userError: LiveData<String?> = _userError
     val pendingRamWarning: LiveData<RamWarning?> = _pendingRamWarning
+    val modelLoadError: LiveData<String?> = _modelLoadError
 
     /** Called by the UI after surfacing the error (e.g. as a Toast). */
     @MainThread
     fun consumeUserError() { _userError.value = null }
+
+    @MainThread
+    fun consumeModelLoadError() { _modelLoadError.value = null }
 
     @MainThread
     fun dismissRamWarning() { _pendingRamWarning.value = null }
@@ -494,14 +507,19 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // Surface the failure to the user instead of leaving
                     // the picker stuck on "Loading…" forever.
                     _modelLoadingProgress.postValue(0f)
-                    _loadedModelStatus.postValue(
-                        t.message ?: t.javaClass.simpleName ?: "Load failed"
+                    val statusMsg = app.getString(
+                        com.druk.lmplayground.R.string.model_load_failed_status
                     )
+                    _loadedModelStatus.postValue(statusMsg)
                     fileHandle.close()
                     if (t !is kotlinx.coroutines.CancellationException) {
-                        // CancellationException is propagated by the
-                        // coroutine machinery — others we just log.
                         android.util.Log.w("ConversationViewModel", "loadModel failed", t)
+                        _modelLoadError.postValue(
+                            app.getString(
+                                com.druk.lmplayground.R.string.model_load_failed_message,
+                                modelInfo.name,
+                            )
+                        )
                     } else {
                         throw t
                     }
@@ -582,17 +600,28 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         params: GenerationParams,
         systemPrompt: String = _systemPrompt.value.orEmpty()
     ): LlamaGenerationSession? {
-        return model.createSession(
-            params.contextSize,
-            params.temperature,
-            params.topP,
-            params.repetitionPenalty,
-            params.topK,
-            params.minP,
-            params.seed,
-            params.thinkingBudget,
-            systemPrompt
-        )
+        return try {
+            model.createSession(
+                params.contextSize,
+                params.temperature,
+                params.topP,
+                params.repetitionPenalty,
+                params.topK,
+                params.minP,
+                params.seed,
+                params.thinkingBudget,
+                systemPrompt
+            )
+        } catch (e: InferenceUnavailableException) {
+            // The :llama service died (or hasn't bound yet). Surface a
+            // recoverable error to the UI rather than letting the AIDL
+            // exception propagate and crash the app process.
+            android.util.Log.w("ConversationViewModel", "createSession failed: service unavailable", e)
+            _userError.postValue(
+                app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
+            )
+            null
+        }
     }
 
     @MainThread
@@ -756,13 +785,28 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 // Tools are active when model supports it and user has tools enabled
                 val toolsActive = _supportsToolCalling.value == true
                     && toolRegistry.hasEnabledTools()
-                if (toolsActive) {
-                    llamaSession.setTools(toolRegistry.toOpenAIToolsJson())
-                } else {
-                    llamaSession.setTools("[]")
+                try {
+                    if (toolsActive) {
+                        llamaSession.setTools(toolRegistry.toOpenAIToolsJson())
+                    } else {
+                        llamaSession.setTools("[]")
+                    }
+                    llamaSession.addMessage(message.content, enableThinking)
+                } catch (e: InferenceUnavailableException) {
+                    android.util.Log.w("ConversationViewModel", "addMessage failed: service unavailable", e)
+                    _userError.postValue(
+                        app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
+                    )
+                    Snapshot.withMutableSnapshot {
+                        // Drop the empty assistant placeholder so the chat
+                        // doesn't sit forever on a half-blank bubble.
+                        if ((uiState.messages.lastOrNull() as? Message)?.id == ourMessageId) {
+                            uiState.removeLastMessage()
+                        }
+                    }
+                    _isGenerating.postValue(false)
+                    return@withContext
                 }
-
-                llamaSession.addMessage(message.content, enableThinking)
 
                 val callback = object: LlamaGenerationCallback {
                     var totalTokens = 0
@@ -852,6 +896,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         callback.thinkingComplete = !enableThinking
                         callback.modelIsThinking = enableThinking
                     }
+                } catch (e: InferenceUnavailableException) {
+                    android.util.Log.w("ConversationViewModel", "generateAll failed: service unavailable", e)
+                    _userError.postValue(
+                        app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
+                    )
                 } finally {
                     // Cleanup must complete even if the coroutine was
                     // cancelled (Stop tapped). NonCancellable lets us

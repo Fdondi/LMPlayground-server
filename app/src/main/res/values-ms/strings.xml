@@ -267,4 +267,8 @@
     <string name="replay_history_too_large">Sejarah perbualan terlalu besar untuk dimuatkan semula ke dalam model ini. Mulakan sembang baharu untuk meneruskan.</string>
     <string name="system_prompt_too_large">Prom sistem bersaiz %1$d KB, melebihi had %2$d KB. Cuba prom yang lebih pendek.</string>
     <string name="history_message_too_large">Mesej tersimpan dalam perbualan ini terlalu besar untuk dimuatkan semula. Mulakan sembang baharu untuk meneruskan.</string>
+    <string name="model_load_failed_status">Tidak dapat memuatkan model</string>
+    <string name="model_load_failed_title">Tidak dapat memuatkan model</string>
+    <string name="model_load_failed_message">Tidak dapat memuatkan %1$s. Fail mungkin rosak, atau ia menggunakan seni bina yang belum disokong oleh versi aplikasi ini. Cuba model lain, atau kemas kini aplikasi.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

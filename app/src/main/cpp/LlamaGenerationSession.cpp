@@ -156,27 +156,6 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
     prev_len = 0;
 }
 
-static std::string strip_think_tags(const std::string &text) {
-    std::string result;
-    size_t pos = 0;
-    while (pos < text.size()) {
-        size_t open = text.find("<think>", pos);
-        if (open == std::string::npos) {
-            result.append(text, pos, std::string::npos);
-            break;
-        }
-        result.append(text, pos, open - pos);
-        size_t close = text.find("</think>", open);
-        if (close == std::string::npos) {
-            break;
-        }
-        pos = close + 8; // strlen("</think>")
-        // skip trailing newlines after the close tag
-        while (pos < text.size() && text[pos] == '\n') pos++;
-    }
-    return result;
-}
-
 int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) {
     if (chat_tmpls == nullptr || ctx == nullptr) {
         LOGe("addMessage called on uninitialized session");
@@ -208,6 +187,22 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     }
     std::string full_prompt = result.prompt;
     additional_stops = result.additional_stops;
+
+    // Initialize the PEG parser from the freshly-rendered template so
+    // `common_chat_parse` is usable for the rest of this turn — including
+    // the strip-thinking pass below. The parser is template-derived, so
+    // re-rendering after compaction yields the same parser; no need to
+    // redo this setup later in the function.
+    if (!result.parser.empty()) {
+        parser_params = common_chat_parser_params(result);
+        parser_params.reasoning_format = enableThinking
+            ? COMMON_REASONING_FORMAT_DEEPSEEK : COMMON_REASONING_FORMAT_NONE;
+        parser_params.parse_tool_calls = tools_enabled;
+        parser_params.parser.load(result.parser);
+        parser_initialized = true;
+    } else {
+        parser_initialized = false;
+    }
 
     // Check if the rendered prompt prefix matches what finalizeResponse computed.
     // The Jinja template may render assistant content differently depending on
@@ -243,19 +238,22 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
              n_ctx_used, n_prompt_tokens, n_ctx);
 
         bool stripped_any = false;
-        for (size_t i = 0; i + 1 < messages.size(); i++) {
-            if (messages[i].role == "assistant") {
-                // Use PEG parser to strip thinking from any format
-                if (parser_initialized) {
+        // If the template has no parser, there's no thinking format to
+        // strip — the loop is a no-op and we fall through to Stage 2.
+        if (parser_initialized) {
+            for (size_t i = 0; i + 1 < messages.size(); i++) {
+                if (messages[i].role != "assistant") continue;
+                try {
                     auto parsed = common_chat_parse(messages[i].content, false, parser_params);
                     if (!parsed.reasoning_content.empty()) {
                         messages[i].content = parsed.content;
                         messages[i].reasoning_content.clear();
                         stripped_any = true;
                     }
-                } else if (messages[i].content.find("<think>") != std::string::npos) {
-                    messages[i].content = strip_think_tags(messages[i].content);
-                    stripped_any = true;
+                } catch (const std::exception &e) {
+                    LOGe("PEG parse failed while stripping older turn: %s", e.what());
+                } catch (...) {
+                    LOGe("PEG parse failed while stripping older turn: unknown");
                 }
             }
         }
@@ -343,17 +341,6 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     // KV cache.
     last_full_prompt = full_prompt;
 
-    // Build PEG parser params for response parsing
-    if (!result.parser.empty()) {
-        parser_params = common_chat_parser_params(result);
-        parser_params.reasoning_format = enableThinking
-            ? COMMON_REASONING_FORMAT_DEEPSEEK : COMMON_REASONING_FORMAT_NONE;
-        parser_params.parse_tool_calls = tools_enabled;
-        parser_params.parser.load(result.parser);
-        parser_initialized = true;
-    } else {
-        parser_initialized = false;
-    }
 
     // Add reasoning budget sampler on first thinking-enabled turn, using
     // the model's actual thinking tags from the template (not hardcoded).
@@ -428,8 +415,16 @@ void LlamaGenerationSession::finalizeResponse() {
     messages.push_back(assistant_msg);
 
     if (parser_initialized) {
-        auto parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
-        prev_had_thinking = !parsed.reasoning_content.empty();
+        try {
+            auto parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
+            prev_had_thinking = !parsed.reasoning_content.empty();
+        } catch (const std::exception &e) {
+            LOGe("PEG parse failed in finalizeResponse: %s", e.what());
+            prev_had_thinking = response.find("</think>") != std::string::npos;
+        } catch (...) {
+            LOGe("PEG parse failed in finalizeResponse: unknown");
+            prev_had_thinking = response.find("</think>") != std::string::npos;
+        }
     } else {
         prev_had_thinking = response.find("</think>") != std::string::npos;
     }
@@ -526,17 +521,25 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         if (!is_eog) {
             // Use PEG parser to normalize thinking format for the UI
             if (parser_initialized) {
-                auto parsed = common_chat_parse(response, /*is_partial=*/true, parser_params);
-                std::string normalized;
-                if (!parsed.reasoning_content.empty()) {
-                    normalized = "<think>" + parsed.reasoning_content;
-                    if (!parsed.content.empty()) {
-                        normalized += "</think>" + parsed.content;
+                try {
+                    auto parsed = common_chat_parse(response, /*is_partial=*/true, parser_params);
+                    std::string normalized;
+                    if (!parsed.reasoning_content.empty()) {
+                        normalized = "<think>" + parsed.reasoning_content;
+                        if (!parsed.content.empty()) {
+                            normalized += "</think>" + parsed.content;
+                        }
+                    } else {
+                        normalized = parsed.content.empty() ? response : parsed.content;
                     }
-                } else {
-                    normalized = parsed.content.empty() ? response : parsed.content;
+                    callback(normalized);
+                } catch (const std::exception &e) {
+                    LOGe("PEG parse failed in generate (partial): %s", e.what());
+                    callback(response);
+                } catch (...) {
+                    LOGe("PEG parse failed in generate (partial): unknown");
+                    callback(response);
                 }
-                callback(normalized);
             } else {
                 callback(response);
             }

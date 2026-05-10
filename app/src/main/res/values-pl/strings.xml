@@ -227,4 +227,8 @@
     <string name="replay_history_too_large">Historia rozmowy jest zbyt duża, aby ją ponownie wczytać do tego modelu. Rozpocznij nowy czat, aby kontynuować.</string>
     <string name="system_prompt_too_large">Prompt systemowy ma %1$d KB i przekracza limit %2$d KB. Spróbuj krótszego promptu.</string>
     <string name="history_message_too_large">Zapisana wiadomość w tej rozmowie jest zbyt duża, aby ją ponownie wczytać. Rozpocznij nowy czat, aby kontynuować.</string>
+    <string name="model_load_failed_status">Nie udało się wczytać modelu</string>
+    <string name="model_load_failed_title">Nie udało się wczytać modelu</string>
+    <string name="model_load_failed_message">Nie udało się wczytać %1$s. Plik może być uszkodzony lub używa architektury, której ta wersja aplikacji jeszcze nie obsługuje. Spróbuj innego modelu lub zaktualizuj aplikację.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

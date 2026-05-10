@@ -21,7 +21,7 @@ class LlamaGenerationSession internal constructor(
 ) {
     fun addMessage(message: String, enableThinking: Boolean) {
         InferenceLimits.requireWithinBudget(message, "user message")
-        client.requireConnected().addMessage(sessionId, message, enableThinking)
+        client.withService { it.addMessage(sessionId, message, enableThinking) }
     }
 
     /**
@@ -47,26 +47,27 @@ class LlamaGenerationSession internal constructor(
             InferenceLimits.requireWithinBudget(assistantMessages[i], "assistant message #$i")
         }
 
-        val svc = client.requireConnected()
-        svc.beginReplayHistory(sessionId)
-        for (i in userMessages.indices) {
-            // One string per AIDL call — keeps every transaction safely
-            // under the binder cap even when each message sits at the
-            // 700 KB ceiling.
-            svc.appendReplayUser(sessionId, userMessages[i])
-            svc.appendReplayAssistant(sessionId, assistantMessages[i])
+        client.withService { svc ->
+            svc.beginReplayHistory(sessionId)
+            for (i in userMessages.indices) {
+                // One string per AIDL call — keeps every transaction safely
+                // under the binder cap even when each message sits at the
+                // 700 KB ceiling.
+                svc.appendReplayUser(sessionId, userMessages[i])
+                svc.appendReplayAssistant(sessionId, assistantMessages[i])
+            }
+            svc.finalizeReplayHistory(sessionId)
         }
-        svc.finalizeReplayHistory(sessionId)
     }
 
     fun printReport() {
-        client.requireConnected().printSessionReport(sessionId)
+        client.withService { it.printSessionReport(sessionId) }
     }
 
-    fun getReport(): String = client.requireConnected().getSessionReport(sessionId)
+    fun getReport(): String = client.withService { it.getSessionReport(sessionId) }
 
     fun destroy() {
-        try { client.requireConnected().destroySession(sessionId) } catch (_: Throwable) {}
+        try { client.withService { it.destroySession(sessionId) } } catch (_: Throwable) {}
     }
 
     /**
@@ -118,6 +119,9 @@ class LlamaGenerationSession internal constructor(
      * status from the service on error / cancel.
      */
     suspend fun generateAll(callback: LlamaGenerationCallback): Int {
+        // Snapshot a service for the duration of this generation. If it
+        // dies we'll surface InferenceUnavailableException via withService
+        // semantics (the cancel/finalize calls below tolerate failure).
         val svc = client.requireConnected()
         val finished = CompletableDeferred<Int>()
         val buf = StringBuilder()
@@ -134,7 +138,17 @@ class LlamaGenerationSession internal constructor(
             }
         }
 
-        svc.startGeneration(sessionId, cb)
+        try {
+            svc.startGeneration(sessionId, cb)
+        } catch (e: android.os.DeadObjectException) {
+            throw InferenceUnavailableException(
+                "Inference service died before generation started: ${e.message}"
+            )
+        } catch (e: android.os.RemoteException) {
+            throw InferenceUnavailableException(
+                "Inference service rejected startGeneration: ${e.message}"
+            )
+        }
         return try {
             finished.await()
         } catch (e: CancellationException) {

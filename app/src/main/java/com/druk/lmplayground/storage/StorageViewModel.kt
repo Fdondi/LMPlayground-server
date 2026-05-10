@@ -127,7 +127,15 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
             } else {
                 val handle = repository.openModelFile(file.name) ?: return@mapNotNull null
                 try {
-                    val result = llamaCpp.probeModelMetadata(handle.pfd) ?: return@mapNotNull null
+                    // probeModelMetadata can throw InferenceUnavailableException
+                    // if the :llama service hasn't connected yet (or just
+                    // crashed). Skip discovery for this pass — the next
+                    // loadStorageInfo (post bind) picks the model up.
+                    val result = try {
+                        llamaCpp.probeModelMetadata(handle.pfd) ?: return@mapNotNull null
+                    } catch (_: com.druk.llamacpp.InferenceUnavailableException) {
+                        return@mapNotNull null
+                    }
                     val probedName = result[0]
                     val probedHasTemplate = result[1].toBoolean()
                     prefs.setCustomModelMetadata(file.name, probedName, probedHasTemplate)

@@ -82,6 +82,10 @@ class ToolCallingTest {
             val model = llamaCpp.loadModel(file.absolutePath, object : LlamaProgressCallback {
                 override fun onProgress(progress: Float) {}
             })
+            if (model == null) {
+                Log.d(TAG, "  -> load returned null, skipping")
+                continue
+            }
             if (model.supportsToolCalling()) {
                 Log.d(TAG, "  -> supports tool calling!")
                 return Pair(file, model)
@@ -101,7 +105,7 @@ class ToolCallingTest {
                     Log.d(TAG, "Loading: ${(progress * 100).toInt()}%")
                 }
             }
-        )
+        ) ?: error("loadModel returned null for ${modelFile.absolutePath}")
         llamaModel = model
         return model
     }
@@ -693,6 +697,10 @@ class ToolCallingTest {
             val model = llamaCpp.loadModel(file.absolutePath, object : LlamaProgressCallback {
                 override fun onProgress(progress: Float) {}
             })
+            if (model == null) {
+                Log.d(TAG, "$name: load returned null (corrupt or unsupported)")
+                continue
+            }
             val thinking = model.supportsThinking()
             val tools = model.supportsToolCalling()
             Log.d(TAG, "$name: thinking=$thinking, tools=$tools")

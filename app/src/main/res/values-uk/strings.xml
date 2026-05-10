@@ -227,4 +227,8 @@
     <string name="replay_history_too_large">Історія розмови завелика, щоб перезавантажити її в цю модель. Розпочніть новий чат, щоб продовжити.</string>
     <string name="system_prompt_too_large">Системний промпт має %1$d КБ, що перевищує ліміт %2$d КБ. Спробуйте коротший промпт.</string>
     <string name="history_message_too_large">Збережене повідомлення в цій розмові завелике для перезавантаження. Розпочніть новий чат, щоб продовжити.</string>
+    <string name="model_load_failed_status">Не вдалося завантажити модель</string>
+    <string name="model_load_failed_title">Не вдалося завантажити модель</string>
+    <string name="model_load_failed_message">Не вдалося завантажити %1$s. Файл може бути пошкоджений або використовує архітектуру, яку ця версія застосунку ще не підтримує. Спробуйте іншу модель або оновіть застосунок.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

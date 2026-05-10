@@ -228,4 +228,8 @@
     <string name="replay_history_too_large">Sohbet geçmişi bu modele yeniden yüklenemeyecek kadar büyük. Devam etmek için yeni bir sohbet başlatın.</string>
     <string name="system_prompt_too_large">Sistem istemi %1$d KB, %2$d KB sınırını aşıyor. Daha kısa bir istem deneyin.</string>
     <string name="history_message_too_large">Bu sohbette kayıtlı bir mesaj yeniden yüklenemeyecek kadar büyük. Devam etmek için yeni bir sohbet başlatın.</string>
+    <string name="model_load_failed_status">Model yüklenemedi</string>
+    <string name="model_load_failed_title">Model yüklenemedi</string>
+    <string name="model_load_failed_message">%1$s yüklenemedi. Dosya bozuk olabilir veya uygulamanın bu sürümünün henüz desteklemediği bir mimari kullanıyor olabilir. Farklı bir model deneyin ya da uygulamayı güncelleyin.</string>
+    <string name="model_load_failed_dismiss">Tamam</string>
 </resources>

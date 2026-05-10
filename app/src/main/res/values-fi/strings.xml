@@ -266,4 +266,8 @@
     <string name="replay_history_too_large">Keskusteluhistoria on liian suuri ladattavaksi tähän malliin. Aloita uusi keskustelu jatkaaksesi.</string>
     <string name="system_prompt_too_large">Järjestelmäkehote on %1$d kt, mikä ylittää %2$d kt:n rajan. Kokeile lyhyempää kehotetta.</string>
     <string name="history_message_too_large">Tähän keskusteluun tallennettu viesti on liian suuri ladattavaksi uudelleen. Aloita uusi keskustelu jatkaaksesi.</string>
+    <string name="model_load_failed_status">Mallin lataaminen epäonnistui</string>
+    <string name="model_load_failed_title">Mallin lataaminen epäonnistui</string>
+    <string name="model_load_failed_message">Mallin %1$s lataaminen epäonnistui. Tiedosto voi olla vioittunut tai se käyttää arkkitehtuuria, jota tämä sovelluksen versio ei vielä tue. Kokeile toista mallia tai päivitä sovellus.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

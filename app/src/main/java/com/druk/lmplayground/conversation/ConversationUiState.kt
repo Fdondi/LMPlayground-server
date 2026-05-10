@@ -91,6 +91,12 @@ class ConversationUiState(
     fun resetMessages() {
         _messages.clear()
     }
+
+    fun removeLastMessage() {
+        if (_messages.isNotEmpty()) {
+            _messages.removeAt(_messages.size - 1)
+        }
+    }
 }
 
 private val messageIdCounter = AtomicLong(0)

@@ -267,4 +267,8 @@
     <string name="replay_history_too_large">Historie konverzace je příliš velká pro načtení do tohoto modelu. Pokračujte zahájením nového chatu.</string>
     <string name="system_prompt_too_large">Systémový prompt má %1$d KB, což překračuje limit %2$d KB. Zkuste kratší prompt.</string>
     <string name="history_message_too_large">Uložená zpráva v této konverzaci je příliš velká pro opětovné načtení. Pokračujte zahájením nového chatu.</string>
+    <string name="model_load_failed_status">Nepodařilo se načíst model</string>
+    <string name="model_load_failed_title">Nepodařilo se načíst model</string>
+    <string name="model_load_failed_message">Nepodařilo se načíst %1$s. Soubor může být poškozený nebo používá architekturu, kterou tato verze aplikace zatím nepodporuje. Zkuste jiný model nebo aktualizujte aplikaci.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>

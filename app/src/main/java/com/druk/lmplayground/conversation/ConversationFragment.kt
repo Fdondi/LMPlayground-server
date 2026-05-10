@@ -96,6 +96,7 @@ class ConversationFragment : Fragment() {
             val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
             val userError by viewModel.userError.observeAsState()
             val pendingRamWarning by viewModel.pendingRamWarning.observeAsState()
+            val modelLoadError by viewModel.modelLoadError.observeAsState()
             var showParamsSheet by remember { mutableStateOf(false) }
 
             // Surface transient ViewModel errors (e.g. message-too-large)
@@ -270,6 +271,19 @@ class ConversationFragment : Fragment() {
                     )
                 }
 
+                modelLoadError?.let { message ->
+                    AlertDialog(
+                        onDismissRequest = { viewModel.consumeModelLoadError() },
+                        title = { Text(stringResource(R.string.model_load_failed_title)) },
+                        text = { Text(message) },
+                        confirmButton = {
+                            TextButton(onClick = { viewModel.consumeModelLoadError() }) {
+                                Text(stringResource(R.string.model_load_failed_dismiss))
+                            }
+                        }
+                    )
+                }
+
                 if (showParamsSheet) {
                     GenerationParamsSheet(
                         params = generationParams,
@@ -352,7 +366,13 @@ class ConversationFragment : Fragment() {
                                             showParamsSheet = true
                                         },
                                         onBrowseModels = {
-                                            findNavController().navigate(R.id.action_home_to_models)
+                                            // Guard against NavController throwing IllegalArgumentException
+                                            // when the user double-taps or another navigation moved us
+                                            // off nav_home before this callback fired.
+                                            val nav = findNavController()
+                                            if (nav.currentDestination?.id == R.id.nav_home) {
+                                                nav.navigate(R.id.action_home_to_models)
+                                            }
                                         },
                                         onDismissRequest = {
                                             viewModel.resetModelList()

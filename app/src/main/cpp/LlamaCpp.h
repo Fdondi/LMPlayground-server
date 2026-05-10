@@ -108,6 +108,8 @@ public:
 
     bool supportsToolCalling();
 
+    bool isLoaded() const { return model != nullptr; }
+
     void unloadModel();
 
 private:

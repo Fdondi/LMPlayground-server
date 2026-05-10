@@ -229,4 +229,8 @@
     <string name="replay_history_too_large">L\'historique de la conversation est trop volumineux pour être rechargé dans ce modèle. Démarrez une nouvelle discussion pour continuer.</string>
     <string name="system_prompt_too_large">L\'invite système fait %1$d Ko et dépasse la limite de %2$d Ko. Essayez une invite plus courte.</string>
     <string name="history_message_too_large">Un message enregistré dans cette conversation est trop volumineux pour être rechargé. Démarrez une nouvelle discussion pour continuer.</string>
+    <string name="model_load_failed_status">Impossible de charger le modèle</string>
+    <string name="model_load_failed_title">Impossible de charger le modèle</string>
+    <string name="model_load_failed_message">Impossible de charger %1$s. Le fichier est peut-être corrompu, ou il utilise une architecture que cette version de l\'application ne prend pas encore en charge. Essayez un autre modèle ou mettez l\'application à jour.</string>
+    <string name="model_load_failed_dismiss">OK</string>
 </resources>
