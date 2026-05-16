@@ -118,6 +118,12 @@ android {
                     systemImageSource = "google"
                     require64Bit = true
                 }
+                maybeCreate<ManagedVirtualDevice>("mvdTablet7Api35").apply {
+                    device = "7in WSVGA (Tablet)"
+                    apiLevel = 35
+                    systemImageSource = "google"
+                    require64Bit = true
+                }
             }
         }
     }
@@ -208,6 +214,10 @@ dependencies {
 
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.materialWindow)
+    implementation(libs.androidx.compose.material3.adaptive.layout)
+    implementation(libs.androidx.compose.material3.adaptive.navigation)
+    implementation(libs.androidx.window)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)

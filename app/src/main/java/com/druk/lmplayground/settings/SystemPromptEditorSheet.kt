@@ -50,58 +50,83 @@ fun SystemPromptEditorSheet(
     onDismiss: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var text by remember { mutableStateOf(initialText) }
 
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState
     ) {
-        Column(
+        SystemPromptEditorBody(
+            initialText = initialText,
+            title = title,
+            primaryLabel = primaryLabel,
+            onPrimary = onPrimary,
+            onDelete = onDelete,
+            onDismiss = onDismiss,
             modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.92f)
                 .navigationBarsPadding()
                 .imePadding()
-                .padding(horizontal = 20.dp, vertical = 12.dp)
+        )
+    }
+}
+
+/**
+ * Editor body without any sheet/dialog wrapping. Used directly by the tablet
+ * master-detail layout (right pane) and wrapped by [SystemPromptEditorSheet]
+ * for the phone bottom-sheet flow. The caller controls outer sizing via
+ * [modifier].
+ */
+@Composable
+fun SystemPromptEditorBody(
+    initialText: String,
+    title: String,
+    primaryLabel: String,
+    onPrimary: (text: String) -> Unit,
+    onDelete: (() -> Unit)? = null,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var text by remember(initialText) { mutableStateOf(initialText) }
+
+    Column(modifier = modifier.padding(horizontal = 20.dp, vertical = 12.dp)) {
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleMedium
+        )
+        Spacer(Modifier.height(12.dp))
+        OutlinedTextField(
+            value = text,
+            onValueChange = { text = it },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+            placeholder = { Text(stringResource(R.string.system_prompt_hint)) },
+            textStyle = MaterialTheme.typography.bodyLarge
+        )
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.titleMedium
-            )
-            Spacer(Modifier.height(12.dp))
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f),
-                placeholder = { Text(stringResource(R.string.system_prompt_hint)) },
-                textStyle = MaterialTheme.typography.bodyLarge
-            )
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (onDelete != null) {
-                    OutlinedButton(onClick = {
-                        onDelete()
-                        onDismiss()
-                    }) { Text(stringResource(R.string.delete)) }
-                }
-                Spacer(Modifier.weight(1f))
-                TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.cancel))
-                }
-                Spacer(Modifier.width(8.dp))
-                Button(
-                    enabled = text.trim().isNotEmpty(),
-                    onClick = {
-                        onPrimary(text.trim())
-                        onDismiss()
-                    }
-                ) { Text(primaryLabel) }
+            if (onDelete != null) {
+                OutlinedButton(onClick = {
+                    onDelete()
+                    onDismiss()
+                }) { Text(stringResource(R.string.delete)) }
             }
+            Spacer(Modifier.weight(1f))
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+            Spacer(Modifier.width(8.dp))
+            Button(
+                enabled = text.trim().isNotEmpty(),
+                onClick = {
+                    onPrimary(text.trim())
+                    onDismiss()
+                }
+            ) { Text(primaryLabel) }
         }
     }
 }

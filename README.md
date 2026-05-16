@@ -17,6 +17,7 @@ LM Playground is an Android application for running Large Language Models locall
 - **Reliable background downloads** - custom download engine with OkHttp and WorkManager, progress notifications with speed and ETA, automatic resume on network interruptions
 - **Storage management** - choose where to keep multi-GB model files with Android's Storage Access Framework
 - **ARM optimized** - KleidiAI kernels and OpenMP for faster generation on arm64 devices
+- **Large-screen ready** - tablets, foldables, and Chromebooks get a permanent sessions sidebar, list-detail Settings, and freeform window resize support
 
 ## Supported Models
 

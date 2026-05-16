@@ -1,13 +1,16 @@
 package com.druk.lmplayground.models
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -36,14 +39,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.druk.lmplayground.R
 
 @Composable
 fun SelectModelDialog(
     models: List<ModelWithStatus>,
     isModelLoaded: Boolean = false,
+    /**
+     * When > 0, the dialog Card is centered inside the chat pane rather than
+     * the full window — used on tablet so the picker doesn't appear to cover
+     * the sessions sidebar on its way to the chat area. Pass the sidebar's
+     * effective width here (e.g. `320.dp`).
+     */
+    chatPaneStartOffset: Dp = 0.dp,
     onLoadModel: (ModelInfo) -> Unit,
     onUnloadModel: () -> Unit = {},
     onGenerationParams: () -> Unit = {},
@@ -53,13 +65,30 @@ fun SelectModelDialog(
     // Only show downloaded models
     val downloadedModels = models.filter { it.isDownloaded }
 
-    Dialog(onDismissRequest = { onDismissRequest() }) {
-        Card(
+    // usePlatformDefaultWidth=false lets us cap the dialog at a comfortable
+    // 560dp on freeform Chromebook windows / wide tablets while still letting
+    // it expand to fill narrow phones via fillMaxWidth.
+    Dialog(
+        onDismissRequest = { onDismissRequest() },
+        properties = DialogProperties(usePlatformDefaultWidth = false)
+    ) {
+        Box(
+            // Full-screen Box gives us explicit alignment control. Adding a
+            // start padding equal to the sidebar width means
+            // contentAlignment = Center centers within (sidebar..rightEdge)
+            // rather than the full window.
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
+                .fillMaxSize()
+                .padding(start = chatPaneStartOffset),
+            contentAlignment = Alignment.Center
         ) {
+            Card(
+                modifier = Modifier
+                    .widthIn(max = 560.dp)
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                shape = RoundedCornerShape(16.dp),
+            ) {
             LazyColumn {
                 if (downloadedModels.isEmpty()) {
                     item {
@@ -138,6 +167,7 @@ fun SelectModelDialog(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
             }
+        }
         }
     }
 }

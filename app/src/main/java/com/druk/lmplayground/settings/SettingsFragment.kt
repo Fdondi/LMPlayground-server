@@ -1,5 +1,11 @@
 package com.druk.lmplayground.settings
 
+import android.Manifest
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,8 +14,21 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -17,12 +36,79 @@ import com.druk.llamacpp.InferenceState
 import com.druk.lmplayground.App
 import com.druk.lmplayground.BuildConfig
 import com.druk.lmplayground.R
+import com.druk.lmplayground.models.ModelInfo
+import com.druk.lmplayground.storage.ModelsContent
+import com.druk.lmplayground.storage.StorageViewModel
+import com.druk.lmplayground.util.rememberHingeWidthDp
 import com.druk.lmplayground.theme.PlaygroundTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SettingsFragment : Fragment() {
+
+    // Lazily created via Compose property delegate — only allocated on tablet
+    // when the user actually opens a Models/Prompts detail pane, since the
+    // ViewModel hits storage as soon as it's constructed.
+    private val storageViewModel: StorageViewModel by viewModels()
+    private val systemPromptsViewModel: SystemPromptsViewModel by viewModels()
+
+    // Pending download model held across the notification-permission
+    // request, mirroring the original ModelsFragment behaviour.
+    private var pendingDownloadModel: ModelInfo? = null
+
+    private val folderPickerLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocumentTree()
+    ) { uri ->
+        uri?.let {
+            requireContext().contentResolver.takePersistableUriPermission(
+                uri,
+                Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+            )
+            storageViewModel.requestStorageFolderChange(uri)
+        }
+    }
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { _ ->
+        pendingDownloadModel?.let { model ->
+            storageViewModel.downloadModel(model)
+            pendingDownloadModel = null
+        }
+    }
+
+    private fun startDownloadWithPermissionCheck(model: ModelInfo) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
+            storageViewModel.downloadModel(model)
+            return
+        }
+
+        val granted = ContextCompat.checkSelfPermission(
+            requireContext(), Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (granted || shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS).not()
+            && hasAskedNotificationPermission()
+        ) {
+            storageViewModel.downloadModel(model)
+        } else {
+            pendingDownloadModel = model
+            setAskedNotificationPermission()
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
+
+    private fun hasAskedNotificationPermission(): Boolean {
+        return requireContext().getSharedPreferences("download_prefs", 0)
+            .getBoolean("asked_notification_permission", false)
+    }
+
+    private fun setAskedNotificationPermission() {
+        requireContext().getSharedPreferences("download_prefs", 0)
+            .edit().putBoolean("asked_notification_permission", true).apply()
+    }
 
     /**
      * Rapid double-taps on a settings row can fire the second click after the
@@ -84,6 +170,24 @@ class SettingsFragment : Fragment() {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
         setContent {
             PlaygroundTheme {
+                val configuration = LocalConfiguration.current
+                // Mirror the SettingsScreen.twoPane threshold so we only build
+                // the inline detail content (and instantiate ViewModels) when
+                // it'll actually render.
+                val twoPane = configuration.screenWidthDp >= 840
+
+                // Foldable book posture: line the master/detail boundary up
+                // with the vertical hinge. Falls back to 360dp on flat
+                // devices / horizontal hinges / folded outer display.
+                val hingeWidth = rememberHingeWidthDp(requireActivity())
+                // 320dp matches the chat sidebar default so both screens have
+                // the same pane width on tablets without a hinge.
+                val masterWidth = if (hingeWidth != androidx.compose.ui.unit.Dp.Unspecified) {
+                    maxOf(320.dp, hingeWidth)
+                } else {
+                    320.dp
+                }
+
                 SettingsScreen(
                     onBackClick = { findNavController().popBackStack() },
                     onModelsClick = {
@@ -92,12 +196,33 @@ class SettingsFragment : Fragment() {
                     onSystemPromptsClick = {
                         findNavController().navigateFromSettings(R.id.action_settings_to_system_prompts)
                     },
+                    onLanguageClick = {
+                        findNavController().navigateFromSettings(R.id.action_settings_to_language)
+                    },
                     onPrivacyPolicyClick = {
                         findNavController().navigateFromSettings(R.id.action_settings_to_privacy_policy)
                     },
                     onFaqClick = {
                         findNavController().navigateFromSettings(R.id.action_settings_to_faq)
                     },
+                    onSendFeedbackClick = {
+                        val email = getString(R.string.privacy_policy_contact_email)
+                        val intent = Intent(Intent.ACTION_SENDTO).apply {
+                            data = Uri.parse("mailto:$email")
+                            putExtra(Intent.EXTRA_SUBJECT, getString(R.string.app_name))
+                        }
+                        startActivity(intent)
+                    },
+                    modelsDetailContent = if (twoPane) {
+                        { ModelsDetailPane() }
+                    } else null,
+                    promptsDetailContent = if (twoPane) {
+                        { PromptsDetailPane() }
+                    } else null,
+                    languageDetailContent = if (twoPane) {
+                        { LanguageContent() }
+                    } else null,
+                    masterWidth = masterWidth,
                     appVersion = BuildConfig.VERSION_NAME,
                     // Debug builds expose a button to crash the inference
                     // process so we can verify the recovery flow without
@@ -108,5 +233,97 @@ class SettingsFragment : Fragment() {
                 )
             }
         }
+    }
+
+    /**
+     * Embedded Models pane — same observable surface that [ModelsFragment]
+     * binds, just rendered without the Scaffold/topBar wrapper.
+     */
+    @androidx.compose.runtime.Composable
+    private fun ModelsDetailPane() {
+        val storageInfo by storageViewModel.storageInfo.observeAsState()
+        val allModels by storageViewModel.allModels.observeAsState(emptyList())
+        val downloadingProgress by storageViewModel.downloadingModels.observeAsState(emptyMap())
+        val snackbarMessage by storageViewModel.snackbarMessage.observeAsState()
+        val pendingMigration by storageViewModel.pendingMigration.observeAsState()
+        val migrationProgress by storageViewModel.migrationProgress.observeAsState()
+
+        // Refresh storage info when a download completes (mirrors the
+        // LaunchedEffect that lives in ModelsFragment).
+        val prevDownloadCount = remember { mutableIntStateOf(downloadingProgress.size) }
+        LaunchedEffect(downloadingProgress.size) {
+            if (downloadingProgress.size < prevDownloadCount.intValue) {
+                storageViewModel.loadStorageInfo()
+            }
+            prevDownloadCount.intValue = downloadingProgress.size
+        }
+        // Settings doesn't call loadStorageInfo() at fragment-create time
+        // (unlike ModelsFragment) because we don't know if Models will be
+        // opened. Trigger a fetch when this pane first composes.
+        LaunchedEffect(Unit) {
+            storageViewModel.loadStorageInfo()
+        }
+
+        val snackbarHostState = remember { SnackbarHostState() }
+        ModelsContent(
+            storageInfo = storageInfo,
+            allModels = allModels,
+            downloadingModels = downloadingProgress,
+            snackbarMessage = snackbarMessage,
+            pendingMigration = pendingMigration,
+            migrationProgress = migrationProgress,
+            deviceLanguage = storageViewModel.deviceLanguage,
+            snackbarHostState = snackbarHostState,
+            onChangeFolderClick = {
+                try {
+                    folderPickerLauncher.launch(null)
+                } catch (_: ActivityNotFoundException) {
+                    Toast.makeText(
+                        requireContext(),
+                        R.string.folder_picker_unavailable,
+                        Toast.LENGTH_LONG,
+                    ).show()
+                }
+            },
+            onDeleteModel = { model -> storageViewModel.deleteModel(model) },
+            onDownloadModel = { model -> startDownloadWithPermissionCheck(model) },
+            onCancelDownload = { model -> storageViewModel.cancelDownload(model) },
+            onSnackbarDismiss = { storageViewModel.clearSnackbar() },
+            onConfirmMigration = { storageViewModel.confirmMigration() },
+            onSkipMigration = { storageViewModel.skipMigration() },
+            onCancelMigration = { storageViewModel.cancelMigration() },
+        )
+    }
+
+    /**
+     * Embedded System Prompts pane — list/grid + bottom-sheet editor.
+     */
+    @androidx.compose.runtime.Composable
+    private fun PromptsDetailPane() {
+        val prompts by systemPromptsViewModel.prompts.observeAsState(emptyList())
+        var editorTarget by remember { mutableStateOf<EditorTarget?>(null) }
+
+        SystemPromptsContent(
+            prompts = prompts,
+            onSelect = { editorTarget = EditorTarget.Edit(it) },
+            onNewPrompt = { editorTarget = EditorTarget.New },
+        )
+
+        EditorBottomSheet(
+            target = editorTarget,
+            onAdd = { text ->
+                systemPromptsViewModel.addPrompt(text)
+                editorTarget = null
+            },
+            onUpdate = { id, text ->
+                systemPromptsViewModel.updatePrompt(id, text)
+                editorTarget = null
+            },
+            onDelete = { id ->
+                systemPromptsViewModel.deletePrompt(id)
+                editorTarget = null
+            },
+            onDismiss = { editorTarget = null },
+        )
     }
 }
