@@ -206,6 +206,7 @@
     <string name="screenshot_hero_title_prefix">Modelle auf</string>
     <string name="screenshot_hero_title_emphasis">deinem</string>
     <string name="screenshot_hero_title_suffix">Handy ausf\u00FChren</string>
+    <string name="screenshot_hero_title_suffix_tablet">Tablet ausführen</string>
     <string name="screenshot_hero_subtitle">Privat. Lokal. Offline.</string>
     <string name="screenshot_hero_providers_label">25+ Modelle von:</string>
     <string name="screenshot_choose_model_sub">von f\u00FChrenden KI-Anbietern</string>

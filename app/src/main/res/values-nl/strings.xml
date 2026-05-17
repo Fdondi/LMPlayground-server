@@ -217,6 +217,7 @@
     <string name="screenshot_hero_title_prefix">AI op</string>
     <string name="screenshot_hero_title_emphasis">je</string>
     <string name="screenshot_hero_title_suffix">telefoon</string>
+    <string name="screenshot_hero_title_suffix_tablet">tablet</string>
     <string name="screenshot_hero_subtitle">Privé. Lokaal. Offline.</string>
     <string name="screenshot_hero_providers_label">25+ modellen van:</string>
     <string name="screenshot_choose_model">Kies een model</string>

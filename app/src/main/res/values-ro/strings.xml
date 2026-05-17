@@ -206,6 +206,7 @@
     <string name="screenshot_hero_title_prefix">Ruleaz\u0103 modele pe</string>
     <string name="screenshot_hero_title_emphasis">telefonul</string>
     <string name="screenshot_hero_title_suffix">t\u0103u</string>
+    <string name="screenshot_hero_title_suffix_tablet">tableta ta</string>
     <string name="screenshot_hero_subtitle">Privat. Local. Offline.</string>
     <string name="screenshot_hero_providers_label">25+ modele de la:</string>
     <string name="screenshot_choose_model_sub">de la principalii furnizori de AI</string>

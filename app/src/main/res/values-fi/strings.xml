@@ -216,6 +216,7 @@
     <string name="screenshot_hero_title_prefix">Tekoäly</string>
     <string name="screenshot_hero_title_emphasis">omassa</string>
     <string name="screenshot_hero_title_suffix">puhelimessa</string>
+    <string name="screenshot_hero_title_suffix_tablet">tabletissa</string>
     <string name="screenshot_hero_subtitle">Yksityinen. Paikallinen. Offline.</string>
     <string name="screenshot_hero_providers_label">25+ mallia:</string>
     <string name="screenshot_choose_model">Valitse malli</string>

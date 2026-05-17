@@ -62,6 +62,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 import com.druk.lmplayground.R
@@ -164,6 +165,11 @@ fun ModelsContent(
     onSkipMigration: () -> Unit,
     onCancelMigration: () -> Unit,
     modifier: Modifier = Modifier,
+    // Maximum content width — defaults to 960dp so the grid feels
+    // anchored on tablets / Chromebook freeform windows. Callers
+    // (e.g. tablet marketing screenshots) can override with
+    // [Dp.Infinity] to fill the full pane width.
+    maxContentWidth: Dp = 960.dp,
 ) {
     var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
 
@@ -214,7 +220,7 @@ fun ModelsContent(
         Column(
             modifier = Modifier
                 .fillMaxHeight()
-                .widthIn(max = 960.dp)
+                .widthIn(max = maxContentWidth)
         ) {
             if (isScrolled) {
                 // Symmetric 12dp inset (same as the chat scaffold dividers)

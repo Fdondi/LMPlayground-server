@@ -330,13 +330,16 @@ class StoreScreenshots(
 
     @Composable
     private fun gemma4Model(): ModelInfo {
-        val efficient = stringResource(R.string.model_category_efficient)
+        // Description in chat/params shots stays minimal (just size) \u2014
+        // ConversationBar renders "<name>  \u00B7  <description>", so this
+        // gives the production-style "Gemma 4 E2B  \u00B7  3.11Gb" line
+        // without the noisy provider/category prefix.
         return ModelInfo(
             name = "Gemma 4 E2B",
             filename = "gemma-4-E2B-it-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/model.gguf"),
             releaseDate = LocalDate.parse("2026-03-25"),
-            description = "Google \u00B7 $efficient \u00B7 3.11Gb",
+            description = "3.11Gb",
             logoRes = R.drawable.logo_google
         )
     }

@@ -217,6 +217,7 @@
     <string name="screenshot_hero_title_prefix">AI บน</string>
     <string name="screenshot_hero_title_emphasis">มือถือ</string>
     <string name="screenshot_hero_title_suffix">ของคุณ</string>
+    <string name="screenshot_hero_title_suffix_tablet">แท็บเล็ตของคุณ</string>
     <string name="screenshot_hero_subtitle">ส่วนตัว ในเครื่อง ออฟไลน์</string>
     <string name="screenshot_hero_providers_label">25+ โมเดลจาก:</string>
     <string name="screenshot_choose_model">เลือกโมเดล</string>

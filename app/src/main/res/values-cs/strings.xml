@@ -217,6 +217,7 @@
     <string name="screenshot_hero_title_prefix">AI ve</string>
     <string name="screenshot_hero_title_emphasis">vašem</string>
     <string name="screenshot_hero_title_suffix">telefonu</string>
+    <string name="screenshot_hero_title_suffix_tablet">tabletu</string>
     <string name="screenshot_hero_subtitle">Soukromé. Lokální. Offline.</string>
     <string name="screenshot_hero_providers_label">25+ modelů od:</string>
     <string name="screenshot_choose_model">Vyberte model</string>

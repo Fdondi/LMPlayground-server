@@ -216,6 +216,7 @@
     <string name="screenshot_hero_title_prefix">AI pada</string>
     <string name="screenshot_hero_title_emphasis">telefon</string>
     <string name="screenshot_hero_title_suffix">anda</string>
+    <string name="screenshot_hero_title_suffix_tablet">tablet anda</string>
     <string name="screenshot_hero_subtitle">Peribadi. Tempatan. Luar talian.</string>
     <string name="screenshot_hero_providers_label">25+ model daripada:</string>
     <string name="screenshot_choose_model">Pilih model</string>
