@@ -1,6 +1,7 @@
 package com.druk.lmplayground
 
 import android.util.Log
+import androidx.test.core.app.ApplicationProvider
 import com.druk.llamacpp.LlamaGenerationCallback
 import com.druk.llamacpp.LlamaProgressCallback
 import com.druk.llamacpp.jni.NativeLlamaCpp
@@ -50,8 +51,9 @@ class ModelGenerationTest {
 
     @Before
     fun setUp() {
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
         llamaCpp = NativeLlamaCpp()
-        llamaCpp.init()
+        llamaCpp.init(context.applicationInfo.nativeLibraryDir)
     }
 
     @After

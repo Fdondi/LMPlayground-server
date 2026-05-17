@@ -41,6 +41,14 @@ android {
                 arguments += "-DGGML_LLAMAFILE=OFF"
                 arguments += "-DGGML_NATIVE=OFF"
                 arguments += "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                // Shared libs + dynamic CPU backend loading. Builds one
+                // libggml-cpu-<variant>.so per ARM feature level (NEON,
+                // dotprod, i8mm, SVE, ...) and picks the best match at
+                // runtime via dlopen. Big prompt-eval speedups on
+                // Snapdragon 8 Gen 1+, Dimensity 9000+, Tensor G3+.
+                arguments += "-DBUILD_SHARED_LIBS=ON"
+                arguments += "-DGGML_BACKEND_DL=ON"
+                arguments += "-DGGML_CPU_ALL_VARIANTS=ON"
             }
         }
 
@@ -55,6 +63,17 @@ android {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
             version = "3.31.6"
+        }
+    }
+
+    // ggml_backend_load_all_from_path uses opendir on the JNI lib dir to
+    // pick the best CPU variant, so the .so files must be extracted to a
+    // real filesystem path (the modern default keeps them packed inside
+    // the APK). Pairs with android:extractNativeLibs="true" in the
+    // manifest.
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
 

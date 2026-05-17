@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference
 class LlamaService : Service() {
 
     private val nativeLlamaCpp by lazy {
-        NativeLlamaCpp().also { it.init() }
+        NativeLlamaCpp().also { it.init(applicationInfo.nativeLibraryDir) }
     }
 
     private val nextModelId = AtomicInteger(1)
@@ -507,9 +507,12 @@ class LlamaService : Service() {
 
     /**
      * Map an AIDL (path?, pfd?) pair into a string the native side accepts.
-     * In step 3 we still send `fd:N` strings from the app; once the service
-     * is in `:llama` (step 5) the FD number is meaningless cross-process,
-     * which step 6 fixes by always sending PFDs.
+     * "fd:N" is a sentinel recognized by our llama.cpp fork's patched
+     * ggml_fopen / llama-mmap (see andriydruk/llama.cpp-android). Plain
+     * libc reopen via /proc/self/fd/N would EACCES under Scoped Storage
+     * — the kernel re-runs path-based permission checks with our UID
+     * instead of inheriting the SAF fd's privilege. dup() of the
+     * Binder-inherited fd is the only thing that works.
      */
     private fun resolvePath(path: String?, pfd: ParcelFileDescriptor?): String? {
         if (path != null) return path

@@ -16,7 +16,7 @@ class NativeLlamaCpp {
         }
     }
 
-    external fun init(): Int
+    external fun init(nativeLibDir: String): Int
 
     external fun systemInfo(): String
 
