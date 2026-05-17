@@ -286,28 +286,31 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun loadModel(modelInfo: ModelInfo, forceLoad: Boolean = false) {
         val llamaCpp = llamaCpp ?: return
 
-        // RAM-fit warning. Run BEFORE we tear down the currently-loaded
-        // model so the user can cancel the warning and keep their
-        // existing session intact. The actual load below still skips
-        // the check when forceLoad=true.
-        if (!forceLoad) {
-            val fileSizeBytes = storageRepository.getModelFiles()
-                .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
-            val totalRamBytes = DeviceCapability.totalRamBytes(app)
-            if (DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)) {
-                _pendingRamWarning.value = RamWarning(
-                    modelInfo = modelInfo,
-                    neededRam = Formatter.formatFileSize(app, fileSizeBytes),
-                    totalRam = Formatter.formatFileSize(app, totalRamBytes),
-                )
-                return
-            }
-        }
-
-        _models.postValue(emptyList())
-        _isModelReady.postValue(false)
-
         viewModelScope.launch {
+            // RAM-fit warning. Run BEFORE we tear down the currently-loaded
+            // model so the user can cancel the warning and keep their
+            // existing session intact. The actual load below still skips
+            // the check when forceLoad=true.
+            if (!forceLoad) {
+                val fileSizeBytes = withContext(Dispatchers.IO) {
+                    storageRepository.getModelFiles()
+                        .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
+                }
+                val totalRamBytes = DeviceCapability.totalRamBytes(app)
+                if (DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)) {
+                    _pendingRamWarning.value = RamWarning(
+                        modelInfo = modelInfo,
+                        neededRam = Formatter.formatFileSize(app, fileSizeBytes),
+                        totalRam = Formatter.formatFileSize(app, totalRamBytes),
+                    )
+                    return@launch
+                }
+            }
+
+            _models.postValue(emptyList())
+            _isModelReady.postValue(false)
+
+
             // If we're recovering from a `:llama` crash, the InferenceClient
             // is in sticky `Crashed` state. Acknowledge it so the next AIDL
             // call uses the freshly auto-rebound service. Safe no-op when
