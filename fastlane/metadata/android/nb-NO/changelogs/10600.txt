@@ -1,0 +1,3 @@
+- Støtte for Tablet og Chromebook — adaptive oppsett for store skjermer og sammenleggbare enheter
+- Opptil 2× raskere generering på enheten med nye CPU-optimaliseringer
+- Rettet en sjelden frysing ved åpning av modellvelgeren

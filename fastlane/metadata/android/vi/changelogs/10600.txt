@@ -1,0 +1,3 @@
+- Hỗ trợ Tablet và Chromebook — bố cục thích ứng cho màn hình lớn và thiết bị gập
+- Tạo nội dung trên thiết bị nhanh hơn đến 2× nhờ tối ưu hóa CPU mới
+- Đã sửa lỗi treo hiếm gặp khi mở trình chọn mô hình

@@ -1,0 +1,3 @@
+- Sokongan Tablet dan Chromebook — susun atur penyesuaian untuk skrin besar dan foldable
+- Penjanaan pada peranti sehingga 2× lebih pantas dengan pengoptimuman CPU baharu
+- Membaiki masalah beku jarang berlaku semasa membuka pemilih model

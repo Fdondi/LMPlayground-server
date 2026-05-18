@@ -1,0 +1,3 @@
+- Ondersteuning voor Tablet en Chromebook — adaptieve lay-outs voor grote schermen en vouwbare toestellen
+- Tot 2× snellere generatie op het apparaat dankzij nieuwe CPU-optimalisaties
+- Zeldzame vastloper bij het openen van de modelkiezer verholpen
