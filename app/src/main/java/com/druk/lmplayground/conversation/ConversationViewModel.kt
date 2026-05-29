@@ -580,6 +580,56 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /**
+     * Swap [newSession] in as the live session after replaying [messages]
+     * into it, destroying [prevSession] only once the replay succeeds (so a
+     * late failure leaves the prior session intact instead of stranding the
+     * UI session-less).
+     *
+     * Centralises the create-then-replace error handling shared by
+     * [updateGenerationParams], [loadSession] and [applySystemPrompt]:
+     *   - [PayloadTooLargeException]: a persisted message exceeds the binder
+     *     cap; tear the new session down and keep the old one.
+     *   - [InferenceUnavailableException]: the :llama service died mid-replay
+     *     (or never re-connected). Previously this escaped the viewModelScope
+     *     coroutine and crashed the app process — surfacing on Google Play as
+     *     withService / requireConnected IUE. Now we tear the half-built
+     *     session down and surface a recoverable error; the crash-recovery
+     *     flow ([onInferenceCrashed]) cleans up the stale handles.
+     *
+     * Returns true if the swap happened, false if the caller should abort.
+     */
+    private fun swapInSessionWithReplay(
+        newSession: LlamaGenerationSession,
+        prevSession: LlamaGenerationSession?,
+        messages: List<Message>,
+    ): Boolean {
+        try {
+            if (messages.isNotEmpty()) {
+                replayHistoryToSession(newSession, messages)
+            }
+        } catch (e: PayloadTooLargeException) {
+            try { newSession.destroy() } catch (_: Throwable) {}
+            _userError.postValue(
+                app.getString(com.druk.lmplayground.R.string.history_message_too_large)
+            )
+            return false
+        } catch (e: InferenceUnavailableException) {
+            android.util.Log.w(
+                "ConversationViewModel",
+                "replayHistory failed: service unavailable", e
+            )
+            try { newSession.destroy() } catch (_: Throwable) {}
+            _userError.postValue(
+                app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
+            )
+            return false
+        }
+        this@ConversationViewModel.llamaSession = newSession
+        prevSession?.destroy()
+        return true
+    }
+
     @MainThread
     fun toggleThinking() {
         _thinkingEnabled.value = _thinkingEnabled.value != true
@@ -697,19 +747,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // usable instead of stranding the UI session-less.
                     val newSession = createSessionWithParams(model, params, systemPrompt)
                         ?: return@withContext
-                    try {
-                        if (messages.isNotEmpty()) {
-                            replayHistoryToSession(newSession, messages)
-                        }
-                    } catch (e: PayloadTooLargeException) {
-                        newSession.destroy()
-                        _userError.postValue(
-                            app.getString(com.druk.lmplayground.R.string.history_message_too_large)
-                        )
-                        return@withContext
-                    }
-                    this@ConversationViewModel.llamaSession = newSession
-                    prevSession?.destroy()
+                    swapInSessionWithReplay(newSession, prevSession, messages)
                 }
             }
         }
@@ -1018,17 +1056,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     val params = _generationParams.value ?: GenerationParams()
                     val newSession = createSessionWithParams(model, params, systemPrompt)
                         ?: return@withContext
-                    try {
-                        replayHistoryToSession(newSession, uiMessages)
-                    } catch (e: PayloadTooLargeException) {
-                        newSession.destroy()
-                        _userError.postValue(
-                            app.getString(com.druk.lmplayground.R.string.history_message_too_large)
-                        )
-                        return@withContext
-                    }
-                    this@ConversationViewModel.llamaSession = newSession
-                    prevSession?.destroy()
+                    swapInSessionWithReplay(newSession, prevSession, uiMessages)
                 }
             }
         }
@@ -1131,19 +1159,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     )
                     null
                 } ?: return@withContext
-                try {
-                    if (messages.isNotEmpty()) {
-                        replayHistoryToSession(newSession, messages)
-                    }
-                } catch (e: PayloadTooLargeException) {
-                    newSession.destroy()
-                    _userError.postValue(
-                        app.getString(com.druk.lmplayground.R.string.history_message_too_large)
-                    )
-                    return@withContext
-                }
-                this@ConversationViewModel.llamaSession = newSession
-                prevSession?.destroy()
+                swapInSessionWithReplay(newSession, prevSession, messages)
             }
         }
     }
@@ -1240,9 +1256,19 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     fun getReport(): String? {
-        val modelReport = llamaModel?.getModelReport() ?: return null
-        val sessionReport = llamaSession?.getReport() ?: return null
-        return modelReport + "\n" + sessionReport
+        // Invoked synchronously on the main thread from the token-count tap.
+        // Both proxy calls go over AIDL and throw InferenceUnavailableException
+        // if the :llama service crashed or hasn't bound — there's nothing to
+        // report in that case, so swallow it instead of crashing the app
+        // (seen on Google Play as withService / requireConnected IUE).
+        return try {
+            val modelReport = llamaModel?.getModelReport() ?: return null
+            val sessionReport = llamaSession?.getReport() ?: return null
+            modelReport + "\n" + sessionReport
+        } catch (e: InferenceUnavailableException) {
+            android.util.Log.w("ConversationViewModel", "getReport failed: service unavailable", e)
+            null
+        }
     }
 
     fun unloadModel() {
