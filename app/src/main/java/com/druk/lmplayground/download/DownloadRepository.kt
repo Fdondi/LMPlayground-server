@@ -2,6 +2,8 @@ package com.druk.lmplayground.download
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
+import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.work.BackoffPolicy
@@ -14,10 +16,14 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.storage.DownloadProgress
-import java.io.File
+import com.druk.lmplayground.storage.StoragePreferences
 import java.util.concurrent.TimeUnit
 
 class DownloadRepository(private val context: Context) {
+
+    companion object {
+        private const val TAG = "DownloadRepository"
+    }
 
     private val workManager = WorkManager.getInstance(context)
 
@@ -51,9 +57,20 @@ class DownloadRepository(private val context: Context) {
     fun cancelDownload(model: ModelInfo) {
         workManager.cancelUniqueWork(workNameFor(model))
 
-        val tempFile = File(context.getExternalFilesDir(null), model.filename)
-        if (tempFile.exists()) {
-            tempFile.delete()
+        // Downloads now stream straight into "<filename>.part" inside the SAF
+        // model folder (not app temp storage), so drop that partial here.
+        // Prefix-match because createFile may have appended an extension.
+        try {
+            val storageUri = StoragePreferences(context).modelStorageUri
+            if (storageUri != null) {
+                val partPrefix = "${model.filename}.part"
+                DocumentFile.fromTreeUri(context, storageUri)
+                    ?.listFiles()
+                    ?.firstOrNull { it.name?.startsWith(partPrefix) == true }
+                    ?.delete()
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Failed to delete partial on cancel: ${e.message}")
         }
 
         val notificationManager = DownloadNotificationManager(context)
