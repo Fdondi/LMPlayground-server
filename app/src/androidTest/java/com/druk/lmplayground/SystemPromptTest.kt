@@ -73,7 +73,8 @@ class SystemPromptTest {
             modelFile.absolutePath,
             object : LlamaProgressCallback {
                 override fun onProgress(progress: Float) {}
-            }
+            },
+            disableRepack = false,
         ) ?: error("native loadModel returned null for ${modelFile.absolutePath}")
         llamaModel = model
         return model

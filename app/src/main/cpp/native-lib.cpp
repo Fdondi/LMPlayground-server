@@ -122,7 +122,8 @@ JNICALL
 Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
                    jobject activity,
                    jstring modelPath,
-                   jobject progressCallback) {
+                   jobject progressCallback,
+                   jboolean disableRepack) {
 
     struct CallbackContext {
         JNIEnv *env;
@@ -141,7 +142,8 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
                             context->env->CallVoidMethod(context->progressCallback, methodId, progress);
                             return true;
                      },
-                     &ctx
+                     &ctx,
+                     disableRepack == JNI_TRUE
                      );
     env->ReleaseStringUTFChars(modelPath, utfModelPath);
 

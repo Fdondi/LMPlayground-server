@@ -28,7 +28,8 @@ class NativeLlamaCpp {
      */
     external fun loadModel(
         path: String,
-        progressCallback: LlamaProgressCallback
+        progressCallback: LlamaProgressCallback,
+        disableRepack: Boolean
     ): NativeLlamaModel?
 
     external fun probeModelMetadata(path: String): Array<String>?

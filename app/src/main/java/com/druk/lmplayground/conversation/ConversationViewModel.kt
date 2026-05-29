@@ -287,24 +287,30 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val llamaCpp = llamaCpp ?: return
 
         viewModelScope.launch {
-            // RAM-fit warning. Run BEFORE we tear down the currently-loaded
+            // RAM-fit check. Run BEFORE we tear down the currently-loaded
             // model so the user can cancel the warning and keep their
-            // existing session intact. The actual load below still skips
-            // the check when forceLoad=true.
-            if (!forceLoad) {
-                val fileSizeBytes = withContext(Dispatchers.IO) {
-                    storageRepository.getModelFiles()
-                        .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
-                }
-                val totalRamBytes = DeviceCapability.totalRamBytes(app)
-                if (DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)) {
-                    _pendingRamWarning.value = RamWarning(
-                        modelInfo = modelInfo,
-                        neededRam = Formatter.formatFileSize(app, fileSizeBytes),
-                        totalRam = Formatter.formatFileSize(app, totalRamBytes),
-                    )
-                    return@launch
-                }
+            // existing session intact.
+            //
+            // A model over the RAM budget isn't refused — instead we load it
+            // memory-mapped by disabling weight repacking (disableRepack
+            // below). Repacking would copy the quantized weights into RAM and
+            // OOM-kill the :llama process; mmap keeps the footprint small (at
+            // the cost of slower matmuls). The warning still fires once so the
+            // user knows it'll be slower; "load anyway" re-enters with
+            // forceLoad=true and the same disableRepack decision.
+            val fileSizeBytes = withContext(Dispatchers.IO) {
+                storageRepository.getModelFiles()
+                    .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
+            }
+            val totalRamBytes = DeviceCapability.totalRamBytes(app)
+            val exceedsRam = DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)
+            if (!forceLoad && exceedsRam) {
+                _pendingRamWarning.value = RamWarning(
+                    modelInfo = modelInfo,
+                    neededRam = Formatter.formatFileSize(app, fileSizeBytes),
+                    totalRam = Formatter.formatFileSize(app, totalRamBytes),
+                )
+                return@launch
             }
 
             _models.postValue(emptyList())
@@ -412,7 +418,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                                     "${round(100 * progress).toInt()}%"
                                 )
                             }
-                        }
+                        },
+                        disableRepack = exceedsRam,
                     )
                     val modelSize = llamaModel.getModelSize()
                     val modelDescription = Formatter.formatFileSize(app, modelSize)

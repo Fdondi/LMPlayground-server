@@ -82,7 +82,8 @@ class ModelGenerationTest {
                 override fun onProgress(progress: Float) {
                     Log.d(TAG, "Loading: ${(progress * 100).toInt()}%")
                 }
-            }
+            },
+            disableRepack = false,
         ) ?: error("native loadModel returned null for ${modelFile.absolutePath}")
         llamaModel = model
         return model

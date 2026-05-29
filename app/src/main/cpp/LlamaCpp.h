@@ -73,7 +73,8 @@ public:
     void loadModel(const std::string &modelPath,
                    int32_t n_gpu_layers,
                    llama_progress_callback progress_callback,
-                   void* progress_callback_user_data);
+                   void* progress_callback_user_data,
+                   bool disableRepack = false);
 
     uint64_t getModelSize();
 
