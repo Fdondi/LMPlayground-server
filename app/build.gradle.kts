@@ -41,6 +41,14 @@ android {
                 arguments += "-DGGML_LLAMAFILE=OFF"
                 arguments += "-DGGML_NATIVE=OFF"
                 arguments += "-DANDROID_SUPPORT_FLEXIBLE_PAGE_SIZES=ON"
+                // Shared libs + dynamic CPU backend loading. Builds one
+                // libggml-cpu-<variant>.so per ARM feature level (NEON,
+                // dotprod, i8mm, SVE, ...) and picks the best match at
+                // runtime via dlopen. Big prompt-eval speedups on
+                // Snapdragon 8 Gen 1+, Dimensity 9000+, Tensor G3+.
+                arguments += "-DBUILD_SHARED_LIBS=ON"
+                arguments += "-DGGML_BACKEND_DL=ON"
+                arguments += "-DGGML_CPU_ALL_VARIANTS=ON"
             }
         }
 
@@ -55,6 +63,17 @@ android {
         cmake {
             path = file("src/main/cpp/CMakeLists.txt")
             version = "3.31.6"
+        }
+    }
+
+    // ggml_backend_load_all_from_path uses opendir on the JNI lib dir to
+    // pick the best CPU variant, so the .so files must be extracted to a
+    // real filesystem path (the modern default keeps them packed inside
+    // the APK). Pairs with android:extractNativeLibs="true" in the
+    // manifest.
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
         }
     }
 
@@ -118,6 +137,12 @@ android {
                     systemImageSource = "google"
                     require64Bit = true
                 }
+                maybeCreate<ManagedVirtualDevice>("mvdTablet7Api35").apply {
+                    device = "7in WSVGA (Tablet)"
+                    apiLevel = 35
+                    systemImageSource = "google"
+                    require64Bit = true
+                }
             }
         }
     }
@@ -154,13 +179,27 @@ val sceneRenames = mapOf(
     "scene4_modelsDownload" to "4_models_download"
 )
 
+// TabletStoreScreenshots emits per-variant English-only landscape shots
+// into fastlane's tablet-specific subdirectories. The variant displayName
+// (`SevenInch` / `TenInch`) appears as the `[...]` suffix in the
+// Paparazzi filename and routes the file to the right subfolder.
+val tabletVariantToSubdir = mapOf(
+    "SevenInch" to "sevenInchScreenshots",
+    "TenInch" to "tenInchScreenshots",
+)
+
 tasks.register("organizeScreenshotsForPlayStore") {
     group = "play store"
-    description = "Renames Paparazzi snapshots into fastlane/metadata phoneScreenshots layout."
+    description = "Renames Paparazzi snapshots into fastlane/metadata phone + tablet layouts."
 
     val snapshotsDir = file("src/test/snapshots/images")
     val fastlaneDir = rootProject.file("fastlane/metadata/android")
-    val regex = Regex("""_StoreScreenshots_(scene\d_\w+)\[(\w+)]\.png""")
+    val phoneRegex = Regex("""_StoreScreenshots_(scene\d_\w+)\[(\w+)]\.png""")
+    // Tablet filename has the form `[<VariantName>_<LocaleName>]`,
+    // e.g. `[SevenInch_French]` — the test class composes both into
+    // the parameterized name. Capture each piece separately so we
+    // can route to `<locale>/images/<variant>Screenshots/`.
+    val tabletRegex = Regex("""_TabletStoreScreenshots_(scene\d_\w+)\[(\w+)_(\w+)]\.png""")
 
     inputs.dir(snapshotsDir)
     outputs.dir(fastlaneDir)
@@ -172,12 +211,25 @@ tasks.register("organizeScreenshotsForPlayStore") {
         }
         var copied = 0
         snapshotsDir.listFiles()?.forEach { src ->
-            val match = regex.find(src.name) ?: return@forEach
-            val scene = sceneRenames[match.groupValues[1]] ?: return@forEach
-            val locale = paparazziLocaleToPlayStore[match.groupValues[2]] ?: return@forEach
-            val destDir = File(fastlaneDir, "$locale/images/phoneScreenshots").apply { mkdirs() }
-            src.copyTo(File(destDir, "$scene.png"), overwrite = true)
-            copied++
+            // Tablet files are checked first so the phone regex (which is
+            // a substring match) doesn't accidentally pick them up if the
+            // class names ever drift.
+            tabletRegex.find(src.name)?.let { match ->
+                val scene = sceneRenames[match.groupValues[1]] ?: return@let
+                val subdir = tabletVariantToSubdir[match.groupValues[2]] ?: return@let
+                val locale = paparazziLocaleToPlayStore[match.groupValues[3]] ?: return@let
+                val destDir = File(fastlaneDir, "$locale/images/$subdir").apply { mkdirs() }
+                src.copyTo(File(destDir, "$scene.png"), overwrite = true)
+                copied++
+                return@forEach
+            }
+            phoneRegex.find(src.name)?.let { match ->
+                val scene = sceneRenames[match.groupValues[1]] ?: return@let
+                val locale = paparazziLocaleToPlayStore[match.groupValues[2]] ?: return@let
+                val destDir = File(fastlaneDir, "$locale/images/phoneScreenshots").apply { mkdirs() }
+                src.copyTo(File(destDir, "$scene.png"), overwrite = true)
+                copied++
+            }
         }
         logger.lifecycle("Organized $copied screenshots into $fastlaneDir")
     }
@@ -185,6 +237,19 @@ tasks.register("organizeScreenshotsForPlayStore") {
 
 tasks.matching { it.name == "recordPaparazziDebug" }.configureEach {
     finalizedBy("organizeScreenshotsForPlayStore")
+}
+
+// Paparazzi 2.0.0-alpha04 + current Gradle ships a transitive
+// reporting extension that references an `org/gradle/reporting/
+// HtmlWriterTools` class that no longer exists. The HTML report
+// step crashes after tests succeed, marking the build FAILED and
+// blocking the finalizedBy above from firing. We don't need the
+// HTML test report for Paparazzi snapshot tests anyway — the
+// snapshots themselves are the artifact. Disabling it lets a
+// single `recordPaparazziDebug` invocation finish cleanly and
+// auto-trigger the organize task.
+tasks.withType<Test>().configureEach {
+    reports.html.required.set(false)
 }
 
 dependencies {
@@ -208,6 +273,10 @@ dependencies {
 
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.materialWindow)
+    implementation(libs.androidx.compose.material3.adaptive.layout)
+    implementation(libs.androidx.compose.material3.adaptive.navigation)
+    implementation(libs.androidx.window)
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.compose.ui.tooling.preview)
     debugImplementation(libs.androidx.compose.ui.tooling)

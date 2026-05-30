@@ -205,6 +205,7 @@
     <string name="screenshot_hero_title_prefix">\u092E\u0949\u0921\u0932 \u091A\u0932\u093E\u090F\u0901</string>
     <string name="screenshot_hero_title_emphasis">\u0905\u092A\u0928\u0947</string>
     <string name="screenshot_hero_title_suffix">\u092B\u093C\u094B\u0928 \u092A\u0930</string>
+    <string name="screenshot_hero_title_suffix_tablet">टैबलेट पर</string>
     <string name="screenshot_hero_subtitle">\u0928\u093F\u091C\u0940. \u0932\u094B\u0915\u0932. \u0911\u092B\u093C\u0932\u093E\u0907\u0928.</string>
     <string name="screenshot_hero_providers_label">25+ \u092E\u0949\u0921\u0932, \u0907\u0928\u0938\u0947:</string>
     <string name="screenshot_choose_model_sub">\u092A\u094D\u0930\u092E\u0941\u0916 AI \u092A\u094D\u0930\u0926\u093E\u0924\u093E\u0913\u0902 \u0938\u0947</string>

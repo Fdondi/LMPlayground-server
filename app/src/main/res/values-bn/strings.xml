@@ -216,6 +216,7 @@
     <string name="screenshot_hero_title_prefix">মডেল চালান</string>
     <string name="screenshot_hero_title_emphasis">আপনার</string>
     <string name="screenshot_hero_title_suffix">ফোনে</string>
+    <string name="screenshot_hero_title_suffix_tablet">ট্যাবলেটে</string>
     <string name="screenshot_hero_subtitle">গোপনীয়। স্থানীয়। অফলাইন।</string>
     <string name="screenshot_hero_providers_label">২৫+ মডেল এখান থেকে:</string>
     <string name="screenshot_choose_model">মডেল বাছুন</string>

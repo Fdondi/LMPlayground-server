@@ -1,0 +1,3 @@
+- Supporto per Tablet e Chromebook — layout adattivi per schermi grandi e dispositivi pieghevoli
+- Generazione sul dispositivo fino a 2× più veloce con le nuove ottimizzazioni CPU
+- Risolto un raro blocco all'apertura del selettore dei modelli

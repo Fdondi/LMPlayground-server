@@ -217,6 +217,7 @@
     <string name="screenshot_hero_title_prefix">AI על</string>
     <string name="screenshot_hero_title_emphasis">הטלפון</string>
     <string name="screenshot_hero_title_suffix">שלך</string>
+    <string name="screenshot_hero_title_suffix_tablet">טאבלט שלך</string>
     <string name="screenshot_hero_subtitle">פרטי. מקומי. לא מקוון.</string>
     <string name="screenshot_hero_providers_label">25+ מודלים מ:</string>
     <string name="screenshot_choose_model">בחר מודל</string>

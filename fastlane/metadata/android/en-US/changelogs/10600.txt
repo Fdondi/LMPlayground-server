@@ -1,0 +1,3 @@
+- Tablet and Chromebook support — adaptive large-screen and foldable layouts
+- Up to 2× faster on-device generation with new CPU optimizations
+- Fixed a rare freeze when opening the model picker

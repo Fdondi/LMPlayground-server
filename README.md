@@ -13,15 +13,17 @@ LM Playground is an Android application for running Large Language Models locall
 
 - **On-device inference** - no cloud, no API keys, fully offline
 - **Rich markdown** in chat responses - headers, code blocks, lists, and more
-- **Reasoning model support** - thinking steps from models like DeepSeek R1 and Nemotron are displayed in a styled section
+- **Reasoning model support** - thinking steps from models like GPT-OSS, DeepSeek R1, and Nemotron are displayed in a styled section
 - **Reliable background downloads** - custom download engine with OkHttp and WorkManager, progress notifications with speed and ETA, automatic resume on network interruptions
 - **Storage management** - choose where to keep multi-GB model files with Android's Storage Access Framework
 - **ARM optimized** - KleidiAI kernels and OpenMP for faster generation on arm64 devices
+- **Large-screen ready** - tablets, foldables, and Chromebooks get a permanent sessions sidebar, list-detail Settings, and freeform window resize support
 
 ## Supported Models
 
 | Family | Sizes | Provider |
 |--------|-------|----------|
+| GPT-OSS | 20B | OpenAI |
 | Qwen 3.5 | 0.8B, 2B, 4B | Alibaba |
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
 | Gemma 3n | E2B, E4B | Google |
@@ -47,7 +49,7 @@ LM Playground is an Android application for running Large Language Models locall
 
 </details>
 
-Most models use Q4_K_M quantization; Qwen 3.5 uses Q3_K_M. See [`ModelInfoProvider.kt`](app/src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt) for the full list.
+Most models use Q4_K_M quantization; Qwen 3.5 uses Q3_K_M, and GPT-OSS ships in its native MXFP4 format. See [`ModelInfoProvider.kt`](app/src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt) for the full list.
 
 ## Install
 

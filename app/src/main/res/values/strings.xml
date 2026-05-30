@@ -221,6 +221,8 @@
     <string name="screenshot_hero_title_prefix">Run models on</string>
     <string name="screenshot_hero_title_emphasis">your</string>
     <string name="screenshot_hero_title_suffix">phone</string>
+    <!-- Hero title suffix variant for tablet marketing screenshots -->
+    <string name="screenshot_hero_title_suffix_tablet">tablet</string>
     <string name="screenshot_hero_subtitle">Private. Local. Offline.</string>
     <string name="screenshot_hero_providers_label">25+ models from:</string>
     <string name="screenshot_choose_model">Choose model</string>

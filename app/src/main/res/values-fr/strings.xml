@@ -206,6 +206,7 @@
     <string name="screenshot_hero_title_prefix">L\'IA sur</string>
     <string name="screenshot_hero_title_emphasis">votre</string>
     <string name="screenshot_hero_title_suffix">t\u00E9l\u00E9phone</string>
+    <string name="screenshot_hero_title_suffix_tablet">tablette</string>
     <string name="screenshot_hero_subtitle">Priv\u00E9. Local. Hors ligne.</string>
     <string name="screenshot_hero_providers_label">25+ mod\u00E8les de :</string>
     <string name="screenshot_choose_model_sub">des principaux fournisseurs d\'IA</string>

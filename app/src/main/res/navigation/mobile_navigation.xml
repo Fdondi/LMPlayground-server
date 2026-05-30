@@ -37,6 +37,9 @@
         <action
             android:id="@+id/action_settings_to_system_prompts"
             app:destination="@id/nav_system_prompts" />
+        <action
+            android:id="@+id/action_settings_to_language"
+            app:destination="@id/nav_language" />
     </fragment>
 
     <fragment
@@ -58,5 +61,10 @@
         android:id="@+id/nav_privacy_policy"
         android:name="com.druk.lmplayground.settings.PrivacyPolicyFragment"
         android:label="@string/privacy_policy" />
+
+    <fragment
+        android:id="@+id/nav_language"
+        android:name="com.druk.lmplayground.settings.LanguageFragment"
+        android:label="@string/language" />
 
 </navigation>

@@ -1,0 +1,3 @@
+- Understøttelse af Tablet og Chromebook — adaptive layouts til store skærme og foldbare enheder
+- Op til 2× hurtigere generering på enheden med nye CPU-optimeringer
+- Rettet en sjælden fastfrysning ved åbning af modelvælgeren

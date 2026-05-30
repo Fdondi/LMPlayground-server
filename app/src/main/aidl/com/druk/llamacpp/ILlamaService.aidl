@@ -34,10 +34,17 @@ interface ILlamaService {
      * Load weights and return a positive modelId, or 0 on failure.
      * Exactly one of (path, pfd) must be non-null. The service holds the
      * PFD alive for the model's lifetime.
+     *
+     * When `disableRepack` is true the native loader turns off the CPU
+     * weight-repacking buffer types (`use_extra_bufts`). Repacking copies
+     * quantized weights into freshly-allocated RAM, which defeats mmap and
+     * makes large models exceed available RAM. The UI sets this for models
+     * that trip the RAM-fit gate so they load memory-mapped instead.
      */
     int loadModel(in @nullable String path,
                   in @nullable ParcelFileDescriptor pfd,
-                  ILlamaProgressCallback progress);
+                  ILlamaProgressCallback progress,
+                  boolean disableRepack);
 
     long getModelSize(int modelId);
     String getModelReport(int modelId);

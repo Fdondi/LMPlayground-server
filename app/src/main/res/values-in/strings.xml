@@ -205,6 +205,7 @@
     <string name="screenshot_hero_title_prefix">Jalankan model di</string>
     <string name="screenshot_hero_title_emphasis">ponselmu</string>
     <string name="screenshot_hero_title_suffix">sendiri</string>
+    <string name="screenshot_hero_title_suffix_tablet">tablet sendiri</string>
     <string name="screenshot_hero_subtitle">Privat. Lokal. Offline.</string>
     <string name="screenshot_hero_providers_label">25+ model dari:</string>
     <string name="screenshot_choose_model_sub">dari penyedia AI terkemuka</string>

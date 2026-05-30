@@ -71,7 +71,10 @@ fun Messages(
                 )
             }
             item {
-                Spacer(modifier = Modifier.height(16.dp))
+                // Each Message already adds bottom = 8.dp padding, so this
+                // trailing spacer only needs to be a small visual breathing
+                // room (was 16.dp — doubled the gap to the input dock).
+                Spacer(modifier = Modifier.height(4.dp))
             }
         }
 

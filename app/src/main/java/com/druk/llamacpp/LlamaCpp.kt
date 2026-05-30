@@ -24,8 +24,12 @@ class LlamaCpp(private val client: InferenceClient) {
      * For SAF-backed files use the [ParcelFileDescriptor] overload — paths
      * containing `fd:N` are not valid cross-process.
      */
-    fun loadModel(path: String, progressCallback: LlamaProgressCallback): LlamaModel {
-        val id = client.withService { it.loadModel(path, null, wrapProgress(progressCallback)) }
+    fun loadModel(
+        path: String,
+        progressCallback: LlamaProgressCallback,
+        disableRepack: Boolean = false,
+    ): LlamaModel {
+        val id = client.withService { it.loadModel(path, null, wrapProgress(progressCallback), disableRepack) }
         if (id == 0) throw IllegalStateException("loadModel failed for $path")
         return LlamaModel(client, id)
     }
@@ -35,8 +39,12 @@ class LlamaCpp(private val client: InferenceClient) {
      * the service process; the service builds its own `fd:N` string from
      * its dup and holds the PFD alive for the model's lifetime.
      */
-    fun loadModel(pfd: ParcelFileDescriptor, progressCallback: LlamaProgressCallback): LlamaModel {
-        val id = client.withService { it.loadModel(null, pfd, wrapProgress(progressCallback)) }
+    fun loadModel(
+        pfd: ParcelFileDescriptor,
+        progressCallback: LlamaProgressCallback,
+        disableRepack: Boolean = false,
+    ): LlamaModel {
+        val id = client.withService { it.loadModel(null, pfd, wrapProgress(progressCallback), disableRepack) }
         if (id == 0) throw IllegalStateException("loadModel failed for pfd")
         return LlamaModel(client, id)
     }

@@ -28,6 +28,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.druk.lmplayground.R
 import com.druk.lmplayground.AppBar
@@ -43,6 +44,14 @@ fun ConversationBar(
     modelStatus: String? = null,
     modifier: Modifier = Modifier,
     colors: TopAppBarColors? = null,
+    showNavIcon: Boolean = true,
+    /**
+     * Compact mode collapses the model name + status onto a single line so the
+     * bar feels less heavy on tablet landscape, where vertical space is the
+     * constrained dimension. The bar's own height stays at the Material 3
+     * default (64dp), but the title content drops from ~50dp to ~28dp tall.
+     */
+    compact: Boolean = false,
     onModelNamePressed: () -> Unit = { },
     onNavIconPressed: () -> Unit = { },
     onNewSessionPressed: () -> Unit = { }
@@ -50,6 +59,11 @@ fun ConversationBar(
     AppBar(
         modifier = modifier.testTag(ConversationBarTestTag),
         colors = colors,
+        showNavIcon = showNavIcon,
+        // Compact bar: shrink from M3 default 64dp to 40dp on tablet
+        // landscape. The title content is a single line of titleMedium so it
+        // fits; the trailing IconButton stays at its 40dp minimum tap target.
+        expandedHeight = if (compact) 40.dp else Dp.Unspecified,
         onNavIconPressed = onNavIconPressed,
         title = {
             if (modelInfo != null) {
@@ -58,30 +72,58 @@ fun ConversationBar(
                     shape = RoundedCornerShape(20.dp),
                     color = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0f),
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (compact) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                        ) {
                             Text(
                                 text = modelInfo.name,
                                 style = MaterialTheme.typography.titleMedium,
                                 color = MaterialTheme.colorScheme.onSurface,
-                                textAlign = TextAlign.Center,
                                 maxLines = 1
                             )
+                            val status = modelStatus ?: modelInfo.description
+                            if (status.isNotBlank()) {
+                                Text(
+                                    text = "  ·  $status",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    maxLines = 1
+                                )
+                            }
                             Icon(
                                 imageVector = Icons.Outlined.ArrowDropDown,
                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                 contentDescription = null
                             )
                         }
-                        Text(
-                            text = modelStatus ?: modelInfo.description,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant,
-                            textAlign = TextAlign.Center
-                        )
+                    } else {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    text = modelInfo.name,
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = MaterialTheme.colorScheme.onSurface,
+                                    textAlign = TextAlign.Center,
+                                    maxLines = 1
+                                )
+                                Icon(
+                                    imageVector = Icons.Outlined.ArrowDropDown,
+                                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                                    contentDescription = null
+                                )
+                            }
+                            Text(
+                                text = modelStatus ?: modelInfo.description,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             } else {

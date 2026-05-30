@@ -205,6 +205,7 @@
     <string name="screenshot_hero_title_prefix">모델을</string>
     <string name="screenshot_hero_title_emphasis">내</string>
     <string name="screenshot_hero_title_suffix">폰에서 실행</string>
+    <string name="screenshot_hero_title_suffix_tablet">태블릿에서 실행</string>
     <string name="screenshot_hero_subtitle">프라이빗. 로컬. 오프라인.</string>
     <string name="screenshot_hero_providers_label">25개 이상의 모델:</string>
     <string name="screenshot_choose_model_sub">주요 AI 제공업체에서</string>

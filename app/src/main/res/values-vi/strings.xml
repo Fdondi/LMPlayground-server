@@ -205,6 +205,7 @@
     <string name="screenshot_hero_title_prefix">Ch\u1EA1y m\u00F4 h\u00ECnh tr\u00EAn</string>
     <string name="screenshot_hero_title_emphasis">\u0111i\u1EC7n tho\u1EA1i</string>
     <string name="screenshot_hero_title_suffix">c\u1EE7a b\u1EA1n</string>
+    <string name="screenshot_hero_title_suffix_tablet">máy tính bảng</string>
     <string name="screenshot_hero_subtitle">Ri\u00EAng t\u01B0. C\u1EE5c b\u1ED9. Ngo\u1EA1i tuy\u1EBFn.</string>
     <string name="screenshot_hero_providers_label">25+ m\u00F4 h\u00ECnh t\u1EEB:</string>
     <string name="screenshot_choose_model_sub">t\u1EEB c\u00E1c nh\u00E0 cung c\u1EA5p AI h\u00E0ng \u0111\u1EA7u</string>

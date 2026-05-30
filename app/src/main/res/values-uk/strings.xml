@@ -206,6 +206,7 @@
     <string name="screenshot_hero_title_prefix">Запускай моделі на</string>
     <string name="screenshot_hero_title_emphasis">своєму</string>
     <string name="screenshot_hero_title_suffix">телефоні</string>
+    <string name="screenshot_hero_title_suffix_tablet">планшеті</string>
     <string name="screenshot_hero_subtitle">Приватно. Локально. Офлайн.</string>
     <string name="screenshot_hero_providers_label">25+ моделей від:</string>
     <string name="screenshot_choose_model_sub">від провідних AI-провайдерів</string>

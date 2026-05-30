@@ -205,6 +205,7 @@
     <string name="screenshot_hero_title_prefix">モデルを</string>
     <string name="screenshot_hero_title_emphasis">あなたの</string>
     <string name="screenshot_hero_title_suffix">スマホで実行</string>
+    <string name="screenshot_hero_title_suffix_tablet">タブレットで実行</string>
     <string name="screenshot_hero_subtitle">プライベート。ローカル。オフライン。</string>
     <string name="screenshot_hero_providers_label">25以上のモデル：</string>
     <string name="screenshot_choose_model_sub">主要なAIプロバイダーから</string>

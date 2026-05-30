@@ -205,6 +205,7 @@
     <string name="screenshot_hero_title_prefix">Modelleri</string>
     <string name="screenshot_hero_title_emphasis">senin</string>
     <string name="screenshot_hero_title_suffix">telefonunda \u00E7al\u0131\u015Ft\u0131r</string>
+    <string name="screenshot_hero_title_suffix_tablet">tabletinde çalıştır</string>
     <string name="screenshot_hero_subtitle">Gizli. Yerel. \u00C7evrimd\u0131\u015F\u0131.</string>
     <string name="screenshot_hero_providers_label">25+ model, \u015Fu sa\u011Flay\u0131c\u0131lardan:</string>
     <string name="screenshot_choose_model_sub">\u00F6nde gelen yapay zek\u00E2 sa\u011Flay\u0131c\u0131lar\u0131ndan</string>

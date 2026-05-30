@@ -204,8 +204,20 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     // redo this setup later in the function.
     if (!result.parser.empty()) {
         parser_params = common_chat_parser_params(result);
-        parser_params.reasoning_format = enableThinking
-            ? COMMON_REASONING_FORMAT_DEEPSEEK : COMMON_REASONING_FORMAT_NONE;
+        // Always extract reasoning into reasoning_content, regardless of the
+        // thinking toggle. Passing NONE makes the gpt-oss/harmony parser leave
+        // the raw "<|channel|>analysis<|message|>...<|end|>" markup in the
+        // content — gpt-oss emits an analysis channel even at minimal reasoning
+        // effort, so "thinking off" must still parse the channels, not dump
+        // them. The UI already detects <think> blocks even when the toggle is
+        // off (some models always think) and renders them as a collapsible
+        // section, so extracting always keeps content clean without losing the
+        // reasoning. Models that emit no reasoning when thinking is off yield an
+        // empty reasoning_content here, so their output is unchanged.
+        parser_params.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
+        // Tool-call parsing follows the session's tools state (set via
+        // setTools / a non-empty tools_enabled). When tools are disabled the
+        // parser ignores tool_call grammars in the model output.
         parser_params.parse_tool_calls = tools_enabled;
         parser_params.parser.load(result.parser);
         parser_initialized = true;
@@ -539,7 +551,20 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
                             normalized += "</think>" + parsed.content;
                         }
                     } else {
-                        normalized = parsed.content.empty() ? response : parsed.content;
+                        // Emit only the parsed content — NOT the raw response.
+                        // During the early channel-header phase (e.g. gpt-oss
+                        // streaming "<|channel|>analysis<|message|>") the parser
+                        // has nothing to surface yet, so this is empty. Emitting
+                        // the raw response here would (a) leak control-token
+                        // markup into the UI and (b) make the streamed string
+                        // non-monotonic when it later flips to "<think>...",
+                        // which corrupts the service's append-only delta
+                        // accumulation (GenerationWorker computes
+                        // response.substring(sentLength), assuming the string
+                        // only ever grows). Keeping it monotonic — "" then
+                        // "<think>..." then "<think>...</think>content" — keeps
+                        // the deltas correct.
+                        normalized = parsed.content;
                     }
                     callback(normalized);
                 } catch (const std::exception &e) {
@@ -646,9 +671,14 @@ common_chat_params LlamaGenerationSession::renderTemplate(bool enableThinking, b
     inputs.add_generation_prompt = addGenerationPrompt;
     inputs.use_jinja = true;
     inputs.enable_thinking = enableThinking;
-    if (enableThinking) {
-        inputs.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
-    }
+    // Always extract reasoning. For channel-based formats (gpt-oss / harmony)
+    // the extract-vs-raw decision is baked into the parser grammar at apply
+    // time from this field. Leaving it NONE when thinking is off would make
+    // the parser dump literal "<|channel|>analysis<|message|>...<|end|>"
+    // markup into content — gpt-oss emits the analysis channel even at
+    // minimal effort. enable_thinking (above) independently drives the
+    // prompt's reasoning effort, so this doesn't force the model to think.
+    inputs.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
     if (tools_enabled) {
         inputs.tools = tools;
         inputs.tool_choice = COMMON_CHAT_TOOL_CHOICE_AUTO;
@@ -1014,8 +1044,10 @@ int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enab
 
     if (!result.parser.empty()) {
         parser_params = common_chat_parser_params(result);
-        parser_params.reasoning_format = enableThinking
-            ? COMMON_REASONING_FORMAT_DEEPSEEK : COMMON_REASONING_FORMAT_NONE;
+        // Same rationale as in addMessage: always extract reasoning so
+        // channel markers from gpt-oss/harmony parsers don't leak into
+        // content even when thinking is off.
+        parser_params.reasoning_format = COMMON_REASONING_FORMAT_DEEPSEEK;
         parser_params.parse_tool_calls = tools_enabled;
         parser_params.parser.load(result.parser);
         parser_initialized = true;

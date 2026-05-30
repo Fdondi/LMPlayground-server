@@ -7,18 +7,27 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
+    <!-- Large-screen / Chromebook posture: app works without touch input and
+         supports freeform window management. Keeping these as required="false"
+         ensures Play Store still surfaces the app to phones. -->
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.freeform_window_management" android:required="false" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
         android:allowNativeHeapPointerTagging="false"
+        android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:localeConfig="@xml/locales_config"
+        android:resizeableActivity="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.NoActionBar">
 
         <activity
             android:name="com.druk.lmplayground.MainActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|density"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>

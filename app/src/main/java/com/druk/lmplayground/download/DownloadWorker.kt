@@ -11,8 +11,7 @@ import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import java.io.File
-import java.io.FileOutputStream
+import java.io.BufferedOutputStream
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -44,6 +43,16 @@ class DownloadWorker(
         private const val PROGRESS_UPDATE_INTERVAL_MS = 500L
         private const val SPEED_WINDOW_MS = 3000L
         private const val BUFFER_SIZE = 64 * 1024
+        // openOutputStream on a local SAF folder hands back a real file
+        // descriptor (PFD), so writes are plain syscalls — same speed as a
+        // direct File write, no per-call IPC. A large BufferedOutputStream
+        // still helps by batching many small network reads into fewer write()
+        // syscalls.
+        private const val SAF_WRITE_BUFFER = 1 shl 20 // 1 MiB
+        // Suffix for the in-progress download. Stays out of the model list
+        // because the scanner only accepts names ending in ".gguf"
+        // (StorageRepository.getModelFiles).
+        private const val PART_SUFFIX = ".part"
     }
 
     private val notificationManager = DownloadNotificationManager(applicationContext)
@@ -103,32 +112,22 @@ class DownloadWorker(
         val storageUriString = inputData.getString(KEY_STORAGE_URI) ?: return failure("Missing storage URI")
         val workName = inputData.getString(KEY_WORK_NAME) ?: "download_$filename"
 
-        val tempFile = File(applicationContext.getExternalFilesDir(null), filename)
+        val storageUri = Uri.parse(storageUriString)
+        val dir = DocumentFile.fromTreeUri(applicationContext, storageUri)
+            ?: return failure("Storage folder not accessible")
         val notificationId = notificationManager.getNotificationId(modelName)
 
         try {
-            val downloadResult = downloadFile(url, tempFile, modelName, workName, notificationId)
-            if (!downloadResult) {
-                return failure("Download stopped")
+            // Stream straight into "<filename>.part" inside the user's SAF
+            // folder, then atomically rename it to the final ".gguf" name. This
+            // replaces the old download-to-temp-then-copy flow, which needed 2x
+            // the disk space and a slow second copy with no progress feedback.
+            val partDoc = downloadToPart(url, dir, filename, modelName, workName, notificationId)
+                ?: return failure("Download stopped")
+
+            if (!finalizeDownload(dir, partDoc, filename)) {
+                return failure("Failed to finalize download")
             }
-
-            reportStatus(modelName, -1f, "Moving to storage…", tempFile.length(), tempFile.length(), 0, 0)
-            // Update the pinned FGS notification directly; we are already a
-            // foreground service so notify() updates the existing notification
-            // rather than re-promoting via SystemForegroundService.
-            notificationManager.showNotification(
-                notificationId,
-                notificationManager.buildCopyingNotification(modelName)
-            )
-
-            val storageUri = Uri.parse(storageUriString)
-            val copyResult = copyToSafStorage(tempFile, filename, storageUri)
-            if (!copyResult) {
-                tempFile.delete()
-                return failure("Failed to copy to storage")
-            }
-
-            tempFile.delete()
 
             notificationManager.showNotification(
                 notificationId,
@@ -137,6 +136,8 @@ class DownloadWorker(
 
             return Result.success()
         } catch (e: IOException) {
+            // Keep the .part file so the WorkManager retry resumes from where
+            // it stopped (HTTP Range request against the existing length).
             Log.e(TAG, "Download IO error: ${e.message}", e)
             notificationManager.showNotification(
                 notificationId,
@@ -144,8 +145,10 @@ class DownloadWorker(
             )
             return Result.retry()
         } catch (e: Exception) {
+            // Non-recoverable: drop the partial so we don't leave a stale
+            // ".part" lingering in the user's folder.
             Log.e(TAG, "Download error: ${e.message}", e)
-            tempFile.delete()
+            findPart(dir, filename)?.delete()
             notificationManager.showNotification(
                 notificationId,
                 notificationManager.buildFailureNotification(modelName, e.message ?: "Download failed")
@@ -154,19 +157,31 @@ class DownloadWorker(
         }
     }
 
-    private suspend fun downloadFile(
+    /**
+     * Download into "<filename>.part" inside [dir], resuming from any existing
+     * partial. Returns the part [DocumentFile] on success, or null if the work
+     * was stopped (cancelled) mid-stream.
+     *
+     * @param allowResume false forces a clean restart from byte 0 (used by the
+     * truncation guard below when a provider doesn't honor append mode).
+     */
+    private suspend fun downloadToPart(
         url: String,
-        tempFile: File,
+        dir: DocumentFile,
+        filename: String,
         modelName: String,
         workName: String,
-        notificationId: Int
-    ): Boolean {
-        var existingBytes = 0L
-        var append = false
-
-        if (tempFile.exists() && tempFile.length() > 0) {
-            existingBytes = tempFile.length()
-            append = true
+        notificationId: Int,
+        allowResume: Boolean = true
+    ): DocumentFile? {
+        var partDoc = findPart(dir, filename)
+        if (!allowResume) {
+            partDoc?.delete()
+            partDoc = null
+        }
+        var existingBytes = partDoc?.length() ?: 0L
+        var append = partDoc != null && existingBytes > 0L
+        if (append) {
             Log.d(TAG, "Resuming download from byte $existingBytes")
         }
 
@@ -182,35 +197,58 @@ class DownloadWorker(
             throw IOException("HTTP ${response.code}: ${response.message}")
         }
 
+        // Asked to resume but the server ignored Range — restart from scratch.
         if (append && response.code != 206) {
             Log.d(TAG, "Server does not support Range, restarting from scratch")
-            existingBytes = 0L
             append = false
+            existingBytes = 0L
         }
+
+        // Ensure a fresh part file whenever we're not appending.
+        if (!append) {
+            partDoc?.delete()
+            partDoc = dir.createFile("application/octet-stream", filename + PART_SUFFIX)
+            existingBytes = 0L
+        }
+        if (partDoc == null) {
+            response.close()
+            throw IOException("Could not create part file in storage folder")
+        }
+        val partUri = partDoc.uri
 
         val body = response.body ?: throw IOException("Empty response body")
 
         val contentLength = body.contentLength()
-        val totalBytes = if (contentLength > 0) {
-            existingBytes + contentLength
-        } else {
-            -1L
+        val totalBytes = if (contentLength > 0) existingBytes + contentLength else -1L
+
+        val mode = if (append) "wa" else "w"
+        val rawOut = applicationContext.contentResolver.openOutputStream(partUri, mode)
+            ?: run { response.close(); throw IOException("Could not open part file for writing") }
+
+        // Guard: if we requested append but the provider truncated the file
+        // (didn't honor "wa"), writing the 206 body onto it would corrupt the
+        // model. Detect the length mismatch and restart cleanly from byte 0.
+        if (append && partDoc.length() != existingBytes) {
+            Log.w(TAG, "Append not honored (len ${partDoc.length()} != $existingBytes), restarting")
+            rawOut.close()
+            response.close()
+            return downloadToPart(url, dir, filename, modelName, workName, notificationId, allowResume = false)
         }
 
         val speedTracker = SpeedTracker()
-
-        val outputStream = FileOutputStream(tempFile, append)
-        val inputStream = body.byteStream()
-
         var bytesDownloaded = existingBytes
         var lastProgressUpdate = 0L
+
+        val outputStream = BufferedOutputStream(rawOut, SAF_WRITE_BUFFER)
+        val inputStream = body.byteStream()
 
         try {
             val buffer = ByteArray(BUFFER_SIZE)
             while (true) {
                 if (isStopped) {
                     Log.d(TAG, "Download cancelled")
-                    return false
+                    outputStream.flush()
+                    return null
                 }
 
                 val bytesRead = inputStream.read(buffer)
@@ -256,7 +294,7 @@ class DownloadWorker(
             response.close()
         }
 
-        return true
+        return partDoc
     }
 
     private suspend fun reportStatus(
@@ -281,20 +319,32 @@ class DownloadWorker(
         )
     }
 
-    private fun copyToSafStorage(tempFile: File, filename: String, storageUri: Uri): Boolean {
-        val documentFile = DocumentFile.fromTreeUri(applicationContext, storageUri) ?: return false
+    /**
+     * Find the in-progress partial for [filename]. Matched by prefix because
+     * SAF's createFile may append an extension (e.g. ".bin") to the
+     * "<filename>.part" display name we request.
+     */
+    private fun findPart(dir: DocumentFile, filename: String): DocumentFile? {
+        val partName = filename + PART_SUFFIX
+        return dir.listFiles().firstOrNull { it.name?.startsWith(partName) == true }
+    }
 
-        documentFile.findFile(filename)?.delete()
-
-        val destFile = documentFile.createFile("application/octet-stream", filename) ?: return false
-
-        applicationContext.contentResolver.openOutputStream(destFile.uri)?.use { outputStream ->
-            tempFile.inputStream().use { inputStream ->
-                inputStream.copyTo(outputStream, bufferSize = 8192)
-            }
-        } ?: return false
-
-        return true
+    /**
+     * Publish the completed partial: delete any existing final file, then
+     * rename "<filename>.part" -> "<filename>". The rename maps to
+     * DocumentsContract.renameDocument — a metadata-only operation on local
+     * storage, so no bytes are copied and no extra space is needed.
+     */
+    private fun finalizeDownload(dir: DocumentFile, partDoc: DocumentFile, filename: String): Boolean {
+        dir.findFile(filename)?.delete()
+        return try {
+            val renamed = partDoc.renameTo(filename)
+            if (!renamed) Log.e(TAG, "renameTo($filename) returned false")
+            renamed
+        } catch (e: Exception) {
+            Log.e(TAG, "Finalize rename failed: ${e.message}", e)
+            false
+        }
     }
 
     private fun failure(message: String): Result {

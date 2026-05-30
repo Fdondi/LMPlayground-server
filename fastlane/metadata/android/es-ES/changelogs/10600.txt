@@ -1,0 +1,3 @@
+- Compatibilidad con Tablet y Chromebook — diseños adaptables para pantallas grandes y plegables
+- Generación en el dispositivo hasta 2× más rápida gracias a nuevas optimizaciones de CPU
+- Se corrigió un bloqueo poco frecuente al abrir el selector de modelos

@@ -25,14 +25,20 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ScaffoldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi
+import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -65,7 +71,7 @@ class ConversationFragment : Fragment() {
     private val viewModel: ConversationViewModel by viewModels()
     private val storageViewModel: StorageViewModel by viewModels()
 
-    @OptIn(ExperimentalMaterial3Api::class)
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -126,14 +132,46 @@ class ConversationFragment : Fragment() {
                 val colorScheme = MaterialTheme.colorScheme
 
                 // Drive toolbar container color directly from scroll position.
+                // On tablet (where we draw an explicit divider below the bar)
+                // the recoloring would just look like a half-screen color flash
+                // restricted to the chat pane, so we freeze the bar at surface
+                // there.
+                // Only show the permanent sidebar when there's enough actual
+                // window width to comfortably fit master (320dp) + detail.
+                // At Medium (600-839dp), e.g. 7" tablet portrait or split-screen,
+                // the chat pane would be squeezed to ~280dp — worse than just
+                // hiding the sidebar behind a hamburger.
+                val widthSize = calculateWindowSizeClass(requireActivity()).widthSizeClass
+                val showPermanent = widthSize == WindowWidthSizeClass.Expanded
+
+                // Foldable book posture: if a vertical hinge is in the window,
+                // align the sidebar boundary with it so the seam between
+                // master/detail lands on the crease instead of arbitrarily
+                // bisecting one display. Fall back to 320dp on flat devices.
+                val hingeWidth = com.druk.lmplayground.util.rememberHingeWidthDp(requireActivity())
+                val sidebarWidth = if (hingeWidth != androidx.compose.ui.unit.Dp.Unspecified) {
+                    // Clamp the lower bound so the master pane doesn't shrink
+                    // below the comfortable 320dp the rest of the UI expects.
+                    maxOf(320.dp, hingeWidth)
+                } else {
+                    320.dp
+                }
+
                 val isScrolled by remember {
                     derivedStateOf {
                         scrollState.firstVisibleItemIndex > 0 ||
                                 scrollState.firstVisibleItemScrollOffset > 0
                     }
                 }
+                // True when there's content below the visible viewport — i.e.
+                // the message list is hidden behind the input dock. Used to
+                // toggle the chat/input divider so it appears only when there's
+                // a real edge to mark.
+                val canScrollDown by remember {
+                    derivedStateOf { scrollState.canScrollForward }
+                }
                 val topBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = if (isScrolled)
+                    containerColor = if (!showPermanent && isScrolled)
                         colorScheme.surfaceContainer
                     else
                         colorScheme.surface
@@ -303,52 +341,40 @@ class ConversationFragment : Fragment() {
                     )
                 }
 
-                ModalNavigationDrawer(
-                    drawerState = drawerState,
-                    drawerContent = {
-                        SessionListDrawer(
-                            sessions = sessions,
-                            currentSessionId = currentSessionId,
-                            onSessionSelected = { sessionId ->
-                                viewModel.loadSession(sessionId)
-                                scope.launch { drawerState.close() }
-                            },
-                            onDeleteSession = { sessionId ->
-                                viewModel.deleteSession(sessionId)
-                            },
-                            onRenameSession = { sessionId, newTitle ->
-                                viewModel.renameSession(sessionId, newTitle)
-                            },
-                            onPinSession = { sessionId, pinned ->
-                                viewModel.pinSession(sessionId, pinned)
-                            },
-                            onSettingsClicked = {
-                                scope.launch {
-                                    drawerState.close()
-                                    if (findNavController().currentDestination?.id == R.id.nav_home) {
-                                        findNavController().navigate(R.id.action_home_to_settings)
-                                    }
-                                }
-                            }
-                        )
-                    }
-                ) {
+                val mainContent: @Composable () -> Unit = {
                     Scaffold(
                         topBar = {
-                            ConversationBar(
-                                modelInfo = modelInfo,
-                                modelStatus = modelStatus,
-                                onNavIconPressed = {
-                                    scope.launch { drawerState.open() }
-                                },
-                                colors = topBarColors,
-                                onModelNamePressed = {
-                                    viewModel.loadModelList()
-                                },
-                                onNewSessionPressed = {
-                                    viewModel.newConversation()
+                            Column {
+                                ConversationBar(
+                                    modelInfo = modelInfo,
+                                    modelStatus = modelStatus,
+                                    showNavIcon = !showPermanent,
+                                    compact = showPermanent,
+                                    onNavIconPressed = {
+                                        scope.launch { drawerState.open() }
+                                    },
+                                    colors = topBarColors,
+                                    onModelNamePressed = {
+                                        viewModel.loadModelList()
+                                    },
+                                    onNewSessionPressed = {
+                                        viewModel.newConversation()
+                                    }
+                                )
+                                // Tablet: the surface-coloured top bar would
+                                // otherwise blend into the chat pane background.
+                                // Show the divider only when there's actually
+                                // content scrolled behind the bar — at scroll
+                                // offset 0 the bar is just bordering empty
+                                // space and the line looks like dead chrome.
+                                // Left inset keeps the line from touching the
+                                // floating master card on the left.
+                                if (showPermanent && isScrolled) {
+                                    HorizontalDivider(
+                                        modifier = Modifier.padding(horizontal = 12.dp)
+                                    )
                                 }
-                            )
+                            }
                             if (models.isNotEmpty()) {
                                 // Check if any models are downloaded
                                 val hasDownloadedModels = models.any { it.isDownloaded }
@@ -356,6 +382,16 @@ class ConversationFragment : Fragment() {
                                     SelectModelDialog(
                                         models = models,
                                         isModelLoaded = modelInfo != null,
+                                        // On tablet, center the dialog inside
+                                        // the chat pane (right of the 320dp
+                                        // permanent sidebar) instead of the
+                                        // full window — otherwise it visually
+                                        // covers the sessions list.
+                                        // Match the sidebar width so the dialog
+                                        // centers in the chat pane even when
+                                        // the sidebar widened to align with a
+                                        // foldable's hinge.
+                                        chatPaneStartOffset = if (showPermanent) sidebarWidth else 0.dp,
                                         onLoadModel = { model ->
                                             viewModel.loadModel(model)
                                         },
@@ -488,6 +524,13 @@ class ConversationFragment : Fragment() {
                                 )
                             }
                             UserInput(
+                                integrateWithSurface = showPermanent,
+                                // Show the chat/input divider only when the
+                                // list actually has content disappearing below
+                                // the input dock. At the bottom of the chat
+                                // (canScrollDown = false) the divider is
+                                // bordering empty space and looks like noise.
+                                showTopDivider = showPermanent && canScrollDown,
                                 modifier = Modifier
                                     .navigationBarsPadding()
                                     .imePadding(),
@@ -525,6 +568,66 @@ class ConversationFragment : Fragment() {
                             )
                         }
                     }
+                }
+
+                if (showPermanent) {
+                    PermanentNavigationDrawer(
+                        drawerContent = {
+                            PermanentSessionList(
+                                sessions = sessions,
+                                currentSessionId = currentSessionId,
+                                width = sidebarWidth,
+                                onSessionSelected = { sessionId ->
+                                    viewModel.loadSession(sessionId)
+                                },
+                                onDeleteSession = { sessionId ->
+                                    viewModel.deleteSession(sessionId)
+                                },
+                                onRenameSession = { sessionId, newTitle ->
+                                    viewModel.renameSession(sessionId, newTitle)
+                                },
+                                onPinSession = { sessionId, pinned ->
+                                    viewModel.pinSession(sessionId, pinned)
+                                },
+                                onSettingsClicked = {
+                                    if (findNavController().currentDestination?.id == R.id.nav_home) {
+                                        findNavController().navigate(R.id.action_home_to_settings)
+                                    }
+                                }
+                            )
+                        }
+                    ) { mainContent() }
+                } else {
+                    ModalNavigationDrawer(
+                        drawerState = drawerState,
+                        drawerContent = {
+                            SessionListDrawer(
+                                sessions = sessions,
+                                currentSessionId = currentSessionId,
+                                onSessionSelected = { sessionId ->
+                                    viewModel.loadSession(sessionId)
+                                    scope.launch { drawerState.close() }
+                                },
+                                onDeleteSession = { sessionId ->
+                                    viewModel.deleteSession(sessionId)
+                                },
+                                onRenameSession = { sessionId, newTitle ->
+                                    viewModel.renameSession(sessionId, newTitle)
+                                },
+                                onPinSession = { sessionId, pinned ->
+                                    viewModel.pinSession(sessionId, pinned)
+                                },
+                                onSettingsClicked = {
+                                    scope.launch {
+                                        drawerState.close()
+                                        if (findNavController().currentDestination?.id == R.id.nav_home) {
+                                            findNavController().navigate(R.id.action_home_to_settings)
+                                        }
+                                    }
+                                }
+                            )
+                        }
+                    ) { mainContent() }
                 }
             }
         }

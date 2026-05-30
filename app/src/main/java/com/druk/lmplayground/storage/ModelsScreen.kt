@@ -9,14 +9,20 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.GridItemSpan
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -56,6 +62,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 import com.druk.lmplayground.R
@@ -66,6 +73,12 @@ import com.druk.lmplayground.models.releaseDateLabel
 import com.druk.lmplayground.models.supportsLanguage
 import com.druk.lmplayground.theme.PlaygroundTheme
 
+/**
+ * Standalone Models screen used by [ModelsFragment] when reached via
+ * navigation on phone. Wraps [ModelsContent] in a Scaffold + back button. The
+ * Content composable on its own is what the tablet Settings detail pane
+ * embeds.
+ */
 @Composable
 fun ModelsScreen(
     storageInfo: StorageInfo?,
@@ -85,8 +98,80 @@ fun ModelsScreen(
     onSkipMigration: () -> Unit,
     onCancelMigration: () -> Unit
 ) {
-    var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
     val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.models)) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                }
+            )
+        }
+    ) { padding ->
+        ModelsContent(
+            storageInfo = storageInfo,
+            allModels = allModels,
+            downloadingModels = downloadingModels,
+            snackbarMessage = snackbarMessage,
+            pendingMigration = pendingMigration,
+            migrationProgress = migrationProgress,
+            deviceLanguage = deviceLanguage,
+            snackbarHostState = snackbarHostState,
+            onChangeFolderClick = onChangeFolderClick,
+            onDeleteModel = onDeleteModel,
+            onDownloadModel = onDownloadModel,
+            onCancelDownload = onCancelDownload,
+            onSnackbarDismiss = onSnackbarDismiss,
+            onConfirmMigration = onConfirmMigration,
+            onSkipMigration = onSkipMigration,
+            onCancelMigration = onCancelMigration,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+        )
+    }
+}
+
+/**
+ * Headless Models content (grid + storage card + dialogs) for embedding into
+ * either [ModelsScreen]'s Scaffold or the tablet Settings detail pane. The
+ * caller supplies a [snackbarHostState] so snackbars hosted by an outer
+ * Scaffold get the messages from here.
+ */
+@Composable
+fun ModelsContent(
+    storageInfo: StorageInfo?,
+    allModels: List<ModelWithStatus>,
+    downloadingModels: Map<String, DownloadProgress>,
+    snackbarMessage: String?,
+    pendingMigration: MigrationState?,
+    migrationProgress: MigrationProgress?,
+    deviceLanguage: String,
+    snackbarHostState: SnackbarHostState,
+    onChangeFolderClick: () -> Unit,
+    onDeleteModel: (ModelInfo) -> Unit,
+    onDownloadModel: (ModelInfo) -> Unit,
+    onCancelDownload: (ModelInfo) -> Unit,
+    onSnackbarDismiss: () -> Unit,
+    onConfirmMigration: () -> Unit,
+    onSkipMigration: () -> Unit,
+    onCancelMigration: () -> Unit,
+    modifier: Modifier = Modifier,
+    // Maximum content width — defaults to 960dp so the grid feels
+    // anchored on tablets / Chromebook freeform windows. Callers
+    // (e.g. tablet marketing screenshots) can override with
+    // [Dp.Infinity] to fill the full pane width.
+    maxContentWidth: Dp = 960.dp,
+) {
+    var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
 
     // Show snackbar when message changes
     LaunchedEffect(snackbarMessage) {
@@ -95,7 +180,7 @@ fun ModelsScreen(
             onSnackbarDismiss()
         }
     }
-    
+
     // Split models into downloaded and available
     val downloadedModels = allModels.filter { it.isDownloaded }
     val availableModels = allModels.filter { !it.isDownloaded }
@@ -114,114 +199,134 @@ fun ModelsScreen(
         emptyList()
     }
 
-    Scaffold(
-        snackbarHost = { SnackbarHost(snackbarHostState) },
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.models)) },
-                navigationIcon = {
-                    IconButton(onClick = onBackClick) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back)
+    // Adaptive grid: GridCells.Adaptive lays out as many ~340dp columns as
+    // fit. At sw>=600dp the content is also capped to ~960dp wide so on a
+    // 7" tablet landscape we get 2 columns, on a Chromebook freeform window
+    // we get 2-3 depending on width, and on phones we get a single column.
+    val gridState = androidx.compose.foundation.lazy.grid.rememberLazyGridState()
+    // Scroll-edge divider: shows a HorizontalDivider just below the topbar
+    // once the user has scrolled past the first item, signalling that
+    // content is now hidden behind the bar (same pattern as the chat scaffold).
+    val isScrolled by remember {
+        androidx.compose.runtime.derivedStateOf {
+            gridState.firstVisibleItemIndex > 0 ||
+                gridState.firstVisibleItemScrollOffset > 0
+        }
+    }
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .widthIn(max = maxContentWidth)
+        ) {
+            if (isScrolled) {
+                // Symmetric 12dp inset (same as the chat scaffold dividers)
+                // so the line doesn't run all the way to the pane edges.
+                HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp))
+            }
+            LazyVerticalGrid(
+                state = gridState,
+                columns = GridCells.Adaptive(minSize = 340.dp),
+                modifier = Modifier.fillMaxHeight(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Storage info card spans the full grid width.
+                if (storageInfo != null) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        StorageInfoCard(
+                            storageInfo = storageInfo,
+                            onChangeFolderClick = onChangeFolderClick,
+                            // No top padding — the card's top edge sits flush
+                            // with the divider / topbar bottom so scrolling
+                            // visually slides it under the bar.
+                            modifier = Modifier.padding(
+                                start = 16.dp,
+                                end = 16.dp,
+                                bottom = 16.dp,
+                            )
                         )
                     }
                 }
-            )
-        }
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding)
-        ) {
-            // Storage info card
-            item {
-                if (storageInfo != null) {
-                    StorageInfoCard(
-                        storageInfo = storageInfo,
-                        onChangeFolderClick = onChangeFolderClick,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-            }
 
-            // Downloaded models section
-            item {
-                Text(
-                    text = stringResource(R.string.downloaded_models),
-                    style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                )
-            }
-
-            if (downloadedModels.isEmpty()) {
-                item {
+                // Downloaded section header
+                item(span = { GridItemSpan(maxLineSpan) }) {
                     Text(
-                        text = stringResource(R.string.no_downloaded_models),
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-            } else {
-                items(downloadedModels, key = { it.model.filename }) { modelWithStatus ->
-                    DownloadedModelItem(
-                        model = modelWithStatus.model,
-                        onDeleteClick = { modelToDelete = modelWithStatus.model }
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-                }
-            }
-            
-            // Available models — either a single section (English) or split into
-            // language-supported and other models (non-English locales).
-            if (supportedModels.isNotEmpty()) {
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = stringResource(
-                            if (splitByLanguage) R.string.supports_your_language
-                            else R.string.available_models
-                        ),
+                        text = stringResource(R.string.downloaded_models),
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
                     )
                 }
 
-                items(supportedModels, key = { it.model.filename }) { modelWithStatus ->
-                    AvailableModelItem(
-                        modelWithStatus = modelWithStatus,
-                        downloadProgress = downloadingModels[modelWithStatus.model.name],
-                        onDownloadClick = { onDownloadModel(modelWithStatus.model) },
-                        onCancelClick = { onCancelDownload(modelWithStatus.model) }
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
-                }
-            }
-
-            if (otherModels.isNotEmpty()) {
-                item {
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = stringResource(R.string.other_models),
-                        style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
-                    )
+                if (downloadedModels.isEmpty()) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Text(
+                            text = stringResource(R.string.no_downloaded_models),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    }
+                } else {
+                    items(downloadedModels, key = { it.model.filename }) { modelWithStatus ->
+                        DownloadedModelItem(
+                            model = modelWithStatus.model,
+                            onDeleteClick = { modelToDelete = modelWithStatus.model }
+                        )
+                    }
                 }
 
-                items(otherModels, key = { it.model.filename }) { modelWithStatus ->
-                    AvailableModelItem(
-                        modelWithStatus = modelWithStatus,
-                        downloadProgress = downloadingModels[modelWithStatus.model.name],
-                        onDownloadClick = { onDownloadModel(modelWithStatus.model) },
-                        onCancelClick = { onCancelDownload(modelWithStatus.model) }
-                    )
-                    HorizontalDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                // Available models — either a single section (English) or split into
+                // language-supported and other models (non-English locales).
+                if (supportedModels.isNotEmpty()) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = stringResource(
+                                if (splitByLanguage) R.string.supports_your_language
+                                else R.string.available_models
+                            ),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
+
+                    items(supportedModels, key = { it.model.filename }) { modelWithStatus ->
+                        AvailableModelItem(
+                            modelWithStatus = modelWithStatus,
+                            downloadProgress = downloadingModels[modelWithStatus.model.name],
+                            onDownloadClick = { onDownloadModel(modelWithStatus.model) },
+                            onCancelClick = { onCancelDownload(modelWithStatus.model) }
+                        )
+                    }
+                }
+
+                if (otherModels.isNotEmpty()) {
+                    item(span = { GridItemSpan(maxLineSpan) }) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = stringResource(R.string.other_models),
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                        )
+                    }
+
+                    items(otherModels, key = { it.model.filename }) { modelWithStatus ->
+                        AvailableModelItem(
+                            modelWithStatus = modelWithStatus,
+                            downloadProgress = downloadingModels[modelWithStatus.model.name],
+                            onDownloadClick = { onDownloadModel(modelWithStatus.model) },
+                            onCancelClick = { onCancelDownload(modelWithStatus.model) }
+                        )
+                    }
                 }
             }
         }
     }
+    // (one less `}` here than before — the Scaffold lambda now lives in
+    // ModelsScreen above and this function ends after the dialogs below.)
 
     // Delete confirmation dialog
     modelToDelete?.let { model ->
@@ -341,6 +446,8 @@ private fun StorageInfoCard(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
+    val usedFormatted = Formatter.formatFileSize(context, storageInfo.usedBytes)
+    val availableFormatted = Formatter.formatFileSize(context, storageInfo.availableBytes)
 
     Card(
         colors = CardDefaults.cardColors(
@@ -348,12 +455,12 @@ private fun StorageInfoCard(
         ),
         modifier = modifier.fillMaxWidth()
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+        // Compact layout: folder info on the left, change-folder button trailing
+        // on the right; storage usage row directly below with progress bar
+        // inline with available-bytes label. Trims roughly 40dp of vertical
+        // space vs the previous stacked layout.
+        Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(
                     imageVector = Icons.Outlined.Folder,
                     contentDescription = null,
@@ -362,9 +469,9 @@ private fun StorageInfoCard(
                 Spacer(modifier = Modifier.width(12.dp))
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = if (storageInfo.isCustomFolder) 
-                            stringResource(R.string.custom_folder) 
-                        else 
+                        text = if (storageInfo.isCustomFolder)
+                            stringResource(R.string.custom_folder)
+                        else
                             stringResource(R.string.downloads_folder),
                         style = MaterialTheme.typography.labelMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
@@ -372,46 +479,45 @@ private fun StorageInfoCard(
                     Text(
                         text = storageInfo.path,
                         style = MaterialTheme.typography.bodyMedium,
-                        maxLines = 2,
+                        maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                 }
+                TextButton(onClick = onChangeFolderClick) {
+                    Text(stringResource(R.string.change_folder))
+                }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Storage usage
-            val usedFormatted = Formatter.formatFileSize(context, storageInfo.usedBytes)
-            Text(
-                text = stringResource(R.string.storage_used_models, usedFormatted),
-                style = MaterialTheme.typography.bodyMedium
-            )
+            Spacer(modifier = Modifier.height(8.dp))
 
             if (storageInfo.totalBytes > 0) {
-                Spacer(modifier = Modifier.height(8.dp))
                 val progressValue = storageInfo.usedBytes.toFloat() / storageInfo.totalBytes.toFloat()
                 LinearProgressIndicator(
                     progress = { progressValue.coerceIn(0f, 1f) },
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Spacer(modifier = Modifier.height(4.dp))
-                val availableFormatted = Formatter.formatFileSize(context, storageInfo.availableBytes)
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = stringResource(R.string.storage_used_models, usedFormatted),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    Text(
+                        text = stringResource(R.string.storage_available, availableFormatted),
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+            } else {
                 Text(
-                    text = stringResource(R.string.storage_available, availableFormatted),
+                    text = stringResource(R.string.storage_used_models, usedFormatted),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
-            ) {
-                TextButton(onClick = onChangeFolderClick) {
-                    Text(stringResource(R.string.change_folder))
-                }
             }
         }
     }

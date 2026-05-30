@@ -324,6 +324,15 @@ object ModelInfoProvider {
             description = "Google \u00B7 Advanced chat model \u00B7 5.44Gb",
             logoRes = R.drawable.logo_google,
             supportedLanguages = ENGLISH_ONLY
+        ),
+        ModelInfo(
+            name = "GPT-OSS 20B",
+            filename = "gpt-oss-20b-mxfp4.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/ggml-org/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-mxfp4.gguf"),
+            releaseDate = LocalDate.parse("2025-08-05"),
+            description = "OpenAI \u00B7 Large reasoning MoE model \u00B7 12.11Gb",
+            logoRes = R.drawable.logo_openai,
+            supportedLanguages = MULTILINGUAL_BROAD
         )
     )
     

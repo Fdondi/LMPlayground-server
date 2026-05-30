@@ -1,0 +1,3 @@
+- Tablet- ja Chromebook-tuki — mukautuvat asettelut suurille näytöille ja taittuville laitteille
+- Jopa 2× nopeampi laitteella tapahtuva tekstintuotto uusien CPU-optimointien ansiosta
+- Korjattu harvinainen jumiutuminen mallivalitsinta avattaessa

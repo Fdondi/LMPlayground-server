@@ -6,6 +6,7 @@
 
 #include "console.h"
 #include "ggml.h"
+#include "ggml-backend.h"
 #include "gguf.h"
 #include "llama.h"
 #include "log.h"
@@ -87,13 +88,25 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_probeModelMetadata(JNIEnv *env, jobjec
 
 extern "C" JNIEXPORT int
 JNICALL
-Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object) {
+Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstring nativeLibDir) {
 
     // Redirect std::cerr to logcat
     AndroidLogBuf androidLogBuf;
     std::cerr.rdbuf(&androidLogBuf);
 
     llama_log_set(log_callback, NULL);
+
+    // With GGML_BACKEND_DL=ON the CPU backend lives in separate
+    // libggml-cpu-*.so files alongside libllamacpp.so. dlopen them so
+    // llama_model_load_from_file has a backend to bind tensors to.
+    if (nativeLibDir != nullptr) {
+        const char *path = env->GetStringUTFChars(nativeLibDir, nullptr);
+        ggml_backend_load_all_from_path(path);
+        env->ReleaseStringUTFChars(nativeLibDir, path);
+    } else {
+        ggml_backend_load_all();
+    }
+
     llama_backend_init();
     return 0;
 }
@@ -109,7 +122,8 @@ JNICALL
 Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
                    jobject activity,
                    jstring modelPath,
-                   jobject progressCallback) {
+                   jobject progressCallback,
+                   jboolean disableRepack) {
 
     struct CallbackContext {
         JNIEnv *env;
@@ -128,7 +142,8 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
                             context->env->CallVoidMethod(context->progressCallback, methodId, progress);
                             return true;
                      },
-                     &ctx
+                     &ctx,
+                     disableRepack == JNI_TRUE
                      );
     env->ReleaseStringUTFChars(modelPath, utfModelPath);
 
