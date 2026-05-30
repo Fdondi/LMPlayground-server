@@ -5,15 +5,16 @@ import com.druk.llamacpp.LlamaProgressCallback
 import com.druk.llamacpp.jni.NativeLlamaCpp
 import com.druk.llamacpp.jni.NativeLlamaModel
 import com.druk.llamacpp.jni.NativeLlamaSession
-import com.druk.lmplayground.tools.CalculatorTool
-import com.druk.lmplayground.tools.DateTimeTool
 import com.druk.lmplayground.tools.ToolRegistry
+import com.druk.lmplayground.tools.WebFetchTool
+import com.druk.lmplayground.tools.WebSearchTool
 import org.junit.Assert.*
 import org.junit.Assume.assumeTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.platform.app.InstrumentationRegistry
 import java.io.File
 
 /**
@@ -49,20 +50,24 @@ class PreambleProbeTest {
     @Before
     fun setUp() {
         llamaCpp = NativeLlamaCpp()
-        llamaCpp.init()
+        llamaCpp.init(
+            InstrumentationRegistry.getInstrumentation()
+                .targetContext.applicationInfo.nativeLibraryDir
+        )
     }
 
     private fun loadModel(file: File): NativeLlamaModel? = llamaCpp.loadModel(
         file.absolutePath,
         object : LlamaProgressCallback {
             override fun onProgress(progress: Float) {}
-        }
+        },
+        disableRepack = false,
     )
 
     private fun toolsJson(): String =
         ToolRegistry().apply {
-            register(DateTimeTool())
-            register(CalculatorTool())
+            register(WebSearchTool())
+            register(WebFetchTool())
         }.toOpenAIToolsJson()
 
     private fun availableModels(): List<File> = CANDIDATE_MODELS

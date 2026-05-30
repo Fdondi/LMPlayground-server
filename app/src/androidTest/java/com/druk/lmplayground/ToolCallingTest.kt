@@ -6,8 +6,6 @@ import com.druk.llamacpp.LlamaProgressCallback
 import com.druk.llamacpp.jni.NativeLlamaCpp
 import com.druk.llamacpp.jni.NativeLlamaModel
 import com.druk.llamacpp.jni.NativeLlamaSession
-import com.druk.lmplayground.tools.CalculatorTool
-import com.druk.lmplayground.tools.DateTimeTool
 import com.druk.lmplayground.tools.ToolRegistry
 import com.druk.lmplayground.tools.WebSearchTool
 import com.druk.lmplayground.tools.JavaScriptTool
@@ -55,7 +53,10 @@ class ToolCallingTest {
     @Before
     fun setUp() {
         llamaCpp = NativeLlamaCpp()
-        llamaCpp.init()
+        llamaCpp.init(
+            InstrumentationRegistry.getInstrumentation()
+                .targetContext.applicationInfo.nativeLibraryDir
+        )
     }
 
     @After
@@ -79,9 +80,13 @@ class ToolCallingTest {
             val file = File(MODELS_PATH, name)
             if (!file.exists() || !file.canRead()) continue
             Log.d(TAG, "Probing model: ${file.name}")
-            val model = llamaCpp.loadModel(file.absolutePath, object : LlamaProgressCallback {
-                override fun onProgress(progress: Float) {}
-            })
+            val model = llamaCpp.loadModel(
+                file.absolutePath,
+                object : LlamaProgressCallback {
+                    override fun onProgress(progress: Float) {}
+                },
+                disableRepack = false,
+            )
             if (model == null) {
                 Log.d(TAG, "  -> load returned null, skipping")
                 continue
@@ -104,7 +109,8 @@ class ToolCallingTest {
                 override fun onProgress(progress: Float) {
                     Log.d(TAG, "Loading: ${(progress * 100).toInt()}%")
                 }
-            }
+            },
+            disableRepack = false,
         ) ?: error("loadModel returned null for ${modelFile.absolutePath}")
         llamaModel = model
         return model
@@ -150,48 +156,6 @@ class ToolCallingTest {
     // -- Kotlin-only tool tests (no model needed) --
 
     @Test
-    fun testDateTimeToolReturnsValidJson() {
-        val tool = DateTimeTool()
-        val result = tool.execute("{}")
-        Log.d(TAG, "DateTimeTool result: $result")
-        // Should be valid JSON with expected fields
-        val json = org.json.JSONObject(result)
-        assertTrue("Should have date", json.has("date"))
-        assertTrue("Should have time", json.has("time"))
-        assertTrue("Should have day_of_week", json.has("day_of_week"))
-        assertTrue("Should have timezone", json.has("timezone"))
-        // Date should match today
-        val date = json.getString("date")
-        assertTrue("Date should be YYYY-MM-DD format", date.matches(Regex("""\d{4}-\d{2}-\d{2}""")))
-    }
-
-    @Test
-    fun testCalculatorToolBasicOperations() {
-        val tool = CalculatorTool()
-
-        val add = org.json.JSONObject(tool.execute("""{"expression":"2 + 3"}"""))
-        assertEquals("2+3=5", 5.0, add.getDouble("result"), 0.001)
-
-        val mul = org.json.JSONObject(tool.execute("""{"expression":"7 * 8"}"""))
-        assertEquals("7*8=56", 56.0, mul.getDouble("result"), 0.001)
-
-        val complex = org.json.JSONObject(tool.execute("""{"expression":"(10 + 5) * 2 / 3"}"""))
-        assertEquals("(10+5)*2/3=10", 10.0, complex.getDouble("result"), 0.001)
-
-        val power = org.json.JSONObject(tool.execute("""{"expression":"2 ^ 10"}"""))
-        assertEquals("2^10=1024", 1024.0, power.getDouble("result"), 0.001)
-    }
-
-    @Test
-    fun testCalculatorToolErrorHandling() {
-        val tool = CalculatorTool()
-        val result = tool.execute("""{"expression":"abc"}""")
-        Log.d(TAG, "Calculator error result: $result")
-        val json = org.json.JSONObject(result)
-        assertTrue("Should have error field", json.has("error"))
-    }
-
-    @Test
     fun testToolRegistryJsonFormat() {
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         val json = registry.toOpenAIToolsJson()
@@ -214,7 +178,8 @@ class ToolCallingTest {
     @Test
     fun testToolRegistryExecuteToolCalls() {
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
-        val toolCallsJson = """[{"id":"call_0","name":"calculate","arguments":"{\"expression\":\"42 * 37\"}"}]"""
+        // 42 * 37 = 1554
+        val toolCallsJson = """[{"id":"call_0","name":"run_javascript","arguments":"{\"code\":\"42 * 37\"}"}]"""
         val results = registry.executeToolCalls(toolCallsJson)
         Log.d(TAG, "Execute result: $results")
 
@@ -222,9 +187,9 @@ class ToolCallingTest {
         assertEquals("Should have 1 result", 1, arr.length())
         val result = arr.getJSONObject(0)
         assertEquals("call_0", result.getString("id"))
-        assertEquals("calculate", result.getString("name"))
+        assertEquals("run_javascript", result.getString("name"))
         val content = org.json.JSONObject(result.getString("content"))
-        assertEquals(1554.0, content.getDouble("result"), 0.001)
+        assertEquals("1554", content.getString("result"))
     }
 
     @Test
@@ -294,7 +259,7 @@ class ToolCallingTest {
 
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
-        session.addMessage("What is 123 * 456? Use the calculate tool.", false)
+        session.addMessage("What is 123 * 456? Use the run_javascript tool.", false)
 
         val (response, result) = generateResponse(session, maxTokens = 512, timeoutMs = 180_000)
         Log.d(TAG, "Response (tools set): result=$result\n$response")
@@ -336,7 +301,7 @@ class ToolCallingTest {
         session.setTools(registry.toOpenAIToolsJson())
 
         // Use a very direct prompt to maximize chances of tool use
-        session.addMessage("Use the get_current_datetime tool to tell me what day of the week it is.", false)
+        session.addMessage("Use the run_javascript tool to tell me what day of the week it is.", false)
 
         val (response1, result1) = generateResponse(session, maxTokens = 512, timeoutMs = 180_000)
         Log.d(TAG, "First generation: result=$result1\n$response1")
@@ -366,7 +331,7 @@ class ToolCallingTest {
     }
 
     @Test
-    fun testCalculatorToolCallCycle() {
+    fun testJavaScriptToolCallCycle() {
         val modelFile = findModel()
         assumeTrue("No model found", modelFile != null)
 
@@ -382,7 +347,7 @@ class ToolCallingTest {
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
 
-        session.addMessage("Use the calculate tool to compute 7823 * 4519", false)
+        session.addMessage("Use the run_javascript tool to compute 7823 * 4519", false)
 
         val (response1, result1) = generateResponse(session, maxTokens = 512, timeoutMs = 180_000)
         Log.d(TAG, "First generation: result=$result1\n$response1")
@@ -393,7 +358,7 @@ class ToolCallingTest {
 
             val arr = JSONArray(toolCallsJson)
             val call = arr.getJSONObject(0)
-            assertEquals("Should call calculate", "calculate", call.getString("name"))
+            assertEquals("Should call run_javascript", "run_javascript", call.getString("name"))
 
             val toolResults = registry.executeToolCalls(toolCallsJson)
             Log.d(TAG, "Tool results: $toolResults")
@@ -406,9 +371,9 @@ class ToolCallingTest {
             assertTrue("Final response should not be empty", response2.isNotBlank())
 
             // The correct answer is 35,352,137
-            Log.d(TAG, "Calculator tool call cycle completed!")
+            Log.d(TAG, "JavaScript tool call cycle completed!")
         } else {
-            Log.d(TAG, "Model did not use calculate tool.")
+            Log.d(TAG, "Model did not use run_javascript tool.")
         }
     }
 
@@ -468,7 +433,7 @@ class ToolCallingTest {
         session.setTools(registry.toOpenAIToolsJson())
 
         // KEY DIFFERENCE: thinking=true (matches app behavior)
-        session.addMessage("Use the calculate tool to compute 15 times 37", true)
+        session.addMessage("Use the run_javascript tool to compute 15 times 37", true)
 
         val (response1, result1) = generateResponse(session, maxTokens = 512, timeoutMs = 180_000)
         Log.d(TAG, "THINKING-ENABLED: First gen: result=$result1, response='$response1'")
@@ -496,8 +461,8 @@ class ToolCallingTest {
     }
 
     @Test
-    fun testToolCallThinkingDisabledCalculator() {
-        // Test thinking=false with calculator (the other test used thinking=true)
+    fun testToolCallThinkingDisabledJavaScript() {
+        // Test thinking=false with run_javascript (the other test used thinking=true)
         val modelFile = findModel()
         assumeTrue("No model found", modelFile != null)
 
@@ -510,17 +475,17 @@ class ToolCallingTest {
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
         session.setTools(registry.toOpenAIToolsJson())
 
-        session.addMessage("Use the calculate tool to compute 7823 * 4519", false)
+        session.addMessage("Use the run_javascript tool to compute 7823 * 4519", false)
         val (r1, res1) = generateResponse(session, maxTokens = 512, timeoutMs = 180_000)
-        Log.d(TAG, "CALC-NOTHINK: First gen result=$res1, response='${r1.take(100)}'")
+        Log.d(TAG, "JS-NOTHINK: First gen result=$res1, response='${r1.take(100)}'")
 
         if (res1 == 2) {
             val tc = session.getToolCallsJson()
             val tr = registry.executeToolCalls(tc)
-            Log.d(TAG, "CALC-NOTHINK: Tool calls=$tc, results=$tr")
+            Log.d(TAG, "JS-NOTHINK: Tool calls=$tc, results=$tr")
             session.submitToolResults(tr, false)
             val (r2, res2) = generateResponse(session, maxTokens = 512, timeoutMs = 180_000)
-            Log.d(TAG, "CALC-NOTHINK: Final gen result=$res2, response='$r2', length=${r2.length}")
+            Log.d(TAG, "JS-NOTHINK: Final gen result=$res2, response='$r2', length=${r2.length}")
         }
     }
 
@@ -694,9 +659,13 @@ class ToolCallingTest {
                 Log.d(TAG, "$name: NOT FOUND on device")
                 continue
             }
-            val model = llamaCpp.loadModel(file.absolutePath, object : LlamaProgressCallback {
-                override fun onProgress(progress: Float) {}
-            })
+            val model = llamaCpp.loadModel(
+                file.absolutePath,
+                object : LlamaProgressCallback {
+                    override fun onProgress(progress: Float) {}
+                },
+                disableRepack = false,
+            )
             if (model == null) {
                 Log.d(TAG, "$name: load returned null (corrupt or unsupported)")
                 continue

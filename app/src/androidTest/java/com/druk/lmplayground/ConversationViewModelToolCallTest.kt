@@ -221,14 +221,13 @@ class ConversationViewModelToolCallTest {
         // Make sure a tool the model can actually call is enabled.
         // setToolEnabled persists to prefs; harmless cross-test.
         runBlocking(Dispatchers.Main) {
-            viewModel.setToolEnabled("calculate", true)
-            viewModel.setToolEnabled("get_current_datetime", true)
+            viewModel.setToolEnabled("run_javascript", true)
         }
 
-        // Pick a prompt that's very likely to trigger calculate.
+        // Pick a prompt that's very likely to trigger run_javascript.
         val userMessage = Message(
             author = "User",
-            content = "Use the calculate tool to compute 17 * 23, then give me the answer.",
+            content = "Use the run_javascript tool to compute 17 * 23, then give me the answer.",
         )
 
         runBlocking(Dispatchers.Main) { viewModel.addMessage(userMessage) }
@@ -274,14 +273,14 @@ class ConversationViewModelToolCallTest {
         val viewModel = vm!!
 
         runBlocking(Dispatchers.Main) {
-            viewModel.setToolEnabled("calculate", true)
+            viewModel.setToolEnabled("run_javascript", true)
         }
 
         runBlocking(Dispatchers.Main) {
             viewModel.addMessage(
                 Message(
                     author = "User",
-                    content = "Use the calculate tool to compute 7823 * 4519, then write a 500-word " +
+                    content = "Use the run_javascript tool to compute 7823 * 4519, then write a 500-word " +
                         "essay about the history of multiplication.",
                 )
             )

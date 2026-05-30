@@ -67,8 +67,6 @@ class ToolRegistry {
     companion object {
         fun createDefault(context: Context): ToolRegistry {
             return ToolRegistry().apply {
-                register(DateTimeTool())
-                register(CalculatorTool())
                 register(WebSearchTool())
                 register(WebFetchTool())
                 register(JavaScriptTool(context))

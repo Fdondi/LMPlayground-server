@@ -7,9 +7,9 @@ import com.druk.llamacpp.LlamaProgressCallback
 import com.druk.llamacpp.jni.NativeLlamaCpp
 import com.druk.llamacpp.jni.NativeLlamaModel
 import com.druk.llamacpp.jni.NativeLlamaSession
-import com.druk.lmplayground.tools.CalculatorTool
-import com.druk.lmplayground.tools.DateTimeTool
 import com.druk.lmplayground.tools.ToolRegistry
+import com.druk.lmplayground.tools.WebFetchTool
+import com.druk.lmplayground.tools.WebSearchTool
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Assume.assumeNotNull
@@ -56,10 +56,11 @@ class PreambleCacheTest {
 
     @Before
     fun setUp() {
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
         llamaCpp = NativeLlamaCpp()
-        llamaCpp.init()
+        llamaCpp.init(ctx.applicationInfo.nativeLibraryDir)
         cacheDir = File(
-            InstrumentationRegistry.getInstrumentation().targetContext.filesDir,
+            ctx.filesDir,
             "kv_preamble_test_${System.currentTimeMillis()}"
         ).apply { mkdirs() }
         cleanups.add { cacheDir.deleteRecursively() }
@@ -79,7 +80,8 @@ class PreambleCacheTest {
             file.absolutePath,
             object : LlamaProgressCallback {
                 override fun onProgress(progress: Float) {}
-            }
+            },
+            disableRepack = false,
         ) ?: error("loadModel returned null for ${file.absolutePath}")
         cleanups.add { model.unloadModel() }
         return model
@@ -105,8 +107,8 @@ class PreambleCacheTest {
     }
 
     private fun toolsJson(): String = ToolRegistry().apply {
-        register(DateTimeTool())
-        register(CalculatorTool())
+        register(WebSearchTool())
+        register(WebFetchTool())
     }.toOpenAIToolsJson()
 
     private fun cachePathFor(name: String): String =
