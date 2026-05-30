@@ -938,15 +938,33 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             uiState.addToolCallsToLastMessage(toolCallInfoList)
                         }
 
-                        llamaSession.submitToolResults(toolResults, enableThinking)
+                        // Force thinking on for the response phase if the
+                        // model supports it, regardless of the user toggle.
+                        // Gemma 4 and harmony-style models emit an empty
+                        // content channel after tool calls when thinking is
+                        // off — the chat would otherwise show a blank
+                        // assistant bubble after every tool call. Reasoning
+                        // still routes to the collapsed thinking section via
+                        // the always-on DEEPSEEK extraction in the parser,
+                        // so visible content stays clean. For models without
+                        // a thinking mode this is a no-op (the flag is
+                        // silently ignored). See testReproduceAppBehavior
+                        // for the canonical repro.
+                        val supportsThinking = _supportsThinking.value == true
+                        val responseThinking = supportsThinking || enableThinking
+                        llamaSession.submitToolResults(toolResults, responseThinking)
 
                         // Reset the streaming callback's per-round counters
                         // so the next generateAll() reports a fresh
-                        // thinking-vs-response token split.
+                        // thinking-vs-response token split. The callback
+                        // tracks WHICH phase the model is in for THIS round,
+                        // so it follows responseThinking (the just-submitted
+                        // flag) — not the user toggle — so the UI shows the
+                        // thinking indicator while we wait for the answer.
                         callback.totalTokens = 0
                         callback.thinkingTokenCount = 0
-                        callback.thinkingComplete = !enableThinking
-                        callback.modelIsThinking = enableThinking
+                        callback.thinkingComplete = !responseThinking
+                        callback.modelIsThinking = responseThinking
                     }
                 } catch (e: InferenceUnavailableException) {
                     android.util.Log.w("ConversationViewModel", "generateAll failed: service unavailable", e)
