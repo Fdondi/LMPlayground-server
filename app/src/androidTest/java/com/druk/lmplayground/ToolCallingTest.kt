@@ -153,6 +153,94 @@ class ToolCallingTest {
         return Pair(lastResponse, result)
     }
 
+    /**
+     * Captured snapshot of a single tool-call cycle:
+     *   the tool the model chose, the arguments it sent, the JSON the
+     *   tool produced, and the model's reply after the result was
+     *   submitted back. [runToolCycle] returns one of these per cycle.
+     */
+    private data class CycleOutcome(
+        val toolName: String,
+        val toolArguments: String,
+        val toolContent: String,
+        val finalResponse: String,
+    )
+
+    /**
+     * Drive a full tool-calling cycle end to end:
+     *   addMessage -> generate -> (if result==2) executeToolCalls ->
+     *   submitToolResults -> generate -> final response.
+     *
+     * Returns the [CycleOutcome] when the model actually invoked a tool,
+     * or null when it answered directly without one (small models can't
+     * always be coaxed — every task test treats null as a soft skip).
+     *
+     * Mirrors production behavior: thinking is enabled for the response
+     * phase iff [model] supports it. Gemma 4 emits an empty reply after
+     * tool calls when thinking is off (see [testReproduceAppBehavior]),
+     * and the app's tool pipeline always toggles thinking on for the
+     * response phase based on [LlamaModel.supportsThinking]. Tests that
+     * skipped this re-introduced the bug.
+     *
+     * Generic invariants are asserted inside (cycle progresses, final
+     * response is non-empty); per-task assertions live in each test.
+     */
+    private fun runToolCycle(
+        model: NativeLlamaModel,
+        session: NativeLlamaSession,
+        registry: ToolRegistry,
+        prompt: String,
+        enableThinking: Boolean = false,
+        maxTokensPerStep: Int = 512,
+        perStepTimeoutMs: Long = 180_000,
+    ): CycleOutcome? {
+        session.addMessage(prompt, enableThinking)
+        val (response1, result1) = generateResponse(session, maxTokensPerStep, perStepTimeoutMs)
+        Log.d(TAG, "Cycle: first-gen result=$result1, response='${response1.take(120)}'")
+        if (result1 != 2) {
+            Log.d(TAG, "Cycle: model did not invoke a tool — answered directly. Skipping cycle.")
+            return null
+        }
+
+        val toolCallsJson = session.getToolCallsJson()
+        Log.d(TAG, "Cycle: tool calls: $toolCallsJson")
+        val callsArr = JSONArray(toolCallsJson)
+        assertTrue("Expected at least one tool call", callsArr.length() > 0)
+        val firstCall = callsArr.getJSONObject(0)
+
+        val toolResults = registry.executeToolCalls(toolCallsJson)
+        Log.d(TAG, "Cycle: tool results: ${toolResults.take(300)}")
+        val resultsArr = JSONArray(toolResults)
+        val firstResult = resultsArr.getJSONObject(0)
+
+        // Match production: enable thinking for the response phase iff the
+        // model supports it. Without this, Gemma-family models emit "" after
+        // tool calls and downstream assertions fail with "response empty".
+        val responseThinking = model.supportsThinking()
+        val submitResult = session.submitToolResults(toolResults, responseThinking)
+        assertEquals("submitToolResults should succeed", 0, submitResult)
+
+        val (response2, result2) = generateResponse(session, maxTokensPerStep, perStepTimeoutMs)
+        Log.d(TAG, "Cycle: final-gen result=$result2 (thinking=$responseThinking), " +
+            "response='${response2.take(200)}'")
+        assertTrue("Final response should not be empty", response2.isNotBlank())
+
+        return CycleOutcome(
+            toolName = firstCall.getString("name"),
+            toolArguments = firstCall.getString("arguments"),
+            toolContent = firstResult.getString("content"),
+            finalResponse = response2,
+        )
+    }
+
+    /** Standard tool-calling session with the same sampler params used elsewhere. */
+    private fun newToolSession(model: NativeLlamaModel): NativeLlamaSession =
+        model.createSession(
+            /*ctx*/ 4096, /*temp*/ 0.6f, /*topP*/ 0.95f, /*repPen*/ 1.0f,
+            /*topK*/ 40, /*minP*/ 0.05f, /*seed*/ -1, /*thinkBudget*/ -1,
+            /*systemPrompt*/ ""
+        ) ?: error("createSession returned null")
+
     // -- Kotlin-only tool tests (no model needed) --
 
     @Test
@@ -530,6 +618,247 @@ class ToolCallingTest {
         } else {
             Log.d(TAG, "APP-REPRO: No tool call, direct response")
         }
+    }
+
+    // -- Task-specific end-to-end tests --
+    //
+    // Each test gives the model a prompt that should naturally route through
+    // exactly one tool, then hard-asserts the *content* of the tool result
+    // and the final response. When the model declines to call a tool (small
+    // models can't always be coaxed), we log and skip — same tolerance as
+    // the lifecycle tests above.
+
+    @Test
+    fun testTask_currentDateTimeIncludesYear() {
+        val modelFile = findModel()
+        assumeTrue("No model found", modelFile != null)
+        val model = loadModel(modelFile!!)
+        assumeTrue("Needs tool calling", model.supportsToolCalling())
+
+        val s = newToolSession(model); this.session = s
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
+        s.setTools(registry.toOpenAIToolsJson())
+
+        val outcome = runToolCycle(
+            model, s, registry,
+            prompt = "Use the run_javascript tool to find the current year, then state the year in your reply."
+        )
+        if (outcome == null) {
+            Log.d(TAG, "TASK-DATETIME: model didn't call a tool, skipping content asserts")
+            return
+        }
+        assertEquals("Should call run_javascript", "run_javascript", outcome.toolName)
+        val currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR).toString()
+        assertTrue(
+            "Tool content must include current year ($currentYear). content=${outcome.toolContent}",
+            outcome.toolContent.contains(currentYear)
+        )
+        assertTrue(
+            "Final response must mention current year ($currentYear). response=${outcome.finalResponse}",
+            outcome.finalResponse.contains(currentYear)
+        )
+    }
+
+    @Test
+    fun testTask_mathSimpleAddition() {
+        val modelFile = findModel()
+        assumeTrue("No model found", modelFile != null)
+        val model = loadModel(modelFile!!)
+        assumeTrue("Needs tool calling", model.supportsToolCalling())
+
+        val s = newToolSession(model); this.session = s
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
+        s.setTools(registry.toOpenAIToolsJson())
+
+        val outcome = runToolCycle(
+            model, s, registry,
+            prompt = "Use the run_javascript tool to compute 17 + 25, then tell me the answer."
+        )
+        if (outcome == null) {
+            Log.d(TAG, "TASK-ADD: skipped, no tool call")
+            return
+        }
+        assertEquals("Should call run_javascript", "run_javascript", outcome.toolName)
+        // JS tool wraps the value as `{"result":"<stringified>"}`.
+        assertTrue(
+            "Tool content must contain '\"result\":\"42\"'. content=${outcome.toolContent}",
+            outcome.toolContent.contains("\"result\":\"42\"")
+        )
+        assertTrue(
+            "Final response must include '42'. response=${outcome.finalResponse}",
+            outcome.finalResponse.contains("42")
+        )
+    }
+
+    @Test
+    fun testTask_mathPowerExponent() {
+        // Validates the JS-tool description hint that `**` is the exponent
+        // operator — small models historically write `2 ^ 10` (XOR=8) and
+        // get the wrong answer. We accept any JS form that yields 1024.
+        val modelFile = findModel()
+        assumeTrue("No model found", modelFile != null)
+        val model = loadModel(modelFile!!)
+        assumeTrue("Needs tool calling", model.supportsToolCalling())
+
+        val s = newToolSession(model); this.session = s
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
+        s.setTools(registry.toOpenAIToolsJson())
+
+        val outcome = runToolCycle(
+            model, s, registry,
+            prompt = "Use the run_javascript tool to compute 2 to the power of 10, then tell me the result."
+        )
+        if (outcome == null) {
+            Log.d(TAG, "TASK-POW: skipped, no tool call")
+            return
+        }
+        assertEquals("Should call run_javascript", "run_javascript", outcome.toolName)
+        assertTrue(
+            "Tool content must contain '\"result\":\"1024\"'. content=${outcome.toolContent}",
+            outcome.toolContent.contains("\"result\":\"1024\"")
+        )
+        assertTrue(
+            "Final response must include '1024'. response=${outcome.finalResponse}",
+            outcome.finalResponse.contains("1024")
+        )
+    }
+
+    @Test
+    fun testTask_mathParenthesizedExpression() {
+        // (2 + 3) * 4 - 7 = 13. Tests precedence handling end-to-end.
+        val modelFile = findModel()
+        assumeTrue("No model found", modelFile != null)
+        val model = loadModel(modelFile!!)
+        assumeTrue("Needs tool calling", model.supportsToolCalling())
+
+        val s = newToolSession(model); this.session = s
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
+        s.setTools(registry.toOpenAIToolsJson())
+
+        val outcome = runToolCycle(
+            model, s, registry,
+            prompt = "Use the run_javascript tool to compute (2 + 3) * 4 - 7, then tell me the result."
+        )
+        if (outcome == null) {
+            Log.d(TAG, "TASK-EXPR: skipped, no tool call")
+            return
+        }
+        assertEquals("Should call run_javascript", "run_javascript", outcome.toolName)
+        assertTrue(
+            "Tool content must contain '\"result\":\"13\"'. content=${outcome.toolContent}",
+            outcome.toolContent.contains("\"result\":\"13\"")
+        )
+        assertTrue(
+            "Final response must include '13'. response=${outcome.finalResponse}",
+            outcome.finalResponse.contains("13")
+        )
+    }
+
+    @Test
+    fun testTask_webSearchKotlinLanguage() {
+        val modelFile = findModel()
+        assumeTrue("No model found", modelFile != null)
+        val model = loadModel(modelFile!!)
+        assumeTrue("Needs tool calling", model.supportsToolCalling())
+
+        val s = newToolSession(model); this.session = s
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
+        s.setTools(registry.toOpenAIToolsJson())
+
+        val outcome = runToolCycle(
+            model, s, registry,
+            prompt = "Use the web_search tool to search for 'Kotlin programming language', " +
+                "then briefly summarize what the search returned."
+        )
+        if (outcome == null) {
+            Log.d(TAG, "TASK-SEARCH: skipped, no tool call")
+            return
+        }
+        assertEquals("Should call web_search", "web_search", outcome.toolName)
+        val toolJson = org.json.JSONObject(outcome.toolContent)
+        assertFalse(
+            "web_search must not return error: ${outcome.toolContent.take(400)}",
+            toolJson.has("error")
+        )
+        val results = toolJson.getJSONArray("results")
+        assertTrue(
+            "web_search should return at least one result: ${outcome.toolContent.take(400)}",
+            results.length() > 0
+        )
+        // Soft check on the model's reply — paraphrasing is fine, but it
+        // should mention something topical (Kotlin / language / programming).
+        val resp = outcome.finalResponse
+        assertTrue(
+            "Final response should mention Kotlin or 'programming'/'language'. response=$resp",
+            resp.contains("Kotlin", ignoreCase = true) ||
+                resp.contains("programming", ignoreCase = true) ||
+                resp.contains("language", ignoreCase = true)
+        )
+    }
+
+    @Test
+    fun testTask_webFetchLmPlaygroundIdentifiesApp() {
+        // Target our own site (https://lmplayground.app) — the rendered
+        // body text is ~2.6 KB after Jsoup strips nav/footer/script, with
+        // "LM Playground" and "Android" prominent in both title and body.
+        // Smaller, more stable, and more recognizable than the previous
+        // httpbin.org/html target (5 KB of Moby-Dick excerpt) which a 2B
+        // model couldn't reliably summarize in a 512-token budget.
+        val modelFile = findModel()
+        assumeTrue("No model found", modelFile != null)
+        val model = loadModel(modelFile!!)
+        assumeTrue("Needs tool calling", model.supportsToolCalling())
+
+        val s = newToolSession(model); this.session = s
+        val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
+        s.setTools(registry.toOpenAIToolsJson())
+
+        val outcome = runToolCycle(
+            model, s, registry,
+            // Three things tighten this prompt to stay inside Gemma 4's
+            // thinking budget: (1) explicit max_length=200 keeps the tool
+            // payload tiny so there's little for the model to chew on
+            // before answering; (2) "in one short sentence" caps the
+            // visible output; (3) we ask for the page title, which
+            // web_fetch returns as a top-level field — always present.
+            prompt = "Use the web_fetch tool with max_length=200 to retrieve " +
+                "https://lmplayground.app, then in one short sentence give me the page title.",
+            // Even with max_length=200 the model may ignore the hint and
+            // pull the full 2.6 KB body. With thinking auto-enabled for
+            // Gemma 4 (see runToolCycle), generation can spend a lot of
+            // wall clock filtering through reasoning tokens before the
+            // visible answer surfaces. Bumping ceiling tokens *and* the
+            // wall-clock so we don't truncate the visible answer phase.
+            maxTokensPerStep = 2048,
+            perStepTimeoutMs = 360_000,
+        )
+        if (outcome == null) {
+            Log.d(TAG, "TASK-FETCH: skipped, no tool call")
+            return
+        }
+        assertEquals("Should call web_fetch", "web_fetch", outcome.toolName)
+        // Tool result is deterministic — both literals appear in the
+        // fetched body text, and "LM Playground" sits in the title field
+        // even when the model truncates content via max_length.
+        assertTrue(
+            "Tool content must include 'LM Playground'. content head=${outcome.toolContent.take(400)}",
+            outcome.toolContent.contains("LM Playground")
+        )
+        assertTrue(
+            "Tool content must include 'Android'. content head=${outcome.toolContent.take(400)}",
+            outcome.toolContent.contains("Android")
+        )
+        // Model interpretation: as long as the reply mentions either the
+        // app name or the platform, fetched content reached the response
+        // phase. Either alone proves the cycle worked end to end.
+        val resp = outcome.finalResponse
+        assertTrue(
+            "Final response should surface fetched content " +
+                "(LM Playground / Android). response=$resp",
+            resp.contains("LM Playground", ignoreCase = true) ||
+                resp.contains("Playground", ignoreCase = true) ||
+                resp.contains("Android", ignoreCase = true)
+        )
     }
 
     // -- Web tool tests (no model needed) --
