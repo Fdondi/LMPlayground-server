@@ -259,6 +259,25 @@ class ConversationViewModelToolCallTest {
             "responseStartTimeMs must be reset to 0 by finalizeLastMessage",
             0L, last?.responseStartTimeMs ?: -1L
         )
+        // Regression: the assistant reply after a tool call must NOT be
+        // empty. Gemma 4 and other harmony-channel models emit "" on the
+        // content channel when thinking is off in the response phase;
+        // ConversationViewModel must force thinking on (when supported)
+        // for that phase so the user never sees a blank bubble. Skip the
+        // assertion only if the model didn't end up calling a tool at all
+        // (small models can't always be coaxed).
+        val toolCallCount = last?.toolCalls?.size ?: 0
+        if (toolCallCount > 0) {
+            assertTrue(
+                "Assistant content must not be empty after a tool call " +
+                    "(content='${last?.content}'). " +
+                    "ConversationViewModel needs to enable thinking on the " +
+                    "tool-result response phase for harmony-channel models.",
+                !last?.content.isNullOrBlank()
+            )
+        } else {
+            Log.d(TAG, "Model didn't invoke a tool — skipping content assertion")
+        }
     }
 
     /**
