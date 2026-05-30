@@ -8,7 +8,7 @@ import java.util.concurrent.TimeUnit
 
 class WebFetchTool : Tool {
     override val name = "web_fetch"
-    override val description = "Fetch a web page and return its text content"
+    override val description = "Fetch a web page and return its main content as markdown. Headings, lists, links and code blocks are preserved so you can read the page structure."
     override val parametersSchema = """{"type":"object","properties":{"url":{"type":"string","description":"The URL to fetch"},"max_length":{"type":"integer","description":"Maximum content length in characters (default 5000)"}},"required":["url"]}"""
 
     private val client = OkHttpClient.Builder()
@@ -39,18 +39,23 @@ class WebFetchTool : Tool {
             result.put("url", url)
 
             if (contentType.contains("text/html") || contentType.contains("application/xhtml")) {
-                val doc = Jsoup.parse(body)
-                // Remove script, style, nav, footer elements for cleaner text
-                doc.select("script, style, nav, footer, header, aside, .ad, .ads, .advertisement").remove()
+                // Pass `url` as baseUri so Jsoup resolves relative
+                // <a href> / <img src> to absolute URLs in markdown.
+                val doc = Jsoup.parse(body, url)
                 val title = doc.title()
-                val text = doc.body()?.text() ?: ""
-                val truncated = if (text.length > maxLength) text.substring(0, maxLength) + "..." else text
+                val markdown = HtmlToMarkdown.convert(doc)
+                val truncated = if (markdown.length > maxLength) {
+                    markdown.substring(0, maxLength) + "..."
+                } else {
+                    markdown
+                }
 
                 result.put("title", title)
                 result.put("content", truncated)
                 result.put("length", truncated.length)
             } else {
-                // Non-HTML content — return raw text truncated
+                // Non-HTML content — return raw text truncated. No
+                // markdown conversion makes sense here.
                 val truncated = if (body.length > maxLength) body.substring(0, maxLength) + "..." else body
                 result.put("title", "")
                 result.put("content", truncated)
