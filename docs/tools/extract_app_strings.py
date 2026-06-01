@@ -46,6 +46,18 @@ WANT = [
     # Section headers used when the models list is split by language support.
     'supports_your_language',
     'other_models',
+    # System-prompts + tools sections (website mirrors the app copy so it
+    # localizes as the Android resources get translated).
+    'system_prompts',
+    'system_prompt_new',
+    'tools',
+    'tools_section_intro',
+    'tool_run_javascript_title',
+    'tool_run_javascript_desc',
+    'tool_web_search_title',
+    'tool_web_search_desc',
+    'tool_web_fetch_title',
+    'tool_web_fetch_desc',
 ]
 
 def unescape(s):

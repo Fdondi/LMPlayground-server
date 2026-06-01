@@ -488,6 +488,75 @@
     .step-bubble.me { background: rgba(54,72,234,0.18); color: var(--accent-pale); align-self: flex-end; max-width: 80%; }
     .step-bubble.them { align-self: flex-start; max-width: 90%; }
 
+    /* ============== FEATURE SPLIT (system prompts) ============== */
+    .feature-split { display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+    @media (max-width: 860px) { .feature-split { grid-template-columns: 1fr; gap: 36px; } }
+    .feature-split .section-sub { margin-bottom: 0; }
+    .prompt-panel {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .prompt-card {
+      position: relative;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 13.5px; line-height: 1.5; color: var(--fg-dim);
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .prompt-card:hover { border-color: var(--line-strong); }
+    .prompt-card.active { border-color: var(--accent); background: var(--bg-elev-2); color: var(--fg); padding-right: 30px; }
+    .prompt-card .pc-dot { position: absolute; top: 50%; right: 15px; transform: translateY(-50%); width: 7px; height: 7px; border-radius: 50%; background: var(--accent-bright); box-shadow: 0 0 8px var(--accent-bright); }
+    .prompt-new {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      border: 1px dashed var(--line-strong); border-radius: 12px;
+      padding: 13px; color: var(--accent-pale); font-size: 13.5px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .prompt-new svg { width: 15px; height: 15px; }
+
+    /* ============== TOOLS ============== */
+    .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    @media (max-width: 900px) { .tools-grid { grid-template-columns: 1fr; } }
+    .eyebrow-row { display: flex; align-items: center; gap: 10px; margin-bottom: 18px; }
+    .eyebrow-row .eyebrow { margin-bottom: 0; }
+    .beta-tag {
+      display: inline-block; font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px; letter-spacing: 0.1em; line-height: 1;
+      padding: 3px 7px; border-radius: 999px;
+      background: rgba(250,189,27,0.12); color: var(--yellow);
+    }
+    .tool-card {
+      background: var(--bg-elev);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      display: flex; flex-direction: column; gap: 13px;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .tool-card:hover { border-color: var(--accent); background: var(--bg-elev-2); transform: translateY(-2px); }
+    .tool-head { display: flex; align-items: center; gap: 12px; }
+    .tool-icon { width: 22px; height: 22px; color: var(--accent-pale); flex-shrink: 0; }
+    .tool-card h3 { font-size: 18px; font-weight: 500; letter-spacing: -0.015em; margin: 0; }
+    .tool-card p { font-size: 14px; color: var(--fg-dim); line-height: 1.55; margin: 0; }
+    .tool-ex {
+      margin-top: auto;
+      font-family: 'JetBrains Mono', monospace; font-size: 11.5px;
+      color: var(--fg-mute);
+      background: var(--bg); border: 1px dashed var(--line-strong);
+      border-radius: 8px; padding: 10px 12px; line-height: 1.5;
+    }
+    .tool-ex .arr { color: var(--accent-pale); }
+    .tools-note {
+      display: flex; align-items: flex-start; gap: 10px;
+      margin-top: 26px; font-size: 14px; color: var(--fg-dim); line-height: 1.55;
+    }
+    .tools-note .hammer { width: 17px; height: 17px; color: var(--yellow); flex-shrink: 0; margin-top: 2px; }
+
     /* ============== QUOTE / STRIP ============== */
     .strip {
       padding: 72px 0;
@@ -814,6 +883,8 @@
       <div class="nav-links">
         <a href="#models" data-i18n="nav.models">Models</a>
         <a href="#how" data-i18n="nav.how">How it works</a>
+        <a href="#prompts" data-i18n="nav.prompts">System Prompts</a>
+        <a href="#tools" data-i18n="nav.tools">Tools</a>
         <a href="#languages" data-i18n="nav.languages">Languages</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
         <a href="https://github.com/andriydruk/LMPlayground" aria-label="GitHub" style="display:flex;align-items:center;gap:6px;">
@@ -836,7 +907,7 @@
     <div class="hero-grid"></div>
     <div class="container hero-inner">
       <div>
-        <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">v1.5.0 · System prompts + 28 languages</span></span>
+        <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">v1.7.0 · Introducing tool support</span></span>
         <h1 class="hero-title" data-i18n-html="hero.title">Run large language models<br/>on <em>your</em> phone.</h1>
         <p class="hero-sub hero-sub-lg" data-i18n="hero.sub">
           No cloud, no internet, no tracking.
@@ -1119,6 +1190,75 @@
     </div>
   </section>
 
+  <!-- SYSTEM PROMPTS -->
+  <section id="prompts" style="padding-top:0;">
+    <div class="container">
+      <div class="feature-split">
+        <div>
+          <span class="eyebrow" data-i18n="prompts.eyebrow">System Prompts</span>
+          <h2 class="section-title" data-i18n-html="prompts.title">Set the role once.<br/>Reuse it everywhere.</h2>
+          <p class="section-sub" data-i18n="prompts.sub">Save a system prompt once — a persona, a tone, an output format — and pick it before you chat. Each model remembers the one you used last.</p>
+        </div>
+        <div class="prompt-panel">
+          <div class="prompt-card active">
+            <span class="pc-dot"></span>
+            <span data-i18n="prompts.card1">You are a concise assistant. Always reply in French.</span>
+          </div>
+          <div class="prompt-card" data-i18n="prompts.card2">Senior Kotlin reviewer — flag bugs, suggest idiomatic fixes, stay terse.</div>
+          <div class="prompt-card" data-i18n="prompts.card3">Explain like I'm five. One analogy per idea, no jargon.</div>
+          <div class="prompt-new">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span data-i18n="prompts.new">New system prompt</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section id="tools" style="padding-top:0;">
+    <div class="container">
+      <div class="eyebrow-row">
+        <span class="eyebrow" data-i18n="tools.eyebrow">Tools</span>
+        <span class="beta-tag">BETA</span>
+      </div>
+      <h2 class="section-title" data-i18n-html="tools.title">Let capable models<br/>take real actions.</h2>
+      <p class="section-sub" data-i18n="tools.sub">Turn on tools and a capable model can act mid-reply — run a calculation, search the web, or read a page — then use the result in its answer. Everything runs on your phone.</p>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            <h3 data-i18n="tools.t1.title">Run JavaScript</h3>
+          </div>
+          <p data-i18n="tools.t1.body">Runs JavaScript in a secure sandbox for math, dates, and text processing. No internet or file access.</p>
+          <div class="tool-ex">(2 + 3) × 4 <span class="arr">→</span> 20</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h3 data-i18n="tools.t2.title">Web search</h3>
+          </div>
+          <p data-i18n="tools.t2.body">Searches the web and returns result titles, links, and snippets so the model can find current information.</p>
+          <div class="tool-ex">"Pixel 9 reviews" <span class="arr">→</span> 5 results</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><line x1="3" y1="12" x2="21" y2="12"/><path d="M12 3c2.5 2.5 2.5 15.5 0 18M12 3c-2.5 2.5-2.5 15.5 0 18"/></svg>
+            <h3 data-i18n="tools.t3.title">Fetch web page</h3>
+          </div>
+          <p data-i18n="tools.t3.body">Opens a link and reads its main content as text so the model can summarize or quote a page.</p>
+          <div class="tool-ex">example.com <span class="arr">→</span> markdown</div>
+        </div>
+      </div>
+
+      <div class="tools-note">
+        <svg class="hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 0 0 5.6-5.6l-2.5 2.5-2-2 2.5-2.5z"/></svg>
+        <span data-i18n="tools.note">Tools let capable models take actions during a reply, like searching the web or running a calculation. Each tool is off by default — turn on only the ones you want. Tools work only with models that support them (look for the hammer badge).</span>
+      </div>
+    </div>
+  </section>
+
   <!-- LANGUAGES -->
   <section id="languages" style="padding-top:0;">
     <div class="container">
@@ -1188,6 +1328,8 @@
           <h4 data-i18n="footer.product">Product</h4>
           <a href="#models" data-i18n="footer.product.models">Supported models</a>
           <a href="#how" data-i18n="footer.product.how">How it works</a>
+          <a href="#prompts" data-i18n="footer.product.prompts">System prompts</a>
+          <a href="#tools" data-i18n="footer.product.tools">Tools</a>
           <a href="#languages" data-i18n="footer.product.languages">Languages</a>
           <a href="#faq" data-i18n="footer.product.faq">FAQ</a>
         </div>
