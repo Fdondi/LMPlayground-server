@@ -42,6 +42,7 @@
     <string name="touch_and_hold_to_record">長押しで録音</string>
     <string name="record_message">音声メッセージを録音</string>
     <string name="stop">停止</string>
+    <string name="share">共有</string>
     <string name="copy">コピー</string>
     <string name="upvote">高評価</string>
     <string name="downvote">低評価</string>

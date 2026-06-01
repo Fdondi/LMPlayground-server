@@ -1,5 +1,6 @@
 package com.druk.lmplayground.conversation
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -38,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -53,6 +56,7 @@ fun ChatItemBubble(
 ) {
     var showRatingSheet by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
 
     val hasToolCalls = !message.toolCalls.isNullOrEmpty()
     val isWaitingForResponse = !showActions
@@ -164,9 +168,30 @@ fun ChatItemBubble(
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {
-                    clipboardManager.setText(AnnotatedString(stripThinkTags(message.content)))
-                }) {
+                val shareLabel = stringResource(id = R.string.share)
+                IconButton(
+                    onClick = {
+                        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, stripThinkTags(message.content))
+                        }
+                        context.startActivity(Intent.createChooser(sendIntent, shareLabel))
+                    },
+                    modifier = Modifier.size(38.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Share,
+                        contentDescription = shareLabel,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(stripThinkTags(message.content)))
+                    },
+                    modifier = Modifier.size(38.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.ContentCopy,
                         contentDescription = stringResource(id = R.string.copy),
@@ -174,7 +199,10 @@ fun ChatItemBubble(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                IconButton(onClick = { /* upvote - no-op */ }) {
+                IconButton(
+                    onClick = { /* upvote - no-op */ },
+                    modifier = Modifier.size(38.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.ThumbUp,
                         contentDescription = stringResource(id = R.string.upvote),
@@ -182,7 +210,10 @@ fun ChatItemBubble(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                IconButton(onClick = { showRatingSheet = true }) {
+                IconButton(
+                    onClick = { showRatingSheet = true },
+                    modifier = Modifier.size(38.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.ThumbDown,
                         contentDescription = stringResource(id = R.string.downvote),

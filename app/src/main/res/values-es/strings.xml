@@ -42,6 +42,7 @@
     <string name="touch_and_hold_to_record">Mantener presionado para grabar</string>
     <string name="record_message">Grabar mensaje de voz</string>
     <string name="stop">Detener</string>
+    <string name="share">Compartir</string>
     <string name="copy">Copiar</string>
     <string name="upvote">Votar a favor</string>
     <string name="downvote">Votar en contra</string>

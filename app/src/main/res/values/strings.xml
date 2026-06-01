@@ -52,6 +52,7 @@
     <string name="record_message">Record voice message</string>
     <string name="stop">Stop</string>
 
+    <string name="share">Share</string>
     <string name="copy">Copy</string>
     <string name="upvote">Upvote</string>
     <string name="downvote">Downvote</string>

@@ -42,6 +42,7 @@
     <string name="touch_and_hold_to_record">길게 눌러서 녹음</string>
     <string name="record_message">음성 메시지 녹음</string>
     <string name="stop">중지</string>
+    <string name="share">공유</string>
     <string name="copy">복사</string>
     <string name="upvote">추천</string>
     <string name="downvote">비추천</string>
