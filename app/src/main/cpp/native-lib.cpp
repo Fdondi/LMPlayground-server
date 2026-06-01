@@ -318,6 +318,18 @@ Java_com_druk_llamacpp_jni_NativeLlamaSession_addMessage(JNIEnv *env,
 
 extern "C"
 JNIEXPORT void JNICALL
+Java_com_druk_llamacpp_jni_NativeLlamaSession_requestAbort(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto *session = (LlamaGenerationSession*)env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return;
+    }
+    session->requestAbort();
+}
+
+extern "C"
+JNIEXPORT void JNICALL
 Java_com_druk_llamacpp_jni_NativeLlamaSession_printReport(JNIEnv *env, jobject thiz) {
     jclass clazz = env->GetObjectClass(thiz);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");

@@ -9,6 +9,8 @@
 #include "chat.h"
 #include "sampling.h"
 
+#include <atomic>
+
 struct SamplerParams {
     int n_ctx;
     float temperature;
@@ -37,6 +39,11 @@ public:
     int generate(const ResponseCallback& callback);
 
     int addMessage(const char *string, bool enableThinking);
+
+    // Request that any in-progress decode (prompt eval or token generation)
+    // abort as soon as the engine next checks the abort callback. Thread-safe:
+    // called from the cancel path while a worker thread is inside generate().
+    void requestAbort();
 
     std::string getReport();
 
@@ -74,6 +81,13 @@ private:
     // for this turn — addMessage falls back to its normal full-prefill).
     bool tryPreambleCache(bool enableThinking);
 
+    // (Re)create the tool-calling sampler — a common_sampler that applies the
+    // chat template's tool-call grammar (lazy, with triggers) plus the
+    // reasoning budget, exactly like llama.cpp's reference path. Used only while
+    // tools are active; normal chat keeps using [smpl] unchanged.
+    void recreateToolSampler(const common_chat_params &render);
+    void destroyToolSampler();
+
     const struct llama_vocab * vocab = nullptr;
     llama_context * ctx = nullptr;
     llama_sampler * smpl = nullptr;
@@ -103,6 +117,14 @@ private:
     bool parser_initialized = false;
     SamplerParams sampler_params;
     bool budget_sampler_added = false;
+    // Set by requestAbort() (cancel path), read by the llama abort callback
+    // during decode so Stop can interrupt the prompt-eval phase, not just the
+    // between-token loop. Cleared at the start of each addMessage/submitToolResults.
+    std::atomic<bool> abort_requested{false};
+    // Tool-calling sampler (grammar + reasoning budget + sampling), built from
+    // the rendered template when tools are enabled. Null for normal chat, where
+    // [smpl] is used instead. See recreateToolSampler.
+    common_sampler * gsmpl = nullptr;
 
     // Tool calling state
     std::vector<common_chat_tool> tools;

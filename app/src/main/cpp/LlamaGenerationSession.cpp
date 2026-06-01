@@ -85,6 +85,54 @@ LlamaGenerationSession::~LlamaGenerationSession() {
     if (smpl != nullptr) {
         llama_sampler_free(smpl);
     }
+    destroyToolSampler();
+}
+
+void LlamaGenerationSession::destroyToolSampler() {
+    if (gsmpl != nullptr) {
+        common_sampler_free(gsmpl);
+        gsmpl = nullptr;
+    }
+}
+
+void LlamaGenerationSession::recreateToolSampler(const common_chat_params &render) {
+    destroyToolSampler();
+    if (render.grammar.empty()) {
+        return;
+    }
+
+    common_params_sampling sp;
+    // Mirror the hand-built chain so non-grammar behavior matches normal chat.
+    sp.top_k             = sampler_params.top_k;
+    sp.top_p             = sampler_params.top_p;
+    sp.min_p             = sampler_params.min_p;
+    sp.temp              = sampler_params.temperature;
+    sp.penalty_repeat    = sampler_params.repetition_penalty;
+    sp.penalty_last_n    = 256;
+    sp.seed              = sampler_params.seed;
+    sp.min_keep          = 1;
+
+    // Tool-call grammar (lazy, with triggers) from the chat template — this is
+    // what constrains the model to emit valid tool calls.
+    sp.grammar           = common_grammar(COMMON_GRAMMAR_TYPE_TOOL_CALLS, render.grammar);
+    sp.grammar_lazy      = render.grammar_lazy;
+    sp.grammar_triggers  = render.grammar_triggers;
+    sp.generation_prompt = render.generation_prompt;
+
+    // Reasoning budget (matches tools/cli/cli.cpp). For lazy grammars this also
+    // provides thinking-block suppression even when the budget is unlimited.
+    if (!render.thinking_end_tag.empty()) {
+        sp.reasoning_budget_tokens = sampler_params.thinking_budget;
+        if (!render.thinking_start_tag.empty()) {
+            sp.reasoning_budget_start = common_tokenize(vocab, render.thinking_start_tag, false, true);
+        }
+        sp.reasoning_budget_end    = common_tokenize(vocab, render.thinking_end_tag, false, true);
+        sp.reasoning_budget_forced = common_tokenize(vocab, render.thinking_end_tag, false, true);
+    }
+
+    gsmpl = common_sampler_init(llama_get_model(ctx), sp);
+    LOGi("Tool sampler created: grammar_len=%zu lazy=%d triggers=%zu",
+         render.grammar.size(), (int)render.grammar_lazy, render.grammar_triggers.size());
 }
 
 void LlamaGenerationSession::init(llama_model *model, const struct common_chat_templates *tmpls, const SamplerParams &params) {
@@ -110,6 +158,16 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
         LOGe("%s: error: failed to create the llama_context\n" , __func__);
         return;
     }
+
+    // Abort callback: llama_decode polls this between compute steps, so setting
+    // abort_requested lets Stop interrupt the prompt-eval phase (a single big
+    // decode), not just the between-token loop. Returns true to abort.
+    llama_set_abort_callback(
+        ctx,
+        [](void *data) -> bool {
+            return static_cast<LlamaGenerationSession *>(data)->abort_requested.load();
+        },
+        this);
 
     auto smplParams = llama_sampler_chain_default_params();
     smplParams.no_perf = false;
@@ -156,11 +214,17 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
     prev_len = 0;
 }
 
+void LlamaGenerationSession::requestAbort() {
+    abort_requested.store(true);
+}
+
 int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) {
     if (chat_tmpls == nullptr || ctx == nullptr) {
         LOGe("addMessage called on uninitialized session");
         return 1;
     }
+    // Fresh turn — clear any abort left set by a previous cancel.
+    abort_requested.store(false);
 
     // Lazy preamble KV-cache: on the first addMessage of a session, try
     // to load (or just-save) the static system+tools prefix so the user
@@ -224,6 +288,20 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     } else {
         parser_initialized = false;
     }
+
+    // Build a fresh tool-calling sampler (grammar + budget) for this turn when
+    // tools are active; otherwise tear it down so normal chat uses [smpl].
+    if (tools_enabled && !result.grammar.empty()) {
+        recreateToolSampler(result);
+    } else {
+        destroyToolSampler();
+    }
+
+    // Apply (or refresh) the lazy tool-call grammar for this turn. Rebuilding
+    // each tools-enabled turn gives the lazy grammar a fresh, armed state so
+    // the model is constrained to valid tool calls once a trigger fires.
+    // Without this, weaker models emit prose describing the tool instead of
+    // calling it.
 
     // Check if the rendered prompt prefix matches what finalizeResponse computed.
     // The Jinja template may render assistant content differently depending on
@@ -367,7 +445,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     // the model's actual thinking tags from the template (not hardcoded).
     // Must be first in chain (before top-k/top-p/temp) so it can override logits,
     // so we rebuild the entire sampler chain.
-    if (sampler_params.thinking_budget >= 0 && enableThinking && !budget_sampler_added && result.supports_thinking) {
+    if (sampler_params.thinking_budget >= 0 && enableThinking && !budget_sampler_added && result.supports_thinking && gsmpl == nullptr) {
         auto tokenize_str = [&](const std::string &text) -> std::vector<llama_token> {
             int n = -llama_tokenize(vocab, text.c_str(), text.size(), nullptr, 0, false, true);
             std::vector<llama_token> tokens(n);
@@ -503,9 +581,19 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
     // can detect <think> prefill from chat templates (e.g. Qwen3).
     // Only on the first call per turn (prompt_tokens is non-empty).
     if (!prompt_tokens.empty()) {
-        llama_sampler_reset(smpl);
-        for (const auto &token : prompt_tokens) {
-            llama_sampler_accept(smpl, token);
+        if (gsmpl != nullptr) {
+            // Tool path: feed prompt tokens as non-generated (penalty/history
+            // context only). The grammar + reasoning-budget prefill is handled
+            // at sampler-init time from the template's generation_prompt.
+            common_sampler_reset(gsmpl);
+            for (const auto &token : prompt_tokens) {
+                common_sampler_accept(gsmpl, token, /*is_generated=*/false);
+            }
+        } else {
+            llama_sampler_reset(smpl);
+            for (const auto &token : prompt_tokens) {
+                llama_sampler_accept(smpl, token);
+            }
         }
         prompt_tokens.clear();
         // KV cache now contains the full prompt (everything llama_decode
@@ -515,7 +603,14 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
         last_prompt_end_pos = llama_memory_seq_pos_max(llama_get_memory(ctx), 0) + 1;
     }
 
-    last_token = llama_sampler_sample(smpl, ctx, -1);
+    if (gsmpl != nullptr) {
+        // Mac-parity tool sampling: grammar-constrained sample-then-validate,
+        // with controlled accept (common_sampler_sample does not auto-accept).
+        last_token = common_sampler_sample(gsmpl, ctx, -1);
+        common_sampler_accept(gsmpl, last_token, /*is_generated=*/true);
+    } else {
+        last_token = llama_sampler_sample(smpl, ctx, -1);
+    }
 
     bool is_eog = llama_vocab_is_eog(vocab, last_token);
 
@@ -584,8 +679,21 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
 
     // Check for tool calls before finalizing
     if (tools_enabled && parser_initialized) {
-        auto parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
-        if (!parsed.tool_calls.empty()) {
+        common_chat_msg parsed;
+        bool parsed_ok = false;
+        try {
+            parsed = common_chat_parse(response, /*is_partial=*/false, parser_params);
+            parsed_ok = true;
+        } catch (const std::exception &e) {
+            // Some templates' tool-call parsers throw on their own model's
+            // output (e.g. LFM2.5 350M's "<|tool_call_end|>" format). A parse
+            // failure must never crash the inference process — fall back to
+            // treating the output as a plain-text response.
+            LOGe("Tool-call parse failed, treating as plain response: %s", e.what());
+        } catch (...) {
+            LOGe("Tool-call parse failed (unknown), treating as plain response");
+        }
+        if (parsed_ok && !parsed.tool_calls.empty()) {
             std::vector<std::string> ids_cache;
             auto gen_id = [this]() -> std::string {
                 return "call_" + std::to_string(tool_call_counter++);
@@ -950,6 +1058,8 @@ int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enab
         LOGe("submitToolResults called on uninitialized session");
         return 1;
     }
+    // New decode phase — clear any abort left set by a previous cancel.
+    abort_requested.store(false);
 
     try {
         auto results = nlohmann::ordered_json::parse(resultsJson);
@@ -1051,6 +1161,14 @@ int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enab
         parser_params.parse_tool_calls = tools_enabled;
         parser_params.parser.load(result.parser);
         parser_initialized = true;
+    }
+
+    // Refresh the tool sampler for the response phase: a fresh lazy grammar
+    // that allows free text and re-arms for any follow-up tool call.
+    if (tools_enabled && !result.grammar.empty()) {
+        recreateToolSampler(result);
+    } else {
+        destroyToolSampler();
     }
 
     LOGi("Tool results submitted: prefix_match=%d, fed %d delta tokens "

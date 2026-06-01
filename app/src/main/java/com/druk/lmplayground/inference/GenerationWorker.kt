@@ -129,6 +129,12 @@ internal class GenerationWorker(
      */
     fun cancel() {
         cancelled = true
+        // Also abort any in-flight native decode (the prompt-eval phase runs
+        // inside a single generate() call and otherwise wouldn't see the
+        // between-token cancel flag until it returns). Safe to call from this
+        // thread while the worker thread is inside generate(): it only flips an
+        // atomic the abort callback polls.
+        try { nativeSession.requestAbort() } catch (_: Throwable) {}
         publishedLatch.countDown()
     }
 

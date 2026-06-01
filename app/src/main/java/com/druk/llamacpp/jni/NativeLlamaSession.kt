@@ -10,6 +10,9 @@ class NativeLlamaSession {
 
     external fun addMessage(message: String, enableThinking: Boolean)
 
+    /** Interrupt an in-progress decode (prompt eval or generation) ASAP. */
+    external fun requestAbort()
+
     external fun printReport()
 
     external fun getReport(): String
