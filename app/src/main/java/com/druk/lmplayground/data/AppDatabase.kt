@@ -14,7 +14,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         SystemPromptEntity::class,
         PromptUsage::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -92,6 +92,18 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Generic per-conversation metadata blob (JSON). Backs
+         * [ConversationMetadata]; first use is the web_search link map.
+         */
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE chat_sessions ADD COLUMN metadata TEXT NOT NULL DEFAULT '{}'"
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -103,7 +115,8 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_1_2,
                         MIGRATION_2_3,
                         MIGRATION_3_4,
-                        MIGRATION_4_5
+                        MIGRATION_4_5,
+                        MIGRATION_5_6
                     )
                     .build().also { INSTANCE = it }
             }

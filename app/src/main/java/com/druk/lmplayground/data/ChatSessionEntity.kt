@@ -20,5 +20,11 @@ data class ChatSessionEntity(
     val minP: Float = 0.05f,
     val seed: Int = -1,
     val thinkingBudget: Int = 1024,
-    val systemPrompt: String = ""
+    val systemPrompt: String = "",
+    /**
+     * Generic per-conversation metadata as a JSON object string. Currently holds
+     * the web_search link map; future features can add keys without a schema
+     * change. See [ConversationMetadata].
+     */
+    val metadata: String = "{}"
 )
