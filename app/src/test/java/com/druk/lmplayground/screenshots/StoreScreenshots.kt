@@ -30,6 +30,8 @@ import androidx.compose.material.icons.outlined.SignalCellular4Bar
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material.icons.outlined.WifiOff
+import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
@@ -39,10 +41,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.Density as ComposeDensity
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.rotate
+import androidx.compose.foundation.layout.offset
+import com.android.resources.Density
+import com.android.resources.ScreenOrientation
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -121,9 +129,46 @@ private fun FakeStatusBar() {
     }
 }
 
+// ── 2x-tall status bar (used by the OG banner) ─────────────────────
+@Composable
+private fun BigStatusBar(wifiOff: Boolean = false) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.background)
+            // No bottom padding — keeps the status bar flush against the
+            // toolbar that follows.
+            .padding(start = 24.dp, end = 24.dp, top = 16.dp)
+            .height(48.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "10:10",
+            color = Color.White,
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Medium
+        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                if (wifiOff) Icons.Outlined.WifiOff else Icons.Outlined.Wifi,
+                null,
+                Modifier.size(22.dp),
+                tint = Color.White
+            )
+            Icon(Icons.Outlined.SignalCellular4Bar, null, Modifier.size(22.dp), tint = Color.White)
+            Icon(Icons.Outlined.BatteryFull, null, Modifier.size(22.dp), tint = Color.White)
+        }
+    }
+}
+
 @Composable
 private fun DeviceFrame(
     modifier: Modifier = Modifier,
+    statusBar: @Composable () -> Unit = { FakeStatusBar() },
     content: @Composable () -> Unit
 ) {
     BoxWithConstraints(
@@ -148,7 +193,7 @@ private fun DeviceFrame(
                     )
                     .background(MaterialTheme.colorScheme.background)
             ) {
-                FakeStatusBar()
+                statusBar()
                 content()
             }
             // Device frame on top
@@ -721,6 +766,216 @@ class StoreScreenshots(
                     )
                 }
             } }
+        }
+    }
+}
+
+// ── OG/Twitter banner ───────────────────────────────────────────────
+// Renders a 2400×1260 snapshot of two phones (model picker + chat) on
+// a dark canvas. After recording, downscale to 1200×630 and write to
+// docs/banner.png — that single asset is referenced by both the website
+// (og:image / twitter:image / JSON-LD) and the README. English-only.
+class OgBanner {
+    @get:Rule
+    val paparazzi = Paparazzi(
+        deviceConfig = DeviceConfig.PIXEL_9_PRO.copy(
+            screenWidth = 1260,
+            screenHeight = 2400,
+            orientation = ScreenOrientation.LANDSCAPE,
+            density = Density.XHIGH,
+            xdpi = 320,
+            ydpi = 320,
+            locale = "en"
+        ),
+        renderingMode = SessionParams.RenderingMode.NORMAL,
+        showSystemUi = false,
+        useDeviceResolution = true
+    )
+
+    @Composable
+    private fun ModelPickerContent() {
+        val efficient = stringResource(R.string.model_category_efficient)
+        val lightweight = stringResource(R.string.model_category_lightweight)
+        val general = stringResource(R.string.model_category_general)
+        val compactReasoning = stringResource(R.string.model_category_compact_reasoning)
+        val enterprise = stringResource(R.string.model_category_enterprise)
+
+        val models = listOf(
+            ModelWithStatus(ModelInfo("Gemma 4 E2B", "g4e2b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-03-25"), "Google · $efficient · 3.11Gb", R.drawable.logo_google), true),
+            ModelWithStatus(ModelInfo("Llama 3.2 3B", "llama32.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-09-25"), "Meta · $general · 1.88Gb", R.drawable.logo_meta), true),
+            ModelWithStatus(ModelInfo("Qwen 3.5 2B", "q35-2b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-02-27"), "Alibaba · $general · 1.07Gb", R.drawable.logo_qwen), true),
+            ModelWithStatus(ModelInfo("Phi-4 mini", "phi4.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-01-15"), "Microsoft · $lightweight · 2.49Gb", R.drawable.logo_microsoft), true),
+            ModelWithStatus(ModelInfo("Ministral 3B", "min3b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-10-16"), "Mistral · $enterprise · 1.85Gb", R.drawable.logo_mistral), true),
+            ModelWithStatus(ModelInfo("Nemotron 3 Nano", "nem4b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-12-15"), "NVIDIA · $compactReasoning · 2.84Gb", R.drawable.logo_nvidia), true),
+        )
+
+        ScaledFonts {
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Column(modifier = Modifier.fillMaxSize()) {
+                    ConversationBar(modelInfo = null, modelStatus = null)
+                    androidx.compose.material3.Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            // ≥15% margin start/end of inner phone width (~508dp),
+                            // makes the picker read like a centered dialog.
+                            .padding(horizontal = 76.dp, vertical = 16.dp),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        Column {
+                            models.filter { it.isDownloaded }.forEach { m ->
+                                Model(model = m.model) { }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Bumps fontScale by ~1.15x within the wrapped subtree — adds roughly
+    // +2sp to all `sp`-sized text without touching individual composables.
+    // Density (and therefore dp/px math) is preserved.
+    @Composable
+    private fun ScaledFonts(content: @Composable () -> Unit) {
+        val base = LocalDensity.current
+        CompositionLocalProvider(
+            LocalDensity provides ComposeDensity(
+                density = base.density,
+                fontScale = base.fontScale * 1.15f
+            )
+        ) {
+            content()
+        }
+    }
+
+    // ── Real app UserInput (with the filled-bulb thinking toggle) +
+    //    Android gesture nav pill. The pill's Surface uses the same
+    //    tonalElevation as UserInput so they share one elevated tone.
+    @Composable
+    private fun ChatInputArea() {
+        Column {
+            UserInput(
+                supportsThinking = true,
+                thinkingEnabled = true,
+                onMessageSent = {}
+            )
+            Surface(tonalElevation = 2.dp) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 10.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(108.dp)
+                            .height(4.dp)
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(Color.White)
+                    )
+                }
+            }
+        }
+    }
+
+    @Composable
+    private fun ChatContent() {
+        val efficient = stringResource(R.string.model_category_efficient)
+        val gemma4 = ModelInfo(
+            name = "Gemma 4 E2B",
+            filename = "gemma-4-E2B-it-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/model.gguf"),
+            releaseDate = LocalDate.parse("2026-03-25"),
+            description = "Google · $efficient · 3.11Gb",
+            logoRes = R.drawable.logo_google
+        )
+
+        ScaledFonts {
+            Surface(modifier = Modifier.fillMaxSize()) {
+                Column {
+                    ConversationBar(modelInfo = gemma4, modelStatus = null)
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 8.dp),
+                        // Anchor messages to the bottom so the recent thread sits
+                        // just above the input bar even when the phone frame is
+                        // much taller than the chat content (OG banner case).
+                        verticalArrangement = Arrangement.Bottom
+                    ) {
+                        com.druk.lmplayground.conversation.Message(
+                            msg = Message("User", "What is machine learning?"),
+                            isUserMe = true,
+                            showActions = false
+                        )
+                        com.druk.lmplayground.conversation.Message(
+                            msg = Message(
+                                author = "Assistant",
+                                // Mirrors the `phone.a` example shown in the
+                                // website hero (docs/i18n.js): an intro
+                                // paragraph followed by a bulleted list of
+                                // key concepts. Renderer parses markdown.
+                                content = "<think>Let me explain machine learning clearly and concisely.</think>\n" +
+                                    "Machine learning is a branch of artificial intelligence where computers **learn from data** instead of being explicitly programmed.\n\n" +
+                                    "Key concepts:\n\n" +
+                                    "• **Training**: feeding data to algorithms\n" +
+                                    "• **Models**: learned patterns from data\n" +
+                                    "• **Inference**: making predictions on new data",
+                                thinkingDurationSeconds = 3,
+                                thinkingTokens = 42,
+                                responseTokens = 240,
+                                responseDurationSeconds = 5.1f
+                            ),
+                            isUserMe = false,
+                            showActions = true
+                        )
+                    }
+                    ChatInputArea()
+                }
+            }
+        }
+    }
+
+    @Test
+    fun ogBanner() {
+        paparazzi.snapshot {
+            PlaygroundTheme(isDarkTheme = true) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0xFF0A0B10))
+                ) {
+                    // 50/50 horizontal split. Each phone outer Box is 540dp
+                    // wide (≈1.7× the canvas-tall sizing — pushed close to
+                    // the 600dp half-width limit), giving inner phone screen
+                    // ≈508dp and total phone height ≈1072dp.
+                    //
+                    // Phone 1 (model picker, LEFT half): top anchored at
+                    // 15% (y≈94.5), bottom extends well past canvas (~185%).
+                    // Phone 2 (chat, RIGHT half): bottom anchored at 85%
+                    // (y≈535.5), top extends well past canvas top (~-85%).
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .offset(x = (-300).dp, y = 315.5.dp)
+                            .width(540.dp)
+                    ) {
+                        DeviceFrame(statusBar = { BigStatusBar(wifiOff = true) }) {
+                            ModelPickerContent()
+                        }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .offset(x = 300.dp, y = (-315.5).dp)
+                            .width(540.dp)
+                    ) {
+                        DeviceFrame(statusBar = { BigStatusBar(wifiOff = true) }) {
+                            ChatContent()
+                        }
+                    }
+                }
+            }
         }
     }
 }
