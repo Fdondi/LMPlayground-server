@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- Per-token typewriter haptic while streaming a response. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <!-- Large-screen / Chromebook posture: app works without touch input and
          supports freeform window management. Keeping these as required="false"

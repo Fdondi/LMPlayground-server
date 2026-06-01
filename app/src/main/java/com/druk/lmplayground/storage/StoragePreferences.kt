@@ -22,6 +22,16 @@ class StoragePreferences(context: Context) {
         get() = prefs.getBoolean("tools_setup_seen", false)
         set(value) = prefs.edit { putBoolean("tools_setup_seen", value) }
 
+    /** Play a chime when generation finishes while the app is backgrounded. */
+    var soundOnCompletion: Boolean
+        get() = prefs.getBoolean("sound_on_completion", true)
+        set(value) = prefs.edit { putBoolean("sound_on_completion", value) }
+
+    /** Per-token typewriter haptic while a response streams in. */
+    var hapticOnGeneration: Boolean
+        get() = prefs.getBoolean("haptic_on_generation", true)
+        set(value) = prefs.edit { putBoolean("haptic_on_generation", value) }
+
     fun getCustomModelMetadata(filename: String): Pair<String, Boolean>? {
         val value = prefs.getString("custom_model_$filename", null) ?: return null
         val parts = value.split("|", limit = 2)

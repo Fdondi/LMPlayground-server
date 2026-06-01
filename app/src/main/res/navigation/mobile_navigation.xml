@@ -37,6 +37,9 @@
             android:id="@+id/action_settings_to_tools"
             app:destination="@id/nav_tools" />
         <action
+            android:id="@+id/action_settings_to_sound_haptic"
+            app:destination="@id/nav_sound_haptic" />
+        <action
             android:id="@+id/action_settings_to_faq"
             app:destination="@id/nav_faq" />
         <action
@@ -69,6 +72,11 @@
         android:id="@+id/nav_tools"
         android:name="com.druk.lmplayground.settings.ToolsFragment"
         android:label="@string/tools" />
+
+    <fragment
+        android:id="@+id/nav_sound_haptic"
+        android:name="com.druk.lmplayground.settings.SoundHapticFragment"
+        android:label="@string/sound_and_haptic" />
 
     <fragment
         android:id="@+id/nav_privacy_policy"

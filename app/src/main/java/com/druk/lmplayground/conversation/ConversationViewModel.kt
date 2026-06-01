@@ -49,6 +49,10 @@ import kotlin.math.ln
 import kotlin.math.min
 import kotlin.math.round
 
+// Minimum gap between per-token haptic ticks. ~60 ms (≈16/s) reads as
+// distinct typewriter taps rather than a continuous buzz on fast streams.
+private const val HAPTIC_MIN_INTERVAL_MS = 60L
+
 class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val llamaCpp: LlamaCpp? = (app as? App)?.llamaCpp
@@ -943,6 +947,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     return@withContext
                 }
 
+                // Resolve the haptic gate once per turn: the in-app setting
+                // AND the system-wide haptic toggle (a ContentResolver query
+                // — too heavy to run per token).
+                val hapticsAllowed = storagePreferences.hapticOnGeneration &&
+                    GenerationHaptics.isSystemHapticsEnabled(app)
                 val callback = object: LlamaGenerationCallback {
                     var totalTokens = 0
                     var thinkingTokenCount = 0
@@ -952,9 +961,23 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // ~1/sec: setForegroundContent is a blocking binder call,
                     // so we must not fire it on every streamed token.
                     var lastNotifUpdateMs = 0L
+                    // Throttle the per-token haptic tick so fast streams feel
+                    // like rapid typing instead of one continuous buzz.
+                    var lastHapticMs = 0L
                     override fun onFullResponse(response: String) {
                         totalTokens++
                         val nowMs = System.currentTimeMillis()
+                        // Typewriter-style haptic: a light tick per token,
+                        // throttled, and only while the chat is actually
+                        // on-screen (also satisfies the OS rule that bars
+                        // background vibration).
+                        if (hapticsAllowed &&
+                            nowMs - lastHapticMs >= HAPTIC_MIN_INTERVAL_MS &&
+                            (app as? App)?.isAppInForeground == true
+                        ) {
+                            lastHapticMs = nowMs
+                            GenerationHaptics.tick(app)
+                        }
                         if (nowMs - lastNotifUpdateMs >= 1000L) {
                             lastNotifUpdateMs = nowMs
                             updateInferenceNotification(
@@ -1146,6 +1169,18 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             notificationTokensLine(callback.totalTokens),
                             actionBody = readyBody,
                         )
+
+                        // If the user isn't looking at the app, play a short
+                        // chime so they know the answer is ready. Gated on the
+                        // in-app setting, a non-blank response (so a cancelled/
+                        // empty turn stays quiet), and background state; the
+                        // helper itself also respects silent/vibrate/DND.
+                        if (storagePreferences.soundOnCompletion &&
+                            readyBody != null &&
+                            (app as? App)?.isAppInForeground == false
+                        ) {
+                            com.druk.lmplayground.inference.ResponseSound.playIfAudible(app)
+                        }
 
                         // Persist whatever the assistant produced — including
                         // a partially-streamed response on cancel — so

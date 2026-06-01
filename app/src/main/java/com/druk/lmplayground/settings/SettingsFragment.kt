@@ -53,6 +53,7 @@ class SettingsFragment : Fragment() {
     private val storageViewModel: StorageViewModel by viewModels()
     private val systemPromptsViewModel: SystemPromptsViewModel by viewModels()
     private val toolsViewModel: ToolsViewModel by viewModels()
+    private val soundHapticViewModel: SoundHapticViewModel by viewModels()
 
     // Pending download model held across the notification-permission
     // request, mirroring the original ModelsFragment behaviour.
@@ -226,6 +227,9 @@ class SettingsFragment : Fragment() {
                     onToolsClick = {
                         findNavController().navigateFromSettings(R.id.action_settings_to_tools)
                     },
+                    onSoundHapticClick = {
+                        findNavController().navigateFromSettings(R.id.action_settings_to_sound_haptic)
+                    },
                     onSendFeedbackClick = {
                         val email = getString(R.string.privacy_policy_contact_email)
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -245,6 +249,9 @@ class SettingsFragment : Fragment() {
                     } else null,
                     toolsDetailContent = if (twoPane) {
                         { ToolsDetailPane() }
+                    } else null,
+                    soundHapticDetailContent = if (twoPane) {
+                        { SoundHapticDetailPane() }
                     } else null,
                     initialDetailKey = openDetail,
                     masterWidth = masterWidth,
@@ -331,6 +338,23 @@ class SettingsFragment : Fragment() {
             tools = toolsViewModel.tools,
             enabledStates = enabled,
             onToolEnabledChanged = { name, value -> toolsViewModel.setEnabled(name, value) },
+        )
+    }
+
+    /**
+     * Embedded Sound and Haptic pane — completion-sound + generation-haptic
+     * toggles, rendered without the Scaffold/topBar that [SoundHapticFragment]
+     * adds on phone.
+     */
+    @androidx.compose.runtime.Composable
+    private fun SoundHapticDetailPane() {
+        val soundEnabled by soundHapticViewModel.soundEnabled.observeAsState(true)
+        val hapticEnabled by soundHapticViewModel.hapticEnabled.observeAsState(true)
+        SoundHapticContent(
+            soundEnabled = soundEnabled,
+            hapticEnabled = hapticEnabled,
+            onSoundChanged = { soundHapticViewModel.setSoundEnabled(it) },
+            onHapticChanged = { soundHapticViewModel.setHapticEnabled(it) },
         )
     }
 

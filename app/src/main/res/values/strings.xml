@@ -261,6 +261,14 @@
     <string name="whats_new_item_3">Performance improvements</string>
     <string name="set_up_tools">Set up tools</string>
 
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">Sound and Haptic</string>
+    <string name="sound_and_haptic_subtitle">Completion sound and typing haptics</string>
+    <string name="sound_on_completion_title">Play sound when generation finishes</string>
+    <string name="sound_on_completion_desc">Plays a short chime when the model finishes a response while the app is in the background.</string>
+    <string name="haptic_on_generation_title">Haptic feedback on generation</string>
+    <string name="haptic_on_generation_desc">A gentle tick as each part of the response streams in.</string>
+
     <!-- Tools -->
     <string name="tools">Tools</string>
     <string name="tools_subtitle">Let capable models take actions</string>
