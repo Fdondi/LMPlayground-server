@@ -294,6 +294,19 @@
          description below is built from the user-facing model name and
          the formatted RAM footprint, e.g. "Gemma 4 E2B - 3.41 GB". -->
     <string name="inference_notification_loaded_title">Model is loaded</string>
+    <!-- Foreground-notification titles that silently track what the model
+         is doing. The description line ("<name> - <size>") stays put while
+         the title flips loaded -> generating -> ready as work progresses. -->
+    <string name="inference_notification_generating_title">Generating response…</string>
+    <string name="inference_notification_ready_title">Response ready</string>
+    <!-- Description line shown on the FGS notification during/after
+         generation, e.g. "Gemma 4 E2B · 342 tokens". -->
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokens</item>
+    </plurals>
+    <string name="response_copied">Copied to clipboard</string>
     <string name="inference_engine_crashed">Whoops — something went wrong.\nPlease reload the model.</string>
     <string name="message_too_large">Message is %1$d KB, exceeds the %2$d KB limit. Try sending a shorter message.</string>
     <string name="replay_history_too_large">Conversation history is too large to reload into this model. Start a new chat to continue.</string>

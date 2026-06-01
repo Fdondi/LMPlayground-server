@@ -74,5 +74,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- Invisible handler for the Copy/Share actions on the inference
+             notification. Runs in the main process (not :llama) so it has a
+             foreground context for the clipboard write and share chooser. -->
+        <activity
+            android:name="com.druk.lmplayground.inference.ResponseActionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:exported="false" />
+
     </application>
 </manifest>

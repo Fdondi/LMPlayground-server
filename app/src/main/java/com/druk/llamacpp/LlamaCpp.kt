@@ -61,9 +61,9 @@ class LlamaCpp(private val client: InferenceClient) {
      * name and RAM footprint when the user expands the Silent group in
      * the shade. Either argument may be null to keep the previous value.
      */
-    fun setForegroundContent(title: String?, text: String?) {
+    fun setForegroundContent(title: String?, text: String?, actionBody: String? = null) {
         try {
-            client.withService { it.setForegroundContent(title, text) }
+            client.withService { it.setForegroundContent(title, text, actionBody) }
         } catch (_: Throwable) {
             // No-op — the FGS will keep whatever content it had, and the
             // next successful call will overwrite it.

@@ -459,15 +459,19 @@ class LlamaService : Service() {
         override fun requestForeground() = promoteToForeground()
         override fun releaseForeground() = demoteFromForeground()
 
-        override fun setForegroundContent(title: String?, text: String?) {
+        override fun setForegroundContent(title: String?, text: String?, actionBody: String?) {
             if (title != null) foregroundTitle = title
             if (text != null) foregroundText = text
+            // Not sticky: each call sets the action body verbatim (null
+            // clears the Copy/Share buttons for the loaded/generating states).
+            foregroundActionBody = actionBody
             if (!isForeground) return
             try {
                 val notification = InferenceNotification.build(
                     this@LlamaService,
                     foregroundTitle,
                     foregroundText,
+                    foregroundActionBody,
                 )
                 getSystemService(NotificationManager::class.java)
                     ?.notify(InferenceNotification.NOTIFICATION_ID, notification)
@@ -495,6 +499,8 @@ class LlamaService : Service() {
     // helper falls back to the localized defaults when null.
     @Volatile private var foregroundTitle: String? = null
     @Volatile private var foregroundText: String? = null
+    // Response text for the Copy/Share notification actions; null = no buttons.
+    @Volatile private var foregroundActionBody: String? = null
 
     @Synchronized
     private fun promoteToForeground() {

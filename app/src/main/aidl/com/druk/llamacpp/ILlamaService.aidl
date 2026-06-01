@@ -135,7 +135,13 @@ interface ILlamaService {
      * Either field may be null to keep the previous value (or fall back
      * to the default at first promote).
      */
-    void setForegroundContent(in @nullable String title, in @nullable String text);
+    /**
+     * @param actionBody when non-null/non-empty, the FGS notification gains
+     *        "Copy" and "Share" action buttons that act on this text (the
+     *        last assistant response). Pass null to remove the buttons —
+     *        unlike title/text, this field is NOT sticky.
+     */
+    void setForegroundContent(in @nullable String title, in @nullable String text, in @nullable String actionBody);
 
     /**
      * Debug-only fault injection: kills the service process via

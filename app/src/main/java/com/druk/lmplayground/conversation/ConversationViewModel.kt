@@ -64,6 +64,15 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _modelLoadingProgress = MutableLiveData(0f)
     private val _loadedModel = MutableLiveData<ModelInfo?>(null)
     private val _loadedModelStatus = MutableLiveData<String?>(null)
+
+    // Captured at load time and reused as the foreground-notification
+    // description across load -> generating -> ready transitions, so the
+    // silent notification reflects what the model is currently doing
+    // without ever re-posting noisily. The "loaded" state shows the size
+    // line ("<name> - <size>"); generating/ready swap in a live token
+    // count ("<name> · <N> tokens"), so the model name is kept too.
+    private var notificationModelLine: String? = null
+    private var notificationModelName: String? = null
     private val _models = MutableLiveData<List<ModelWithStatus>>(emptyList())
     private val _supportsThinking = MutableLiveData(false)
     private val _thinkingEnabled = MutableLiveData(false)
@@ -306,6 +315,34 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /**
+     * Silently flip the foreground-service notification to reflect the
+     * current inference state (loaded / generating / ready). [text]
+     * defaults to the cached "<name> - <size>" line used by the loaded
+     * state; generating/ready pass a token-count line. No-op until a
+     * model has been loaded. Safe to call from any thread — the
+     * underlying AIDL call swallows binder failures.
+     */
+    private fun updateInferenceNotification(
+        titleRes: Int,
+        text: String? = notificationModelLine,
+        actionBody: String? = null,
+    ) {
+        if (text == null) return
+        llamaCpp?.setForegroundContent(app.getString(titleRes), text, actionBody)
+    }
+
+    /** "<name> · <N> tokens" for the generating/ready notification line. */
+    private fun notificationTokensLine(tokens: Int): String? {
+        val name = notificationModelName ?: return null
+        val tokenStr = app.resources.getQuantityString(
+            com.druk.lmplayground.R.plurals.inference_notification_tokens, tokens, tokens
+        )
+        return app.getString(
+            com.druk.lmplayground.R.string.inference_notification_tokens_line, name, tokenStr
+        )
+    }
+
     @MainThread
     fun loadModel(modelInfo: ModelInfo, forceLoad: Boolean = false) {
         val llamaCpp = llamaCpp ?: return
@@ -450,10 +487,13 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // Surface "Model is loaded" + "<name> - <size>" in the
                     // FGS notification (otherwise hidden under MIN importance,
                     // but visible when the user expands the Silent group in
-                    // the shade).
-                    llamaCpp.setForegroundContent(
-                        app.getString(com.druk.lmplayground.R.string.inference_notification_loaded_title),
-                        "${modelInfo.name} - $modelDescription",
+                    // the shade). The description line is cached so generation
+                    // can later flip the title to "Generating…"/"Response
+                    // ready" without re-deriving it.
+                    notificationModelLine = "${modelInfo.name} - $modelDescription"
+                    notificationModelName = modelInfo.name
+                    updateInferenceNotification(
+                        com.druk.lmplayground.R.string.inference_notification_loaded_title
                     )
                     val nCtxTrain = llamaModel.getContextTrainSize()
                     _maxContextSize.postValue(minOf(nCtxTrain, 16384))
@@ -908,8 +948,20 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     var thinkingTokenCount = 0
                     var thinkingComplete = !enableThinking
                     var modelIsThinking = enableThinking
+                    // Throttle the silent token-count notification update to
+                    // ~1/sec: setForegroundContent is a blocking binder call,
+                    // so we must not fire it on every streamed token.
+                    var lastNotifUpdateMs = 0L
                     override fun onFullResponse(response: String) {
                         totalTokens++
+                        val nowMs = System.currentTimeMillis()
+                        if (nowMs - lastNotifUpdateMs >= 1000L) {
+                            lastNotifUpdateMs = nowMs
+                            updateInferenceNotification(
+                                com.druk.lmplayground.R.string.inference_notification_generating_title,
+                                notificationTokensLine(totalTokens),
+                            )
+                        }
                         var string = ResponseProcessor.process(response)
 
                         // Detect thinking from model output even when the
@@ -950,6 +1002,15 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 // which calls service.cancelGeneration() under the hood
                 // and re-throws CancellationException once the worker
                 // exits. We never re-enter the loop after a cancel.
+                //
+                // Silently flip the notification to "Generating…" with a
+                // starting token count; the callback above bumps the count
+                // ~1/sec as tokens stream. The finally block below freezes
+                // it at the final total under "Response ready".
+                updateInferenceNotification(
+                    com.druk.lmplayground.R.string.inference_notification_generating_title,
+                    notificationTokensLine(0),
+                )
                 try {
                     var toolRounds = 0
                     val maxToolRounds = 5
@@ -1068,6 +1129,23 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             uiState.finalizeLastMessage()
                         }
                         _isGenerating.postValue(false)
+                        // Generation (or cancellation) is done — freeze the
+                        // silent notification on "Response ready" with the
+                        // final token count, and attach Copy/Share actions
+                        // bound to the finalized response (think-tags
+                        // stripped, matching the in-chat share/copy). Skipped
+                        // on the superseded path above, so a newer in-flight
+                        // turn's "Generating…" line is preserved.
+                        val readyBody = (uiState.messages.lastOrNull()
+                            ?.takeIf { it.author == "Assistant" }
+                            ?.content
+                            ?.let { stripThinkTags(it) })
+                            ?.takeIf { it.isNotBlank() }
+                        updateInferenceNotification(
+                            com.druk.lmplayground.R.string.inference_notification_ready_title,
+                            notificationTokensLine(callback.totalTokens),
+                            actionBody = readyBody,
+                        )
 
                         // Persist whatever the assistant produced — including
                         // a partially-streamed response on cancel — so
