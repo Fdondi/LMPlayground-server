@@ -34,6 +34,10 @@ compose-compiler = "2.3.0"
 coroutines = "1.7.3"
 google-maps = "18.2.0"
 gradle-versions = "0.50.0"
+# 1.7.x pulls androidx.activity 1.12 -> navigationevent, which forces
+# compileSdk 36. 1.6.10 keeps activity at 1.10.1 (API-identical) so we stay on
+# compileSdk 35. Bump both together if moving to 1.7.x.
+haze = "1.6.10"
 hilt = "2.48.1"
 hiltExt = "1.1.0"
 # @pin When updating to AGP 7.4.0-alpha10 and up we can update this https://developer.android.com/studio/write/java8-support#library-desugaring-versions
@@ -125,6 +129,7 @@ core-jdk-desugaring = { module = "com.android.tools:desugar_jdk_libs", version.r
 google-android-material = { module = "com.google.android.material:material", version.ref = "material" }
 googlemaps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps-compose" }
 googlemaps-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "google-maps" }
+haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
 hilt-android-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
 hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }

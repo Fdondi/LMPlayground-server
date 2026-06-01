@@ -1,5 +1,9 @@
 package com.druk.lmplayground.models
 
+import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,13 +26,14 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.Image
@@ -41,9 +46,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import com.druk.lmplayground.R
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.hazeEffect
 
 @Composable
 fun SelectModelDialog(
@@ -56,6 +62,8 @@ fun SelectModelDialog(
      * effective width here (e.g. `320.dp`).
      */
     chatPaneStartOffset: Dp = 0.dp,
+    hazeState: HazeState? = null,
+    hazeStyle: HazeStyle = HazeStyle.Unspecified,
     onLoadModel: (ModelInfo) -> Unit,
     onUnloadModel: () -> Unit = {},
     onGenerationParams: () -> Unit = {},
@@ -65,29 +73,46 @@ fun SelectModelDialog(
     // Only show downloaded models
     val downloadedModels = models.filter { it.isDownloaded }
 
-    // usePlatformDefaultWidth=false lets us cap the dialog at a comfortable
-    // 560dp on freeform Chromebook windows / wide tablets while still letting
-    // it expand to fill narrow phones via fillMaxWidth.
-    Dialog(
-        onDismissRequest = { onDismissRequest() },
-        properties = DialogProperties(usePlatformDefaultWidth = false)
+    // Rendered as an in-composition overlay (not a platform Dialog) so the
+    // frosted card can blur the chat behind it — Haze can't reach across the
+    // separate window a Dialog uses. Already lives inside the chat pane, so
+    // chatPaneStartOffset is no longer needed for centering. Back press and
+    // taps on the scrim dismiss; taps on the card are consumed.
+    BackHandler(onBack = onDismissRequest)
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black.copy(alpha = 0.4f))
+            .clickable(
+                interactionSource = remember { MutableInteractionSource() },
+                indication = null,
+                onClick = onDismissRequest
+            ),
+        contentAlignment = Alignment.Center
     ) {
-        Box(
-            // Full-screen Box gives us explicit alignment control. Adding a
-            // start padding equal to the sidebar width means
-            // contentAlignment = Center centers within (sidebar..rightEdge)
-            // rather than the full window.
+        val frosted = hazeState != null
+        Surface(
+            // The card caps at a comfortable 560dp on wide windows while
+            // expanding to fill narrow phones.
             modifier = Modifier
-                .fillMaxSize()
-                .padding(start = chatPaneStartOffset),
-            contentAlignment = Alignment.Center
+                .widthIn(max = 560.dp)
+                .fillMaxWidth()
+                .padding(16.dp)
+                .clickable(
+                    interactionSource = remember { MutableInteractionSource() },
+                    indication = null,
+                    onClick = {}
+                ),
+            shape = RoundedCornerShape(16.dp),
+            color = if (frosted) Color.Transparent else MaterialTheme.colorScheme.surface,
+            contentColor = MaterialTheme.colorScheme.onSurface,
+            tonalElevation = if (frosted) 0.dp else 6.dp,
+            shadowElevation = 12.dp,
         ) {
-            Card(
-                modifier = Modifier
-                    .widthIn(max = 560.dp)
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                shape = RoundedCornerShape(16.dp),
+            Box(
+                modifier = if (frosted) {
+                    Modifier.hazeEffect(hazeState!!, hazeStyle)
+                } else Modifier
             ) {
             LazyColumn {
                 if (downloadedModels.isEmpty()) {

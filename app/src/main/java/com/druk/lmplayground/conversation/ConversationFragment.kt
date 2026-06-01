@@ -7,17 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.exclude
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -25,12 +23,10 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.PermanentNavigationDrawer
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.ScaffoldDefaults
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
@@ -39,21 +35,25 @@ import androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSiz
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
@@ -66,6 +66,11 @@ import com.druk.lmplayground.R
 import com.druk.lmplayground.models.SelectModelDialog
 import com.druk.lmplayground.storage.StorageViewModel
 import com.druk.lmplayground.theme.PlaygroundTheme
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
+import dev.chrisbanes.haze.rememberHazeState
 import kotlinx.coroutines.launch
 
 class ConversationFragment : Fragment() {
@@ -140,13 +145,56 @@ class ConversationFragment : Fragment() {
                 val scope = rememberCoroutineScope()
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
 
+                // "Follow the latest" flag for the message list. Hoisted here so
+                // the jump-to-bottom button (rendered at the root, above all
+                // chrome) can re-arm it. New messages re-enable following.
+                var piningBottom by remember { mutableStateOf(false) }
+                LaunchedEffect(messages.size) { piningBottom = true }
+                val jumpEnabled by remember {
+                    derivedStateOf { scrollState.canScrollForward }
+                }
+
+                // Restore the pre-frost behavior: the top bar is flush (no
+                // tint/elevation) while the list is at the very top, and only
+                // frosts once content scrolls underneath it. Drive the haze
+                // effect's alpha from this so it fades in like the old M3
+                // container-color transition.
+                val isScrolled by remember {
+                    derivedStateOf {
+                        scrollState.firstVisibleItemIndex > 0 ||
+                            scrollState.firstVisibleItemScrollOffset > 0
+                    }
+                }
+                val topBarFrost by animateFloatAsState(
+                    targetValue = if (isScrolled) 1f else 0f,
+                    label = "topBarFrost"
+                )
+
                 val colorScheme = MaterialTheme.colorScheme
 
-                // Drive toolbar container color directly from scroll position.
-                // On tablet (where we draw an explicit divider below the bar)
-                // the recoloring would just look like a half-screen color flash
-                // restricted to the chat pane, so we freeze the bar at surface
-                // there.
+                // Frosted-glass chrome: the message list scrolls full-bleed
+                // behind a translucent, blurred top bar and input dock. The
+                // shared HazeState links the source (the list) to the overlays.
+                // Real blur needs API 32+; on older devices Haze draws the
+                // fallbackTint scrim instead — kept near-opaque so the bars
+                // still read as solid chrome rather than washed-out content.
+                val hazeState = rememberHazeState()
+                val hazeStyle = HazeStyle(
+                    // The color sitting behind the blurred content (the chat
+                    // background painted on the root Box), so Haze composites the
+                    // gaps between message bubbles correctly.
+                    backgroundColor = colorScheme.background,
+                    // Tint with a lighter "elevated surface" tone at fairly high
+                    // opacity. A low-alpha surface tint let the dark chat bleed
+                    // through and read darker than the old solid bars; this keeps
+                    // the chrome clearly lighter than the content (so it reads as
+                    // raised) while still showing the blur through it.
+                    tints = listOf(HazeTint(colorScheme.surfaceContainerHigh.copy(alpha = 0.78f))),
+                    blurRadius = 24.dp,
+                    noiseFactor = 0f,
+                    fallbackTint = HazeTint(colorScheme.surfaceContainerHigh.copy(alpha = 0.97f))
+                )
+
                 // Only show the permanent sidebar when there's enough actual
                 // window width to comfortably fit master (320dp) + detail.
                 // At Medium (600-839dp), e.g. 7" tablet portrait or split-screen,
@@ -168,26 +216,25 @@ class ConversationFragment : Fragment() {
                     320.dp
                 }
 
-                val isScrolled by remember {
-                    derivedStateOf {
-                        scrollState.firstVisibleItemIndex > 0 ||
-                                scrollState.firstVisibleItemScrollOffset > 0
-                    }
-                }
-                // True when there's content below the visible viewport — i.e.
-                // the message list is hidden behind the input dock. Used to
-                // toggle the chat/input divider so it appears only when there's
-                // a real edge to mark.
-                val canScrollDown by remember {
-                    derivedStateOf { scrollState.canScrollForward }
-                }
+                // The bar paints no container of its own — the frosted blur
+                // behind it provides the separation, so both the resting and
+                // scrolled container colors are transparent.
                 val topBarColors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = if (!showPermanent && isScrolled)
-                        colorScheme.surfaceContainer
-                    else
-                        colorScheme.surface
+                    containerColor = Color.Transparent,
+                    scrolledContainerColor = Color.Transparent
                 )
                 val inputFocusRequester = remember { FocusRequester() }
+
+                // Measured heights of the floating top bar and bottom dock,
+                // fed back into the list as content padding (so the first/last
+                // messages clear the chrome) and as the float offset for the
+                // jump-to-bottom / model-hint buttons. The bottom value tracks
+                // the dock as it grows with multi-line text and the keyboard.
+                val density = LocalDensity.current
+                var topBarHeightPx by remember { mutableIntStateOf(0) }
+                var bottomBarHeightPx by remember { mutableIntStateOf(0) }
+                val topBarHeight = with(density) { topBarHeightPx.toDp() }
+                val bottomBarHeight = with(density) { bottomBarHeightPx.toDp() }
                 var modelReport by remember { mutableStateOf<String?>(null) }
 
                 // When model finishes loading, jump to bottom and open keyboard
@@ -353,190 +400,135 @@ class ConversationFragment : Fragment() {
                 }
 
                 val mainContent: @Composable () -> Unit = {
-                    Scaffold(
-                        topBar = {
-                            Column {
-                                ConversationBar(
-                                    modelInfo = modelInfo,
-                                    modelStatus = modelStatus,
-                                    showNavIcon = !showPermanent,
-                                    compact = showPermanent,
-                                    onNavIconPressed = {
-                                        scope.launch { drawerState.open() }
-                                    },
-                                    colors = topBarColors,
-                                    onModelNamePressed = {
-                                        viewModel.loadModelList()
-                                    },
-                                    onNewSessionPressed = {
-                                        viewModel.newConversation()
-                                    }
-                                )
-                                // Tablet: the surface-coloured top bar would
-                                // otherwise blend into the chat pane background.
-                                // Show the divider only when there's actually
-                                // content scrolled behind the bar — at scroll
-                                // offset 0 the bar is just bordering empty
-                                // space and the line looks like dead chrome.
-                                // Left inset keeps the line from touching the
-                                // floating master card on the left.
-                                if (showPermanent && isScrolled) {
-                                    HorizontalDivider(
-                                        modifier = Modifier.padding(horizontal = 12.dp)
-                                    )
-                                }
-                            }
-                            if (models.isNotEmpty()) {
-                                // Check if any models are downloaded
-                                val hasDownloadedModels = models.any { it.isDownloaded }
-                                if (hasDownloadedModels) {
-                                    SelectModelDialog(
-                                        models = models,
-                                        isModelLoaded = modelInfo != null,
-                                        // On tablet, center the dialog inside
-                                        // the chat pane (right of the 320dp
-                                        // permanent sidebar) instead of the
-                                        // full window — otherwise it visually
-                                        // covers the sessions list.
-                                        // Match the sidebar width so the dialog
-                                        // centers in the chat pane even when
-                                        // the sidebar widened to align with a
-                                        // foldable's hinge.
-                                        chatPaneStartOffset = if (showPermanent) sidebarWidth else 0.dp,
-                                        onLoadModel = { model ->
-                                            viewModel.loadModel(model)
-                                        },
-                                        onUnloadModel = {
-                                            viewModel.unloadModel()
-                                        },
-                                        onGenerationParams = {
-                                            showParamsSheet = true
-                                        },
-                                        onBrowseModels = {
-                                            // Guard against NavController throwing IllegalArgumentException
-                                            // when the user double-taps or another navigation moved us
-                                            // off nav_home before this callback fired.
-                                            val nav = findNavController()
-                                            if (nav.currentDestination?.id == R.id.nav_home) {
-                                                nav.navigate(R.id.action_home_to_models)
+                    // Picker sits just above the composer. Visible only when:
+                    //   - model is ready
+                    //   - chat is empty
+                    //   - library has entries
+                    //   - the session has no prompt selected yet
+                    val pickerVisible = isModelReady &&
+                        messages.isEmpty() &&
+                        recentSystemPrompts.isNotEmpty() &&
+                        systemPrompt.isEmpty()
+
+                    // Surface restores what the old Scaffold provided: it paints
+                    // the chat background AND propagates the correct content
+                    // color (onBackground) to descendants. A bare Box leaves text
+                    // at the default LocalContentColor (black). It's also the base
+                    // the frosted bars blur over.
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = colorScheme.background
+                    ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        // ---- Background (haze source): full-bleed content the
+                        // frosted bars blur. Content padding keeps the first and
+                        // last messages clear of the floating chrome.
+                        if (modelInfo == null && messages.isEmpty()) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .hazeSource(hazeState)
+                                    .padding(top = topBarHeight, bottom = bottomBarHeight),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                WhatsNewText(
+                                    // Show the "Set up tools" button only until
+                                    // the user taps it once (then persisted off).
+                                    onSetUpTools = if (showToolsSetup) {
+                                        {
+                                            // Don't hide on tap (avoids the button
+                                            // vanishing under the finger). The flag is
+                                            // set when the Tools screen opens; we
+                                            // re-check it in onResume.
+                                            if (findNavController().currentDestination?.id == R.id.nav_home) {
+                                                findNavController().navigate(
+                                                    R.id.action_home_to_settings,
+                                                    bundleOf(
+                                                        SettingsFragment.ARG_OPEN_DETAIL
+                                                            to SettingsFragment.DETAIL_TOOLS
+                                                    )
+                                                )
                                             }
-                                        },
-                                        onDismissRequest = {
-                                            viewModel.resetModelList()
                                         }
-                                    )
-                                } else {
-                                    // No downloaded models - go directly to Models screen
-                                    LaunchedEffect(Unit) {
-                                        viewModel.resetModelList()
-                                        if (findNavController().currentDestination?.id == R.id.nav_home) {
-                                            findNavController().navigate(R.id.action_home_to_models)
-                                        }
-                                    }
-                                }
-                            } else if (modelReport != null) {
-                                AlertDialog(
-                                    onDismissRequest = {
-                                        modelReport = null
-                                    },
-                                    title = {
-                                        Text(text = stringResource(R.string.session_info))
-                                    },
-                                    text = {
-                                        Text(
-                                            text = modelReport!!,
-                                            style = MaterialTheme.typography.bodyMedium
-                                        )
-                                    },
-                                    confirmButton = {
-                                        TextButton(onClick = { modelReport = null }) {
-                                            Text(text = stringResource(R.string.close))
-                                        }
-                                    }
+                                    } else null
                                 )
                             }
-                        },
-                        // Exclude ime and navigation bar padding so this can be added by the UserInput composable
-                        contentWindowInsets = ScaffoldDefaults
-                            .contentWindowInsets
-                            .exclude(WindowInsets.navigationBars)
-                            .exclude(WindowInsets.ime),
-                        modifier = Modifier
-                    ) { paddingValues ->
-                        Column(
-                            Modifier
-                                .fillMaxSize()
-                                .padding(paddingValues)
-                                .drawBehind {
+                        } else {
+                            Messages(
+                                messages = messages,
+                                modifier = Modifier.fillMaxSize(),
+                                scrollState = scrollState,
+                                contentPadding = PaddingValues(
+                                    top = topBarHeight,
+                                    bottom = bottomBarHeight
+                                ),
+                                bottomInset = bottomBarHeight,
+                                hazeState = hazeState,
+                                hazeStyle = hazeStyle,
+                                isGenerating = isGenerating == true,
+                                piningBottom = piningBottom,
+                                onPiningBottomChange = { piningBottom = it },
+                                sessionModelHint = sessionModelHint,
+                                onSessionModelHintClick = { filename ->
+                                    viewModel.loadModelByFilename(filename)
+                                },
+                                onSessionModelHintDismiss = {
+                                    viewModel.dismissSessionModelHint()
+                                },
+                                onTokenCountClicked = {
+                                    modelReport = viewModel.getReport()
+                                }
+                            )
+                        }
+
+                        // ---- Frosted top bar, floating over the content ----
+                        ConversationBar(
+                            modelInfo = modelInfo,
+                            modelStatus = modelStatus,
+                            showNavIcon = !showPermanent,
+                            compact = showPermanent,
+                            onNavIconPressed = {
+                                scope.launch { drawerState.open() }
+                            },
+                            colors = topBarColors,
+                            onModelNamePressed = {
+                                viewModel.loadModelList()
+                            },
+                            onNewSessionPressed = {
+                                viewModel.newConversation()
+                            },
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .onSizeChanged { topBarHeightPx = it.height }
+                                // Fade the frost in as content scrolls under the
+                                // bar; flush (no tint/elevation) at the top.
+                                .hazeEffect(hazeState, hazeStyle) { alpha = topBarFrost }
+                                .drawWithContent {
+                                    drawContent()
+                                    // Model-loading progress hairline along the
+                                    // bar's bottom edge.
                                     val strokeWidth = 2.dp.toPx()
-                                    val x = size.width * progress
+                                    val y = size.height - strokeWidth / 2f
                                     drawLine(
                                         colorScheme.primary,
-                                        start = Offset(0f, 0f),
-                                        end = Offset(x, 0f),
+                                        start = Offset(0f, y),
+                                        end = Offset(size.width * progress, y),
                                         strokeWidth = strokeWidth
                                     )
-                                }) {
-                            if (modelInfo == null && messages.isEmpty()) {
-                                Box(
-                                    modifier = Modifier.weight(1f),
-                                    contentAlignment = Alignment.Center
-                                ) {
-                                    WhatsNewText(
-                                        // Show the "Set up tools" button only until
-                                        // the user taps it once (then persisted off).
-                                        onSetUpTools = if (showToolsSetup) {
-                                            {
-                                                // Don't hide on tap (avoids the button
-                                                // vanishing under the finger). The flag is
-                                                // set when the Tools screen opens; we
-                                                // re-check it in onResume.
-                                                if (findNavController().currentDestination?.id == R.id.nav_home) {
-                                                    findNavController().navigate(
-                                                        R.id.action_home_to_settings,
-                                                        bundleOf(
-                                                            SettingsFragment.ARG_OPEN_DETAIL
-                                                                to SettingsFragment.DETAIL_TOOLS
-                                                        )
-                                                    )
-                                                }
-                                            }
-                                        } else null
-                                    )
                                 }
-                            } else {
-                                Messages(
-                                    messages = messages,
-                                    modifier = Modifier.weight(1f),
-                                    scrollState = scrollState,
-                                    isGenerating = isGenerating == true,
-                                    sessionModelHint = sessionModelHint,
-                                    onSessionModelHintClick = { filename ->
-                                        viewModel.loadModelByFilename(filename)
-                                    },
-                                    onSessionModelHintDismiss = {
-                                        viewModel.dismissSessionModelHint()
-                                    },
-                                    onTokenCountClicked = {
-                                        modelReport = viewModel.getReport()
-                                    }
-                                )
-                            }
-                            // Picker sits just above the composer. Visible only when:
-                            //   - model is ready
-                            //   - chat is empty
-                            //   - library has entries
-                            //   - the session has no prompt selected yet
+                        )
+
+                        // ---- Bottom dock (picker + frosted input) ----
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .onSizeChanged { bottomBarHeightPx = it.height }
+                        ) {
                             // On pick: the picker row handles its own flight
                             // animation per-card, then fires onPick — which flips
                             // the visibility gate. Exit uses ExitTransition.None
                             // so the row disappears immediately after the card
                             // finishes flying (no double-animation).
-                            // On clear: the row slides back up and fades in.
-                            val pickerVisible = isModelReady &&
-                                messages.isEmpty() &&
-                                recentSystemPrompts.isNotEmpty() &&
-                                systemPrompt.isEmpty()
                             androidx.compose.animation.AnimatedVisibility(
                                 visible = pickerVisible,
                                 enter = androidx.compose.animation.fadeIn(
@@ -556,12 +548,8 @@ class ConversationFragment : Fragment() {
                             }
                             UserInput(
                                 integrateWithSurface = showPermanent,
-                                // Show the chat/input divider only when the
-                                // list actually has content disappearing below
-                                // the input dock. At the bottom of the chat
-                                // (canScrollDown = false) the divider is
-                                // bordering empty space and looks like noise.
-                                showTopDivider = showPermanent && canScrollDown,
+                                hazeState = hazeState,
+                                hazeStyle = hazeStyle,
                                 modifier = Modifier
                                     .navigationBarsPadding()
                                     .imePadding(),
@@ -586,8 +574,8 @@ class ConversationFragment : Fragment() {
                                 onCancelClicked = {
                                     viewModel.cancelGeneration()
                                 },
-                                // let this element handle the padding so that the elevation is shown behind the
-                                // navigation bar
+                                // let this element handle the padding so that the
+                                // frost extends behind the navigation bar
                                 resetScroll = {
                                     scope.launch {
                                         val lastIndex = scrollState.layoutInfo.totalItemsCount - 1
@@ -598,6 +586,99 @@ class ConversationFragment : Fragment() {
                                 }
                             )
                         }
+
+                        // Jump-to-bottom: rendered last so it sits above all the
+                        // chrome with both a frosted background and a real
+                        // elevation shadow. Hidden while the model hint is up.
+                        JumpToBottom(
+                            enabled = jumpEnabled &&
+                                sessionModelHint == null &&
+                                (modelInfo != null || messages.isNotEmpty()),
+                            onClicked = {
+                                scope.launch {
+                                    val last = scrollState.layoutInfo.totalItemsCount - 1
+                                    if (last >= 0) scrollState.animateScrollToItem(last)
+                                }
+                                piningBottom = true
+                            },
+                            modifier = Modifier
+                                .align(Alignment.BottomCenter)
+                                .padding(bottom = bottomBarHeight),
+                            hazeState = hazeState,
+                            hazeStyle = hazeStyle
+                        )
+
+                        // Frosted model picker — kept inside the chat Box (and
+                        // drawn last) so its glass blurs the message list behind
+                        // it. A separate Dialog window couldn't be blurred by
+                        // Haze. The overlay already fills the chat pane, so no
+                        // chatPaneStartOffset is needed.
+                        if (models.isNotEmpty() && models.any { it.isDownloaded }) {
+                            SelectModelDialog(
+                                models = models,
+                                isModelLoaded = modelInfo != null,
+                                hazeState = hazeState,
+                                hazeStyle = hazeStyle,
+                                onLoadModel = { model ->
+                                    viewModel.loadModel(model)
+                                },
+                                onUnloadModel = {
+                                    viewModel.unloadModel()
+                                },
+                                onGenerationParams = {
+                                    showParamsSheet = true
+                                },
+                                onBrowseModels = {
+                                    // Guard against NavController throwing IllegalArgumentException
+                                    // when the user double-taps or another navigation moved us
+                                    // off nav_home before this callback fired.
+                                    val nav = findNavController()
+                                    if (nav.currentDestination?.id == R.id.nav_home) {
+                                        nav.navigate(R.id.action_home_to_models)
+                                    }
+                                },
+                                onDismissRequest = {
+                                    viewModel.resetModelList()
+                                }
+                            )
+                        }
+                    }
+                    }
+
+                    // Models exist but none are downloaded → jump straight to the
+                    // Models screen. (When some are downloaded, the frosted picker
+                    // overlay inside the chat Box above handles it.) The
+                    // session-info dialog stays a plain platform dialog.
+                    if (models.isNotEmpty()) {
+                        if (models.none { it.isDownloaded }) {
+                            // No downloaded models - go directly to Models screen
+                            LaunchedEffect(Unit) {
+                                viewModel.resetModelList()
+                                if (findNavController().currentDestination?.id == R.id.nav_home) {
+                                    findNavController().navigate(R.id.action_home_to_models)
+                                }
+                            }
+                        }
+                    } else if (modelReport != null) {
+                        AlertDialog(
+                            onDismissRequest = {
+                                modelReport = null
+                            },
+                            title = {
+                                Text(text = stringResource(R.string.session_info))
+                            },
+                            text = {
+                                Text(
+                                    text = modelReport!!,
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            },
+                            confirmButton = {
+                                TextButton(onClick = { modelReport = null }) {
+                                    Text(text = stringResource(R.string.close))
+                                }
+                            }
+                        )
                     }
                 }
 

@@ -296,6 +296,8 @@ dependencies {
     implementation(libs.commonmark)
     implementation(libs.commonmark.ext.gfm.strikethrough)
 
+    implementation(libs.haze)
+
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(libs.junit)

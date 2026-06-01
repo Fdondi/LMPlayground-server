@@ -2,33 +2,39 @@ package com.druk.lmplayground.conversation
 
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.druk.lmplayground.R
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -37,26 +43,39 @@ fun Messages(
     messages: List<Message>,
     scrollState: LazyListState,
     modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(0.dp),
+    // How far above the bottom edge the floating buttons (jump-to-bottom and
+    // the model hint) should sit, so they clear the frosted input dock that
+    // now overlaps the bottom of the message list.
+    bottomInset: Dp = 0.dp,
+    hazeState: HazeState? = null,
+    hazeStyle: HazeStyle = HazeStyle.Unspecified,
     isGenerating: Boolean = false,
+    // Auto-scroll "follow the latest" flag, hoisted to the caller so the
+    // jump-to-bottom button (now rendered above this list) can re-arm it.
+    piningBottom: Boolean = false,
+    onPiningBottomChange: (Boolean) -> Unit = {},
     sessionModelHint: Pair<String, String>? = null,
     onSessionModelHintClick: ((String) -> Unit)? = null,
     onSessionModelHintDismiss: (() -> Unit)? = null,
     onTokenCountClicked: (() -> Unit)? = null
 ) {
-    var piningBottom by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
 
-    LaunchedEffect(messages.size) {
-        piningBottom = true
-    }
     Box(modifier = modifier.pointerInput(Unit) {
         detectTapGestures(onPress = {
-            piningBottom = false
+            onPiningBottomChange(false)
         })
     }) {
         LazyColumn(
             state = scrollState,
-            modifier = Modifier.fillMaxSize()
+            contentPadding = contentPadding,
+            // The list is the blur source. Keeping hazeSource on the list (not
+            // the parent Box) means the floating buttons below are siblings of
+            // the source, so their own hazeEffect can blur the list behind them.
+            modifier = Modifier
+                .fillMaxSize()
+                .then(if (hazeState != null) Modifier.hazeSource(hazeState) else Modifier)
         ) {
             itemsIndexed(
                 items = messages,
@@ -78,14 +97,6 @@ fun Messages(
             }
         }
 
-        // Show the button if the first visible item is not the first one or if the offset is
-        // greater than the threshold.
-        val jumpToBottomButtonEnabled by remember {
-            derivedStateOf {
-                scrollState.canScrollForward
-            }
-        }
-
         // Auto scrolling to the latest item
         LaunchedEffect(piningBottom, scrollState.canScrollForward) {
             if (scrollState.canScrollForward && piningBottom) {
@@ -96,12 +107,15 @@ fun Messages(
             }
         }
 
+        // The jump-to-bottom button is rendered by the caller above all chrome.
+        // This list still owns the transient "previously used model" hint pill,
+        // which sits just above the input dock (frosted, like the bars).
         if (sessionModelHint != null) {
-            // Model hint FAB — same style as JumpToBottom
             LaunchedEffect(sessionModelHint) {
                 delay(3000)
                 onSessionModelHintDismiss?.invoke()
             }
+            val frosted = hazeState != null
             ExtendedFloatingActionButton(
                 icon = {
                     Icon(
@@ -114,25 +128,24 @@ fun Messages(
                     Text(text = stringResource(R.string.previously_used_model, sessionModelHint.first))
                 },
                 onClick = { onSessionModelHintClick?.invoke(sessionModelHint.second) },
-                containerColor = MaterialTheme.colorScheme.surface,
+                shape = CircleShape,
+                containerColor = if (frosted) Color.Transparent else MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.primary,
+                elevation = if (frosted) {
+                    FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                } else {
+                    FloatingActionButtonDefaults.elevation()
+                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
+                    .padding(bottom = bottomInset)
                     .offset(x = 0.dp, y = (-32).dp)
                     .height(36.dp)
-            )
-        } else {
-            JumpToBottom(
-                // Only show if the scroller is not at the bottom
-                enabled = jumpToBottomButtonEnabled,
-                onClicked = {
-                    scope.launch {
-                        val totalItemsCount = scrollState.layoutInfo.totalItemsCount
-                        scrollState.animateScrollToItem(totalItemsCount - 1)
-                        piningBottom = true
-                    }
-                },
-                modifier = Modifier.align(Alignment.BottomCenter)
+                    .then(
+                        if (hazeState != null) {
+                            Modifier.clip(CircleShape).hazeEffect(hazeState, hazeStyle)
+                        } else Modifier
+                    )
             )
         }
     }
