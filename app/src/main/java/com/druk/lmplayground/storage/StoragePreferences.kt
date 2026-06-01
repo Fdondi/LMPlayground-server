@@ -17,6 +17,11 @@ class StoragePreferences(context: Context) {
         get() = prefs.getString(KEY_URI, null)?.toUri()
         set(value) = prefs.edit { putString(KEY_URI, value?.toString()) }
 
+    /** True once the user has tapped the What's New "Set up tools" button. */
+    var toolsSetupSeen: Boolean
+        get() = prefs.getBoolean("tools_setup_seen", false)
+        set(value) = prefs.edit { putBoolean("tools_setup_seen", value) }
+
     fun getCustomModelMetadata(filename: String): Pair<String, Boolean>? {
         val value = prefs.getString("custom_model_$filename", null) ?: return null
         val parts = value.split("|", limit = 2)
@@ -47,12 +52,56 @@ class StoragePreferences(context: Context) {
         prefs.edit { putString("gen_params_$filename", encoded) }
     }
 
-    fun isToolEnabled(toolName: String): Boolean {
-        return prefs.getBoolean("tool_enabled_$toolName", true)
+    // --- Tool enablement (two-level: global default + per-model override) ---
+    //
+    // The global default (set in Settings → Tools) applies to every model; a
+    // per-model override (set in a model's generation-params sheet) wins for
+    // that model only. Tools are OFF by default.
+
+    fun isToolEnabledDefault(toolName: String): Boolean {
+        return prefs.getBoolean("tool_enabled_$toolName", false)
     }
 
-    fun setToolEnabled(toolName: String, enabled: Boolean) {
+    fun setToolEnabledDefault(toolName: String, enabled: Boolean) {
         prefs.edit { putBoolean("tool_enabled_$toolName", enabled) }
+    }
+
+    fun hasToolOverride(filename: String, toolName: String): Boolean {
+        return prefs.contains("tool_override_${filename}_$toolName")
+    }
+
+    fun setToolOverride(filename: String, toolName: String, enabled: Boolean) {
+        prefs.edit { putBoolean("tool_override_${filename}_$toolName", enabled) }
+    }
+
+    /** Resolved enablement for a tool on a specific model: override if set, else global default. */
+    fun effectiveToolEnabled(filename: String, toolName: String): Boolean {
+        return if (hasToolOverride(filename, toolName)) {
+            prefs.getBoolean("tool_override_${filename}_$toolName", false)
+        } else {
+            isToolEnabledDefault(toolName)
+        }
+    }
+
+    // --- Detected model capabilities cache ---
+    //
+    // Capabilities (tool calling, thinking) read from a model's chat template at
+    // load time, cached per filename so the model list can show accurate badges
+    // for models the user has already loaded (including custom GGUFs).
+
+    fun getDetectedCaps(filename: String): Pair<Boolean, Boolean>? {
+        if (!prefs.contains("caps_tools_$filename")) return null
+        return Pair(
+            prefs.getBoolean("caps_tools_$filename", false),
+            prefs.getBoolean("caps_thinking_$filename", false),
+        )
+    }
+
+    fun setDetectedCaps(filename: String, supportsTools: Boolean, supportsThinking: Boolean) {
+        prefs.edit {
+            putBoolean("caps_tools_$filename", supportsTools)
+            putBoolean("caps_thinking_$filename", supportsThinking)
+        }
     }
 
     fun clear() {

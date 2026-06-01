@@ -58,7 +58,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.core.os.bundleOf
 import androidx.navigation.fragment.findNavController
+import com.druk.lmplayground.settings.SettingsFragment
 import com.druk.lmplayground.MainActivity
 import com.druk.lmplayground.R
 import com.druk.lmplayground.models.SelectModelDialog
@@ -70,6 +72,14 @@ class ConversationFragment : Fragment() {
 
     private val viewModel: ConversationViewModel by viewModels()
     private val storageViewModel: StorageViewModel by viewModels()
+
+    override fun onResume() {
+        super.onResume()
+        // After returning from the Tools screen (which marks the flag), hide the
+        // "Set up tools" button — re-checking here instead of on tap avoids the
+        // button visibly disappearing under the user's finger.
+        viewModel.refreshToolsSetupVisibility()
+    }
 
     @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3WindowSizeClassApi::class)
     override fun onCreateView(
@@ -88,6 +98,7 @@ class ConversationFragment : Fragment() {
             val modelStatus by viewModel.loadedModelStatus.observeAsState()
             val supportsThinking by viewModel.supportsThinking.observeAsState(false)
             val supportsToolCalling by viewModel.supportsToolCalling.observeAsState(false)
+            val showToolsSetup by viewModel.showToolsSetup.observeAsState(false)
             val toolEnabledStates by viewModel.toolEnabledStates.observeAsState(emptyMap())
             val thinkingEnabled by viewModel.thinkingEnabled.observeAsState(false)
             val isModelReady by viewModel.isModelReady.observeAsState(false)
@@ -471,7 +482,27 @@ class ConversationFragment : Fragment() {
                                     modifier = Modifier.weight(1f),
                                     contentAlignment = Alignment.Center
                                 ) {
-                                    WhatsNewText()
+                                    WhatsNewText(
+                                        // Show the "Set up tools" button only until
+                                        // the user taps it once (then persisted off).
+                                        onSetUpTools = if (showToolsSetup) {
+                                            {
+                                                // Don't hide on tap (avoids the button
+                                                // vanishing under the finger). The flag is
+                                                // set when the Tools screen opens; we
+                                                // re-check it in onResume.
+                                                if (findNavController().currentDestination?.id == R.id.nav_home) {
+                                                    findNavController().navigate(
+                                                        R.id.action_home_to_settings,
+                                                        bundleOf(
+                                                            SettingsFragment.ARG_OPEN_DETAIL
+                                                                to SettingsFragment.DETAIL_TOOLS
+                                                        )
+                                                    )
+                                                }
+                                            }
+                                        } else null
+                                    )
                                 }
                             } else {
                                 Messages(

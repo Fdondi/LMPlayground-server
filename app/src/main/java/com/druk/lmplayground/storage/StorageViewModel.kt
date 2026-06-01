@@ -13,6 +13,7 @@ import com.druk.lmplayground.download.DownloadRepository
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
+import com.druk.lmplayground.models.resolveCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -112,7 +113,10 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
                 _downloadedModels.postValue(modelFiles)
                 val downloadedFilenames = modelFiles.map { it.name }.toSet()
                 val customModels = discoverCustomModels(modelFiles)
-                _allModels.postValue(ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels))
+                _allModels.postValue(
+                    ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels)
+                        .map { it.copy(model = it.model.resolveCapabilities(prefs)) }
+                )
             }
         }
     }

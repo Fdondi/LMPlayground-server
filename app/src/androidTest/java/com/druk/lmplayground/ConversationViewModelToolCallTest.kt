@@ -240,8 +240,9 @@ class ConversationViewModelToolCallTest {
         Log.d(TAG, "Final isGenerating=${viewModel.isGenerating.value}, " +
             "messages=${viewModel.uiState.messages.size}")
         for ((i, m) in viewModel.uiState.messages.withIndex()) {
+            val firstPreThinking = m.toolCalls?.firstOrNull()?.precedingThinking.orEmpty()
             Log.d(TAG, "  [$i] ${m.author}: tools=${m.toolCalls?.size ?: 0}, " +
-                "preTool='${m.preToolContent.take(80)}', " +
+                "preThinking='${firstPreThinking.take(80)}', " +
                 "content='${m.content.take(80)}'")
         }
 

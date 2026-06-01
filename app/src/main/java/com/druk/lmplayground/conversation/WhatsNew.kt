@@ -5,6 +5,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Build
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,11 +21,14 @@ import androidx.compose.ui.unit.dp
 import com.druk.lmplayground.R
 
 @Composable
-fun WhatsNewText(modifier: Modifier = Modifier) {
+fun WhatsNewText(
+    modifier: Modifier = Modifier,
+    onSetUpTools: (() -> Unit)? = null,
+) {
     val items = listOf(
         stringResource(R.string.whats_new_item_1),
-        stringResource(R.string.whats_new_item_2),
-        stringResource(R.string.whats_new_item_3)
+        stringResource(R.string.whats_new_tools),
+        stringResource(R.string.whats_new_cache)
     )
 
     Column(
@@ -43,6 +50,17 @@ fun WhatsNewText(modifier: Modifier = Modifier) {
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(8.dp))
+        }
+        if (onSetUpTools != null) {
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedButton(onClick = onSetUpTools) {
+                Icon(
+                    imageVector = Icons.Outlined.Build,
+                    contentDescription = null,
+                    modifier = Modifier.padding(end = 8.dp)
+                )
+                Text(stringResource(R.string.set_up_tools))
+            }
         }
     }
 }

@@ -66,6 +66,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlin.math.roundToInt
 import com.druk.lmplayground.R
+import com.druk.lmplayground.models.ModelCapabilityIcons
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
@@ -565,6 +566,7 @@ private fun DownloadedModelItem(
                 )
             }
         }
+        ModelCapabilityIcons(model = model, modifier = Modifier.padding(end = 4.dp))
         IconButton(onClick = onDeleteClick) {
             Icon(
                 imageVector = Icons.Outlined.Delete,
@@ -629,6 +631,10 @@ private fun AvailableModelItem(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+        }
+
+        if (downloadProgress == null) {
+            ModelCapabilityIcons(model = model, modifier = Modifier.padding(end = 4.dp))
         }
 
         if (downloadProgress != null) {

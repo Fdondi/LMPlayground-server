@@ -154,6 +154,48 @@ fun GenerationParamsSheet(
             }
             Spacer(modifier = Modifier.height(12.dp))
 
+            // Tools section (only for models that support tool calling)
+            if (supportsToolCalling && tools.isNotEmpty()) {
+                Text(
+                    text = stringResource(R.string.tools),
+                    style = MaterialTheme.typography.titleSmall
+                )
+                Text(
+                    text = stringResource(R.string.tools_params_sheet_subtitle),
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                for (tool in tools) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Column(modifier = Modifier.weight(1f).padding(end = 16.dp)) {
+                            Text(
+                                text = toolFriendlyName(tool.name),
+                                style = MaterialTheme.typography.bodyMedium
+                            )
+                            toolShortDescription(tool.name)?.let { desc ->
+                                Spacer(modifier = Modifier.height(2.dp))
+                                Text(
+                                    text = desc,
+                                    style = MaterialTheme.typography.bodySmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+                        }
+                        Switch(
+                            checked = toolEnabledStates[tool.name] ?: false,
+                            onCheckedChange = { onToolEnabledChanged(tool.name, it) }
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
             // Context Size
             val contextWarning = editedParams.contextSize != params.contextSize
             ParamSlider(
@@ -195,47 +237,6 @@ fun GenerationParamsSheet(
                         )
                     }
                 )
-            }
-
-            // Tools section (only for models that support tool calling)
-            if (supportsToolCalling && tools.isNotEmpty()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Tools",
-                    style = MaterialTheme.typography.titleSmall
-                )
-                Text(
-                    text = "Model can call these during generation",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                for (tool in tools) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 2.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = tool.name,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
-                            Text(
-                                text = tool.description,
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                maxLines = 1
-                            )
-                        }
-                        Switch(
-                            checked = toolEnabledStates[tool.name] ?: true,
-                            onCheckedChange = { onToolEnabledChanged(tool.name, it) }
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.height(8.dp))
             }
 
             // Temperature
@@ -439,4 +440,31 @@ private fun ParamSlider(
             )
         }
     }
+}
+
+/**
+ * Friendly, user-facing name for a tool keyed by its registry [Tool.name].
+ * The raw name (e.g. "run_javascript") is model-facing; falls back to it for
+ * any tool without a mapped string.
+ */
+@Composable
+private fun toolFriendlyName(name: String): String = when (name) {
+    "run_javascript" -> stringResource(R.string.tool_run_javascript_title)
+    "web_search" -> stringResource(R.string.tool_web_search_title)
+    "web_fetch" -> stringResource(R.string.tool_web_fetch_title)
+    else -> name
+}
+
+/**
+ * User-facing description for the params-sheet tool toggle — the same plain-language
+ * copy as Settings → Tools (minus the worked example). The registry
+ * [Tool.description] is written for the model, so we use these strings instead.
+ * Null for unmapped tools (the subtitle is then hidden).
+ */
+@Composable
+private fun toolShortDescription(name: String): String? = when (name) {
+    "run_javascript" -> stringResource(R.string.tool_run_javascript_desc)
+    "web_search" -> stringResource(R.string.tool_web_search_desc)
+    "web_fetch" -> stringResource(R.string.tool_web_fetch_desc)
+    else -> null
 }

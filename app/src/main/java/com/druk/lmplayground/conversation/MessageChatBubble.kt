@@ -58,45 +58,55 @@ fun ChatItemBubble(
     val isWaitingForResponse = !showActions
         && message.content.isEmpty()
         && !hasToolCalls
-        && message.preToolContent.isEmpty()
     val isGenerating = !showActions
 
     Column {
         if (isWaitingForResponse) {
             ThinkingIndicator()
         } else {
-            // ① Pre-tool thinking (from generation phase before tool calls)
-            if (hasToolCalls && message.preToolContent.isNotEmpty()) {
-                val preToolSplit = remember(message.preToolContent) {
-                    splitThinking(message.preToolContent)
-                }
-                if (preToolSplit.thinkingContent.isNotEmpty()) {
-                    val thinkingText = stringResource(R.string.thinking)
-                    CollapsibleSection(
-                        label = buildString {
-                            append("$thinkingText \u00B7 ${formatDuration(message.preToolThinkingDurationSeconds)}")
-                            if (message.preToolThinkingTokens > 0) {
-                                append(" \u00B7 ${message.preToolThinkingTokens} tokens")
-                            }
-                        },
-                        content = preToolSplit.thinkingContent
-                    )
-                    Spacer(modifier = Modifier.height(6.dp))
-                }
-            }
-
-            // ② Tool calls — collapsible rows like thinking
+            // Tool rounds: render each round's thinking immediately before its
+            // tool call(s), in chronological order.
             if (hasToolCalls) {
+                val thinkingText = stringResource(R.string.thinking)
+                val inputLabel = stringResource(R.string.tool_call_input)
+                val outputLabel = stringResource(R.string.tool_call_output)
                 for (toolCall in message.toolCalls!!) {
+                    // This round's thinking, rendered immediately before its
+                    // tool call so multi-step turns read in chronological order.
+                    if (toolCall.precedingThinking.isNotEmpty()) {
+                        val pre = remember(toolCall.precedingThinking) {
+                            splitThinking(toolCall.precedingThinking)
+                        }
+                        if (pre.thinkingContent.isNotEmpty()) {
+                            CollapsibleSection(
+                                label = buildString {
+                                    append("$thinkingText \u00B7 ${formatDuration(toolCall.precedingThinkingDurationSeconds)}")
+                                    if (toolCall.precedingThinkingTokens > 0) {
+                                        append(" \u00B7 ${toolCall.precedingThinkingTokens} tokens")
+                                    }
+                                },
+                                content = pre.thinkingContent
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                        }
+                    }
                     val durationSec = (toolCall.durationMs / 1000).toInt().coerceAtLeast(
                         if (toolCall.durationMs > 0) 1 else 0
                     )
                     CollapsibleSection(
-                        label = "Tool: ${toolCall.name} \u00B7 ${formatDuration(durationSec)}",
-                        content = toolCall.result
+                        label = "${toolDisplayName(toolCall.name)} \u00B7 ${formatDuration(durationSec)}",
+                        content = buildString {
+                            if (toolCall.arguments.isNotBlank()) {
+                                append(inputLabel).append('\n')
+                                append(prettyJson(toolCall.arguments))
+                                append("\n\n")
+                            }
+                            append(outputLabel).append('\n')
+                            append(prettyJson(toolCall.result))
+                        }
                     )
+                    Spacer(modifier = Modifier.height(6.dp))
                 }
-                Spacer(modifier = Modifier.height(6.dp))
             }
 
             // ③ If still generating after tool calls, show thinking indicator
@@ -270,6 +280,29 @@ private fun formatDuration(seconds: Int): String {
         val m = seconds / 60
         val s = seconds % 60
         "${m}m ${s}s"
+    }
+}
+
+/** Friendly display name for a tool (falls back to the raw name for unknowns). */
+@Composable
+private fun toolDisplayName(name: String): String = when (name) {
+    "run_javascript" -> stringResource(R.string.tool_run_javascript_title)
+    "web_search" -> stringResource(R.string.tool_web_search_title)
+    "web_fetch" -> stringResource(R.string.tool_web_fetch_title)
+    else -> name
+}
+
+/** Pretty-print a JSON object/array for the tool input/output view; raw on failure. */
+private fun prettyJson(raw: String): String {
+    val trimmed = raw.trim()
+    return try {
+        when {
+            trimmed.startsWith("{") -> org.json.JSONObject(trimmed).toString(2)
+            trimmed.startsWith("[") -> org.json.JSONArray(trimmed).toString(2)
+            else -> raw
+        }
+    } catch (_: Exception) {
+        raw
     }
 }
 

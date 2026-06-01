@@ -21,20 +21,24 @@ import com.druk.lmplayground.App
 import com.druk.lmplayground.data.ChatMessageEntity
 import com.druk.lmplayground.data.ChatRepository
 import com.druk.lmplayground.data.ChatSessionEntity
+import com.druk.lmplayground.data.ConversationMetadata
 import com.druk.lmplayground.data.SystemPromptEntity
 import com.druk.lmplayground.data.SystemPromptRepository
 import com.druk.lmplayground.models.DeviceCapability
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
+import com.druk.lmplayground.models.resolveCapabilities
 import com.druk.lmplayground.storage.StoragePreferences
 import com.druk.lmplayground.storage.StorageRepository
 import com.druk.lmplayground.tools.ToolRegistry
 import org.json.JSONArray
 import androidx.compose.runtime.snapshots.Snapshot
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -96,6 +100,18 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
+
+    // Whether to show the What's New "Set up tools" button. Shown until the
+    // user has opened the Tools settings once (the flag is set there, not on
+    // tap, so the button doesn't visibly vanish under the user's finger).
+    // Re-read on resume so it disappears after returning from Tools settings.
+    private val _showToolsSetup = MutableLiveData(!storagePreferences.toolsSetupSeen)
+    val showToolsSetup: LiveData<Boolean> = _showToolsSetup
+
+    @MainThread
+    fun refreshToolsSetupVisibility() {
+        _showToolsSetup.value = !storagePreferences.toolsSetupSeen
+    }
 
     val isGenerating: LiveData<Boolean> = _isGenerating
     val isModelReady: LiveData<Boolean> = _isModelReady
@@ -284,6 +300,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     }
                 _models.postValue(
                     ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels)
+                        .map { it.copy(model = it.model.resolveCapabilities(storagePreferences)) }
                 )
             }
         }
@@ -461,13 +478,23 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     }
                     this@ConversationViewModel.llamaModel = llamaModel
                     this@ConversationViewModel.llamaSession = llamaSession
-                    _supportsThinking.postValue(llamaModel.supportsThinking())
+                    val thinkingSupported = llamaModel.supportsThinking()
+                    _supportsThinking.postValue(thinkingSupported)
                     val toolCallingSupported = llamaModel.supportsToolCalling()
                     _supportsToolCalling.postValue(toolCallingSupported)
+                    // Cache the real, template-detected capabilities so the model
+                    // list can show accurate badges for this model (and any custom
+                    // GGUF) without having to load it again.
+                    storagePreferences.setDetectedCaps(
+                        modelInfo.filename, toolCallingSupported, thinkingSupported
+                    )
                     if (toolCallingSupported) {
                         val states = mutableMapOf<String, Boolean>()
                         for (tool in toolRegistry.getAllTools()) {
-                            val enabled = storagePreferences.isToolEnabled(tool.name)
+                            // Per-model override wins, else the global default.
+                            val enabled = storagePreferences.effectiveToolEnabled(
+                                modelInfo.filename, tool.name
+                            )
                             toolRegistry.setToolEnabled(tool.name, enabled)
                             states[tool.name] = enabled
                         }
@@ -830,6 +857,22 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             withContext(Dispatchers.Default) {
                 val llamaSession = llamaSession ?: return@withContext
 
+                // Re-hydrate per-tool enablement from prefs before every turn so
+                // a tool toggled in Settings -> Tools (global default) or a
+                // model's params sheet (per-model override) takes effect on the
+                // next message — without this, enabling a tool after the model
+                // was loaded had no effect (the registry was only hydrated at
+                // load time), so the model never saw any tools.
+                _loadedModel.value?.filename?.let { filename ->
+                    val states = mutableMapOf<String, Boolean>()
+                    for (tool in toolRegistry.getAllTools()) {
+                        val enabled = storagePreferences.effectiveToolEnabled(filename, tool.name)
+                        toolRegistry.setToolEnabled(tool.name, enabled)
+                        states[tool.name] = enabled
+                    }
+                    _toolEnabledStates.postValue(states)
+                }
+
                 // Tools are active when model supports it and user has tools enabled
                 val toolsActive = _supportsToolCalling.value == true
                     && toolRegistry.hasEnabledTools()
@@ -924,7 +967,18 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         )
 
                         val toolStartTime = System.currentTimeMillis()
-                        val toolResults = toolRegistry.executeToolCalls(toolCallsJson)
+                        // Run the (blocking) tool execution on IO and await it so
+                        // Stop can interrupt it: on cancel we abort in-flight
+                        // network requests, which unblocks the call promptly.
+                        val toolResults = withContext(Dispatchers.IO) {
+                            val exec = async { toolRegistry.executeToolCalls(toolCallsJson) }
+                            try {
+                                exec.await()
+                            } catch (e: CancellationException) {
+                                toolRegistry.cancelInFlight()
+                                throw e
+                            }
+                        }
                         val toolDurationMs = System.currentTimeMillis() - toolStartTime
                         android.util.Log.d(
                             "ConversationVM",
@@ -965,6 +1019,17 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         callback.thinkingTokenCount = 0
                         callback.thinkingComplete = !responseThinking
                         callback.modelIsThinking = responseThinking
+
+                        // Restart the thinking timer for the post-tool phase:
+                        // addToolCallsToLastMessage reset thinkingStartTimeMs to 0,
+                        // and the callback's modelIsThinking is pre-set true so the
+                        // streaming path won't fire markThinkingStarted itself —
+                        // without this the post-tool "Thinking" duration stays 0s.
+                        if (responseThinking) {
+                            Snapshot.withMutableSnapshot {
+                                uiState.markThinkingStarted()
+                            }
+                        }
                     }
                 } catch (e: InferenceUnavailableException) {
                     android.util.Log.w("ConversationViewModel", "generateAll failed: service unavailable", e)
@@ -1015,6 +1080,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                                     sessionId,
                                     System.currentTimeMillis(),
                                 )
+                                persistConversationMetadata(sessionId)
                             } catch (_: Throwable) { /* best-effort */ }
                         }
                     }
@@ -1053,6 +1119,23 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         )
         _currentSessionId.postValue(id)
         return id
+    }
+
+    /**
+     * Snapshot the web_search link references into the conversation's metadata
+     * so a returned ref still resolves after the app is restarted and the
+     * conversation reopened. Read-modify-write to preserve any other metadata
+     * keys. No-op when there are no references to save.
+     */
+    private suspend fun persistConversationMetadata(sessionId: String) {
+        val repo = chatRepository ?: return
+        val links = toolRegistry.webLinkStore.snapshot()
+        if (links.isEmpty()) return
+        val existing = repo.getSession(sessionId)?.metadata
+        val updated = ConversationMetadata.parse(existing)
+            .putStringMap(ConversationMetadata.KEY_WEB_LINKS, links)
+            .toJson()
+        repo.updateSessionMetadata(sessionId, updated)
     }
 
     private suspend fun persistMessage(sessionId: String, message: Message) {
@@ -1101,6 +1184,10 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
             _currentSessionId.value = sessionId
 
+            // Drop the previous conversation's web_search references; the loaded
+            // session's own references (if any) are restored just below.
+            toolRegistry.webLinkStore.clear()
+
             // Restore generation params from session
             if (sessionEntity != null) {
                 val params = GenerationParams(
@@ -1125,6 +1212,13 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     val entity = systemPromptRepository?.findByText(stored)
                     _systemPromptId.value = entity?.id
                 }
+
+                // Restore web_search link references saved with this conversation
+                // so the model can still web_fetch a previously-returned ref.
+                toolRegistry.webLinkStore.restore(
+                    ConversationMetadata.parse(sessionEntity.metadata)
+                        .getStringMap(ConversationMetadata.KEY_WEB_LINKS)
+                )
             }
 
             // Show model hint if session used a different model
@@ -1168,6 +1262,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             _currentSessionId.value = null
             _sessionModelHint.value = null
             uiState.resetMessages()
+            // Fresh conversation starts with no web_search references.
+            toolRegistry.webLinkStore.clear()
 
             // Recreate native session with clean KV cache
             val model = llamaModel
@@ -1405,10 +1501,17 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
+    /**
+     * Toggle a tool for the currently loaded model. This records a per-model
+     * override (which takes precedence over the global default set in
+     * Settings → Tools) so changing a tool here only affects this model.
+     */
     @MainThread
     fun setToolEnabled(toolName: String, enabled: Boolean) {
         toolRegistry.setToolEnabled(toolName, enabled)
-        storagePreferences.setToolEnabled(toolName, enabled)
+        _loadedModel.value?.filename?.let { filename ->
+            storagePreferences.setToolOverride(filename, toolName, enabled)
+        }
         val states = _toolEnabledStates.value.orEmpty().toMutableMap()
         states[toolName] = enabled
         _toolEnabledStates.value = states

@@ -52,6 +52,7 @@ class SettingsFragment : Fragment() {
     // ViewModel hits storage as soon as it's constructed.
     private val storageViewModel: StorageViewModel by viewModels()
     private val systemPromptsViewModel: SystemPromptsViewModel by viewModels()
+    private val toolsViewModel: ToolsViewModel by viewModels()
 
     // Pending download model held across the notification-permission
     // request, mirroring the original ModelsFragment behaviour.
@@ -160,6 +161,9 @@ class SettingsFragment : Fragment() {
 
     companion object {
         private const val TAG = "SettingsFragment"
+        /** Optional nav argument: which detail to open on entry (e.g. "tools"). */
+        const val ARG_OPEN_DETAIL = "open_detail"
+        const val DETAIL_TOOLS = "tools"
     }
 
     override fun onCreateView(
@@ -188,6 +192,20 @@ class SettingsFragment : Fragment() {
                     320.dp
                 }
 
+                // Deep link from "What's New": on phone, forward straight to the
+                // Tools screen; on tablet, the Tools detail pane opens via
+                // initialDetailKey below. Consume the argument so returning to
+                // Settings doesn't re-trigger the jump.
+                val openDetail = arguments?.getString(ARG_OPEN_DETAIL)
+                LaunchedEffect(Unit) {
+                    if (openDetail == DETAIL_TOOLS) {
+                        arguments?.remove(ARG_OPEN_DETAIL)
+                        if (!twoPane) {
+                            findNavController().navigateFromSettings(R.id.action_settings_to_tools)
+                        }
+                    }
+                }
+
                 SettingsScreen(
                     onBackClick = { findNavController().popBackStack() },
                     onModelsClick = {
@@ -204,6 +222,9 @@ class SettingsFragment : Fragment() {
                     },
                     onFaqClick = {
                         findNavController().navigateFromSettings(R.id.action_settings_to_faq)
+                    },
+                    onToolsClick = {
+                        findNavController().navigateFromSettings(R.id.action_settings_to_tools)
                     },
                     onSendFeedbackClick = {
                         val email = getString(R.string.privacy_policy_contact_email)
@@ -222,6 +243,10 @@ class SettingsFragment : Fragment() {
                     languageDetailContent = if (twoPane) {
                         { LanguageContent() }
                     } else null,
+                    toolsDetailContent = if (twoPane) {
+                        { ToolsDetailPane() }
+                    } else null,
+                    initialDetailKey = openDetail,
                     masterWidth = masterWidth,
                     appVersion = BuildConfig.VERSION_NAME,
                     // Debug builds expose a button to crash the inference
@@ -292,6 +317,20 @@ class SettingsFragment : Fragment() {
             onConfirmMigration = { storageViewModel.confirmMigration() },
             onSkipMigration = { storageViewModel.skipMigration() },
             onCancelMigration = { storageViewModel.cancelMigration() },
+        )
+    }
+
+    /**
+     * Embedded Tools pane — per-tool global default toggles, rendered without
+     * the Scaffold/topBar wrapper that [ToolsFragment] adds on phone.
+     */
+    @androidx.compose.runtime.Composable
+    private fun ToolsDetailPane() {
+        val enabled by toolsViewModel.enabled.observeAsState(emptyMap())
+        ToolsContent(
+            tools = toolsViewModel.tools,
+            enabledStates = enabled,
+            onToolEnabledChanged = { name, value -> toolsViewModel.setEnabled(name, value) },
         )
     }
 

@@ -977,6 +977,85 @@ class ToolCallingTest {
         assertTrue("Should have error for syntax error", json.has("error"))
     }
 
+    // -- Diagnostic: does the model REALLY emit tool calls? --
+    //
+    // supportsToolCalling() only reports whether the chat template injects tool
+    // definitions (template "supports_tools"). It does not prove the model was
+    // trained to emit parseable tool calls. This probe gives a direct, tool-
+    // forcing prompt N times to each model and logs how often the model
+    // actually produced a tool call (generate() rc==2) vs answered directly.
+    // Compares a suspect small model (LFM2.5 350M) against a known-good control
+    // (Qwen3 0.6B). Pure diagnostic — logs results, only fails if neither model
+    // is on the device.
+    @Test(timeout = 600_000)
+    fun testToolEmissionRate_LFMvsControl() {
+        val probes = listOf(
+            "LFM2.5-350M-Q4_K_M.gguf" to "LFM2.5 350M (user-reported failing)",
+            "Qwen3-0.6B-Q4_K_M.gguf" to "Qwen3 0.6B (confirmed-good control)",
+        )
+        val registry = ToolRegistry.createDefault(
+            InstrumentationRegistry.getInstrumentation().targetContext
+        )
+        // Tools now default to DISABLED, so enable them before serializing —
+        // otherwise toOpenAIToolsJson() returns "[]" and no tools are sent.
+        registry.getAllTools().forEach { registry.setToolEnabled(it.name, true) }
+        val toolsJson = registry.toOpenAIToolsJson()
+        // The current-date task can't be answered from training data, so a real
+        // tool-user must call run_javascript (new Date()). This is the prompt
+        // that fired a tool call in ~1s in the live app, so it's a good positive
+        // control for a known-good model.
+        val prompt = "What is today's date? Use the run_javascript tool to find out."
+        val attempts = 3
+        var anyRan = false
+
+        for ((fileName, label) in probes) {
+            val file = File(MODELS_PATH, fileName)
+            if (!file.exists() || !file.canRead()) {
+                Log.d(TAG, "TOOL-PROBE [$label]: not on device, skipping")
+                continue
+            }
+            anyRan = true
+            val model = loadModel(file)
+            val templateFlag = model.supportsToolCalling()
+            var toolCallCount = 0
+            val toolNames = mutableListOf<String>()
+            repeat(attempts) { i ->
+                val s = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")
+                    ?: error("createSession returned null")
+                try {
+                    s.setTools(toolsJson)
+                    s.addMessage(prompt, false)
+                    val (resp, rc) = generateResponse(s, maxTokens = 1024, timeoutMs = 120_000)
+                    if (rc == 2) {
+                        toolCallCount++
+                        val arr = JSONArray(s.getToolCallsJson())
+                        if (arr.length() > 0) toolNames.add(arr.getJSONObject(0).getString("name"))
+                        Log.d(TAG, "TOOL-PROBE [$label] attempt $i: PARSED TOOL CALL -> ${toolNames.lastOrNull()}")
+                    } else {
+                        // Did the model emit a tool-call STRUCTURE the parser missed
+                        // (=> parser bug), or just prose (=> capability)? Log the full
+                        // raw output and flag any tool-call-ish markup.
+                        val looksLikeToolCall = Regex("tool_call|<\\|tool|\"name\"\\s*:|function").containsMatchIn(resp)
+                        Log.d(TAG, "TOOL-PROBE [$label] attempt $i: NO PARSED CALL (rc=$rc), " +
+                            "looksLikeUnparsedToolCall=$looksLikeToolCall")
+                        Log.d(TAG, "TOOL-PROBE [$label] attempt $i RAW >>>\n$resp\n<<< END RAW")
+                    }
+                } finally {
+                    s.destroy()
+                }
+            }
+            Log.d(
+                TAG,
+                "TOOL-PROBE RESULT [$label]: template supports_tools=$templateFlag, " +
+                    "actually emitted tool call in $toolCallCount/$attempts attempts " +
+                    "(tools=$toolNames)"
+            )
+            model.unloadModel()
+            if (this.llamaModel === model) this.llamaModel = null
+        }
+        assumeTrue("Neither probe model present on device", anyRan)
+    }
+
     // -- Diagnostic test: reports all model capabilities --
 
     @Test

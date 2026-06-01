@@ -36,7 +36,7 @@ object ModelInfoProvider {
     /**
      * Static list of all available models
      */
-    val allModels: List<ModelInfo> = listOf(
+    private val rawModels: List<ModelInfo> = listOf(
         ModelInfo(
             name = "Qwen 3 0.6B",
             filename = "Qwen3-0.6B-Q4_K_M.gguf",
@@ -335,7 +335,66 @@ object ModelInfoProvider {
             supportedLanguages = MULTILINGUAL_BROAD
         )
     )
-    
+
+    // Best-effort capability flags by filename, assigned by model family. The
+    // authoritative source is each GGUF's embedded chat template, which is only
+    // readable after the model loads; once loaded, the detected capabilities are
+    // cached and override these (see ModelInfo.resolveCapabilities). A wrong flag
+    // here only mis-paints a list badge \u2014 it never affects whether tools actually
+    // run, which is gated separately on the loaded model's real capability.
+    private val TOOL_CAPABLE = setOf(
+        "Qwen3-0.6B-Q4_K_M.gguf",
+        "Qwen3-1.7B-Q4_K_M.gguf",
+        "Qwen3-4B-Q4_K_M.gguf",
+        "Qwen_Qwen3.5-0.8B-Q3_K_M.gguf",
+        "Qwen_Qwen3.5-2B-Q3_K_M.gguf",
+        "Qwen_Qwen3.5-4B-Q3_K_M.gguf",
+        "Llama-3.2-1B-Instruct-Q4_K_M.gguf",
+        "Llama-3.2-3B-Instruct-Q4_K_M.gguf",
+        "Phi-4-mini-instruct-Q4_K_M.gguf",
+        "LFM2.5-350M-Q4_K_M.gguf",
+        "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
+        "Ministral-3-3B-Instruct-2512-Q4_K_M.gguf",
+        "Ministral-3-3B-Reasoning-2512-Q4_K_M.gguf",
+        "Ministral-3-8B-Instruct-2512-Q4_K_M.gguf",
+        "Ministral-3-8B-Reasoning-2512-Q4_K_M.gguf",
+        "granite-4.0-micro-Q4_K_M.gguf",
+        "granite-4.0-h-tiny-Q4_K_M.gguf",
+        "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
+        "gemma-4-E2B-it-Q4_K_M.gguf",
+        "gemma-4-E4B-it-Q4_K_M.gguf",
+        "Qwen2.5-0.5B-Instruct-Q4_K_M.gguf",
+        "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
+        "Mistral-7B-Instruct-v0.3-Q4_K_M.gguf",
+        "Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf",
+        "gpt-oss-20b-mxfp4.gguf",
+    )
+    private val THINKING_CAPABLE = setOf(
+        "Qwen3-0.6B-Q4_K_M.gguf",
+        "Qwen3-1.7B-Q4_K_M.gguf",
+        "Qwen3-4B-Q4_K_M.gguf",
+        "Qwen_Qwen3.5-0.8B-Q3_K_M.gguf",
+        "Qwen_Qwen3.5-2B-Q3_K_M.gguf",
+        "Qwen_Qwen3.5-4B-Q3_K_M.gguf",
+        "DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf",
+        "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf",
+        "LFM2.5-350M-Q4_K_M.gguf",
+        "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
+        "Ministral-3-3B-Reasoning-2512-Q4_K_M.gguf",
+        "Ministral-3-8B-Reasoning-2512-Q4_K_M.gguf",
+        "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
+        "gemma-4-E2B-it-Q4_K_M.gguf",
+        "gemma-4-E4B-it-Q4_K_M.gguf",
+        "gpt-oss-20b-mxfp4.gguf",
+    )
+
+    val allModels: List<ModelInfo> = rawModels.map { model ->
+        model.copy(
+            supportsTools = model.filename in TOOL_CAPABLE,
+            supportsThinking = model.filename in THINKING_CAPABLE,
+        )
+    }
+
     /**
      * Get all known model filenames
      */

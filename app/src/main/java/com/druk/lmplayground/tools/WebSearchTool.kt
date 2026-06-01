@@ -8,9 +8,9 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
-class WebSearchTool : Tool {
+class WebSearchTool(private val linkStore: WebLinkStore? = null) : Tool {
     override val name = "web_search"
-    override val description = "Search the web and return results with titles, URLs, and snippets"
+    override val description = "Search the web and return results with titles, snippets, and a compact reference for each result. Pass a result's \"ref\" to web_fetch to read that page."
     override val parametersSchema = """{"type":"object","properties":{"query":{"type":"string","description":"The search query"},"max_results":{"type":"integer","description":"Maximum number of results to return (default 5, max 10)"}},"required":["query"]}"""
 
     private val client = OkHttpClient.Builder()
@@ -18,6 +18,10 @@ class WebSearchTool : Tool {
         .readTimeout(8, TimeUnit.SECONDS)
         .followRedirects(true)
         .build()
+
+    override fun cancelInFlight() {
+        client.dispatcher.cancelAll()
+    }
 
     override fun execute(arguments: String): String {
         return try {
@@ -57,7 +61,13 @@ class WebSearchTool : Tool {
 
                 val obj = JSONObject()
                 obj.put("title", title)
-                obj.put("url", actualUrl)
+                if (linkStore != null) {
+                    // Hand the model a compact reference instead of the full
+                    // URL to save context tokens; web_fetch resolves it back.
+                    obj.put("ref", linkStore.reference(actualUrl))
+                } else {
+                    obj.put("url", actualUrl)
+                }
                 obj.put("snippet", snippet)
                 results.put(obj)
             }

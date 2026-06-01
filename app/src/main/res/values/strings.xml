@@ -253,9 +253,35 @@
 
     <!-- What\'s New -->
     <string name="whats_new">What\'s New</string>
-    <string name="whats_new_item_1">Reusable system prompts</string>
+    <string name="whats_new_item_1">Tools — capable models can now use:</string>
+    <string name="whats_new_tools">Web search, fetch page, and run JavaScript</string>
+    <string name="whats_new_cache">Faster replies with cached prompts &amp; tools</string>
     <string name="whats_new_item_2">Now available in 28 languages</string>
     <string name="whats_new_item_3">Performance improvements</string>
+    <string name="set_up_tools">Set up tools</string>
+
+    <!-- Tools -->
+    <string name="tools">Tools</string>
+    <string name="tools_subtitle">Let capable models take actions</string>
+    <string name="tools_section_intro">Tools let capable models take actions during a reply, like searching the web or running a calculation. Each tool is off by default — turn on only the ones you want. Tools work only with models that support them (look for the hammer badge).</string>
+    <string name="tools_example_label">Example: %1$s</string>
+    <string name="tools_params_sheet_subtitle">The model can call these during a reply</string>
+    <!-- Tool-call detail in the chat bubble -->
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <!-- Model capability badges (content descriptions) -->
+    <string name="cd_supports_tools">Supports tools</string>
+    <string name="cd_supports_thinking">Supports thinking</string>
+    <!-- Per-tool copy -->
+    <string name="tool_run_javascript_title">Run JavaScript</string>
+    <string name="tool_run_javascript_desc">Runs JavaScript in a secure sandbox for math, dates, and text processing. No internet or file access.</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="tool_web_search_title">Web search</string>
+    <string name="tool_web_search_desc">Searches the web and returns result titles, links, and snippets so the model can find current information.</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">Fetch web page</string>
+    <string name="tool_web_fetch_desc">Opens a link and reads its main content as text so the model can summarize or quote a page.</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
 
     <!-- Inference engine service notification (foreground service while a
          model is loaded so the OS does not evict the :llama process). -->

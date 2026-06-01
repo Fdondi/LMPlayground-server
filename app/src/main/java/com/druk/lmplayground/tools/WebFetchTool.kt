@@ -6,10 +6,10 @@ import org.json.JSONObject
 import org.jsoup.Jsoup
 import java.util.concurrent.TimeUnit
 
-class WebFetchTool : Tool {
+class WebFetchTool(private val linkStore: WebLinkStore? = null) : Tool {
     override val name = "web_fetch"
     override val description = "Fetch a web page and return its main content as markdown. Headings, lists, links and code blocks are preserved so you can read the page structure."
-    override val parametersSchema = """{"type":"object","properties":{"url":{"type":"string","description":"The URL to fetch"},"max_length":{"type":"integer","description":"Maximum content length in characters (default 5000)"}},"required":["url"]}"""
+    override val parametersSchema = """{"type":"object","properties":{"url":{"type":"string","description":"The URL to fetch, or a reference from web_search results such as \"ddg:3\""},"max_length":{"type":"integer","description":"Maximum content length in characters (default 5000)"}},"required":["url"]}"""
 
     private val client = OkHttpClient.Builder()
         .connectTimeout(8, TimeUnit.SECONDS)
@@ -17,12 +17,24 @@ class WebFetchTool : Tool {
         .followRedirects(true)
         .build()
 
+    override fun cancelInFlight() {
+        client.dispatcher.cancelAll()
+    }
+
     override fun execute(arguments: String): String {
         return try {
             val args = JSONObject(arguments)
-            val url = args.getString("url").let {
-                if (!it.startsWith("http")) "https://$it" else it
+            val rawUrl = args.getString("url").trim()
+            // A web_search result reference (e.g. "ddg:3") maps back to the real
+            // URL we stored at search time. If it looks like a reference but
+            // isn't known, tell the model to search first rather than fetching
+            // a bogus host.
+            val resolved = linkStore?.resolve(rawUrl)
+            if (resolved == null && linkStore?.isReference(rawUrl) == true) {
+                return errorJson("Unknown search reference '$rawUrl'. Call web_search first, then fetch a returned ref.")
             }
+            val target = resolved ?: rawUrl
+            val url = if (!target.startsWith("http")) "https://$target" else target
             val maxLength = args.optInt("max_length", 5000).coerceIn(50, 20000)
 
             val request = Request.Builder()

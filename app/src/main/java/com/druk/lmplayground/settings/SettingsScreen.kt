@@ -23,6 +23,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.outlined.Article
 import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.HelpOutline
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Language
@@ -59,7 +60,7 @@ import java.util.Locale
  * [promptsDetailContent] slots — the caller owns the ViewModels and passes
  * the appropriate Composable when on tablet.
  */
-private enum class SettingsDetail { Models, Prompts, Language, PrivacyPolicy, Faq }
+private enum class SettingsDetail { Models, Prompts, Language, Tools, PrivacyPolicy, Faq }
 
 @Composable
 fun SettingsScreen(
@@ -69,6 +70,7 @@ fun SettingsScreen(
     onLanguageClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onFaqClick: () -> Unit,
+    onToolsClick: () -> Unit,
     onSendFeedbackClick: () -> Unit,
     appVersion: String,
     /**
@@ -88,6 +90,15 @@ fun SettingsScreen(
      * pass `{ LanguageContent() }`.
      */
     languageDetailContent: (@Composable () -> Unit)? = null,
+    /**
+     * Tablet-only mirror of [modelsDetailContent] for the Tools section.
+     */
+    toolsDetailContent: (@Composable () -> Unit)? = null,
+    /**
+     * Optional deep-link target: when "tools", the screen opens directly on the
+     * Tools detail (tablet). Used by the What's New "Set up tools" button.
+     */
+    initialDetailKey: String? = null,
     /**
      * Width of the master pane on tablet. Defaults to 320dp to match the
      * chat sidebar — callers can pass a different value to align the
@@ -114,7 +125,10 @@ fun SettingsScreen(
     // the detail pane doesn't render at all so the initial value is moot.
     var detail by remember {
         mutableStateOf<SettingsDetail?>(
-            if (modelsDetailContent != null) SettingsDetail.Models else null
+            when (initialDetailKey) {
+                "tools" -> SettingsDetail.Tools
+                else -> if (modelsDetailContent != null) SettingsDetail.Models else null
+            }
         )
     }
 
@@ -184,6 +198,13 @@ fun SettingsScreen(
                                 onLanguageClick()
                             }
                         },
+                        onToolsClick = {
+                            if (toolsDetailContent != null) {
+                                detail = SettingsDetail.Tools
+                            } else {
+                                onToolsClick()
+                            }
+                        },
                         onPrivacyPolicyClick = { detail = SettingsDetail.PrivacyPolicy },
                         onFaqClick = { detail = SettingsDetail.Faq },
                         onCrashEngineClick = onCrashEngineClick
@@ -198,6 +219,7 @@ fun SettingsScreen(
                 SettingsDetail.Models -> stringResource(R.string.models)
                 SettingsDetail.Prompts -> stringResource(R.string.system_prompts)
                 SettingsDetail.Language -> stringResource(R.string.language)
+                SettingsDetail.Tools -> stringResource(R.string.tools)
                 SettingsDetail.PrivacyPolicy -> stringResource(R.string.privacy_policy)
                 SettingsDetail.Faq -> stringResource(R.string.faq)
                 null -> ""
@@ -217,6 +239,7 @@ fun SettingsScreen(
                         SettingsDetail.Models -> modelsDetailContent?.invoke()
                         SettingsDetail.Prompts -> promptsDetailContent?.invoke()
                         SettingsDetail.Language -> languageDetailContent?.invoke()
+                        SettingsDetail.Tools -> toolsDetailContent?.invoke()
                         SettingsDetail.PrivacyPolicy ->
                             PrivacyPolicyContent(onSendFeedbackClick = onSendFeedbackClick)
                         SettingsDetail.Faq -> FaqContent()
@@ -252,6 +275,7 @@ fun SettingsScreen(
                 onModelsClick = onModelsClick,
                 onSystemPromptsClick = onSystemPromptsClick,
                 onLanguageClick = onLanguageClick,
+                onToolsClick = onToolsClick,
                 onPrivacyPolicyClick = onPrivacyPolicyClick,
                 onFaqClick = onFaqClick,
                 onCrashEngineClick = onCrashEngineClick,
@@ -276,6 +300,7 @@ private fun SettingsList(
     onModelsClick: () -> Unit,
     onSystemPromptsClick: () -> Unit,
     onLanguageClick: () -> Unit,
+    onToolsClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onFaqClick: () -> Unit,
     onCrashEngineClick: (() -> Unit)?,
@@ -301,6 +326,15 @@ private fun SettingsList(
             subtitle = stringResource(R.string.system_prompts_subtitle),
             selected = selectedDetail == SettingsDetail.Prompts,
             onClick = onSystemPromptsClick
+        )
+
+        // Tools row
+        SettingsRow(
+            icon = Icons.Outlined.Build,
+            title = stringResource(R.string.tools),
+            subtitle = stringResource(R.string.tools_subtitle),
+            selected = selectedDetail == SettingsDetail.Tools,
+            onClick = onToolsClick
         )
 
         // Language row
@@ -429,6 +463,7 @@ private fun SettingsScreenPreview() {
             onModelsClick = {},
             onSystemPromptsClick = {},
             onLanguageClick = {},
+            onToolsClick = {},
             onPrivacyPolicyClick = {},
             onFaqClick = {},
             onSendFeedbackClick = {},

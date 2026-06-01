@@ -224,6 +224,10 @@ fun Model(
                 }
             }
         }
+        ModelCapabilityIcons(
+            model = model,
+            modifier = Modifier.padding(end = 4.dp)
+        )
         Icon(
             imageVector = Icons.Outlined.AutoAwesome,
             modifier = Modifier.padding(4.dp),

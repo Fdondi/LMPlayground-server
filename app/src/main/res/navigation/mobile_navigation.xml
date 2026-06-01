@@ -25,9 +25,17 @@
         android:id="@+id/nav_settings"
         android:name="com.druk.lmplayground.settings.SettingsFragment"
         android:label="@string/settings">
+        <argument
+            android:name="open_detail"
+            android:defaultValue="@null"
+            app:argType="string"
+            app:nullable="true" />
         <action
             android:id="@+id/action_settings_to_models"
             app:destination="@id/nav_models" />
+        <action
+            android:id="@+id/action_settings_to_tools"
+            app:destination="@id/nav_tools" />
         <action
             android:id="@+id/action_settings_to_faq"
             app:destination="@id/nav_faq" />
@@ -56,6 +64,11 @@
         android:id="@+id/nav_faq"
         android:name="com.druk.lmplayground.settings.FaqFragment"
         android:label="@string/faq" />
+
+    <fragment
+        android:id="@+id/nav_tools"
+        android:name="com.druk.lmplayground.settings.ToolsFragment"
+        android:label="@string/tools" />
 
     <fragment
         android:id="@+id/nav_privacy_policy"
