@@ -8,8 +8,8 @@ import java.util.concurrent.TimeUnit
 
 class JavaScriptTool(private val context: Context) : Tool {
     override val name = "run_javascript"
-    override val description = "Execute JavaScript code in a sandboxed V8 isolate and return the value of the last expression as a string. Use this for arithmetic and math (note: `**` is exponent, `^` is bitwise XOR — not power), current date and time via `new Date()` (e.g. `new Date().toString()` for local time with day-of-week and timezone, `new Date().toISOString()` for UTC), string manipulation, JSON, regex, and any deterministic computation. Standard ECMAScript only — no network, filesystem, or DOM access."
-    override val parametersSchema = """{"type":"object","properties":{"code":{"type":"string","description":"JavaScript source. The value of the last expression is returned. Examples: '(2 + 3) * 4', '2 ** 10', 'new Date().toString()', 'JSON.stringify({pi: Math.PI})'."}},"required":["code"]}"""
+    override val description = "Run JavaScript in a sandboxed V8 isolate; returns the last expression's value. Use for math, date and time (`new Date()`), strings, JSON, and regex. No network, filesystem, or DOM."
+    override val parametersSchema = """{"type":"object","properties":{"code":{"type":"string","description":"JavaScript source; the last expression's value is returned. E.g. '(2 + 3) * 4', 'new Date().toString()'."}},"required":["code"]}"""
 
     override fun execute(arguments: String): String {
         return try {
