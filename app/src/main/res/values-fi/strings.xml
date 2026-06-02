@@ -69,20 +69,22 @@
     <string name="version">Versio %s</string>
     <string name="models_subtitle">Lataa ja hallitse malleja</string>
     <string name="privacy_policy">Tietosuojakäytäntö</string>
-    <string name="privacy_policy_effective_date">Voimaantulopäivä: 16. maaliskuuta 2024</string>
-    <string name="privacy_policy_intro">Tervetuloa LM Playgroundiin! Olen sitoutunut ylläpitämään sovellukseni kaikkien käyttäjien luottamusta. Tässä tietosuojakäytännössä annan yksityiskohtaista tietoa siitä, milloin ja miksi en kerää henkilötietoja, miten käytän ainoaa tarvittavaa lupaa (internetlupa) ja miten varmistan, että yksityisyytesi on suojattu.</string>
+    <string name="privacy_policy_effective_date">Voimaantulopäivä: 2. kesäkuuta 2026</string>
+    <string name="privacy_policy_intro">Tervetuloa LM Playgroundiin! Olen sitoutunut ylläpitämään sovellukseni kaikkien käyttäjien luottamusta. Tässä tietosuojakäytännössä selitetään, mitä sovellus kerää ja mitä se ei kerää, miten keskustelusi pysyvät laitteellasi, sekä ne harvat tapaukset — kuten valinnaiset verkkotyökalut — joissa tietoja lähtee laitteeltasi, jotta tiedät aina, mitä odottaa.</string>
     <string name="privacy_policy_s1_title">1. Ei henkilötietojen keräämistä</string>
-    <string name="privacy_policy_s1_body">Minä, Andriy Druk, LM Playgroundin kehittäjä, en kerää, tallenna, käytä tai jaa sovellukseni käyttäjien henkilötietoja. Sovellukseni on suunniteltu yksityisyytesi etusijalla, mikä varmistaa, että voit käyttää sitä vaarantamatta henkilötietojasi.</string>
-    <string name="privacy_policy_s2_title">2. Ei-henkilökohtaiset tiedot</string>
-    <string name="privacy_policy_s2_body">LM Playground on suunniteltu siten, että se ei kerää tai käytä mitään ei-henkilökohtaisia tietoja käyttäjiltään. Sovellus toimii itsenäisesti seuraamatta tai analysoimatta käyttäjätietoja, käyttäytymistä tai mieltymyksiä.</string>
-    <string name="privacy_policy_s3_title">3. Internetluvan käyttö</string>
-    <string name="privacy_policy_s3_body">Ainoa LM Playgroundin vaatima lupa on internetyhteys. Tämä lupa on välttämätön, jotta DownloadManager voi ladata tiedostoja suoraan sovellukseen. Ole varma, että tämä toiminto ei sisällä tietojen lähettämistä laitteeltasi millekään palvelimille tai tietojen keräämistä selaustottumuksistasi.</string>
-    <string name="privacy_policy_s4_title">4. Tietosuojakäytännön päivitykset</string>
-    <string name="privacy_policy_s4_body">LM Playgroundin kehittäjänä pidätän oikeuden päivittää tätä tietosuojakäytäntöä milloin tahansa. Muutokset tulevat voimaan välittömästi, kun päivitetty käytäntö julkaistaan tällä sivulla. Käyttäjiä kannustetaan tarkistamaan tämä sivu säännöllisesti muutosten varalta ja pysymään ajan tasalla siitä, miten autan suojaamaan henkilötietoja, joita en kerää.</string>
-    <string name="privacy_policy_s5_title">5. Tämän käytännön hyväksyminen</string>
-    <string name="privacy_policy_s5_body">Käyttämällä LM Playgroundia hyväksyt tämän tietosuojakäytännön. Jos et hyväksy käytäntöä, pidättäydy sovelluksen käytöstä. Sovelluksen jatkuvaa käyttöä tämän käytännön päivitysten tai muutosten julkaisemisen jälkeen pidetään hyväksymisenä näille muutoksille.</string>
-    <string name="privacy_policy_s6_title">6. Ota yhteyttä</string>
-    <string name="privacy_policy_s6_body">Jos sinulla on kysymyksiä tai ehdotuksia tietosuojakäytännöstäni, älä epäröi ottaa yhteyttä.</string>
+    <string name="privacy_policy_s1_body">Minä, Andriy Druk, LM Playgroundin kehittäjä, en kerää, tallenna, käytä tai jaa sovellukseni käyttäjien henkilötietoja. Sovelluksessa ei ole tilejä, mainoksia eikä käytön analytiikkaa tai seurantaa. Sovellus on suunniteltu yksityisyytesi etusijalla, joten voit käyttää sitä vaarantamatta henkilötietojasi.</string>
+    <string name="privacy_policy_s2_title">2. Käsittely laitteella</string>
+    <string name="privacy_policy_s2_body">Keskustelusi, järjestelmäkehotteesi ja mallin vastaukset käsitellään paikallisesti laitteellasi laitteella toimivan mallin avulla. Tätä sisältöä ei koskaan lähetetä minulle eikä millekään palvelimelle päättelyä varten. Se pysyy laitteellasi, ellet päätä käyttää internetiin yhteyttä ottavaa ominaisuutta, kuten alla kuvataan.</string>
+    <string name="privacy_policy_s3_title">3. Internetyhteys</string>
+    <string name="privacy_policy_s3_body">LM Playground pyytää internetlupaa kahteen tarkoitukseen: valitsemiesi mallitiedostojen lataamiseen ja — vain jos otat ne käyttöön — valinnaisten verkkotyökalujen toimintaan. Sovellus ei sisällä mainoksia, telemetriaa tai käytön analytiikkaa, eikä se raportoi toimintaasi minulle.</string>
+    <string name="privacy_policy_s4_title">4. Työkalut ja verkkoyhteys</string>
+    <string name="privacy_policy_s4_body">Kyvykkäät mallit voivat käyttää valinnaisia työkaluja, jotka ovat oletuksena pois päältä. Kun otat verkkotyökalut käyttöön, osa tiedoista lähtee laitteeltasi: Verkkohaku-työkalu lähettää mallin hakukyselyn DuckDuckGoon, ja Nouda verkkosivu -työkalu lataa sivut, jotka malli päättää avata näiltä verkkosivustoilta. Nämä pyynnöt käsittelevät kolmannen osapuolen sivustot omien tietosuojakäytäntöjensä mukaisesti — en vastaanota enkä tallenna niitä. Suorita JavaScript -työkalu toimii kokonaan laitteellasi hiekkalaatikossa ilman internetyhteyttä. Pidä kaikki offline-tilassa jättämällä työkalut yksinkertaisesti pois päältä.</string>
+    <string name="privacy_policy_s5_title">5. Tietosuojakäytännön päivitykset</string>
+    <string name="privacy_policy_s5_body">LM Playgroundin kehittäjänä pidätän oikeuden päivittää tätä tietosuojakäytäntöä milloin tahansa. Muutokset tulevat voimaan välittömästi, kun päivitetty käytäntö julkaistaan. Käyttäjiä kannustetaan tarkistamaan tämä sivu säännöllisesti ja pysymään ajan tasalla siitä, miten yksityisyyttäsi suojataan.</string>
+    <string name="privacy_policy_s6_title">6. Tämän käytännön hyväksyminen</string>
+    <string name="privacy_policy_s6_body">Käyttämällä LM Playgroundia hyväksyt tämän tietosuojakäytännön. Jos et hyväksy käytäntöä, pidättäydy sovelluksen käytöstä. Sovelluksen jatkuvaa käyttöä tämän käytännön päivitysten tai muutosten julkaisemisen jälkeen pidetään hyväksymisenä näille muutoksille.</string>
+    <string name="privacy_policy_s7_title">7. Ota yhteyttä</string>
+    <string name="privacy_policy_s7_body">Jos sinulla on kysymyksiä tai ehdotuksia tietosuojakäytännöstäni, älä epäröi ottaa yhteyttä.</string>
     <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
     <string name="send_feedback">Lähetä palaute</string>
     <string name="faq">UKK</string>
@@ -96,9 +98,9 @@
     <string name="faq_q3">Kuinka paljon tallennustilaa tarvitsen?</string>
     <string name="faq_a3">Mallien koot vaihtelevat noin 500 MB:stä (pienet mallit kuten Qwen 3 0.6B) useisiin gigatavuihin (suuremmat mallit kuten DeepSeek R1 7B). Varmista, että sinulla on tarpeeksi vapaata tilaa ennen lataamista.</string>
     <string name="faq_q4">Vaatiiko sovellus internetyhteyden?</string>
-    <string name="faq_a4">Internetiä tarvitaan vain mallien lataamiseen. Kun mallit on ladattu, ne toimivat täysin offline-tilassa laitteellasi.</string>
+    <string name="faq_a4">Internetiä tarvitaan mallien lataamiseen sekä — jos otat ne käyttöön — valinnaisiin verkkotyökaluihin (verkkohaku ja sivun nouto). Sen lisäksi malli toimii latauksen jälkeen täysin offline-tilassa laitteellasi.</string>
     <string name="faq_q5">Ovatko tietoni yksityisiä?</string>
-    <string name="faq_a5">Kyllä. Kaikki keskustelut käsitellään paikallisesti laitteellasi. Tietoja ei lähetetä ulkoisille palvelimille. Katso tietosuojakäytäntö saadaksesi lisätietoja.</string>
+    <string name="faq_a5">Keskustelusi käsitellään paikallisesti laitteellasi, eikä sovellus koskaan lähetä niitä palvelimelle. Ainoa poikkeus ovat valinnaiset verkkotyökalut: jos otat käyttöön verkkohaun tai sivun noudon, mallin hakukyselyt ja sen avaamat sivut lähetetään näille verkkosivustoille (haku käyttää DuckDuckGoa). Työkalut ovat oletuksena pois päältä, joten mitään ei lähde laitteeltasi, ellet ota niitä käyttöön. Katso lisätietoja tietosuojakäytännöstä.</string>
     <string name="faq_q6">Miksi mallin lataaminen on hidasta?</string>
     <string name="faq_a6">Suurempien mallien lataaminen muistiin kestää kauemmin. Latausajat riippuvat laitteesi laitteistosta. Kun malli on ladattu, se pysyy muistissa, kunnes poistat sen.</string>
     <string name="faq_q7">Mitkä laitteet toimivat parhaiten?</string>
@@ -109,6 +111,14 @@
     <string name="faq_a9">Kyllä. Siirry kohtaan Asetukset, sitten Mallit, ja käytä \u201CVaihda kansio\u201D -vaihtoehtoa valitaksesi toisen tallennuspaikan.</string>
     <string name="faq_q10">Miten poistan mallin?</string>
     <string name="faq_a10">Siirry kohtaan Asetukset, sitten Mallit. \u201CLadattu\u201D-osiossa napauta poistokuvaketta sen mallin vieressä, jonka haluat poistaa.</string>
+    <string name="faq_q11">Mitä järjestelmäkehotteet ovat?</string>
+    <string name="faq_a11">Järjestelmäkehote on uudelleenkäytettävä ohje, joka muokkaa sitä, miten malli vastaa – esimerkiksi “Olet tiivis tiedeopettaja. Selitä ajatukset selkeästi arkipäiväisin esimerkein” tai “Olet kokenut koodin tarkastaja. Osoita bugit, reunatapaukset ja tietoturvaongelmat”. Luo ja hallitse niitä kohdassa Asetukset → Järjestelmäkehotteet ja ota sitten yksi käyttöön keskustelussasi. Ne tallennetaan laitteellesi ja lähetetään vain paikalliselle mallille.</string>
+    <string name="faq_q12">Mitä työkalut ovat ja mitkä niistä ovat saatavilla?</string>
+    <string name="faq_a12">Työkalujen avulla kyvykkäät mallit voivat tehdä toimintoja vastauksen aikana. Saatavilla on kolme: Suorita JavaScript (matematiikka, päivämäärät ja tekstinkäsittely laitteella toimivassa hiekkalaatikossa), Verkkohaku (etsii ajantasaista tietoa verkosta) ja Nouda verkkosivu (lukee sivun, jotta malli voi tiivistää tai lainata sitä). Ota ne käyttöön kohdassa Asetukset → Työkalut. Jokainen on oletuksena pois päältä ja toimii vain malleilla, jotka tukevat työkalujen kutsumista – etsi vasaramerkkiä mallivalitsimesta.</string>
+    <string name="faq_q13">Lähettävätkö verkkotyökalut tietojani verkkoon?</string>
+    <string name="faq_a13">Vain kun otat ne käyttöön. Verkkohaku lähettää mallin kyselyn DuckDuckGoon, ja Nouda verkkosivu lataa sivut, jotka malli päättää avata – nämä pyynnöt menevät verkkosivustoille itselleen, ei kehittäjälle. Suorita JavaScript pysyy kokonaan laitteellasi ilman internetyhteyttä. Kun kaikki työkalut ovat pois päältä (oletus), mitään ei lähde laitteeltasi. Katso lisätietoja tietosuojakäytännöstä.</string>
+    <string name="faq_q14">Ilmoittaako sovellus minulle, kun vastaus on valmis?</string>
+    <string name="faq_a14">Kyllä. Kun sovellus on taustalla, ilmoitus seuraa mallin tilaa – ladattu, generoi, sitten vastaus valmis – ja antaa sinun kopioida tai jakaa vastauksen. Voit myös ottaa käyttöön lyhyen valmistumisäänen kohdassa Asetukset → Ääni ja värinä. Mallien lataukset näyttävät oman edistymisilmoituksensa nopeuden ja arvioidun jäljellä olevan ajan kanssa.</string>
 
     <!-- Models Screen -->
     <string name="models">Mallit</string>

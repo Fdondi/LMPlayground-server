@@ -68,20 +68,22 @@
     <string name="version">Version %s</string>
     <string name="models_subtitle">Ladda ned och hantera modeller</string>
     <string name="privacy_policy">Integritetspolicy</string>
-    <string name="privacy_policy_effective_date">Träder i kraft: 16 mars 2024</string>
-    <string name="privacy_policy_intro">Välkommen till LM Playground! Jag är dedikerad till att upprätthålla förtroendet hos alla användare av min app. I denna integritetspolicy ger jag detaljerad information om när och varför jag inte samlar in personuppgifter, hur jag använder den enda behörighet som krävs (Internetbehörighet) och hur jag säkerställer att din integritet skyddas.</string>
+    <string name="privacy_policy_effective_date">Träder i kraft: 2 juni 2026</string>
+    <string name="privacy_policy_intro">Välkommen till LM Playground! Jag är dedikerad till att upprätthålla förtroendet hos alla användare av min app. Denna integritetspolicy förklarar vad appen samlar in och inte samlar in, hur dina konversationer stannar på din enhet och de få fall — som de valfria webbverktygen — då information lämnar din enhet, så att du alltid vet vad du kan förvänta dig.</string>
     <string name="privacy_policy_s1_title">1. Ingen insamling av personuppgifter</string>
-    <string name="privacy_policy_s1_body">Jag, Andriy Druk, utvecklaren av LM Playground, samlar inte in, lagrar, använder eller delar någon personlig information från användarna av min app. Min app är utformad med din integritet som prioritet, vilket säkerställer att du kan använda den utan att kompromissa med dina personuppgifter.</string>
-    <string name="privacy_policy_s2_title">2. Icke-personlig information</string>
-    <string name="privacy_policy_s2_body">LM Playground är utformad på ett sådant sätt att den inte samlar in eller använder någon icke-personlig information från sina användare. Appen fungerar självständigt utan att spåra eller analysera användardata, beteende eller preferenser.</string>
-    <string name="privacy_policy_s3_title">3. Användning av Internetbehörighet</string>
-    <string name="privacy_policy_s3_body">Den enda behörighet som krävs av LM Playground är Internetåtkomst. Denna behörighet är nödvändig för att DownloadManager ska kunna ladda ned filer direkt till appen. Var försäkrad om att denna funktion inte innebär att några data skickas från din enhet till några servrar eller samlar in information om dina surfvanor.</string>
-    <string name="privacy_policy_s4_title">4. Uppdateringar av integritetspolicyn</string>
-    <string name="privacy_policy_s4_body">Som utvecklare av LM Playground förbehåller jag mig rätten att uppdatera denna integritetspolicy när som helst. Eventuella ändringar träder i kraft omedelbart när den uppdaterade policyn publiceras på denna sida. Användare uppmanas att ofta kontrollera denna sida för eventuella ändringar och hålla sig informerade om hur jag hjälper till att skydda den personliga information jag inte samlar in.</string>
-    <string name="privacy_policy_s5_title">5. Godkännande av denna policy</string>
-    <string name="privacy_policy_s5_body">Genom att använda LM Playground bekräftar du och samtycker till denna integritetspolicy. Om du inte godkänner policyn, vänligen avstå från att använda appen. Din fortsatta användning av appen efter publicering av eventuella uppdateringar eller ändringar av denna policy kommer att anses vara ditt godkännande av dessa ändringar.</string>
-    <string name="privacy_policy_s6_title">6. Kontakta mig</string>
-    <string name="privacy_policy_s6_body">Om du har några frågor eller förslag om min integritetspolicy, tveka inte att kontakta mig.</string>
+    <string name="privacy_policy_s1_body">Jag, Andriy Druk, utvecklaren av LM Playground, samlar inte in, lagrar, använder eller delar någon personlig information från användarna av min app. Det finns inga konton, ingen reklam och ingen användningsanalys eller spårning. Appen är utformad med din integritet som prioritet, så att du kan använda den utan att kompromissa med dina personuppgifter.</string>
+    <string name="privacy_policy_s2_title">2. Bearbetning på enheten</string>
+    <string name="privacy_policy_s2_body">Dina konversationer, systemprompter och modellens svar bearbetas lokalt på din enhet av modellen på enheten. Detta innehåll skickas aldrig till mig eller till någon server för inferens. Det stannar på din enhet om du inte väljer att använda en funktion som ansluter till internet, enligt beskrivningen nedan.</string>
+    <string name="privacy_policy_s3_title">3. Internetåtkomst</string>
+    <string name="privacy_policy_s3_body">LM Playground begär internetbehörighet för två syften: att ladda ned de modellfiler du väljer, och — endast om du slår på dem — för att driva de valfria webbverktygen. Appen innehåller ingen reklam, telemetri eller användningsanalys, och den rapporterar inte din aktivitet tillbaka till mig.</string>
+    <string name="privacy_policy_s4_title">4. Verktyg och webbåtkomst</string>
+    <string name="privacy_policy_s4_body">Kapabla modeller kan använda valfria verktyg, som är avstängda som standard. När du aktiverar webbverktygen lämnar viss information din enhet: verktyget Webbsökning skickar modellens sökfråga till DuckDuckGo, och verktyget Hämta webbsida laddar ned de sidor modellen beslutar att öppna från dessa webbplatser. Dessa förfrågningar hanteras av tredjepartswebbplatserna under deras egna integritetspolicyer — jag varken tar emot eller lagrar dem. Verktyget Kör JavaScript körs helt på din enhet i en sandlåda utan internetåtkomst. För att hålla allt offline lämnar du helt enkelt verktygen avstängda.</string>
+    <string name="privacy_policy_s5_title">5. Uppdateringar av integritetspolicyn</string>
+    <string name="privacy_policy_s5_body">Som utvecklare av LM Playground förbehåller jag mig rätten att uppdatera denna integritetspolicy när som helst. Eventuella ändringar träder i kraft omedelbart när den uppdaterade policyn publiceras. Användare uppmanas att regelbundet granska denna sida och hålla sig informerade om hur deras integritet skyddas.</string>
+    <string name="privacy_policy_s6_title">6. Godkännande av denna policy</string>
+    <string name="privacy_policy_s6_body">Genom att använda LM Playground bekräftar du och samtycker till denna integritetspolicy. Om du inte godkänner policyn, vänligen avstå från att använda appen. Din fortsatta användning av appen efter publicering av eventuella uppdateringar eller ändringar av denna policy kommer att anses vara ditt godkännande av dessa ändringar.</string>
+    <string name="privacy_policy_s7_title">7. Kontakta mig</string>
+    <string name="privacy_policy_s7_body">Om du har några frågor eller förslag om min integritetspolicy, tveka inte att kontakta mig.</string>
     <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
     <string name="send_feedback">Skicka feedback</string>
     <string name="faq">FAQ</string>
@@ -95,9 +97,9 @@
     <string name="faq_q3">Hur mycket lagringsutrymme behöver jag?</string>
     <string name="faq_a3">Modellstorlekarna varierar från cirka 500 MB (små modeller som Qwen 3 0.6B) till flera GB (större modeller som DeepSeek R1 7B). Se till att du har tillräckligt med ledigt utrymme innan du laddar ned.</string>
     <string name="faq_q4">Kräver appen en internetanslutning?</string>
-    <string name="faq_a4">Internet behövs endast för att ladda ned modeller. När de har laddats ned körs modellerna helt offline på din enhet.</string>
+    <string name="faq_a4">Internet behövs för att ladda ned modeller och — om du slår på dem — för de valfria webbverktygen (webbsökning och hämta sida). Bortsett från det körs en modell helt offline på din enhet när den väl har laddats ned.</string>
     <string name="faq_q5">Är mina data privata?</string>
-    <string name="faq_a5">Ja. Alla konversationer bearbetas lokalt på din enhet. Inga data skickas till externa servrar. Se integritetspolicyn för mer information.</string>
+    <string name="faq_a5">Dina konversationer bearbetas lokalt på din enhet och skickas aldrig till en server av appen. Det enda undantaget är de valfria webbverktygen: om du aktiverar webbsökning eller hämta sida skickas modellens sökfrågor och de sidor den öppnar till dessa webbplatser (sökning använder DuckDuckGo). Verktyg är avstängda som standard, så ingenting lämnar din enhet om du inte slår på dem. Se integritetspolicyn för mer information.</string>
     <string name="faq_q6">Varför är modellinläsningen långsam?</string>
     <string name="faq_a6">Större modeller tar längre tid att läsa in i minnet. Inläsningstiderna beror på din enhets hårdvara. När modellen är inläst stannar den i minnet tills du laddar ur den.</string>
     <string name="faq_q7">Vilka enheter fungerar bäst?</string>
@@ -108,6 +110,15 @@
     <string name="faq_a9">Ja. Gå till Inställningar, sedan Modeller, och använd alternativet \u201CÄndra mapp\u201D för att välja en annan lagringsplats.</string>
     <string name="faq_q10">Hur tar jag bort en modell?</string>
     <string name="faq_a10">Gå till Inställningar, sedan Modeller. I avsnittet \u201CNedladdade\u201D trycker du på papperskorgsikonen bredvid modellen du vill ta bort.</string>
+
+    <string name="faq_q11">Vad är systemprompter?</string>
+    <string name="faq_a11">En systemprompt är en återanvändbar instruktion som formar hur modellen svarar — till exempel ”Du är en koncis vetenskapslärare. Förklara idéer tydligt med vardagliga exempel.” eller ”Du är en senior kodgranskare. Peka ut buggar, gränsfall och säkerhetsproblem.” Skapa och hantera dem i Inställningar → Systemprompter och tillämpa sedan en på din chatt. De lagras på din enhet och skickas endast till den lokala modellen.</string>
+    <string name="faq_q12">Vad är verktyg och vilka finns tillgängliga?</string>
+    <string name="faq_a12">Verktyg låter kapabla modeller utföra åtgärder under ett svar. Tre finns tillgängliga: Kör JavaScript (matematik, datum och textbearbetning i en sandlåda på enheten), Webbsökning (hittar aktuell information på webben) och Hämta webbsida (läser en sida så att modellen kan sammanfatta eller citera den). Slå på dem i Inställningar → Verktyg. Varje är avstängt som standard och fungerar endast med modeller som stöder verktygsanrop — leta efter hammarsymbolen i modellväljaren.</string>
+    <string name="faq_q13">Skickar webbverktygen mina data online?</string>
+    <string name="faq_a13">Endast när du aktiverar dem. Webbsökning skickar modellens sökfråga till DuckDuckGo, och Hämta webbsida laddar ned de sidor modellen väljer att öppna — dessa förfrågningar går till webbplatserna själva, inte till utvecklaren. Kör JavaScript stannar helt på din enhet utan internetåtkomst. Med alla verktyg avstängda (standarden) lämnar ingenting din enhet. Se integritetspolicyn för mer information.</string>
+    <string name="faq_q14">Meddelar appen mig när ett svar är klart?</string>
+    <string name="faq_a14">Ja. Medan appen är i bakgrunden följer en avisering modellens status — inläst, genererar, sedan svar klart — och låter dig kopiera eller dela svaret. Du kan även aktivera en kort slutförandeton i Inställningar → Ljud och haptik. Modellnedladdningar visar sin egen förloppsavisering med hastighet och beräknad återstående tid.</string>
 
     <!-- Models Screen -->
     <string name="models">Modeller</string>

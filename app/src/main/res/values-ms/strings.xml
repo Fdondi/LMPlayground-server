@@ -68,20 +68,22 @@
     <string name="version">Versi %s</string>
     <string name="models_subtitle">Muat turun dan urus model</string>
     <string name="privacy_policy">Dasar Privasi</string>
-    <string name="privacy_policy_effective_date">Tarikh Kuat Kuasa: 16 Mac 2024</string>
-    <string name="privacy_policy_intro">Selamat datang ke LM Playground! Saya komited untuk mengekalkan kepercayaan dan keyakinan semua pengguna aplikasi saya. Dalam Dasar Privasi ini, saya menyediakan maklumat terperinci tentang bila dan mengapa saya tidak mengumpul data peribadi, bagaimana saya menggunakan satu-satunya kebenaran yang diperlukan (kebenaran Internet), dan bagaimana saya memastikan privasi anda dilindungi.</string>
+    <string name="privacy_policy_effective_date">Tarikh Kuat Kuasa: 2 Jun 2026</string>
+    <string name="privacy_policy_intro">Selamat datang ke LM Playground! Saya komited untuk mengekalkan kepercayaan dan keyakinan semua orang yang menggunakan aplikasi saya. Dasar Privasi ini menerangkan apa yang dikumpul dan tidak dikumpul oleh aplikasi, bagaimana perbualan anda kekal pada peranti anda, dan beberapa keadaan — seperti alat web pilihan — apabila maklumat meninggalkan peranti anda, supaya anda sentiasa tahu apa yang dijangkakan.</string>
     <string name="privacy_policy_s1_title">1. Tiada Pengumpulan Maklumat Peribadi</string>
-    <string name="privacy_policy_s1_body">Saya, Andriy Druk, pembangun LM Playground, tidak mengumpul, menyimpan, menggunakan atau berkongsi sebarang maklumat peribadi daripada pengguna aplikasi saya. Aplikasi saya direka dengan privasi anda sebagai keutamaan, memastikan anda boleh menggunakannya tanpa menjejaskan data peribadi anda.</string>
-    <string name="privacy_policy_s2_title">2. Maklumat Bukan Peribadi</string>
-    <string name="privacy_policy_s2_body">LM Playground direka sedemikian rupa sehingga ia tidak mengumpul atau menggunakan sebarang maklumat bukan peribadi daripada penggunanya. Aplikasi ini beroperasi secara bebas tanpa menjejaki atau menganalisis data, tingkah laku atau pilihan pengguna.</string>
-    <string name="privacy_policy_s3_title">3. Penggunaan Kebenaran Internet</string>
-    <string name="privacy_policy_s3_body">Satu-satunya kebenaran yang diperlukan oleh LM Playground adalah untuk akses Internet. Kebenaran ini diperlukan untuk membolehkan DownloadManager memuat turun fail terus ke dalam aplikasi. Yakinlah bahawa fungsi ini tidak melibatkan penghantaran sebarang data dari peranti anda ke mana-mana pelayan atau mengumpul maklumat tentang tabiat pelayaran anda.</string>
-    <string name="privacy_policy_s4_title">4. Kemas Kini Dasar Privasi</string>
-    <string name="privacy_policy_s4_body">Sebagai pembangun LM Playground, saya berhak untuk mengemas kini Dasar Privasi ini pada bila-bila masa. Sebarang perubahan akan berkuat kuasa serta-merta setelah dasar yang dikemas kini disiarkan di halaman ini. Pengguna digalakkan untuk kerap memeriksa halaman ini untuk sebarang perubahan dan sentiasa dimaklumkan tentang bagaimana saya membantu melindungi maklumat peribadi yang saya tidak kumpul.</string>
-    <string name="privacy_policy_s5_title">5. Penerimaan Dasar Ini</string>
-    <string name="privacy_policy_s5_body">Dengan menggunakan LM Playground, anda mengakui dan bersetuju dengan Dasar Privasi ini. Jika anda tidak bersetuju dengan dasar ini, sila berhenti menggunakan aplikasi. Penggunaan berterusan aplikasi selepas penyiaran sebarang kemas kini atau perubahan kepada dasar ini akan dianggap sebagai penerimaan anda terhadap perubahan tersebut.</string>
-    <string name="privacy_policy_s6_title">6. Hubungi Saya</string>
-    <string name="privacy_policy_s6_body">Jika anda mempunyai sebarang soalan atau cadangan tentang Dasar Privasi saya, jangan teragak-agak untuk menghubungi saya.</string>
+    <string name="privacy_policy_s1_body">Saya, Andriy Druk, pembangun LM Playground, tidak mengumpul, menyimpan, menggunakan atau berkongsi sebarang maklumat peribadi daripada pengguna aplikasi saya. Tiada akaun, tiada pengiklanan, dan tiada analitik atau penjejakan penggunaan. Aplikasi direka dengan privasi anda sebagai keutamaan, supaya anda boleh menggunakannya tanpa menjejaskan data peribadi anda.</string>
+    <string name="privacy_policy_s2_title">2. Pemprosesan pada Peranti</string>
+    <string name="privacy_policy_s2_body">Perbualan anda, gesaan sistem, dan respons model diproses secara setempat pada peranti anda oleh model pada peranti. Kandungan ini tidak pernah dihantar kepada saya atau ke mana-mana pelayan untuk inferens. Ia kekal pada peranti anda melainkan anda memilih untuk menggunakan ciri yang mencapai internet, seperti diterangkan di bawah.</string>
+    <string name="privacy_policy_s3_title">3. Akses Internet</string>
+    <string name="privacy_policy_s3_body">LM Playground meminta kebenaran Internet untuk dua tujuan: untuk memuat turun fail model yang anda pilih, dan — hanya jika anda menghidupkannya — untuk menggerakkan alat web pilihan. Aplikasi tidak mengandungi pengiklanan, telemetri atau analitik penggunaan, dan ia tidak melaporkan aktiviti anda kembali kepada saya.</string>
+    <string name="privacy_policy_s4_title">4. Alat dan Akses Web</string>
+    <string name="privacy_policy_s4_body">Model yang berkemampuan boleh menggunakan alat pilihan, yang dimatikan secara lalai. Apabila anda mendayakan alat web, sebahagian maklumat meninggalkan peranti anda: alat Carian web menghantar pertanyaan carian model ke DuckDuckGo, dan alat Ambil halaman web memuat turun halaman yang model putuskan untuk dibuka daripada tapak web tersebut. Permintaan tersebut dikendalikan oleh tapak pihak ketiga di bawah dasar privasi mereka sendiri — saya tidak menerima mahupun menyimpannya. Alat Jalankan JavaScript berjalan sepenuhnya pada peranti anda dalam kotak pasir tanpa akses internet. Untuk memastikan segalanya luar talian, biarkan sahaja alat dimatikan.</string>
+    <string name="privacy_policy_s5_title">5. Kemas Kini Dasar Privasi</string>
+    <string name="privacy_policy_s5_body">Sebagai pembangun LM Playground, saya berhak untuk mengemas kini Dasar Privasi ini pada bila-bila masa. Sebarang perubahan akan berkuat kuasa serta-merta setelah dasar yang dikemas kini disiarkan. Pengguna digalakkan untuk menyemak halaman ini secara berkala dan sentiasa dimaklumkan tentang bagaimana privasi mereka dilindungi.</string>
+    <string name="privacy_policy_s6_title">6. Penerimaan Dasar Ini</string>
+    <string name="privacy_policy_s6_body">Dengan menggunakan LM Playground, anda mengakui dan bersetuju dengan Dasar Privasi ini. Jika anda tidak bersetuju dengan dasar ini, sila berhenti menggunakan aplikasi. Penggunaan berterusan aplikasi selepas penyiaran sebarang kemas kini atau perubahan kepada dasar ini akan dianggap sebagai penerimaan anda terhadap perubahan tersebut.</string>
+    <string name="privacy_policy_s7_title">7. Hubungi Saya</string>
+    <string name="privacy_policy_s7_body">Jika anda mempunyai sebarang soalan atau cadangan tentang Dasar Privasi saya, jangan teragak-agak untuk menghubungi saya.</string>
     <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
     <string name="send_feedback">Hantar Maklum Balas</string>
     <string name="faq">Soalan Lazim</string>
@@ -95,9 +97,9 @@
     <string name="faq_q3">Berapa banyak ruang storan yang saya perlukan?</string>
     <string name="faq_a3">Saiz model berbeza dari kira-kira 500 MB (model kecil seperti Qwen 3 0.6B) hingga beberapa GB (model lebih besar seperti DeepSeek R1 7B). Pastikan anda mempunyai ruang kosong yang mencukupi sebelum memuat turun.</string>
     <string name="faq_q4">Adakah aplikasi memerlukan sambungan internet?</string>
-    <string name="faq_a4">Internet hanya diperlukan untuk memuat turun model. Setelah dimuat turun, model berjalan sepenuhnya luar talian pada peranti anda.</string>
+    <string name="faq_a4">Internet diperlukan untuk memuat turun model, dan — jika anda menghidupkannya — untuk alat web pilihan (carian web dan ambil halaman). Selain itu, setelah model dimuat turun, ia berjalan sepenuhnya luar talian pada peranti anda.</string>
     <string name="faq_q5">Adakah data saya peribadi?</string>
-    <string name="faq_a5">Ya. Semua perbualan diproses secara tempatan pada peranti anda. Tiada data dihantar ke pelayan luar. Lihat Dasar Privasi untuk butiran.</string>
+    <string name="faq_a5">Perbualan anda diproses secara setempat pada peranti anda dan tidak pernah dihantar ke pelayan oleh aplikasi. Satu-satunya pengecualian ialah alat web pilihan: jika anda mendayakan carian web atau ambil halaman, pertanyaan carian model dan halaman yang dibukanya dihantar ke tapak web tersebut (carian menggunakan DuckDuckGo). Alat dimatikan secara lalai, jadi tiada apa-apa meninggalkan peranti anda melainkan anda menghidupkannya. Lihat Dasar Privasi untuk butiran.</string>
     <string name="faq_q6">Mengapa pemuatan model perlahan?</string>
     <string name="faq_a6">Model yang lebih besar mengambil lebih banyak masa untuk dimuat ke dalam memori. Masa pemuatan bergantung pada perkakasan peranti anda. Setelah dimuatkan, model kekal dalam memori sehingga anda menyahmuatkannya.</string>
     <string name="faq_q7">Peranti manakah yang berfungsi paling baik?</string>
@@ -108,6 +110,14 @@
     <string name="faq_a9">Ya. Pergi ke Tetapan, kemudian Model, dan gunakan pilihan \u201CTukar Folder\u201D untuk memilih lokasi storan yang berbeza.</string>
     <string name="faq_q10">Bagaimana saya memadamkan model?</string>
     <string name="faq_a10">Pergi ke Tetapan, kemudian Model. Di bahagian \u201CDimuat Turun\u201D, ketik ikon padam di sebelah model yang anda ingin buang.</string>
+    <string name="faq_q11">Apakah gesaan sistem?</string>
+    <string name="faq_a11">Gesaan sistem ialah arahan boleh guna semula yang membentuk cara model bertindak balas \u2014 sebagai contoh, \u201CAnda ialah tutor sains yang ringkas. Terangkan idea dengan jelas menggunakan contoh harian\u201D atau \u201CAnda ialah penyemak kod kanan. Tunjukkan pepijat, kes tepi dan isu keselamatan\u201D. Cipta dan urus di Tetapan \u2192 Gesaan Sistem, kemudian gunakan satu pada sembang anda. Ia disimpan pada peranti anda dan hanya dihantar ke model setempat.</string>
+    <string name="faq_q12">Apakah alat dan yang manakah tersedia?</string>
+    <string name="faq_a12">Alat membolehkan model yang berkemampuan mengambil tindakan semasa membalas. Tiga tersedia: Jalankan JavaScript (matematik, tarikh dan pemprosesan teks dalam kotak pasir pada peranti), Carian web (mencari maklumat semasa di web), dan Ambil halaman web (membaca halaman supaya model dapat meringkas atau memetiknya). Hidupkannya di Tetapan \u2192 Alat. Setiap satu dimatikan secara lalai dan hanya berfungsi dengan model yang menyokong pemanggilan alat \u2014 cari lencana tukul dalam pemilih model.</string>
+    <string name="faq_q13">Adakah alat web menghantar data saya dalam talian?</string>
+    <string name="faq_a13">Hanya apabila anda mendayakannya. Carian web menghantar pertanyaan model ke DuckDuckGo, dan Ambil halaman web memuat turun halaman yang model pilih untuk dibuka \u2014 permintaan tersebut pergi ke tapak web itu sendiri, bukan kepada pembangun. Jalankan JavaScript kekal sepenuhnya pada peranti anda tanpa akses internet. Dengan setiap alat dimatikan (lalai), tiada apa-apa meninggalkan peranti anda. Lihat Dasar Privasi untuk butiran.</string>
+    <string name="faq_q14">Adakah aplikasi akan memberitahu saya apabila respons sedia?</string>
+    <string name="faq_a14">Ya. Semasa aplikasi berada di latar belakang, satu pemberitahuan menjejaki status model \u2014 dimuatkan, menjana, kemudian respons sedia \u2014 dan membenarkan anda menyalin atau berkongsi balasan. Anda juga boleh mendayakan bunyi siap yang pendek di Tetapan \u2192 Bunyi dan Haptik. Muat turun model memaparkan pemberitahuan kemajuannya sendiri dengan kelajuan dan anggaran masa.</string>
 
     <!-- Models Screen -->
     <string name="models">Model</string>

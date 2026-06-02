@@ -70,20 +70,22 @@
     <string name="version">Verze %s</string>
     <string name="models_subtitle">Stáhnout a spravovat modely</string>
     <string name="privacy_policy">Zásady ochrany osobních údajů</string>
-    <string name="privacy_policy_effective_date">Datum účinnosti: 16. března 2024</string>
-    <string name="privacy_policy_intro">Vítejte v LM Playground! Záleží mi na zachování důvěry všech uživatelů mé aplikace. V těchto zásadách ochrany osobních údajů poskytuji podrobné informace o tom, kdy a proč nesbírám osobní údaje, jak využívám jediné požadované oprávnění (oprávnění k internetu) a jak zajišťuji ochranu vašeho soukromí.</string>
+    <string name="privacy_policy_effective_date">Datum účinnosti: 2. června 2026</string>
+    <string name="privacy_policy_intro">Vítejte v LM Playground! Záleží mi na zachování důvěry všech, kdo mou aplikaci používají. Tyto zásady ochrany osobních údajů vysvětlují, co aplikace shromažďuje a co ne, jak vaše konverzace zůstávají ve vašem zařízení a v jakých několika případech — například u volitelných webových nástrojů — informace vaše zařízení opouštějí, abyste vždy věděli, co očekávat.</string>
     <string name="privacy_policy_s1_title">1. Žádný sběr osobních údajů</string>
-    <string name="privacy_policy_s1_body">Já, Andriy Druk, vývojář LM Playground, neshromažďuji, neukládám, nepoužívám ani nesdílím žádné osobní údaje uživatelů mé aplikace. Moje aplikace je navržena s prioritou vaší soukromí, abyste ji mohli používat bez ohrožení svých osobních údajů.</string>
-    <string name="privacy_policy_s2_title">2. Neosobní údaje</string>
-    <string name="privacy_policy_s2_body">LM Playground je navržen tak, aby nesbíral ani nepoužíval žádné neosobní údaje od svých uživatelů. Aplikace funguje nezávisle, bez sledování nebo analýzy dat, chování nebo preferencí uživatelů.</string>
-    <string name="privacy_policy_s3_title">3. Používání oprávnění k internetu</string>
-    <string name="privacy_policy_s3_body">Jediným oprávněním požadovaným aplikací LM Playground je přístup k internetu. Toto oprávnění je nezbytné k tomu, aby DownloadManager mohl stahovat soubory přímo do aplikace. Ujišťuji vás, že tato funkce nezahrnuje odesílání žádných dat z vašeho zařízení na jakékoli servery ani shromažďování informací o vašich zvycích prohlížení.</string>
-    <string name="privacy_policy_s4_title">4. Aktualizace zásad ochrany osobních údajů</string>
-    <string name="privacy_policy_s4_body">Jako vývojář LM Playground si vyhrazuji právo kdykoli tyto zásady ochrany osobních údajů aktualizovat. Jakékoli změny jsou účinné okamžitě po zveřejnění aktualizovaných zásad na této stránce. Uživatelé jsou vybízeni, aby pravidelně kontrolovali tuto stránku kvůli změnám a zůstali informováni o tom, jak pomáhám chránit osobní údaje, které neshromažďuji.</string>
-    <string name="privacy_policy_s5_title">5. Přijetí těchto zásad</string>
-    <string name="privacy_policy_s5_body">Používáním LM Playground berete na vědomí a souhlasíte s těmito zásadami ochrany osobních údajů. Pokud s nimi nesouhlasíte, aplikaci prosím nepoužívejte. Pokračující používání aplikace po zveřejnění jakýchkoli aktualizací nebo změn těchto zásad bude považováno za vaše přijetí těchto změn.</string>
-    <string name="privacy_policy_s6_title">6. Kontakt</string>
-    <string name="privacy_policy_s6_body">Pokud máte jakékoli dotazy nebo návrhy ohledně mých zásad ochrany osobních údajů, neváhejte mě kontaktovat.</string>
+    <string name="privacy_policy_s1_body">Já, Andriy Druk, vývojář LM Playground, neshromažďuji, neukládám, nepoužívám ani nesdílím žádné osobní údaje uživatelů mé aplikace. Nejsou zde žádné účty, žádná reklama ani žádná analytika používání nebo sledování. Aplikace je navržena s prioritou vašeho soukromí, abyste ji mohli používat bez ohrožení svých osobních údajů.</string>
+    <string name="privacy_policy_s2_title">2. Zpracování v zařízení</string>
+    <string name="privacy_policy_s2_body">Vaše konverzace, systémové pokyny a odpovědi modelu jsou zpracovávány lokálně ve vašem zařízení modelem běžícím v zařízení. Tento obsah není nikdy odesílán mně ani na žádný server pro inferenci. Zůstává ve vašem zařízení, pokud se nerozhodnete použít funkci, která se připojuje k internetu, jak je popsáno níže.</string>
+    <string name="privacy_policy_s3_title">3. Přístup k internetu</string>
+    <string name="privacy_policy_s3_body">LM Playground žádá o oprávnění k internetu ze dvou důvodů: ke stažení souborů modelů, které si vyberete, a — pouze pokud je zapnete — k provozu volitelných webových nástrojů. Aplikace neobsahuje žádnou reklamu, telemetrii ani analytiku používání a nehlásí mi vaši aktivitu.</string>
+    <string name="privacy_policy_s4_title">4. Nástroje a přístup k webu</string>
+    <string name="privacy_policy_s4_body">Schopné modely mohou používat volitelné nástroje, které jsou ve výchozím nastavení vypnuté. Když zapnete webové nástroje, část informací opustí vaše zařízení: nástroj Vyhledávání na webu odešle vyhledávací dotaz modelu do DuckDuckGo a nástroj Načíst webovou stránku stáhne stránky, které se model rozhodne otevřít na těchto webech. Tyto požadavky zpracovávají weby třetích stran podle svých vlastních zásad ochrany osobních údajů — já je ani nepřijímám, ani neukládám. Nástroj Spustit JavaScript běží zcela ve vašem zařízení v sandboxu bez přístupu k internetu. Chcete-li, aby vše zůstalo offline, jednoduše nástroje nezapínejte.</string>
+    <string name="privacy_policy_s5_title">5. Aktualizace zásad ochrany osobních údajů</string>
+    <string name="privacy_policy_s5_body">Jako vývojář LM Playground si vyhrazuji právo kdykoli tyto zásady ochrany osobních údajů aktualizovat. Jakékoli změny jsou účinné okamžitě po zveřejnění aktualizovaných zásad. Uživatelé jsou vybízeni, aby tuto stránku pravidelně kontrolovali a zůstali informováni o tom, jak je chráněno jejich soukromí.</string>
+    <string name="privacy_policy_s6_title">6. Přijetí těchto zásad</string>
+    <string name="privacy_policy_s6_body">Používáním LM Playground berete na vědomí a souhlasíte s těmito zásadami ochrany osobních údajů. Pokud s nimi nesouhlasíte, aplikaci prosím nepoužívejte. Pokračující používání aplikace po zveřejnění jakýchkoli aktualizací nebo změn těchto zásad bude považováno za vaše přijetí těchto změn.</string>
+    <string name="privacy_policy_s7_title">7. Kontakt</string>
+    <string name="privacy_policy_s7_body">Pokud máte jakékoli dotazy nebo návrhy ohledně mých zásad ochrany osobních údajů, neváhejte mě kontaktovat.</string>
     <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
     <string name="send_feedback">Odeslat zpětnou vazbu</string>
     <string name="faq">FAQ</string>
@@ -97,9 +99,9 @@
     <string name="faq_q3">Kolik úložného prostoru potřebuji?</string>
     <string name="faq_a3">Velikosti modelů se pohybují od přibližně 500 MB (malé modely jako Qwen 3 0.6B) až po několik GB (větší modely jako DeepSeek R1 7B). Před stažením se ujistěte, že máte dostatek volného místa.</string>
     <string name="faq_q4">Vyžaduje aplikace připojení k internetu?</string>
-    <string name="faq_a4">Internet je potřeba pouze ke stažení modelů. Po stažení modely běží kompletně offline na vašem zařízení.</string>
+    <string name="faq_a4">Internet je potřeba ke stažení modelů a — pokud je zapnete — pro volitelné webové nástroje (vyhledávání na webu a načtení stránky). Kromě toho po stažení běží model kompletně offline na vašem zařízení.</string>
     <string name="faq_q5">Jsou moje data soukromá?</string>
-    <string name="faq_a5">Ano. Všechny konverzace jsou zpracovávány lokálně na vašem zařízení. Žádná data nejsou odesílána na externí servery. Podrobnosti naleznete v zásadách ochrany osobních údajů.</string>
+    <string name="faq_a5">Vaše konverzace jsou zpracovávány lokálně na vašem zařízení a aplikace je nikdy neodesílá na server. Jedinou výjimkou jsou volitelné webové nástroje: pokud zapnete vyhledávání na webu nebo načtení stránky, vyhledávací dotazy modelu a stránky, které otevírá, jsou odeslány na tyto weby (vyhledávání používá DuckDuckGo). Nástroje jsou ve výchozím nastavení vypnuté, takže nic neopustí vaše zařízení, dokud je nezapnete. Podrobnosti naleznete v zásadách ochrany osobních údajů.</string>
     <string name="faq_q6">Proč je načítání modelu pomalé?</string>
     <string name="faq_a6">Větší modely potřebují více času k načtení do paměti. Doby načítání závisí na hardwaru vašeho zařízení. Po načtení zůstává model v paměti, dokud jej nevyložíte.</string>
     <string name="faq_q7">Která zařízení fungují nejlépe?</string>
@@ -110,6 +112,14 @@
     <string name="faq_a9">Ano. Přejděte do Nastavení, poté Modely, a pomocí možnosti \u201CZměnit složku\u201D vyberte jiné umístění úložiště.</string>
     <string name="faq_q10">Jak smazat model?</string>
     <string name="faq_a10">Přejděte do Nastavení, poté Modely. V sekci \u201CStažené\u201D klepněte na ikonu smazání vedle modelu, který chcete odstranit.</string>
+    <string name="faq_q11">Co jsou systémové pokyny?</string>
+    <string name="faq_a11">Systémový pokyn je opakovaně použitelná instrukce, která utváří způsob, jakým model odpovídá — například „Jste stručný učitel přírodních věd. Vysvětlujte myšlenky jasně pomocí každodenních příkladů\u201C nebo „Jste zkušený recenzent kódu. Upozorňujte na chyby, hraniční případy a bezpečnostní problémy\u201C. Vytvářejte je a spravujte v Nastavení \u2192 Systémové pokyny a poté jeden použijte ve svém chatu. Ukládají se ve vašem zařízení a odesílají se pouze místnímu modelu.</string>
+    <string name="faq_q12">Co jsou nástroje a které jsou k dispozici?</string>
+    <string name="faq_a12">Nástroje umožňují schopným modelům provádět během odpovědi akce. K dispozici jsou tři: Spustit JavaScript (matematika, data a zpracování textu v sandboxu v zařízení), Vyhledávání na webu (najde aktuální informace na webu) a Načíst webovou stránku (přečte stránku, aby ji model mohl shrnout nebo citovat). Zapněte je v Nastavení \u2192 Nástroje. Každý je ve výchozím nastavení vypnutý a funguje pouze s modely, které podporují volání nástrojů — hledejte odznak s kladivem ve výběru modelů.</string>
+    <string name="faq_q13">Odesílají webové nástroje moje data online?</string>
+    <string name="faq_a13">Pouze když je zapnete. Vyhledávání na webu odešle dotaz modelu do DuckDuckGo a Načíst webovou stránku stáhne stránky, které se model rozhodne otevřít — tyto požadavky jdou na samotné weby, nikoli vývojáři. Spustit JavaScript zůstává zcela ve vašem zařízení bez přístupu k internetu. Když jsou všechny nástroje vypnuté (výchozí stav), nic neopustí vaše zařízení. Podrobnosti naleznete v zásadách ochrany osobních údajů.</string>
+    <string name="faq_q14">Upozorní mě aplikace, až bude odpověď připravena?</string>
+    <string name="faq_a14">Ano. Když je aplikace na pozadí, oznámení sleduje stav modelu — načteno, generování, poté odpověď připravena — a umožňuje vám odpověď zkopírovat nebo sdílet. V Nastavení \u2192 Zvuk a haptika můžete také zapnout krátký tón dokončení. Stahování modelů zobrazuje vlastní oznámení o průběhu s rychlostí a odhadovaným časem.</string>
 
     <!-- Models Screen -->
     <string name="models">Modely</string>
