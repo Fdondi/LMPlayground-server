@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -30,12 +31,18 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.BatteryFull
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.CloudDownload
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.SignalCellular4Bar
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Wifi
 import androidx.compose.material.icons.outlined.WifiOff
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -60,6 +67,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -82,12 +90,16 @@ import com.druk.lmplayground.conversation.Message
 import com.druk.lmplayground.conversation.PermanentSessionList
 import com.druk.lmplayground.conversation.UserInput
 import com.druk.lmplayground.data.ChatSessionEntity
+import com.druk.lmplayground.data.SystemPromptEntity
 import com.druk.lmplayground.models.Model
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelWithStatus
+import com.druk.lmplayground.settings.SystemPromptsContent
+import com.druk.lmplayground.settings.ToolsContent
 import com.druk.lmplayground.storage.ModelsContent
 import com.druk.lmplayground.storage.StorageInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
+import com.druk.lmplayground.tools.Tool
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.remember
 import org.junit.Rule
@@ -495,6 +507,65 @@ class TabletStoreScreenshots(
                 Icon(Icons.Outlined.Wifi, null, Modifier.size(14.dp), tint = Color.White)
                 Icon(Icons.Outlined.SignalCellular4Bar, null, Modifier.size(14.dp), tint = Color.White)
                 Icon(Icons.Outlined.BatteryFull, null, Modifier.size(14.dp), tint = Color.White)
+            }
+        }
+    }
+
+    // ── System notification mock ────────────────────────────────────
+    // Mirrors the real InferenceNotification (app icon + label,
+    // "Response ready" title, "<model> · <tokens>" line, Copy/Share
+    // actions) so the background-generation shot reads like the OS
+    // heads-up card. Caller constrains the width so it floats like a
+    // real tablet notification rather than spanning the display.
+    @Composable
+    private fun NotificationCard(
+        appName: String,
+        title: String,
+        body: String,
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(24.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surfaceVariant
+            ),
+        ) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(R.drawable.penrose_triangle),
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Text(
+                        text = appName,
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                Spacer(Modifier.height(10.dp))
+                Text(text = title, style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = body,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                Spacer(Modifier.height(8.dp))
+                HorizontalDivider()
+                Row(modifier = Modifier.fillMaxWidth()) {
+                    TextButton(onClick = { }) {
+                        Icon(Icons.Outlined.ContentCopy, null, Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.copy))
+                    }
+                    TextButton(onClick = { }) {
+                        Icon(Icons.Outlined.Share, null, Modifier.size(18.dp))
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.share))
+                    }
+                }
             }
         }
     }
@@ -979,6 +1050,223 @@ class TabletStoreScreenshots(
             }
         }
     }
+
+    // Scene 5: Reusable system prompts — adaptive multi-column grid
+    // (the tablet-only layout the phone shot can't show).
+    @Test
+    fun scene5_systemPrompts() {
+        paparazzi.snapshot {
+            LocaleTheme {
+                val prompts = listOf(
+                    SystemPromptEntity(id = "1", text = stringResource(R.string.screenshot_system_prompt_sample), createdAt = 0L),
+                    SystemPromptEntity(id = "2", text = stringResource(R.string.screenshot_prompt_sample_code), createdAt = 0L),
+                    SystemPromptEntity(id = "3", text = stringResource(R.string.screenshot_prompt_sample_translator), createdAt = 0L),
+                    SystemPromptEntity(id = "4", text = stringResource(R.string.screenshot_prompt_sample_brainstorm), createdAt = 0L),
+                )
+                TabletStoreScreenshotFrame(
+                    icon = Icons.Outlined.Description,
+                    title = stringResource(R.string.screenshot_prompts),
+                    subtitle = stringResource(R.string.screenshot_prompts_sub),
+                ) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            TopAppBar(
+                                title = { Text(stringResource(R.string.system_prompts)) },
+                                navigationIcon = {
+                                    IconButton(onClick = { }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = stringResource(R.string.back),
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                    ) { padding ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding),
+                            contentAlignment = Alignment.TopCenter,
+                        ) {
+                            SystemPromptsContent(
+                                prompts = prompts,
+                                onSelect = { },
+                                modifier = Modifier
+                                    .widthIn(max = 760.dp)
+                                    .fillMaxSize(),
+                                onNewPrompt = { },
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Scene 6: Tools — per-tool toggles in Settings, centered to match
+    // the tablet content width used by the other scenes.
+    @Test
+    fun scene6_tools() {
+        paparazzi.snapshot {
+            LocaleTheme {
+                val tools = listOf(
+                    StubTool("web_search"),
+                    StubTool("web_fetch"),
+                    StubTool("run_javascript"),
+                )
+                val enabled = mapOf(
+                    "web_search" to true,
+                    "web_fetch" to true,
+                    "run_javascript" to true,
+                )
+                TabletStoreScreenshotFrame(
+                    icon = Icons.Outlined.Build,
+                    title = stringResource(R.string.screenshot_tools),
+                    subtitle = stringResource(R.string.screenshot_tools_sub),
+                ) {
+                    Scaffold(
+                        modifier = Modifier.fillMaxSize(),
+                        topBar = {
+                            TopAppBar(
+                                title = { Text(stringResource(R.string.tools)) },
+                                navigationIcon = {
+                                    IconButton(onClick = { }) {
+                                        Icon(
+                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                                            contentDescription = stringResource(R.string.back),
+                                        )
+                                    }
+                                },
+                            )
+                        },
+                    ) { padding ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(padding),
+                            contentAlignment = Alignment.TopCenter,
+                        ) {
+                            ToolsContent(
+                                tools = tools,
+                                enabledStates = enabled,
+                                onToolEnabledChanged = { _, _ -> },
+                                modifier = Modifier
+                                    .widthIn(max = 720.dp)
+                                    .fillMaxWidth(),
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Scene 7: Background generation notification over the dimmed
+    // sidebar chat — the reply kept running after the user left.
+    @Test
+    fun scene7_notification() {
+        paparazzi.snapshot {
+            LocaleTheme {
+                val gemma4 = gemma4Model()
+                val question = stringResource(R.string.screenshot_chat_question)
+                val response = stringResource(R.string.screenshot_chat_response)
+                val sessions = sampleSessions()
+                val tokens = pluralStringResource(R.plurals.inference_notification_tokens, 342, 342)
+
+                TabletStoreScreenshotFrame(
+                    icon = Icons.Outlined.Notifications,
+                    title = stringResource(R.string.screenshot_notification),
+                    subtitle = stringResource(R.string.screenshot_notification_sub),
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        PermanentNavigationDrawer(
+                            drawerContent = {
+                                PermanentSessionList(
+                                    sessions = sessions,
+                                    currentSessionId = sessions[0].id,
+                                    onSessionSelected = {},
+                                    onDeleteSession = {},
+                                    onRenameSession = { _, _ -> },
+                                    onPinSession = { _, _ -> },
+                                    onSettingsClicked = {},
+                                )
+                            },
+                        ) {
+                            Surface(modifier = Modifier.fillMaxSize()) {
+                                Column {
+                                    ConversationBar(
+                                        modelInfo = gemma4,
+                                        modelStatus = null,
+                                        compact = true,
+                                        showNavIcon = false,
+                                    )
+                                    Column(
+                                        modifier = Modifier
+                                            .weight(1f)
+                                            .padding(horizontal = 8.dp)
+                                    ) {
+                                        com.druk.lmplayground.conversation.Message(
+                                            msg = Message("User", question),
+                                            isUserMe = true,
+                                            showActions = false
+                                        )
+                                        com.druk.lmplayground.conversation.Message(
+                                            msg = Message(author = "Assistant", content = response),
+                                            isUserMe = false,
+                                            showActions = false
+                                        )
+                                    }
+                                    UserInput(
+                                        integrateWithSurface = true,
+                                        onMessageSent = {},
+                                    )
+                                }
+                            }
+                        }
+                        // Scrim — the app is in the background.
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.6f))
+                        )
+                        // Heads-up notification floating near the top.
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 16.dp),
+                            contentAlignment = Alignment.TopCenter,
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .widthIn(max = 460.dp)
+                                    .fillMaxWidth()
+                            ) {
+                                NotificationCard(
+                                    appName = stringResource(R.string.inference_notification_title),
+                                    title = stringResource(R.string.inference_notification_ready_title),
+                                    body = stringResource(
+                                        R.string.inference_notification_tokens_line,
+                                        "Gemma 4 E2B",
+                                        tokens
+                                    )
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+// Marketing stand-in for a real Tool — ToolsContent keys its UI copy
+// off Tool.name, so only the three real names matter here.
+private class StubTool(override val name: String) : Tool {
+    override val description: String = ""
+    override val parametersSchema: String = ""
+    override fun execute(arguments: String): String = ""
 }
 
 /**

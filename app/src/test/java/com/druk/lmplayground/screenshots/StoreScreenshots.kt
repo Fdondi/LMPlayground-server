@@ -25,7 +25,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.BatteryFull
+import androidx.compose.material.icons.outlined.Build
 import androidx.compose.material.icons.outlined.CloudDownload
+import androidx.compose.material.icons.outlined.ContentCopy
+import androidx.compose.material.icons.outlined.Description
+import androidx.compose.material.icons.outlined.Notifications
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.SignalCellular4Bar
 import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.Wifi
@@ -55,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -72,12 +78,16 @@ import com.druk.lmplayground.R
 import com.druk.lmplayground.conversation.ConversationBar
 import com.druk.lmplayground.conversation.Message
 import com.druk.lmplayground.conversation.UserInput
+import com.druk.lmplayground.data.SystemPromptEntity
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.Model
 import com.druk.lmplayground.models.ModelWithStatus
+import com.druk.lmplayground.settings.SystemPromptsScreen
+import com.druk.lmplayground.settings.ToolsScreen
 import com.druk.lmplayground.storage.ModelsScreen
 import com.druk.lmplayground.storage.StorageInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
+import com.druk.lmplayground.tools.Tool
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -311,6 +321,74 @@ private fun InlineParamSlider(
             valueRange = valueRange,
             modifier = Modifier.fillMaxWidth()
         )
+    }
+}
+
+// ── Fake tool for the Tools settings screenshot ────────────────────
+// ToolsScreen keys its user-facing copy off Tool.name, so the mock only
+// needs the three real names; description/schema/execute are unused here.
+private class FakeTool(override val name: String) : Tool {
+    override val description: String = ""
+    override val parametersSchema: String = ""
+    override fun execute(arguments: String): String = ""
+}
+
+// ── System notification mock ───────────────────────────────────────
+// Mirrors the real InferenceNotification (app icon + label, "Response
+// ready" title, "<model> · <tokens>" line, Copy/Share actions) so the
+// background-generation screenshot looks like the OS heads-up card.
+@Composable
+private fun NotificationCard(
+    appName: String,
+    title: String,
+    body: String,
+) {
+    androidx.compose.material3.Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp),
+        shape = RoundedCornerShape(24.dp),
+        colors = androidx.compose.material3.CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
+        )
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(R.drawable.penrose_triangle),
+                    contentDescription = null,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(Modifier.width(8.dp))
+                Text(
+                    text = appName,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            Spacer(Modifier.height(10.dp))
+            Text(text = title, style = MaterialTheme.typography.titleMedium)
+            Spacer(Modifier.height(2.dp))
+            Text(
+                text = body,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+            Spacer(Modifier.height(8.dp))
+            androidx.compose.material3.HorizontalDivider()
+            Row(modifier = Modifier.fillMaxWidth()) {
+                androidx.compose.material3.TextButton(onClick = { }) {
+                    Icon(Icons.Outlined.ContentCopy, null, Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.copy))
+                }
+                androidx.compose.material3.TextButton(onClick = { }) {
+                    Icon(Icons.Outlined.Share, null, Modifier.size(18.dp))
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.share))
+                }
+            }
+        }
     }
 }
 
@@ -764,6 +842,131 @@ class StoreScreenshots(
                         onSkipMigration = { },
                         onCancelMigration = { }
                     )
+                }
+            } }
+        }
+    }
+
+    // Scene 5: Reusable system prompts
+    @Test
+    fun scene5_systemPrompts() {
+        paparazzi.snapshot {
+            PlaygroundTheme(isDarkTheme = true) { LocaleLayout {
+                val prompts = listOf(
+                    SystemPromptEntity(id = "1", text = stringResource(R.string.screenshot_system_prompt_sample), createdAt = 0L),
+                    SystemPromptEntity(id = "2", text = stringResource(R.string.screenshot_prompt_sample_code), createdAt = 0L),
+                    SystemPromptEntity(id = "3", text = stringResource(R.string.screenshot_prompt_sample_translator), createdAt = 0L),
+                    SystemPromptEntity(id = "4", text = stringResource(R.string.screenshot_prompt_sample_brainstorm), createdAt = 0L),
+                )
+                StoreScreenshotFrame(
+                    icon = Icons.Outlined.Description,
+                    title = stringResource(R.string.screenshot_prompts),
+                    subtitle = stringResource(R.string.screenshot_prompts_sub)
+                ) {
+                    SystemPromptsScreen(
+                        prompts = prompts,
+                        onBackClick = { },
+                        onAdd = { },
+                        onUpdate = { _, _ -> },
+                        onDelete = { }
+                    )
+                }
+            } }
+        }
+    }
+
+    // Scene 6: Tools — per-tool toggles in Settings
+    @Test
+    fun scene6_tools() {
+        paparazzi.snapshot {
+            PlaygroundTheme(isDarkTheme = true) { LocaleLayout {
+                val tools = listOf(
+                    FakeTool("web_search"),
+                    FakeTool("web_fetch"),
+                    FakeTool("run_javascript"),
+                )
+                val enabled = mapOf(
+                    "web_search" to true,
+                    "web_fetch" to true,
+                    "run_javascript" to true,
+                )
+                StoreScreenshotFrame(
+                    icon = Icons.Outlined.Build,
+                    title = stringResource(R.string.screenshot_tools),
+                    subtitle = stringResource(R.string.screenshot_tools_sub)
+                ) {
+                    ToolsScreen(
+                        tools = tools,
+                        enabledStates = enabled,
+                        onToolEnabledChanged = { _, _ -> },
+                        onBackClick = { }
+                    )
+                }
+            } }
+        }
+    }
+
+    // Scene 7: Background generation notification
+    @Test
+    fun scene7_notification() {
+        paparazzi.snapshot {
+            PlaygroundTheme(isDarkTheme = true) { LocaleLayout {
+                val gemma4 = gemma4Model()
+                val question = stringResource(R.string.screenshot_chat_question)
+                val response = stringResource(R.string.screenshot_chat_response)
+                val tokens = pluralStringResource(R.plurals.inference_notification_tokens, 342, 342)
+                StoreScreenshotFrame(
+                    icon = Icons.Outlined.Notifications,
+                    title = stringResource(R.string.screenshot_notification),
+                    subtitle = stringResource(R.string.screenshot_notification_sub)
+                ) {
+                    Box(modifier = Modifier.fillMaxSize()) {
+                        // The app sits dimmed in the background — the reply kept
+                        // running after the user left the chat.
+                        Surface(modifier = Modifier.fillMaxSize()) {
+                            Column {
+                                ConversationBar(modelInfo = gemma4, modelStatus = null)
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 8.dp)
+                                ) {
+                                    com.druk.lmplayground.conversation.Message(
+                                        msg = Message("User", question),
+                                        isUserMe = true,
+                                        showActions = false
+                                    )
+                                    com.druk.lmplayground.conversation.Message(
+                                        msg = Message(author = "Assistant", content = response),
+                                        isUserMe = false,
+                                        showActions = false
+                                    )
+                                }
+                                UserInput(onMessageSent = {})
+                            }
+                        }
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .background(Color.Black.copy(alpha = 0.6f))
+                        )
+                        // Heads-up notification slid down from the top.
+                        Column(
+                            modifier = Modifier
+                                .align(Alignment.TopCenter)
+                                .padding(top = 12.dp)
+                        ) {
+                            NotificationCard(
+                                appName = stringResource(R.string.inference_notification_title),
+                                title = stringResource(R.string.inference_notification_ready_title),
+                                body = stringResource(
+                                    R.string.inference_notification_tokens_line,
+                                    "Gemma 4 E2B",
+                                    tokens
+                                )
+                            )
+                        }
+                    }
                 }
             } }
         }

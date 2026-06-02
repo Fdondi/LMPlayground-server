@@ -234,9 +234,18 @@
     <string name="screenshot_fine_tune_sub">generation parameters</string>
     <string name="screenshot_download_models">Download any model</string>
     <string name="screenshot_download_models_sub">to any folder you choose</string>
+    <string name="screenshot_prompts">Reusable prompts</string>
+    <string name="screenshot_prompts_sub">set the tone once, use anywhere</string>
+    <string name="screenshot_tools">Give models tools</string>
+    <string name="screenshot_tools_sub">web search, fetch &amp; JavaScript</string>
+    <string name="screenshot_notification">Runs in the background</string>
+    <string name="screenshot_notification_sub">get a ping when it\'s done</string>
 
-    <!-- Screenshot sample system prompt -->
+    <!-- Screenshot sample system prompts -->
     <string name="screenshot_system_prompt_sample">You are a concise science tutor. Explain ideas clearly with everyday examples.</string>
+    <string name="screenshot_prompt_sample_code">You are a senior code reviewer. Point out bugs, edge cases, and security issues. Be direct and specific.</string>
+    <string name="screenshot_prompt_sample_translator">You are a translator. Turn everything I send into natural, fluent French and keep the formatting.</string>
+    <string name="screenshot_prompt_sample_brainstorm">You are a creative brainstorming partner. Offer bold, unexpected ideas and build on mine.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">What is machine learning?</string>
