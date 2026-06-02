@@ -70,6 +70,10 @@ private val faqItems = listOf(
     FaqItem(R.string.faq_q8, R.string.faq_a8, hasGithubLink = true),
     FaqItem(R.string.faq_q9, R.string.faq_a9),
     FaqItem(R.string.faq_q10, R.string.faq_a10),
+    FaqItem(R.string.faq_q11, R.string.faq_a11),
+    FaqItem(R.string.faq_q12, R.string.faq_a12),
+    FaqItem(R.string.faq_q13, R.string.faq_a13),
+    FaqItem(R.string.faq_q14, R.string.faq_a14),
 )
 
 @Composable

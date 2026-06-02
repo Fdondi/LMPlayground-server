@@ -45,6 +45,7 @@ private val policySections = listOf(
     PolicySection(R.string.privacy_policy_s3_title, R.string.privacy_policy_s3_body),
     PolicySection(R.string.privacy_policy_s4_title, R.string.privacy_policy_s4_body),
     PolicySection(R.string.privacy_policy_s5_title, R.string.privacy_policy_s5_body),
+    PolicySection(R.string.privacy_policy_s6_title, R.string.privacy_policy_s6_body),
 )
 
 @Composable
@@ -128,15 +129,15 @@ fun PrivacyPolicyContent(
             Spacer(modifier = Modifier.height(24.dp))
         }
 
-        // Section 6 - Contact with feedback button
+        // Section 7 - Contact with feedback button
         item {
             Text(
-                text = stringResource(R.string.privacy_policy_s6_title),
+                text = stringResource(R.string.privacy_policy_s7_title),
                 style = MaterialTheme.typography.titleSmall
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = stringResource(R.string.privacy_policy_s6_body),
+                text = stringResource(R.string.privacy_policy_s7_body),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
