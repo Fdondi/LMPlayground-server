@@ -1,0 +1,6 @@
+- Instrumente — modelele capabile pot căuta pe web, deschide pagini și rula JavaScript în răspuns. Activează-le pe model în Setări → Instrumente
+- Răspunsuri mai rapide cu prompturi și instrumente în cache
+- Distribuie răspunsuri sau copiază/distribuie din notificare
+- Notificarea live arată starea generării și numărul de tokeni
+- Sunet și vibrații — un ton când răspunsul se termină în fundal și o vibrație de mașină de scris (Setări → Sunet și vibrații)
+- Aspect nou cu sticlă mată în app

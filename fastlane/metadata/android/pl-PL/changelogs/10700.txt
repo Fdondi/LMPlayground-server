@@ -1,0 +1,6 @@
+- Narzędzia — zdolne modele mogą szukać w sieci, pobierać strony i uruchamiać JavaScript w odpowiedzi. Włącz je per model w Ustawienia → Narzędzia
+- Szybsze odpowiedzi dzięki cache promptów i narzędzi
+- Udostępniaj odpowiedzi lub kopiuj/udostępniaj wprost z powiadomienia
+- Powiadomienie na żywo pokazuje stan generowania i liczbę tokenów
+- Dźwięk i wibracje — sygnał po odpowiedzi w tle oraz stuk maszyny do pisania (Ustawienia → Dźwięk i wibracje)
+- Mleczny, odświeżony wygląd w całej aplikacji

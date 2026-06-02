@@ -1,0 +1,6 @@
+- Ferramentas — modelos capazes podem pesquisar na web, abrir páginas e executar JavaScript na resposta. Ative por modelo em Configurações → Ferramentas
+- Respostas mais rápidas com cache de prompts e ferramentas
+- Compartilhe respostas ou copie/compartilhe pela notificação
+- Notificação ao vivo mostra o status e o total de tokens
+- Som e vibração — um aviso ao terminar em segundo plano e um toque de máquina de escrever (Configurações → Som e vibração)
+- Visual de vidro fosco renovado no app

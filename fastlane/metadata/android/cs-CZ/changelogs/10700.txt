@@ -1,0 +1,6 @@
+- Nástroje — modely teď mohou prohledávat web, načíst stránku a spouštět JavaScript. Zapněte je u modelů v Nastavení → Nástroje
+- Rychlejší odpovědi díky mezipaměti promptů a nástrojů
+- Sdílejte odpovědi nebo je kopírujte/sdílejte přímo z oznámení
+- Živé oznámení ukazuje stav generování a počet tokenů
+- Zvuk a haptika — zvonkohra po dokončení odpovědi na pozadí a cvaknutí psacího stroje při streamování (Nastavení → Zvuk a haptika)
+- Osvěžení v celé aplikaci se vzhledem matného skla

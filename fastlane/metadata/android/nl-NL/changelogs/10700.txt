@@ -1,0 +1,6 @@
+- Hulpmiddelen — geschikte modellen kunnen in een antwoord op het web zoeken, pagina's ophalen en JavaScript draaien. Zet ze per model aan via Instellingen → Hulpmiddelen
+- Snellere antwoorden met prompts en tools in cache
+- Deel antwoorden, of kopieer/deel via de melding
+- Live melding toont status en tokens
+- Geluid en haptiek — een signaal als een antwoord op de achtergrond klaar is, plus een typemachine-tik bij streamen (Instellingen → Geluid en haptiek)
+- Nieuwe matglas-look in de app

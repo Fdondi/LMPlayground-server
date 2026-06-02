@@ -1,0 +1,6 @@
+- Outils — les modèles peuvent chercher sur le web, récupérer une page et exécuter du JavaScript. Activez-les par modèle : Paramètres → Outils
+- Réponses plus rapides grâce au cache prompts/outils
+- Partagez des réponses, ou copiez/partagez via la notification
+- La notification en direct affiche l'état et le nombre de tokens
+- Son et vibrations — un carillon en fin de réponse en arrière-plan et un tic de clavier (Paramètres → Son et vibrations)
+- Refonte en verre dépoli dans toute l'app

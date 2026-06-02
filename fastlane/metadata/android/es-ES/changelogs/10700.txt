@@ -1,0 +1,6 @@
+- Herramientas — los modelos ya pueden buscar en la web, abrir páginas y ejecutar JavaScript. Actívalas: Ajustes → Herramientas
+- Respuestas más rápidas con la caché de prompts y herramientas
+- Comparte respuestas, o copia/comparte desde la notificación
+- La notificación en directo muestra el estado y el número de tokens
+- Sonido y vibración — un tono al terminar una respuesta en segundo plano y un tic de tecleo (Ajustes → Sonido y vibración)
+- Nuevo aspecto de cristal esmerilado en la app
