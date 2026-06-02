@@ -58,6 +58,7 @@ EN = {
     "models.title": "Pick a brain. Tap download. Chat.",
     "models.sub": "Browse community-made models optimized for mobile — compact enough to fit on your phone, powerful enough to be useful.",
     "models.tab.all": "All", "models.tab.reason": "Reasoning", "models.tab.small": "Under 1GB",
+    "models.tab.tools": "Tools",
 
     # Section headers used when the models list is split by language support
     # on non-English locales. Filled per-language from app strings.xml.
@@ -2574,6 +2575,7 @@ def fill_app_strings(d, lang):
         d["tools.eyebrow"] = src["tools"]
         d["nav.tools"] = src["tools"]
         d["footer.product.tools"] = src["tools"]
+        d["models.tab.tools"] = src["tools"]
     if "tools_section_intro" in src: d["tools.note"] = src["tools_section_intro"]
     if "tool_run_javascript_title" in src: d["tools.t1.title"] = src["tool_run_javascript_title"]
     if "tool_run_javascript_desc" in src: d["tools.t1.body"] = src["tool_run_javascript_desc"]
