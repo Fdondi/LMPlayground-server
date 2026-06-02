@@ -190,6 +190,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Sei un tutor di scienze conciso. Spiega le idee con chiarezza usando esempi quotidiani.</string>
+    <string name="screenshot_prompts">Prompt riutilizzabili</string>
+    <string name="screenshot_prompts_sub">imposta il tono una volta, usalo ovunque</string>
+    <string name="screenshot_tools">Dai strumenti ai modelli</string>
+    <string name="screenshot_tools_sub">ricerca web, fetch &amp; JavaScript</string>
+    <string name="screenshot_notification">Funziona in background</string>
+    <string name="screenshot_notification_sub">ricevi un avviso quando ha finito</string>
+    <string name="screenshot_prompt_sample_code">Sei un revisore di codice esperto. Segnala bug, casi limite e problemi di sicurezza. Sii diretto e specifico.</string>
+    <string name="screenshot_prompt_sample_translator">Sei un traduttore. Trasforma tutto ciò che ti invio in francese naturale e fluente e mantieni la formattazione.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Sei un partner creativo di brainstorming. Proponi idee audaci e inaspettate e sviluppa le mie.</string>
     <string name="screenshot_chat_question">Cos\'\u00E8 l\'apprendimento automatico?</string>
     <string name="screenshot_chat_response">L\'apprendimento automatico \u00E8 un ramo dell\'intelligenza artificiale in cui i computer **imparano dai dati** invece di essere programmati esplicitamente.\n\nConcetti chiave:\n\n\u2022 **Addestramento**: fornire dati agli algoritmi\n\u2022 **Modelli**: schemi appresi dai dati\n\u2022 **Inferenza**: fare previsioni su nuovi dati</string>
 
@@ -235,4 +244,49 @@
     <string name="model_load_failed_title">Impossibile caricare il modello</string>
     <string name="model_load_failed_message">Impossibile caricare %1$s. Il file potrebbe essere danneggiato o utilizza un\'architettura non ancora supportata da questa versione dell\'app. Prova un altro modello o aggiorna l\'app.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- Notifiche di inferenza -->
+    <string name="inference_notification_generating_title">Generazione della risposta…</string>
+    <string name="inference_notification_ready_title">Risposta pronta</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d token</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">Il motore di inferenza non è disponibile al momento. Riprova tra poco.</string>
+
+    <!-- Suono e vibrazione -->
+    <string name="sound_and_haptic">Suono e vibrazione</string>
+    <string name="sound_and_haptic_subtitle">Suono al completamento e vibrazione durante la digitazione</string>
+    <string name="sound_on_completion_title">Riproduci un suono al termine della generazione</string>
+    <string name="sound_on_completion_desc">Riproduce un breve suono quando il modello termina una risposta mentre l\'app è in background.</string>
+    <string name="haptic_on_generation_title">Vibrazione durante la generazione</string>
+    <string name="haptic_on_generation_desc">Una leggera vibrazione mentre ogni parte della risposta arriva.</string>
+
+    <!-- Strumenti -->
+    <string name="tools">Strumenti</string>
+    <string name="tools_subtitle">Lascia che i modelli capaci compiano azioni</string>
+    <string name="set_up_tools">Configura gli strumenti</string>
+    <string name="tools_section_intro">Gli strumenti permettono ai modelli capaci di compiere azioni durante una risposta, come cercare sul web o eseguire un calcolo. Ogni strumento è disattivato per impostazione predefinita: attiva solo quelli che vuoi. Gli strumenti funzionano solo con i modelli che li supportano (cerca il badge con l\'icona della chiave).</string>
+    <string name="tools_params_sheet_subtitle">Il modello può usarli durante una risposta</string>
+    <string name="tools_example_label">Esempio: %1$s</string>
+    <string name="cd_supports_tools">Supporta gli strumenti</string>
+    <string name="cd_supports_thinking">Supporta il ragionamento</string>
+    <string name="tool_web_search_title">Ricerca web</string>
+    <string name="tool_web_search_desc">Cerca sul web e restituisce titoli dei risultati, link e frammenti affinché il modello possa trovare informazioni aggiornate.</string>
+    <string name="tool_web_search_example">\"Trova recensioni recenti dell\'ultimo telefono Pixel.\"</string>
+    <string name="tool_web_fetch_title">Carica pagina web</string>
+    <string name="tool_web_fetch_desc">Apre un link e ne legge il contenuto principale come testo affinché il modello possa riassumere o citare una pagina.</string>
+    <string name="tool_web_fetch_example">\"Riassumi l\'articolo a questo link.\"</string>
+    <string name="tool_run_javascript_title">Esegui JavaScript</string>
+    <string name="tool_run_javascript_desc">Esegue JavaScript in un ambiente isolato sicuro per calcoli, date ed elaborazione del testo. Nessun accesso a internet o ai file.</string>
+    <string name="tool_run_javascript_example">\"Quanto fa (2 + 3) × 4 e che giorno della settimana è il 1° gennaio 2027?\"</string>
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <string name="response_copied">Copiato negli appunti</string>
+    <string name="folder_picker_unavailable">Nessuna app disponibile per scegliere una cartella. Installa o attiva l\'app File / Documenti di sistema.</string>
+
+    <!-- Novità -->
+    <string name="whats_new_tools">Ricerca web, caricamento pagina ed esecuzione di JavaScript</string>
+    <string name="whats_new_cache">Risposte più veloci con prompt &amp; strumenti in cache</string>
 </resources>

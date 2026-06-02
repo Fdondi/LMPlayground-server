@@ -10,6 +10,10 @@ Experiencia de chat enriquecida — las respuestas se renderizan con soporte com
 
 Modelos de razonamiento — observa el proceso de pensamiento de modelos como DeepSeek R1, Nemotron y LFM2.5 Thinking mostrado en una sección estilizada y plegable con presupuesto de razonamiento ajustable.
 
+Herramientas — los modelos capaces pueden buscar en la web, abrir una página y ejecutar JavaScript directamente dentro de una respuesta. Cada herramienta está desactivada por defecto; activa solo las que quieras, por modelo, en Ajustes → Herramientas. La búsqueda web y la apertura de páginas acceden a internet solo cuando las activas — todo lo demás permanece en tu dispositivo.
+
+Generación en segundo plano — inicia una respuesta y deja la app: seguirá funcionando. Una notificación en vivo muestra el estado de la generación y el conteo de tokens, te permite copiar o compartir el resultado sin reabrir la app, y suena cuando termina.
+
 Velocidad de generación — consulta el conteo de tokens, tiempo de generación y velocidad en tok/s para cada respuesta.
 
 Parámetros por modelo — cada modelo recuerda sus propios ajustes de generación. Configura el tamaño de contexto, presupuesto de razonamiento, temperatura, Top-P, Top-K, Min-P, penalización por repetición y semilla.
@@ -28,6 +32,7 @@ MODELOS COMPATIBLES
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ MODELOS COMPATIBLES
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-Desde solo 267 MB para el modelo más pequeño. Los modelos más grandes (4B–8B) se benefician de 8+ GB de RAM. También puedes cargar cualquier modelo GGUF personalizado.
+Desde solo 267 MB para el modelo más pequeño. Los modelos más grandes (4B–8B) se benefician de 8+ GB de RAM, y el modelo de 20B necesita un dispositivo de gama alta con mucha memoria. También puedes cargar cualquier modelo GGUF personalizado.
 
 CÓDIGO ABIERTO
 

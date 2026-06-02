@@ -189,6 +189,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">당신은 간결한 과학 튜터입니다. 일상적인 예시를 들어 아이디어를 명확하게 설명하세요.</string>
+    <string name="screenshot_prompts">재사용 가능한 프롬프트</string>
+    <string name="screenshot_prompts_sub">톤을 한 번 설정하면 어디서나 사용</string>
+    <string name="screenshot_tools">모델에 도구를 부여</string>
+    <string name="screenshot_tools_sub">웹 검색, 가져오기 &amp; JavaScript</string>
+    <string name="screenshot_notification">백그라운드에서 실행</string>
+    <string name="screenshot_notification_sub">완료되면 알림으로 알려드려요</string>
+    <string name="screenshot_prompt_sample_code">당신은 시니어 코드 리뷰어입니다. 버그, 엣지 케이스, 보안 문제를 지적하세요. 직접적이고 구체적으로.</string>
+    <string name="screenshot_prompt_sample_translator">당신은 번역가입니다. 제가 보내는 모든 것을 자연스럽고 유창한 프랑스어로 바꾸고 서식을 유지하세요.</string>
+    <string name="screenshot_prompt_sample_brainstorm">당신은 창의적인 브레인스토밍 파트너입니다. 대담하고 의외의 아이디어를 제안하고 제 아이디어를 발전시키세요.</string>
     <string name="screenshot_chat_question">머신러닝이란 무엇인가요?</string>
     <string name="screenshot_chat_response">머신러닝은 컴퓨터가 명시적으로 프로그래밍되는 대신 **데이터로부터 학습**하는 인공지능의 한 분야입니다.\n\n핵심 개념:\n\n\u2022 **훈련**: 알고리즘에 데이터를 제공하는 것\n\u2022 **모델**: 데이터에서 학습된 패턴\n\u2022 **추론**: 새로운 데이터에 대한 예측</string>
 
@@ -234,4 +243,48 @@
     <string name="model_load_failed_title">모델을 로드할 수 없습니다</string>
     <string name="model_load_failed_message">%1$s을(를) 로드할 수 없습니다. 파일이 손상되었거나 이 버전의 앱에서 아직 지원하지 않는 아키텍처를 사용하는 모델일 수 있습니다. 다른 모델을 시도하거나 앱을 업데이트해 주세요.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- What's New (1.7.0) -->
+    <string name="whats_new_tools">웹 검색, 페이지 가져오기, JavaScript 실행</string>
+    <string name="whats_new_cache">캐시된 프롬프트 &amp; 도구로 더 빠른 응답</string>
+    <string name="set_up_tools">도구 설정</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">소리 및 햅틱</string>
+    <string name="sound_and_haptic_subtitle">완료음과 입력 햅틱</string>
+    <string name="sound_on_completion_title">생성 완료 시 소리 재생</string>
+    <string name="sound_on_completion_desc">앱이 백그라운드에 있을 때 모델이 응답을 마치면 짧은 알림음을 재생합니다.</string>
+    <string name="haptic_on_generation_title">생성 시 햅틱 피드백</string>
+    <string name="haptic_on_generation_desc">응답의 각 부분이 스트리밍될 때 부드러운 진동을 전달합니다.</string>
+
+    <!-- Tools -->
+    <string name="tools">도구</string>
+    <string name="tools_subtitle">유능한 모델이 작업을 수행하도록</string>
+    <string name="tools_section_intro">도구를 사용하면 유능한 모델이 웹 검색이나 계산 수행 같은 작업을 응답 중에 실행할 수 있습니다. 각 도구는 기본적으로 꺼져 있으며 — 원하는 도구만 켜세요. 도구는 이를 지원하는 모델에서만 작동합니다(망치 배지를 확인하세요).</string>
+    <string name="tools_example_label">예시: %1$s</string>
+    <string name="tools_params_sheet_subtitle">모델이 응답 중에 이를 호출할 수 있습니다</string>
+    <string name="tool_call_input">입력</string>
+    <string name="tool_call_output">출력</string>
+    <string name="cd_supports_tools">도구 지원</string>
+    <string name="cd_supports_thinking">사고 지원</string>
+    <string name="tool_run_javascript_title">JavaScript 실행</string>
+    <string name="tool_run_javascript_desc">수학, 날짜, 텍스트 처리를 위해 안전한 샌드박스에서 JavaScript를 실행합니다. 인터넷이나 파일에 접근하지 않습니다.</string>
+    <string name="tool_run_javascript_example">\"(2 + 3) × 4는 얼마이고, 2027년 1월 1일은 무슨 요일인가요?\"</string>
+    <string name="tool_web_search_title">웹 검색</string>
+    <string name="tool_web_search_desc">웹을 검색하여 결과 제목, 링크, 스니펫을 반환해 모델이 최신 정보를 찾을 수 있게 합니다.</string>
+    <string name="tool_web_search_example">\"최신 Pixel 폰의 최근 리뷰를 찾아줘.\"</string>
+    <string name="tool_web_fetch_title">웹 페이지 가져오기</string>
+    <string name="tool_web_fetch_desc">링크를 열어 주요 내용을 텍스트로 읽어 모델이 페이지를 요약하거나 인용할 수 있게 합니다.</string>
+    <string name="tool_web_fetch_example">\"이 링크의 기사를 요약해줘.\"</string>
+
+    <!-- Inference engine notifications (1.7.0) -->
+    <string name="inference_notification_generating_title">응답 생성 중…</string>
+    <string name="inference_notification_ready_title">응답 준비됨</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d 토큰</item>
+    </plurals>
+    <string name="response_copied">클립보드에 복사됨</string>
+    <string name="inference_engine_unavailable">현재 추론 엔진을 사용할 수 없습니다. 잠시 후 다시 시도하세요.</string>
+    <string name="folder_picker_unavailable">폴더를 선택할 수 있는 앱이 없습니다. 시스템 파일 / 문서 앱을 설치하거나 활성화하세요.</string>
 </resources>

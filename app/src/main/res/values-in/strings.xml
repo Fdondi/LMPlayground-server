@@ -189,6 +189,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Kamu adalah tutor sains yang ringkas. Jelaskan ide dengan jernih lewat contoh sehari-hari.</string>
+    <string name="screenshot_prompts">Prompt yang bisa dipakai ulang</string>
+    <string name="screenshot_prompts_sub">atur nadanya sekali, pakai di mana saja</string>
+    <string name="screenshot_tools">Beri model alat</string>
+    <string name="screenshot_tools_sub">pencarian web, ambil halaman &amp; JavaScript</string>
+    <string name="screenshot_notification">Berjalan di latar belakang</string>
+    <string name="screenshot_notification_sub">dapatkan notifikasi saat selesai</string>
+    <string name="screenshot_prompt_sample_code">Kamu adalah peninjau kode senior. Tunjukkan bug, kasus tepi, dan masalah keamanan. Bersikaplah langsung dan spesifik.</string>
+    <string name="screenshot_prompt_sample_translator">Kamu adalah seorang penerjemah. Ubah semua yang aku kirim menjadi bahasa Prancis yang alami dan lancar, serta pertahankan formatnya.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Kamu adalah partner brainstorming yang kreatif. Tawarkan ide yang berani dan tak terduga, lalu kembangkan dari ideku.</string>
     <string name="screenshot_chat_question">Apa itu machine learning?</string>
     <string name="screenshot_chat_response">Machine learning adalah cabang kecerdasan buatan di mana komputer **belajar dari data** alih-alih diprogram secara eksplisit.\n\nKonsep utama:\n\n\u2022 **Pelatihan**: memberikan data ke algoritma\n\u2022 **Model**: pola yang dipelajari dari data\n\u2022 **Inferensi**: membuat prediksi pada data baru</string>
 
@@ -234,4 +243,42 @@
     <string name="model_load_failed_title">Tidak dapat memuat model</string>
     <string name="model_load_failed_message">Tidak dapat memuat %1$s. File mungkin rusak, atau menggunakan arsitektur yang belum didukung versi aplikasi ini. Coba model lain, atau perbarui aplikasi.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0: Sound & haptics, tools, inference notifications -->
+    <string name="cd_supports_thinking">Mendukung berpikir</string>
+    <string name="cd_supports_tools">Mendukung alat</string>
+    <string name="folder_picker_unavailable">Tidak ada aplikasi untuk memilih folder. Instal atau aktifkan aplikasi File / Dokumen sistem.</string>
+    <string name="haptic_on_generation_title">Umpan balik haptik saat menghasilkan</string>
+    <string name="haptic_on_generation_desc">Getaran halus saat setiap bagian respons mengalir masuk.</string>
+    <string name="sound_and_haptic">Suara dan Haptik</string>
+    <string name="sound_and_haptic_subtitle">Suara penyelesaian dan haptik pengetikan</string>
+    <string name="sound_on_completion_title">Putar suara saat pembuatan selesai</string>
+    <string name="sound_on_completion_desc">Memutar nada singkat saat model menyelesaikan respons ketika aplikasi berada di latar belakang.</string>
+    <string name="response_copied">Disalin ke clipboard</string>
+    <string name="inference_engine_unavailable">Mesin inferensi tidak tersedia saat ini. Coba lagi sebentar.</string>
+    <string name="inference_notification_generating_title">Membuat respons…</string>
+    <string name="inference_notification_ready_title">Respons siap</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="set_up_tools">Siapkan alat</string>
+    <string name="tools">Alat</string>
+    <string name="tools_subtitle">Biarkan model yang mampu mengambil tindakan</string>
+    <string name="tools_section_intro">Alat memungkinkan model yang mampu mengambil tindakan selama membalas, seperti mencari di web atau melakukan perhitungan. Setiap alat nonaktif secara default — aktifkan hanya yang Anda inginkan. Alat hanya berfungsi dengan model yang mendukungnya (cari lencana palu).</string>
+    <string name="tools_params_sheet_subtitle">Model dapat memanggil ini selama membalas</string>
+    <string name="tools_example_label">Contoh: %1$s</string>
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <string name="tool_web_search_title">Pencarian web</string>
+    <string name="tool_web_search_desc">Mencari di web dan mengembalikan judul hasil, tautan, dan cuplikan agar model dapat menemukan informasi terkini.</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">Ambil halaman web</string>
+    <string name="tool_web_fetch_desc">Membuka tautan dan membaca konten utamanya sebagai teks agar model dapat meringkas atau mengutip sebuah halaman.</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+    <string name="tool_run_javascript_title">Jalankan JavaScript</string>
+    <string name="tool_run_javascript_desc">Menjalankan JavaScript dalam sandbox aman untuk matematika, tanggal, dan pemrosesan teks. Tanpa akses internet atau file.</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="whats_new_tools">Pencarian web, ambil halaman, dan jalankan JavaScript</string>
+    <string name="whats_new_cache">Balasan lebih cepat dengan prompt &amp; alat yang di-cache</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d token</item>
+    </plurals>
 </resources>

@@ -10,6 +10,10 @@ Bohaté chatovací prostředí — odpovědi jsou vykreslovány s plnou podporou
 
 Modely s uvažováním — sledujte myšlenkový proces modelů jako DeepSeek R1, Nemotron a LFM2.5 Thinking zobrazený ve stylizované, sbalitelné sekci s nastavitelným rozpočtem uvažování.
 
+Nástroje — schopné modely mohou vyhledávat na webu, načíst stránku a spustit JavaScript přímo v odpovědi. Každý nástroj je ve výchozím nastavení vypnutý; zapněte jen ty, které chcete, pro každý model, v Nastavení → Nástroje. Vyhledávání na webu a načítání se připojují k internetu pouze po jejich zapnutí — vše ostatní zůstává ve vašem zařízení.
+
+Generování na pozadí — spusťte odpověď a poté aplikaci opusťte, bude pokračovat dál. Živé oznámení zobrazuje stav generování a počet tokenů, umožňuje zkopírovat nebo sdílet výsledek bez opětovného otevření aplikace a po dokončení zazvoní.
+
 Sledování rychlosti generování — zobrazte si počet tokenů, dobu generování a rychlost tok/s pro každou odpověď.
 
 Parametry pro každý model — každý model si pamatuje vlastní nastavení generování. Dolaďte velikost kontextu, rozpočet uvažování, temperature, Top-P, Top-K, Min-P, postih za opakování a seed.
@@ -28,6 +32,7 @@ PODPOROVANÉ MODELY
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ PODPOROVANÉ MODELY
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-Začíná již na 267 MB pro nejmenší model. Větší modely (4B–8B) těží z 8+ GB RAM. Můžete také načíst jakýkoli vlastní model GGUF.
+Začíná již na 267 MB pro nejmenší model. Větší modely (4B–8B) těží z 8+ GB RAM a model 20B vyžaduje špičkové zařízení s dostatkem paměti. Můžete také načíst jakýkoli vlastní model GGUF.
 
 OPEN SOURCE
 

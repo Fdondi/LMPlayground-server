@@ -52,6 +52,7 @@
     <string name="record_message">Nauhoita ääniviesti</string>
     <string name="stop">Pysäytä</string>
 
+    <string name="share">Jaa</string>
     <string name="copy">Kopioi</string>
     <string name="upvote">Äänestä ylös</string>
     <string name="downvote">Äänestä alas</string>
@@ -230,6 +231,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">Olet tiivis tiedeopettaja. Selitä ajatukset selkeästi arkipäiväisin esimerkein.</string>
+    <string name="screenshot_prompts">Uudelleenkäytettävät kehotteet</string>
+    <string name="screenshot_prompts_sub">aseta sävy kerran, käytä missä tahansa</string>
+    <string name="screenshot_tools">Anna malleille työkaluja</string>
+    <string name="screenshot_tools_sub">verkkohaku, nouto &amp; JavaScript</string>
+    <string name="screenshot_notification">Toimii taustalla</string>
+    <string name="screenshot_notification_sub">saat ilmoituksen, kun se on valmis</string>
+    <string name="screenshot_prompt_sample_code">Olet kokenut koodin tarkastaja. Osoita bugit, reunatapaukset ja tietoturvaongelmat. Ole suora ja täsmällinen.</string>
+    <string name="screenshot_prompt_sample_translator">Olet kääntäjä. Muunna kaikki lähettämäni luonnolliseksi, sujuvaksi ranskaksi ja säilytä muotoilu.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Olet luova ideointikumppani. Tarjoa rohkeita, odottamattomia ideoita ja kehitä omiani eteenpäin.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">Mitä on koneoppiminen?</string>
@@ -271,4 +281,43 @@
     <string name="model_load_failed_title">Mallin lataaminen epäonnistui</string>
     <string name="model_load_failed_message">Mallin %1$s lataaminen epäonnistui. Tiedosto voi olla vioittunut tai se käyttää arkkitehtuuria, jota tämä sovelluksen versio ei vielä tue. Kokeile toista mallia tai päivitä sovellus.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0 -->
+    <string name="cd_supports_thinking">Tukee ajattelua</string>
+    <string name="cd_supports_tools">Tukee työkaluja</string>
+    <string name="folder_picker_unavailable">Ei sovellusta kansion valitsemiseen. Asenna tai ota käyttöön järjestelmän Tiedostot / Dokumentit -sovellus.</string>
+    <string name="haptic_on_generation_desc">Kevyt naps, kun jokainen vastauksen osa saapuu.</string>
+    <string name="haptic_on_generation_title">Värinäpalaute generoinnin aikana</string>
+    <string name="inference_engine_unavailable">Päättelymoottori ei ole juuri nyt käytettävissä. Yritä hetken kuluttua uudelleen.</string>
+    <string name="inference_notification_generating_title">Luodaan vastausta…</string>
+    <string name="inference_notification_ready_title">Vastaus valmis</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokenia</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="response_copied">Kopioitu leikepöydälle</string>
+    <string name="set_up_tools">Määritä työkalut</string>
+    <string name="sound_and_haptic">Ääni ja värinä</string>
+    <string name="sound_and_haptic_subtitle">Valmistumisääni ja kirjoitusvärinä</string>
+    <string name="sound_on_completion_desc">Soittaa lyhyen merkkiäänen, kun malli saa vastauksen valmiiksi sovelluksen ollessa taustalla.</string>
+    <string name="sound_on_completion_title">Soita ääni, kun generointi valmistuu</string>
+    <string name="tool_call_input">Syöte</string>
+    <string name="tool_call_output">Tulos</string>
+    <string name="tool_run_javascript_desc">Suorittaa JavaScriptiä turvallisessa hiekkalaatikossa laskutoimituksia, päivämääriä ja tekstinkäsittelyä varten. Ei internet- tai tiedostokäyttöä.</string>
+    <string name="tool_run_javascript_example">\"Paljonko on (2 + 3) × 4, ja mikä viikonpäivä on 1.1.2027?\"</string>
+    <string name="tool_run_javascript_title">Suorita JavaScript</string>
+    <string name="tool_web_fetch_desc">Avaa linkin ja lukee sen pääsisällön tekstinä, jotta malli voi tiivistää tai lainata sivun.</string>
+    <string name="tool_web_fetch_example">\"Tiivistä tämän linkin artikkeli.\"</string>
+    <string name="tool_web_fetch_title">Nouda verkkosivu</string>
+    <string name="tool_web_search_desc">Hakee verkosta ja palauttaa tulosten otsikot, linkit ja katkelmat, jotta malli voi löytää ajantasaista tietoa.</string>
+    <string name="tool_web_search_example">\"Etsi tuoreita arvioita uusimmasta Pixel-puhelimesta.\"</string>
+    <string name="tool_web_search_title">Verkkohaku</string>
+    <string name="tools">Työkalut</string>
+    <string name="tools_example_label">Esimerkki: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Malli voi kutsua näitä vastauksen aikana</string>
+    <string name="tools_section_intro">Työkalujen avulla kyvykkäät mallit voivat tehdä toimintoja vastauksen aikana, kuten hakea verkosta tai suorittaa laskutoimituksen. Jokainen työkalu on oletuksena pois päältä — ota käyttöön vain haluamasi. Työkalut toimivat vain niitä tukevien mallien kanssa (etsi vasaramerkkiä).</string>
+    <string name="tools_subtitle">Anna kyvykkäiden mallien tehdä toimintoja</string>
+    <string name="whats_new_cache">Nopeammat vastaukset välimuistiin tallennetuilla kehotteilla &amp; työkaluilla</string>
+    <string name="whats_new_tools">Verkkohaku, sivun nouto ja JavaScriptin suoritus</string>
 </resources>

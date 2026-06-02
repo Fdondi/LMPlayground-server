@@ -231,6 +231,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">Je bent een bondige wetenschapsleraar. Leg ideeën helder uit met alledaagse voorbeelden.</string>
+    <string name="screenshot_prompts">Herbruikbare prompts</string>
+    <string name="screenshot_prompts_sub">stel de toon één keer in, gebruik hem overal</string>
+    <string name="screenshot_tools">Geef modellen tools</string>
+    <string name="screenshot_tools_sub">webzoeken, ophalen &amp; JavaScript</string>
+    <string name="screenshot_notification">Draait op de achtergrond</string>
+    <string name="screenshot_notification_sub">krijg een melding wanneer het klaar is</string>
+    <string name="screenshot_prompt_sample_code">Je bent een senior code-reviewer. Wijs op bugs, randgevallen en beveiligingsproblemen. Wees direct en specifiek.</string>
+    <string name="screenshot_prompt_sample_translator">Je bent een vertaler. Zet alles wat ik stuur om in natuurlijk, vloeiend Frans en behoud de opmaak.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Je bent een creatieve brainstormpartner. Bied gedurfde, onverwachte ideeën en bouw voort op de mijne.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">Wat is machine learning?</string>
@@ -274,4 +283,52 @@
     <string name="model_load_failed_title">Kan model niet laden</string>
     <string name="model_load_failed_message">Kan %1$s niet laden. Het bestand is mogelijk beschadigd of gebruikt een architectuur die deze versie van de app nog niet ondersteunt. Probeer een ander model of werk de app bij.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- What's new (1.7.0) -->
+    <string name="whats_new_tools">Zoeken op het web, pagina ophalen en JavaScript uitvoeren</string>
+    <string name="whats_new_cache">Snellere antwoorden met gecachte prompts &amp; tools</string>
+
+    <!-- Tools -->
+    <string name="set_up_tools">Tools instellen</string>
+    <string name="tools">Tools</string>
+    <string name="tools_subtitle">Laat capabele modellen acties uitvoeren</string>
+    <string name="tools_section_intro">Met tools kunnen capabele modellen tijdens een antwoord acties uitvoeren, zoals zoeken op het web of een berekening maken. Elke tool staat standaard uit – zet alleen de tools aan die je wilt gebruiken. Tools werken alleen met modellen die ze ondersteunen (let op het hamersymbool).</string>
+    <string name="tools_example_label">Voorbeeld: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Het model kan deze tijdens een antwoord aanroepen</string>
+    <string name="tool_call_input">Invoer</string>
+    <string name="tool_call_output">Uitvoer</string>
+    <string name="tool_run_javascript_title">JavaScript uitvoeren</string>
+    <string name="tool_run_javascript_desc">Voert JavaScript uit in een beveiligde sandbox voor berekeningen, datums en tekstverwerking. Geen internet- of bestandstoegang.</string>
+    <string name="tool_run_javascript_example">“Wat is (2 + 3) × 4, en welke weekdag is 1 januari 2027?”</string>
+    <string name="tool_web_search_title">Zoeken op het web</string>
+    <string name="tool_web_search_desc">Doorzoekt het web en geeft titels, links en fragmenten van resultaten terug, zodat het model actuele informatie kan vinden.</string>
+    <string name="tool_web_search_example">“Vind recente reviews van de nieuwste Pixel-telefoon.”</string>
+    <string name="tool_web_fetch_title">Webpagina ophalen</string>
+    <string name="tool_web_fetch_desc">Opent een link en leest de belangrijkste inhoud als tekst, zodat het model een pagina kan samenvatten of citeren.</string>
+    <string name="tool_web_fetch_example">“Vat het artikel achter deze link samen.”</string>
+    <string name="cd_supports_tools">Ondersteunt tools</string>
+    <string name="cd_supports_thinking">Ondersteunt denken</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">Geluid en haptiek</string>
+    <string name="sound_and_haptic_subtitle">Voltooiingsgeluid en haptiek bij typen</string>
+    <string name="sound_on_completion_title">Geluid afspelen wanneer het genereren klaar is</string>
+    <string name="sound_on_completion_desc">Speelt een korte toon af wanneer het model een antwoord voltooit terwijl de app op de achtergrond draait.</string>
+    <string name="haptic_on_generation_title">Haptische feedback bij genereren</string>
+    <string name="haptic_on_generation_desc">Een zachte tik terwijl elk deel van het antwoord binnenkomt.</string>
+
+    <!-- Inference notification -->
+    <string name="inference_notification_generating_title">Antwoord genereren…</string>
+    <string name="inference_notification_ready_title">Antwoord gereed</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokens</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">De inferentie-engine is momenteel niet beschikbaar. Probeer het zo opnieuw.</string>
+
+    <!-- Misc -->
+    <string name="share">Delen</string>
+    <string name="response_copied">Gekopieerd naar klembord</string>
+    <string name="folder_picker_unavailable">Geen app beschikbaar om een map te kiezen. Installeer of schakel de systeem-app Bestanden / Documenten in.</string>
 </resources>

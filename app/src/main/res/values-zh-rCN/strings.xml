@@ -189,6 +189,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">你是一位简洁的科学老师。请用日常生活中的例子清晰地解释概念。</string>
+    <string name="screenshot_prompts">可复用的提示词</string>
+    <string name="screenshot_prompts_sub">设定一次语气，随处使用</string>
+    <string name="screenshot_tools">为模型赋予工具</string>
+    <string name="screenshot_tools_sub">网络搜索、抓取和 JavaScript</string>
+    <string name="screenshot_notification">在后台运行</string>
+    <string name="screenshot_notification_sub">完成时收到提醒</string>
+    <string name="screenshot_prompt_sample_code">你是一位资深的代码审查员。请指出 bug、边界情况和安全问题。直接且具体。</string>
+    <string name="screenshot_prompt_sample_translator">你是一位翻译。把我发送的所有内容转换成自然流畅的法语，并保留格式。</string>
+    <string name="screenshot_prompt_sample_brainstorm">你是一位富有创意的头脑风暴伙伴。提出大胆、出人意料的想法，并在我的想法基础上拓展。</string>
     <string name="screenshot_chat_question">什么是机器学习？</string>
     <string name="screenshot_chat_response">机器学习是人工智能的一个分支，计算机通过**从数据中学习**而非被明确编程来工作。\n\n关键概念：\n\n\u2022 **训练**：向算法输入数据\n\u2022 **模型**：从数据中学习到的模式\n\u2022 **推理**：对新数据进行预测</string>
 
@@ -234,4 +243,48 @@
     <string name="model_load_failed_title">无法加载模型</string>
     <string name="model_load_failed_message">无法加载 %1$s。文件可能已损坏，或者使用了此版本应用尚不支持的架构。请尝试其他模型，或更新应用。</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- What's New (1.7.0) -->
+    <string name="whats_new_tools">网络搜索、抓取网页和运行 JavaScript</string>
+    <string name="whats_new_cache">借助缓存的提示词和工具，回复更快 &amp; 更流畅</string>
+    <string name="set_up_tools">设置工具</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">声音与触感</string>
+    <string name="sound_and_haptic_subtitle">完成提示音和输入触感反馈</string>
+    <string name="sound_on_completion_title">生成完成时播放提示音</string>
+    <string name="sound_on_completion_desc">当应用在后台运行时，模型完成回复后会播放一声短促的提示音。</string>
+    <string name="haptic_on_generation_title">生成时的触感反馈</string>
+    <string name="haptic_on_generation_desc">回复的每个部分流式输出时，伴随轻柔的振动。</string>
+
+    <!-- Tools -->
+    <string name="tools">工具</string>
+    <string name="tools_subtitle">让有能力的模型执行操作</string>
+    <string name="tools_section_intro">工具让有能力的模型在回复过程中执行操作，例如搜索网络或进行计算。每个工具默认关闭 — 只需开启你想要的工具。工具仅适用于支持它们的模型（请留意锤子徽标）。</string>
+    <string name="tools_example_label">示例：%1$s</string>
+    <string name="tools_params_sheet_subtitle">模型可在回复时调用这些工具</string>
+    <string name="tool_call_input">输入</string>
+    <string name="tool_call_output">输出</string>
+    <string name="cd_supports_tools">支持工具</string>
+    <string name="cd_supports_thinking">支持思考</string>
+    <string name="tool_run_javascript_title">运行 JavaScript</string>
+    <string name="tool_run_javascript_desc">在安全沙箱中运行 JavaScript，用于数学运算、日期和文本处理。无法访问网络或文件。</string>
+    <string name="tool_run_javascript_example">\"(2 + 3) × 4 等于多少，2027 年 1 月 1 日是星期几？\"</string>
+    <string name="tool_web_search_title">网络搜索</string>
+    <string name="tool_web_search_desc">搜索网络并返回结果的标题、链接和摘要，让模型能够查找最新信息。</string>
+    <string name="tool_web_search_example">\"查找最新款 Pixel 手机的近期评测。\"</string>
+    <string name="tool_web_fetch_title">抓取网页</string>
+    <string name="tool_web_fetch_desc">打开链接并以文本形式读取其主要内容，让模型能够总结或引用页面。</string>
+    <string name="tool_web_fetch_example">\"总结此链接中的文章。\"</string>
+
+    <!-- Inference engine notifications (1.7.0) -->
+    <string name="inference_notification_generating_title">正在生成回复…</string>
+    <string name="inference_notification_ready_title">回复已就绪</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d 个 token</item>
+    </plurals>
+    <string name="response_copied">已复制到剪贴板</string>
+    <string name="inference_engine_unavailable">推理引擎当前不可用。请稍后再试。</string>
+    <string name="folder_picker_unavailable">没有可用于选择文件夹的应用。请安装或启用系统的“文件 / 文档”应用。</string>
 </resources>

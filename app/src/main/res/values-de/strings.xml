@@ -190,6 +190,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Du bist ein pr\u00E4ziser Wissenschaftslehrer. Erkl\u00E4re Ideen klar mit Beispielen aus dem Alltag.</string>
+    <string name="screenshot_prompts">Wiederverwendbare Prompts</string>
+    <string name="screenshot_prompts_sub">Tonfall einmal festlegen, \u00FCberall nutzen</string>
+    <string name="screenshot_tools">Gib Modellen Werkzeuge</string>
+    <string name="screenshot_tools_sub">Websuche, Abruf &amp; JavaScript</string>
+    <string name="screenshot_notification">L\u00E4uft im Hintergrund</string>
+    <string name="screenshot_notification_sub">erhalte einen Hinweis, wenn es fertig ist</string>
+    <string name="screenshot_prompt_sample_code">Du bist ein erfahrener Code-Reviewer. Weise auf Bugs, Grenzf\u00E4lle und Sicherheitsprobleme hin. Sei direkt und konkret.</string>
+    <string name="screenshot_prompt_sample_translator">Du bist ein \u00DCbersetzer. Wandle alles, was ich sende, in nat\u00FCrliches, fl\u00FCssiges Franz\u00F6sisch um und behalte die Formatierung bei.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Du bist ein kreativer Brainstorming-Partner. Biete mutige, unerwartete Ideen und baue auf meinen auf.</string>
     <string name="screenshot_chat_question">Was ist maschinelles Lernen?</string>
     <string name="screenshot_chat_response">Maschinelles Lernen ist ein Zweig der k\u00FCnstlichen Intelligenz, bei dem Computer **aus Daten lernen**, anstatt explizit programmiert zu werden.\n\nWichtige Konzepte:\n\n\u2022 **Training**: Algorithmen mit Daten f\u00FCttern\n\u2022 **Modelle**: aus Daten gelernte Muster\n\u2022 **Inferenz**: Vorhersagen mit neuen Daten treffen</string>
 
@@ -235,4 +244,51 @@
     <string name="model_load_failed_title">Modell konnte nicht geladen werden</string>
     <string name="model_load_failed_message">%1$s konnte nicht geladen werden. Die Datei ist möglicherweise beschädigt oder verwendet eine Architektur, die diese Version der App noch nicht unterstützt. Versuche es mit einem anderen Modell oder aktualisiere die App.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- What's new (1.7.0) -->
+    <string name="whats_new_tools">Websuche, Seite abrufen und JavaScript ausführen</string>
+    <string name="whats_new_cache">Schnellere Antworten dank zwischengespeicherter Prompts &amp; Tools</string>
+
+    <!-- Tools -->
+    <string name="set_up_tools">Tools einrichten</string>
+    <string name="tools">Tools</string>
+    <string name="tools_subtitle">Leistungsfähige Modelle Aktionen ausführen lassen</string>
+    <string name="tools_section_intro">Mit Tools können leistungsfähige Modelle während einer Antwort Aktionen ausführen, etwa im Web suchen oder eine Berechnung durchführen. Jedes Tool ist standardmäßig deaktiviert – aktiviere nur die, die du nutzen möchtest. Tools funktionieren nur mit Modellen, die sie unterstützen (achte auf das Hammer-Symbol).</string>
+    <string name="tools_example_label">Beispiel: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Das Modell kann diese während einer Antwort aufrufen</string>
+    <string name="tool_call_input">Eingabe</string>
+    <string name="tool_call_output">Ausgabe</string>
+    <string name="tool_run_javascript_title">JavaScript ausführen</string>
+    <string name="tool_run_javascript_desc">Führt JavaScript in einer sicheren Sandbox für Berechnungen, Datumsangaben und Textverarbeitung aus. Kein Internet- oder Dateizugriff.</string>
+    <string name="tool_run_javascript_example">“Was ergibt (2 + 3) × 4, und welcher Wochentag ist der 1. Januar 2027?”</string>
+    <string name="tool_web_search_title">Websuche</string>
+    <string name="tool_web_search_desc">Durchsucht das Web und liefert Titel, Links und Ausschnitte der Ergebnisse, damit das Modell aktuelle Informationen finden kann.</string>
+    <string name="tool_web_search_example">“Finde aktuelle Testberichte zum neuesten Pixel-Smartphone.”</string>
+    <string name="tool_web_fetch_title">Webseite abrufen</string>
+    <string name="tool_web_fetch_desc">Öffnet einen Link und liest dessen Hauptinhalt als Text, damit das Modell eine Seite zusammenfassen oder zitieren kann.</string>
+    <string name="tool_web_fetch_example">“Fasse den Artikel unter diesem Link zusammen.”</string>
+    <string name="cd_supports_tools">Unterstützt Tools</string>
+    <string name="cd_supports_thinking">Unterstützt Thinking</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">Ton und Haptik</string>
+    <string name="sound_and_haptic_subtitle">Abschlusston und haptisches Tippen</string>
+    <string name="sound_on_completion_title">Ton abspielen, wenn die Generierung abgeschlossen ist</string>
+    <string name="sound_on_completion_desc">Spielt einen kurzen Klang ab, wenn das Modell eine Antwort abschließt, während die App im Hintergrund läuft.</string>
+    <string name="haptic_on_generation_title">Haptisches Feedback bei der Generierung</string>
+    <string name="haptic_on_generation_desc">Ein sanftes Ticken, während jeder Teil der Antwort eintrifft.</string>
+
+    <!-- Inference notification -->
+    <string name="inference_notification_generating_title">Antwort wird generiert…</string>
+    <string name="inference_notification_ready_title">Antwort bereit</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d Token</item>
+        <item quantity="other">%d Tokens</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">Die Inferenz-Engine ist gerade nicht verfügbar. Versuche es gleich noch einmal.</string>
+
+    <!-- Misc -->
+    <string name="response_copied">In die Zwischenablage kopiert</string>
+    <string name="folder_picker_unavailable">Keine App zum Auswählen eines Ordners verfügbar. Installiere oder aktiviere die System-App Dateien / Dokumente.</string>
 </resources>

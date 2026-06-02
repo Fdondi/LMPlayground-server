@@ -190,6 +190,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Tu es un tuteur scientifique concis. Explique les id\u00E9es clairement avec des exemples du quotidien.</string>
+    <string name="screenshot_prompts">Invites r\u00E9utilisables</string>
+    <string name="screenshot_prompts_sub">d\u00E9finissez le ton une fois, utilisez-le partout</string>
+    <string name="screenshot_tools">Donnez des outils aux mod\u00E8les</string>
+    <string name="screenshot_tools_sub">recherche web, fetch &amp; JavaScript</string>
+    <string name="screenshot_notification">Fonctionne en arri\u00E8re-plan</string>
+    <string name="screenshot_notification_sub">recevez une alerte une fois termin\u00E9</string>
+    <string name="screenshot_prompt_sample_code">Tu es un relecteur de code exp\u00E9riment\u00E9. Signale les bugs, les cas limites et les probl\u00E8mes de s\u00E9curit\u00E9. Sois direct et pr\u00E9cis.</string>
+    <string name="screenshot_prompt_sample_translator">Tu es un traducteur. Transforme tout ce que je t\'envoie en fran\u00E7ais naturel et fluide, et conserve la mise en forme.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Tu es un partenaire de brainstorming cr\u00E9atif. Propose des id\u00E9es audacieuses et inattendues, et d\u00E9veloppe les miennes.</string>
     <string name="screenshot_chat_question">Qu\'est-ce que l\'apprentissage automatique ?</string>
     <string name="screenshot_chat_response">L\'apprentissage automatique est une branche de l\'intelligence artificielle o\u00F9 les ordinateurs **apprennent \u00E0 partir des donn\u00E9es** au lieu d\'\u00EAtre explicitement programm\u00E9s.\n\nConcepts cl\u00E9s :\n\n\u2022 **Entra\u00EEnement** : fournir des donn\u00E9es aux algorithmes\n\u2022 **Mod\u00E8les** : motifs appris \u00E0 partir des donn\u00E9es\n\u2022 **Inf\u00E9rence** : faire des pr\u00E9dictions sur de nouvelles donn\u00E9es</string>
 
@@ -235,4 +244,49 @@
     <string name="model_load_failed_title">Impossible de charger le modèle</string>
     <string name="model_load_failed_message">Impossible de charger %1$s. Le fichier est peut-être corrompu, ou il utilise une architecture que cette version de l\'application ne prend pas encore en charge. Essayez un autre modèle ou mettez l\'application à jour.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- Notifications d\'inférence -->
+    <string name="inference_notification_generating_title">Génération de la réponse…</string>
+    <string name="inference_notification_ready_title">Réponse prête</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokens</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">Le moteur d\'inférence n\'est pas disponible pour le moment. Réessayez dans un instant.</string>
+
+    <!-- Son et retour haptique -->
+    <string name="sound_and_haptic">Son et retour haptique</string>
+    <string name="sound_and_haptic_subtitle">Son de fin et retour haptique à la saisie</string>
+    <string name="sound_on_completion_title">Jouer un son à la fin de la génération</string>
+    <string name="sound_on_completion_desc">Joue un court carillon lorsque le modèle termine une réponse pendant que l\'application est en arrière-plan.</string>
+    <string name="haptic_on_generation_title">Retour haptique pendant la génération</string>
+    <string name="haptic_on_generation_desc">Une légère vibration à mesure que chaque partie de la réponse arrive.</string>
+
+    <!-- Outils -->
+    <string name="tools">Outils</string>
+    <string name="tools_subtitle">Laissez les modèles capables agir</string>
+    <string name="set_up_tools">Configurer les outils</string>
+    <string name="tools_section_intro">Les outils permettent aux modèles capables d\'effectuer des actions pendant une réponse, comme rechercher sur le web ou faire un calcul. Chaque outil est désactivé par défaut : n\'activez que ceux que vous voulez. Les outils ne fonctionnent qu\'avec les modèles qui les prennent en charge (repérez le badge en forme de clé).</string>
+    <string name="tools_params_sheet_subtitle">Le modèle peut les utiliser pendant une réponse</string>
+    <string name="tools_example_label">Exemple : %1$s</string>
+    <string name="cd_supports_tools">Prend en charge les outils</string>
+    <string name="cd_supports_thinking">Prend en charge la réflexion</string>
+    <string name="tool_web_search_title">Recherche web</string>
+    <string name="tool_web_search_desc">Recherche sur le web et renvoie les titres des résultats, les liens et des extraits afin que le modèle puisse trouver des informations actuelles.</string>
+    <string name="tool_web_search_example">\"Trouve des avis récents sur le dernier téléphone Pixel.\"</string>
+    <string name="tool_web_fetch_title">Charger une page web</string>
+    <string name="tool_web_fetch_desc">Ouvre un lien et lit son contenu principal sous forme de texte pour que le modèle puisse résumer ou citer une page.</string>
+    <string name="tool_web_fetch_example">\"Résume l\'article de ce lien.\"</string>
+    <string name="tool_run_javascript_title">Exécuter JavaScript</string>
+    <string name="tool_run_javascript_desc">Exécute du JavaScript dans un bac à sable sécurisé pour les calculs, les dates et le traitement de texte. Aucun accès à Internet ni aux fichiers.</string>
+    <string name="tool_run_javascript_example">\"Combien font (2 + 3) × 4, et quel jour de la semaine est le 1er janvier 2027 ?\"</string>
+    <string name="tool_call_input">Entrée</string>
+    <string name="tool_call_output">Sortie</string>
+    <string name="response_copied">Copié dans le presse-papiers</string>
+    <string name="folder_picker_unavailable">Aucune application disponible pour choisir un dossier. Installez ou activez l\'application Fichiers / Documents du système.</string>
+
+    <!-- Nouveautés -->
+    <string name="whats_new_tools">Recherche web, chargement de page et exécution de JavaScript</string>
+    <string name="whats_new_cache">Réponses plus rapides avec les prompts &amp; outils en cache</string>
 </resources>

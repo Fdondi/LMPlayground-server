@@ -10,6 +10,10 @@ Experiență de chat bogată — răspunsurile sunt randate cu suport complet pe
 
 Modele de raționament — urmărește procesul de gândire al modelelor precum DeepSeek R1, Nemotron și LFM2.5 Thinking afișat într-o secțiune stilizată, reductibilă, cu buget de raționament ajustabil.
 
+Instrumente — modelele capabile pot căuta pe web, deschide o pagină și rula JavaScript chiar în interiorul unui răspuns. Fiecare instrument este dezactivat implicit; activează doar pe cele dorite, pentru fiecare model, în Setări → Instrumente. Căutarea web și deschiderea paginilor accesează internetul doar când le activezi — restul rămâne pe dispozitivul tău.
+
+Generare în fundal — pornește un răspuns, apoi părăsește aplicația: continuă să ruleze. O notificare în timp real afișează starea generării și numărul de tokeni, îți permite să copiezi sau să distribui rezultatul fără a redeschide aplicația și emite un sunet când se termină.
+
 Urmărirea vitezei de generare — vezi numărul de tokeni, timpul de generare și viteza în tok/s pentru fiecare răspuns.
 
 Parametri per model — fiecare model își amintește propriile setări de generare. Reglează dimensiunea contextului, bugetul de raționament, temperatura, Top-P, Top-K, Min-P, penalizarea pentru repetiție și seed-ul.
@@ -28,6 +32,7 @@ MODELE COMPATIBILE
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ MODELE COMPATIBILE
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-Începând de la doar 267 MB pentru cel mai mic model. Modelele mai mari (4B–8B) beneficiază de 8+ GB RAM. Poți încărca și orice model GGUF personalizat.
+Începând de la doar 267 MB pentru cel mai mic model. Modelele mai mari (4B–8B) beneficiază de 8+ GB RAM, iar modelul de 20B necesită un dispozitiv high-end cu multă memorie. Poți încărca și orice model GGUF personalizat.
 
 OPEN SOURCE
 

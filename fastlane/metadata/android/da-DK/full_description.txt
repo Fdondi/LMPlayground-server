@@ -10,6 +10,10 @@ Rig chatoplevelse — svar vises med fuld markdown-understøttelse, herunder ove
 
 Ræsonnementsmodeller — se tankeprocessen i modeller som DeepSeek R1, Nemotron og LFM2.5 Thinking vist i en stiliseret, sammenklappelig sektion med justerbart tænkebudget.
 
+Værktøjer — kapable modeller kan søge på nettet, hente en side og køre JavaScript direkte inde i et svar. Hvert værktøj er slået fra som standard; aktivér kun dem, du ønsker, pr. model, under Indstillinger → Værktøjer. Websøgning og hentning når kun internettet, når du slår dem til — alt andet bliver på din enhed.
+
+Generering i baggrunden — start et svar, og forlad derefter appen, mens den fortsætter med at køre. En live-notifikation viser genereringsstatus og antal tokens, lader dig kopiere eller dele resultatet uden at åbne appen igen, og giver en lyd, når den er færdig.
+
 Sporing af genereringshastighed — se antal tokens, genereringstid og hastighed i tok/s for hvert svar.
 
 Parametre pr. model — hver model husker sine egne genereringsindstillinger. Finjuster kontekststørrelse, tænkebudget, temperatur, Top-P, Top-K, Min-P, gentagelsesstraf og seed.
@@ -28,6 +32,7 @@ UNDERSTØTTEDE MODELLER
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ UNDERSTØTTEDE MODELLER
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-Fra kun 267 MB for den mindste model. Større modeller (4B–8B) drager fordel af 8+ GB RAM. Du kan også indlæse enhver brugerdefineret GGUF-model.
+Fra kun 267 MB for den mindste model. Større modeller (4B–8B) drager fordel af 8+ GB RAM, og 20B-modellen kræver en avanceret enhed med rigeligt med hukommelse. Du kan også indlæse enhver brugerdefineret GGUF-model.
 
 OPEN SOURCE
 

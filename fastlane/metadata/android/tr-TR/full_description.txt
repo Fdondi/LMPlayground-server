@@ -10,6 +10,10 @@ Zengin sohbet deneyimi — yanıtlar başlıklar, kod blokları, listeler, kalı
 
 Akıl yürütme modelleri — DeepSeek R1, Nemotron ve LFM2.5 Thinking gibi modellerin düşünme sürecini, ayarlanabilir düşünme bütçesi ile şık ve katlanabilir bir bölümde görün.
 
+Araçlar — yetenekli modeller web'de arama yapabilir, bir sayfayı getirebilir ve JavaScript'i doğrudan yanıtın içinde çalıştırabilir. Her araç varsayılan olarak kapalıdır; Ayarlar → Araçlar bölümünden yalnızca istediklerinizi model bazında açın. Web araması ve getirme yalnızca siz açtığınızda internete erişir — geri kalan her şey cihazınızda kalır.
+
+Arka planda üretim — bir yanıt başlatın, ardından uygulamadan çıkın ve çalışmaya devam etsin. Canlı bir bildirim üretim durumunu ve token sayısını gösterir, uygulamayı yeniden açmadan sonucu kopyalamanıza veya paylaşmanıza olanak tanır ve tamamlandığında bir ses çalar.
+
 Üretim hızı takibi — her yanıt için token sayısı, üretim süresi ve tok/s hızını görün.
 
 Model bazlı parametreler — her model kendi üretim ayarlarını hatırlar. Bağlam boyutu, düşünme bütçesi, sıcaklık, Top-P, Top-K, Min-P, tekrar cezası ve tohum değerini ince ayar yapın.
@@ -28,6 +32,7 @@ DESTEKLENEN MODELLER
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ DESTEKLENEN MODELLER
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-En küçük model sadece 267 MB'dan başlar. Daha büyük modeller (4B–8B) 8+ GB RAM'den faydalanır. Ayrıca herhangi bir özel GGUF model yükleyebilirsiniz.
+En küçük model sadece 267 MB'dan başlar. Daha büyük modeller (4B–8B) 8+ GB RAM'den faydalanır ve 20B model bol belleğe sahip üst düzey bir cihaz gerektirir. Ayrıca herhangi bir özel GGUF model yükleyebilirsiniz.
 
 AÇIK KAYNAK
 

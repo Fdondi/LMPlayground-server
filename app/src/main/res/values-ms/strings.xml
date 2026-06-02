@@ -230,6 +230,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">Anda adalah tutor sains yang ringkas. Terangkan idea dengan jelas menggunakan contoh harian.</string>
+    <string name="screenshot_prompts">Gesaan boleh guna semula</string>
+    <string name="screenshot_prompts_sub">tetapkan nada sekali, guna di mana-mana</string>
+    <string name="screenshot_tools">Beri model alat</string>
+    <string name="screenshot_tools_sub">carian web, ambil halaman &amp; JavaScript</string>
+    <string name="screenshot_notification">Berjalan di latar belakang</string>
+    <string name="screenshot_notification_sub">dapat pemberitahuan apabila siap</string>
+    <string name="screenshot_prompt_sample_code">Anda ialah penyemak kod kanan. Tunjukkan pepijat, kes tepi dan isu keselamatan. Berterus terang dan khusus.</string>
+    <string name="screenshot_prompt_sample_translator">Anda ialah seorang penterjemah. Tukar segala yang saya hantar kepada bahasa Perancis yang semula jadi dan lancar serta kekalkan formatnya.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Anda ialah rakan sumbang saran yang kreatif. Tawarkan idea yang berani dan tidak dijangka serta kembangkan daripada idea saya.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">Apakah pembelajaran mesin?</string>
@@ -272,4 +281,43 @@
     <string name="model_load_failed_title">Tidak dapat memuatkan model</string>
     <string name="model_load_failed_message">Tidak dapat memuatkan %1$s. Fail mungkin rosak, atau ia menggunakan seni bina yang belum disokong oleh versi aplikasi ini. Cuba model lain, atau kemas kini aplikasi.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0: Sound & haptics, tools, inference notifications -->
+    <string name="share">Kongsi</string>
+    <string name="cd_supports_thinking">Menyokong pemikiran</string>
+    <string name="cd_supports_tools">Menyokong alat</string>
+    <string name="folder_picker_unavailable">Tiada aplikasi tersedia untuk memilih folder. Pasang atau dayakan aplikasi Fail / Dokumen sistem.</string>
+    <string name="haptic_on_generation_title">Maklum balas haptik semasa penjanaan</string>
+    <string name="haptic_on_generation_desc">Getaran halus apabila setiap bahagian respons dialirkan masuk.</string>
+    <string name="sound_and_haptic">Bunyi dan Haptik</string>
+    <string name="sound_and_haptic_subtitle">Bunyi siap dan haptik menaip</string>
+    <string name="sound_on_completion_title">Mainkan bunyi apabila penjanaan selesai</string>
+    <string name="sound_on_completion_desc">Memainkan bunyi pendek apabila model selesai memberi respons semasa aplikasi berada di latar belakang.</string>
+    <string name="response_copied">Disalin ke papan keratan</string>
+    <string name="inference_engine_unavailable">Enjin inferens tidak tersedia buat masa ini. Cuba lagi sebentar.</string>
+    <string name="inference_notification_generating_title">Menjana respons…</string>
+    <string name="inference_notification_ready_title">Respons sedia</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="set_up_tools">Sediakan alat</string>
+    <string name="tools">Alat</string>
+    <string name="tools_subtitle">Biar model yang berkemampuan mengambil tindakan</string>
+    <string name="tools_section_intro">Alat membolehkan model yang berkemampuan mengambil tindakan semasa membalas, seperti mencari di web atau melakukan pengiraan. Setiap alat dimatikan secara lalai — hidupkan hanya yang anda mahu. Alat hanya berfungsi dengan model yang menyokongnya (cari lencana tukul).</string>
+    <string name="tools_params_sheet_subtitle">Model boleh memanggil ini semasa membalas</string>
+    <string name="tools_example_label">Contoh: %1$s</string>
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <string name="tool_web_search_title">Carian web</string>
+    <string name="tool_web_search_desc">Mencari di web dan memulangkan tajuk hasil, pautan dan petikan supaya model dapat mencari maklumat terkini.</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">Ambil halaman web</string>
+    <string name="tool_web_fetch_desc">Membuka pautan dan membaca kandungan utamanya sebagai teks supaya model dapat meringkaskan atau memetik sesuatu halaman.</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+    <string name="tool_run_javascript_title">Jalankan JavaScript</string>
+    <string name="tool_run_javascript_desc">Menjalankan JavaScript dalam kotak pasir selamat untuk matematik, tarikh dan pemprosesan teks. Tiada akses internet atau fail.</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="whats_new_tools">Carian web, ambil halaman dan jalankan JavaScript</string>
+    <string name="whats_new_cache">Balasan lebih pantas dengan gesaan &amp; alat yang dicache</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d token</item>
+    </plurals>
 </resources>

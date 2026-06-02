@@ -10,6 +10,10 @@ LM Playground 让您直接在 Android 设备上运行大型语言模型。下载
 
 推理模型——查看 DeepSeek R1、Nemotron 和 LFM2.5 Thinking 等模型的思考过程，以精美的可折叠区域展示，支持可调节的思考预算。
 
+工具——能力强的模型可以在回复中直接搜索网络、抓取页面并运行 JavaScript。每个工具默认关闭；只需在设置 → 工具中为每个模型开启您想要的工具。仅当您开启时，网络搜索和抓取才会联网——其余一切都留在您的设备上。
+
+后台生成——开始生成回复后，您可以离开应用，它会继续运行。实时通知会显示生成状态和 token 数量，让您无需重新打开应用即可复制或分享结果，并在完成时发出提示音。
+
 生成速度追踪——查看每条回复的 token 数量、生成时间和 tok/s 速度。
 
 模型独立参数——每个模型记住自己的生成设置。微调上下文大小、思考预算、温度、Top-P、Top-K、Min-P、重复惩罚和种子。
@@ -28,6 +32,7 @@ LM Playground 让您直接在 Android 设备上运行大型语言模型。下载
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ LM Playground 让您直接在 Android 设备上运行大型语言模型。下载
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-最小模型仅需 267 MB 起。较大模型（4B–8B）建议 8GB 以上 RAM。您还可以加载任何自定义 GGUF 模型。
+最小模型仅需 267 MB 起。较大模型（4B–8B）建议 8GB 以上 RAM，20B 模型则需要内存充裕的高端设备。您还可以加载任何自定义 GGUF 模型。
 
 开源
 

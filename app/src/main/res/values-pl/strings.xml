@@ -190,6 +190,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Jesteś zwięzłym korepetytorem nauk ścisłych. Tłumacz pojęcia jasno, posługując się codziennymi przykładami.</string>
+    <string name="screenshot_prompts">Prompty wielokrotnego użytku</string>
+    <string name="screenshot_prompts_sub">ustaw ton raz, używaj wszędzie</string>
+    <string name="screenshot_tools">Daj modelom narzędzia</string>
+    <string name="screenshot_tools_sub">wyszukiwanie w sieci, pobieranie &amp; JavaScript</string>
+    <string name="screenshot_notification">Działa w tle</string>
+    <string name="screenshot_notification_sub">otrzymaj powiadomienie po zakończeniu</string>
+    <string name="screenshot_prompt_sample_code">Jesteś doświadczonym recenzentem kodu. Wskazuj błędy, przypadki brzegowe i problemy z bezpieczeństwem. Bądź bezpośredni i konkretny.</string>
+    <string name="screenshot_prompt_sample_translator">Jesteś tłumaczem. Zamieniaj wszystko, co wysyłam, na naturalny, płynny francuski i zachowuj formatowanie.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Jesteś kreatywnym partnerem do burzy mózgów. Proponuj śmiałe, nieoczekiwane pomysły i rozwijaj moje.</string>
     <string name="screenshot_chat_question">Czym jest uczenie maszynowe?</string>
     <string name="screenshot_chat_response">Uczenie maszynowe to gałąź sztucznej inteligencji, w której komputery **uczą się z danych** zamiast być jawnie programowane.\n\nKluczowe pojęcia:\n\n\u2022 **Trening**: dostarczanie danych algorytmom\n\u2022 **Modele**: wzorce nauczone z danych\n\u2022 **Wnioskowanie**: tworzenie przewidywań na nowych danych</string>
 
@@ -233,4 +242,45 @@
     <string name="model_load_failed_title">Nie udało się wczytać modelu</string>
     <string name="model_load_failed_message">Nie udało się wczytać %1$s. Plik może być uszkodzony lub używa architektury, której ta wersja aplikacji jeszcze nie obsługuje. Spróbuj innego modelu lub zaktualizuj aplikację.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0 -->
+    <string name="cd_supports_thinking">Obsługuje myślenie</string>
+    <string name="cd_supports_tools">Obsługuje narzędzia</string>
+    <string name="folder_picker_unavailable">Brak aplikacji do wyboru folderu. Zainstaluj lub włącz systemową aplikację Pliki / Dokumenty.</string>
+    <string name="haptic_on_generation_desc">Delikatne puknięcie przy każdej części spływającej odpowiedzi.</string>
+    <string name="haptic_on_generation_title">Wibracje podczas generowania</string>
+    <string name="inference_engine_unavailable">Silnik wnioskowania jest obecnie niedostępny. Spróbuj ponownie za chwilę.</string>
+    <string name="inference_notification_generating_title">Generowanie odpowiedzi…</string>
+    <string name="inference_notification_ready_title">Odpowiedź gotowa</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="few">%d tokeny</item>
+        <item quantity="many">%d tokenów</item>
+        <item quantity="other">%d tokena</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="response_copied">Skopiowano do schowka</string>
+    <string name="set_up_tools">Skonfiguruj narzędzia</string>
+    <string name="sound_and_haptic">Dźwięk i wibracje</string>
+    <string name="sound_and_haptic_subtitle">Dźwięk zakończenia i wibracje przy pisaniu</string>
+    <string name="sound_on_completion_desc">Odtwarza krótki dźwięk, gdy model kończy odpowiedź, a aplikacja działa w tle.</string>
+    <string name="sound_on_completion_title">Odtwarzaj dźwięk po zakończeniu generowania</string>
+    <string name="tool_call_input">Wejście</string>
+    <string name="tool_call_output">Wyjście</string>
+    <string name="tool_run_javascript_desc">Uruchamia JavaScript w bezpiecznej piaskownicy do obliczeń, dat i przetwarzania tekstu. Bez dostępu do internetu i plików.</string>
+    <string name="tool_run_javascript_example">\"Ile to jest (2 + 3) × 4 i jaki dzień tygodnia wypada 1 stycznia 2027?\"</string>
+    <string name="tool_run_javascript_title">Uruchom JavaScript</string>
+    <string name="tool_web_fetch_desc">Otwiera link i odczytuje jego główną treść jako tekst, aby model mógł podsumować lub zacytować stronę.</string>
+    <string name="tool_web_fetch_example">\"Podsumuj artykuł pod tym linkiem.\"</string>
+    <string name="tool_web_fetch_title">Pobierz stronę internetową</string>
+    <string name="tool_web_search_desc">Przeszukuje sieć i zwraca tytuły wyników, linki oraz fragmenty, aby model mógł znaleźć aktualne informacje.</string>
+    <string name="tool_web_search_example">\"Znajdź najnowsze recenzje najnowszego telefonu Pixel.\"</string>
+    <string name="tool_web_search_title">Wyszukiwanie w sieci</string>
+    <string name="tools">Narzędzia</string>
+    <string name="tools_example_label">Przykład: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Model może wywołać je podczas odpowiedzi</string>
+    <string name="tools_section_intro">Narzędzia pozwalają zdolnym modelom wykonywać działania podczas odpowiedzi, takie jak wyszukiwanie w sieci czy wykonywanie obliczeń. Każde narzędzie jest domyślnie wyłączone — włącz tylko te, których chcesz używać. Narzędzia działają tylko z modelami, które je obsługują (szukaj odznaki z młotkiem).</string>
+    <string name="tools_subtitle">Pozwól zdolnym modelom wykonywać działania</string>
+    <string name="whats_new_cache">Szybsze odpowiedzi dzięki buforowaniu promptów &amp; narzędzi</string>
+    <string name="whats_new_tools">Wyszukiwanie w sieci, pobieranie stron i uruchamianie JavaScript</string>
 </resources>

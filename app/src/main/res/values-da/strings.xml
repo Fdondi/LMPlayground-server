@@ -230,6 +230,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">Du er en kortfattet naturvidenskabslærer. Forklar idéer tydeligt med hverdagseksempler.</string>
+    <string name="screenshot_prompts">Genanvendelige prompter</string>
+    <string name="screenshot_prompts_sub">sæt tonen én gang, brug den overalt</string>
+    <string name="screenshot_tools">Giv modeller værktøjer</string>
+    <string name="screenshot_tools_sub">websøgning, hentning &amp; JavaScript</string>
+    <string name="screenshot_notification">Kører i baggrunden</string>
+    <string name="screenshot_notification_sub">få en notifikation, når den er færdig</string>
+    <string name="screenshot_prompt_sample_code">Du er en erfaren kodeanmelder. Påpeg fejl, grænsetilfælde og sikkerhedsproblemer. Vær direkte og specifik.</string>
+    <string name="screenshot_prompt_sample_translator">Du er en oversætter. Lav alt, hvad jeg sender, om til naturligt, flydende fransk og bevar formateringen.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Du er en kreativ idéudviklingspartner. Kom med dristige, uventede idéer og byg videre på mine.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">Hvad er maskinlæring?</string>
@@ -273,4 +282,52 @@
     <string name="model_load_failed_title">Kunne ikke indlæse modellen</string>
     <string name="model_load_failed_message">Kunne ikke indlæse %1$s. Filen kan være beskadiget, eller den bruger en arkitektur, som denne version af appen endnu ikke understøtter. Prøv en anden model, eller opdater appen.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- What's new (1.7.0) -->
+    <string name="whats_new_tools">Websøgning, hent side og kør JavaScript</string>
+    <string name="whats_new_cache">Hurtigere svar med cachelagrede prompter &amp; værktøjer</string>
+
+    <!-- Tools -->
+    <string name="set_up_tools">Konfigurer værktøjer</string>
+    <string name="tools">Værktøjer</string>
+    <string name="tools_subtitle">Lad dygtige modeller udføre handlinger</string>
+    <string name="tools_section_intro">Med værktøjer kan dygtige modeller udføre handlinger undervejs i et svar, som at søge på nettet eller foretage en beregning. Hvert værktøj er slået fra som standard – slå kun dem til, du vil bruge. Værktøjer fungerer kun med modeller, der understøtter dem (se efter hammersymbolet).</string>
+    <string name="tools_example_label">Eksempel: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Modellen kan kalde disse undervejs i et svar</string>
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <string name="tool_run_javascript_title">Kør JavaScript</string>
+    <string name="tool_run_javascript_desc">Kører JavaScript i en sikker sandkasse til matematik, datoer og tekstbehandling. Ingen internet- eller filadgang.</string>
+    <string name="tool_run_javascript_example">“Hvad er (2 + 3) × 4, og hvilken ugedag er 1. januar 2027?”</string>
+    <string name="tool_web_search_title">Websøgning</string>
+    <string name="tool_web_search_desc">Søger på nettet og returnerer resultaternes titler, links og uddrag, så modellen kan finde aktuel information.</string>
+    <string name="tool_web_search_example">“Find nylige anmeldelser af den nyeste Pixel-telefon.”</string>
+    <string name="tool_web_fetch_title">Hent webside</string>
+    <string name="tool_web_fetch_desc">Åbner et link og læser hovedindholdet som tekst, så modellen kan opsummere eller citere en side.</string>
+    <string name="tool_web_fetch_example">“Opsummer artiklen på dette link.”</string>
+    <string name="cd_supports_tools">Understøtter værktøjer</string>
+    <string name="cd_supports_thinking">Understøtter tænkning</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">Lyd og haptik</string>
+    <string name="sound_and_haptic_subtitle">Fuldførelseslyd og haptik ved indtastning</string>
+    <string name="sound_on_completion_title">Afspil lyd, når genereringen er færdig</string>
+    <string name="sound_on_completion_desc">Afspiller en kort tone, når modellen fuldfører et svar, mens appen kører i baggrunden.</string>
+    <string name="haptic_on_generation_title">Haptisk feedback ved generering</string>
+    <string name="haptic_on_generation_desc">Et blidt tik, efterhånden som hver del af svaret kommer ind.</string>
+
+    <!-- Inference notification -->
+    <string name="inference_notification_generating_title">Genererer svar…</string>
+    <string name="inference_notification_ready_title">Svar klar</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokens</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">Inferensmotoren er ikke tilgængelig lige nu. Prøv igen om et øjeblik.</string>
+
+    <!-- Misc -->
+    <string name="share">Del</string>
+    <string name="response_copied">Kopieret til udklipsholder</string>
+    <string name="folder_picker_unavailable">Ingen app tilgængelig til at vælge en mappe. Installer eller aktivér system-appen Filer / Dokumenter.</string>
 </resources>

@@ -230,6 +230,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">আপনি একজন সংক্ষিপ্ত বিজ্ঞান শিক্ষক। দৈনন্দিন উদাহরণ দিয়ে ধারণাগুলি স্পষ্টভাবে ব্যাখ্যা করুন।</string>
+    <string name="screenshot_prompts">পুনঃব্যবহারযোগ্য প্রম্পট</string>
+    <string name="screenshot_prompts_sub">একবার টোন ঠিক করুন, যেকোনো জায়গায় ব্যবহার করুন</string>
+    <string name="screenshot_tools">মডেলকে টুল দিন</string>
+    <string name="screenshot_tools_sub">ওয়েব সার্চ, ফেচ এবং JavaScript</string>
+    <string name="screenshot_notification">ব্যাকগ্রাউন্ডে চলে</string>
+    <string name="screenshot_notification_sub">শেষ হলে একটি বিজ্ঞপ্তি পান</string>
+    <string name="screenshot_prompt_sample_code">আপনি একজন সিনিয়র কোড রিভিউয়ার। বাগ, এজ কেস এবং নিরাপত্তা সমস্যা চিহ্নিত করুন। সরাসরি ও সুনির্দিষ্ট হন।</string>
+    <string name="screenshot_prompt_sample_translator">আপনি একজন অনুবাদক। আমি যা পাঠাই তা স্বাভাবিক, সাবলীল ফরাসিতে রূপান্তর করুন এবং ফর্ম্যাটিং বজায় রাখুন।</string>
+    <string name="screenshot_prompt_sample_brainstorm">আপনি একজন সৃজনশীল ভাবনা-বিনিময়ের সঙ্গী। সাহসী, অপ্রত্যাশিত ধারণা দিন এবং আমার ধারণাগুলিকে আরও এগিয়ে নিন।</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">মেশিন লার্নিং কী?</string>
@@ -272,4 +281,54 @@
     <string name="model_load_failed_title">মডেল লোড করা যায়নি</string>
     <string name="model_load_failed_message">%1$s লোড করা যায়নি। ফাইলটি দূষিত হতে পারে, অথবা এটি এমন একটি আর্কিটেকচার ব্যবহার করে যা অ্যাপের এই সংস্করণ এখনও সমর্থন করে না। অন্য একটি মডেল চেষ্টা করুন, অথবা অ্যাপটি আপডেট করুন।</string>
     <string name="model_load_failed_dismiss">ঠিক আছে</string>
+
+    <!-- Inference notifications -->
+    <string name="inference_notification_generating_title">প্রতিক্রিয়া তৈরি হচ্ছে…</string>
+    <string name="inference_notification_ready_title">প্রতিক্রিয়া প্রস্তুত</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d টোকেন</item>
+        <item quantity="other">%d টোকেন</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">ইনফারেন্স ইঞ্জিন এই মুহূর্তে উপলব্ধ নয়। কিছুক্ষণ পরে আবার চেষ্টা করুন।</string>
+
+    <!-- Common actions -->
+    <string name="share">শেয়ার করুন</string>
+    <string name="response_copied">ক্লিপবোর্ডে কপি করা হয়েছে</string>
+    <string name="folder_picker_unavailable">ফোল্ডার বাছাই করার জন্য কোনো অ্যাপ উপলব্ধ নেই। সিস্টেম ফাইলস / ডকুমেন্টস অ্যাপ ইনস্টল বা সক্ষম করুন।</string>
+
+    <!-- Model capability badges -->
+    <string name="cd_supports_thinking">চিন্তা সমর্থন করে</string>
+    <string name="cd_supports_tools">টুল সমর্থন করে</string>
+
+    <!-- Sound and haptic -->
+    <string name="sound_and_haptic">শব্দ এবং হ্যাপটিক</string>
+    <string name="sound_and_haptic_subtitle">সম্পন্ন হলে শব্দ এবং টাইপিংয়ের সময় হ্যাপটিক</string>
+    <string name="sound_on_completion_title">জেনারেশন শেষ হলে শব্দ বাজান</string>
+    <string name="sound_on_completion_desc">অ্যাপ ব্যাকগ্রাউন্ডে থাকা অবস্থায় মডেল প্রতিক্রিয়া শেষ করলে একটি ছোট ধ্বনি বাজে।</string>
+    <string name="haptic_on_generation_title">জেনারেশনে হ্যাপটিক ফিডব্যাক</string>
+    <string name="haptic_on_generation_desc">প্রতিক্রিয়ার প্রতিটি অংশ স্ট্রিম হওয়ার সাথে একটি মৃদু কম্পন।</string>
+
+    <!-- Tools -->
+    <string name="tools">টুল</string>
+    <string name="tools_subtitle">সক্ষম মডেলকে কাজ করতে দিন</string>
+    <string name="set_up_tools">টুল সেট আপ করুন</string>
+    <string name="tools_section_intro">টুল সক্ষম মডেলকে প্রতিক্রিয়ার সময় কাজ করতে দেয়, যেমন ওয়েবে অনুসন্ধান করা বা গণনা করা। প্রতিটি টুল ডিফল্টভাবে বন্ধ থাকে — শুধু আপনি যেগুলি চান সেগুলি চালু করুন। টুল কেবল সেই মডেলগুলির সাথেই কাজ করে যেগুলি এগুলি সমর্থন করে (হ্যামার ব্যাজ খুঁজুন)।</string>
+    <string name="tools_params_sheet_subtitle">মডেল প্রতিক্রিয়ার সময় এগুলি কল করতে পারে</string>
+    <string name="tools_example_label">উদাহরণ: %1$s</string>
+    <string name="tool_call_input">ইনপুট</string>
+    <string name="tool_call_output">আউটপুট</string>
+    <string name="tool_web_search_title">ওয়েব অনুসন্ধান</string>
+    <string name="tool_web_search_desc">ওয়েবে অনুসন্ধান করে এবং ফলাফলের শিরোনাম, লিঙ্ক ও স্নিপেট ফেরত দেয় যাতে মডেল সাম্প্রতিক তথ্য খুঁজে পেতে পারে।</string>
+    <string name="tool_web_search_example">\"সর্বশেষ Pixel ফোনের সাম্প্রতিক রিভিউ খুঁজুন।\"</string>
+    <string name="tool_web_fetch_title">ওয়েব পেজ ফেচ করুন</string>
+    <string name="tool_web_fetch_desc">একটি লিঙ্ক খোলে এবং এর মূল বিষয়বস্তু টেক্সট হিসেবে পড়ে যাতে মডেল কোনো পেজের সারসংক্ষেপ বা উদ্ধৃতি দিতে পারে।</string>
+    <string name="tool_web_fetch_example">\"এই লিঙ্কের নিবন্ধটির সারসংক্ষেপ দিন।\"</string>
+    <string name="tool_run_javascript_title">JavaScript চালান</string>
+    <string name="tool_run_javascript_desc">গণিত, তারিখ ও টেক্সট প্রক্রিয়াকরণের জন্য একটি নিরাপদ স্যান্ডবক্সে JavaScript চালায়। ইন্টারনেট বা ফাইল অ্যাক্সেস নেই।</string>
+    <string name="tool_run_javascript_example">\"(2 + 3) × 4 কত, এবং ১ জানুয়ারি ২০২৭ সপ্তাহের কোন দিন?\"</string>
+
+    <!-- What's New (1.7.0) -->
+    <string name="whats_new_tools">ওয়েব অনুসন্ধান, পেজ ফেচ এবং JavaScript চালানো</string>
+    <string name="whats_new_cache">ক্যাশ করা প্রম্পট ও টুলের সাথে দ্রুত প্রতিক্রিয়া</string>
 </resources>

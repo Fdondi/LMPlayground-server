@@ -189,6 +189,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">B\u1EA1n l\u00E0 m\u1ED9t gia s\u01B0 khoa h\u1ECDc ng\u1EAFn g\u1ECDn. H\u00E3y gi\u1EA3i th\u00EDch c\u00E1c \u00FD t\u01B0\u1EDFng m\u1ED9t c\u00E1ch r\u00F5 r\u00E0ng b\u1EB1ng nh\u1EEFng v\u00ED d\u1EE5 th\u01B0\u1EDDng ng\u00E0y.</string>
+    <string name="screenshot_prompts">L\u1EDDi nh\u1EAFc t\u00E1i s\u1EED d\u1EE5ng</string>
+    <string name="screenshot_prompts_sub">\u0111\u1EB7t gi\u1ECDng \u0111i\u1EC7u m\u1ED9t l\u1EA7n, d\u00F9ng \u1EDF m\u1ECDi n\u01A1i</string>
+    <string name="screenshot_tools">Trao c\u00F4ng c\u1EE5 cho m\u00F4 h\u00ECnh</string>
+    <string name="screenshot_tools_sub">t\u00ECm ki\u1EBFm web, t\u1EA3i trang &amp; JavaScript</string>
+    <string name="screenshot_notification">Ch\u1EA1y \u1EDF ch\u1EBF \u0111\u1ED9 n\u1EC1n</string>
+    <string name="screenshot_notification_sub">nh\u1EADn th\u00F4ng b\u00E1o khi ho\u00E0n t\u1EA5t</string>
+    <string name="screenshot_prompt_sample_code">B\u1EA1n l\u00E0 m\u1ED9t ng\u01B0\u1EDDi \u0111\u00E1nh gi\u00E1 m\u00E3 c\u1EA5p cao. H\u00E3y ch\u1EC9 ra l\u1ED7i, c\u00E1c tr\u01B0\u1EDDng h\u1EE3p bi\u00EAn v\u00E0 v\u1EA5n \u0111\u1EC1 b\u1EA3o m\u1EADt. H\u00E3y tr\u1EF1c ti\u1EBFp v\u00E0 c\u1EE5 th\u1EC3.</string>
+    <string name="screenshot_prompt_sample_translator">B\u1EA1n l\u00E0 m\u1ED9t bi\u00EAn d\u1ECBch vi\u00EAn. H\u00E3y chuy\u1EC3n m\u1ECDi th\u1EE9 t\u00F4i g\u1EEDi th\u00E0nh ti\u1EBFng Ph\u00E1p t\u1EF1 nhi\u00EAn, tr\u00F4i ch\u1EA3y v\u00E0 gi\u1EEF nguy\u00EAn \u0111\u1ECBnh d\u1EA1ng.</string>
+    <string name="screenshot_prompt_sample_brainstorm">B\u1EA1n l\u00E0 m\u1ED9t \u0111\u1ED1i t\u00E1c \u0111\u1ED9ng n\u00E3o s\u00E1ng t\u1EA1o. H\u00E3y \u0111\u01B0a ra nh\u1EEFng \u00FD t\u01B0\u1EDFng t\u00E1o b\u1EA1o, b\u1EA5t ng\u1EDD v\u00E0 ph\u00E1t tri\u1EC3n th\u00EAm t\u1EEB \u00FD c\u1EE7a t\u00F4i.</string>
     <string name="screenshot_chat_question">H\u1ECDc m\u00E1y l\u00E0 g\u00EC?</string>
     <string name="screenshot_chat_response">H\u1ECDc m\u00E1y l\u00E0 m\u1ED9t nh\u00E1nh c\u1EE7a tr\u00ED tu\u1EC7 nh\u00E2n t\u1EA1o, trong \u0111\u00F3 m\u00E1y t\u00EDnh **h\u1ECDc t\u1EEB d\u1EEF li\u1EC7u** thay v\u00EC \u0111\u01B0\u1EE3c l\u1EADp tr\u00ECnh r\u00F5 r\u00E0ng.\n\nC\u00E1c kh\u00E1i ni\u1EC7m ch\u00EDnh:\n\n\u2022 **Hu\u1EA5n luy\u1EC7n**: cung c\u1EA5p d\u1EEF li\u1EC7u cho thu\u1EADt to\u00E1n\n\u2022 **M\u00F4 h\u00ECnh**: c\u00E1c m\u1EABu h\u1ECDc \u0111\u01B0\u1EE3c t\u1EEB d\u1EEF li\u1EC7u\n\u2022 **Suy lu\u1EADn**: \u0111\u01B0a ra d\u1EF1 \u0111o\u00E1n tr\u00EAn d\u1EEF li\u1EC7u m\u1EDBi</string>
 
@@ -234,4 +243,42 @@
     <string name="model_load_failed_title">Không thể tải mô hình</string>
     <string name="model_load_failed_message">Không thể tải %1$s. Tệp có thể bị hỏng, hoặc nó sử dụng kiến trúc mà phiên bản ứng dụng này chưa hỗ trợ. Hãy thử một mô hình khác, hoặc cập nhật ứng dụng.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0: Sound &amp; haptics, tools, inference notifications -->
+    <string name="cd_supports_thinking">H\u1ED7 tr\u1EE3 suy ngh\u0129</string>
+    <string name="cd_supports_tools">H\u1ED7 tr\u1EE3 c\u00F4ng c\u1EE5</string>
+    <string name="folder_picker_unavailable">Kh\u00F4ng c\u00F3 \u1EE9ng d\u1EE5ng n\u00E0o \u0111\u1EC3 ch\u1ECDn th\u01B0 m\u1EE5c. H\u00E3y c\u00E0i \u0111\u1EB7t ho\u1EB7c b\u1EADt \u1EE9ng d\u1EE5ng T\u1EC7p / T\u00E0i li\u1EC7u c\u1EE7a h\u1EC7 th\u1ED1ng.</string>
+    <string name="haptic_on_generation_title">Ph\u1EA3n h\u1ED3i rung khi t\u1EA1o ph\u1EA3n h\u1ED3i</string>
+    <string name="haptic_on_generation_desc">M\u1ED9t nh\u1ECBp rung nh\u1EB9 khi t\u1EEBng ph\u1EA7n ph\u1EA3n h\u1ED3i \u0111\u01B0\u1EE3c truy\u1EC1n v\u1EC1.</string>
+    <string name="sound_and_haptic">\u00C2m thanh v\u00E0 Rung</string>
+    <string name="sound_and_haptic_subtitle">\u00C2m b\u00E1o ho\u00E0n t\u1EA5t v\u00E0 rung khi g\u00F5</string>
+    <string name="sound_on_completion_title">Ph\u00E1t \u00E2m thanh khi t\u1EA1o xong</string>
+    <string name="sound_on_completion_desc">Ph\u00E1t m\u1ED9t ti\u1EBFng chu\u00F4ng ng\u1EAFn khi m\u00F4 h\u00ECnh ho\u00E0n t\u1EA5t ph\u1EA3n h\u1ED3i trong khi \u1EE9ng d\u1EE5ng \u0111ang ch\u1EA1y n\u1EC1n.</string>
+    <string name="response_copied">\u0110\u00E3 sao ch\u00E9p v\u00E0o b\u1ED9 nh\u1EDB t\u1EA1m</string>
+    <string name="inference_engine_unavailable">C\u00F4ng c\u1EE5 suy lu\u1EADn hi\u1EC7n kh\u00F4ng kh\u1EA3 d\u1EE5ng. H\u00E3y th\u1EED l\u1EA1i sau gi\u00E2y l\u00E1t.</string>
+    <string name="inference_notification_generating_title">\u0110ang t\u1EA1o ph\u1EA3n h\u1ED3i\u2026</string>
+    <string name="inference_notification_ready_title">Ph\u1EA3n h\u1ED3i \u0111\u00E3 s\u1EB5n s\u00E0ng</string>
+    <string name="inference_notification_tokens_line">%1$s \u00B7 %2$s</string>
+    <string name="set_up_tools">Thi\u1EBFt l\u1EADp c\u00F4ng c\u1EE5</string>
+    <string name="tools">C\u00F4ng c\u1EE5</string>
+    <string name="tools_subtitle">Cho m\u00F4 h\u00ECnh m\u1EA1nh th\u1EF1c hi\u1EC7n h\u00E0nh \u0111\u1ED9ng</string>
+    <string name="tools_section_intro">C\u00F4ng c\u1EE5 cho ph\u00E9p c\u00E1c m\u00F4 h\u00ECnh \u0111\u1EE7 kh\u1EA3 n\u0103ng th\u1EF1c hi\u1EC7n h\u00E0nh \u0111\u1ED9ng trong khi tr\u1EA3 l\u1EDDi, nh\u01B0 t\u00ECm ki\u1EBFm web ho\u1EB7c th\u1EF1c hi\u1EC7n ph\u00E9p t\u00EDnh. M\u1ED7i c\u00F4ng c\u1EE5 m\u1EB7c \u0111\u1ECBnh \u0111\u1EC1u t\u1EAFt \u2014 ch\u1EC9 b\u1EADt nh\u1EEFng c\u00F4ng c\u1EE5 b\u1EA1n mu\u1ED1n. C\u00F4ng c\u1EE5 ch\u1EC9 ho\u1EA1t \u0111\u1ED9ng v\u1EDBi c\u00E1c m\u00F4 h\u00ECnh h\u1ED7 tr\u1EE3 ch\u00FAng (h\u00E3y t\u00ECm huy hi\u1EC7u h\u00ECnh b\u00FAa).</string>
+    <string name="tools_params_sheet_subtitle">M\u00F4 h\u00ECnh c\u00F3 th\u1EC3 g\u1ECDi nh\u1EEFng c\u00F4ng c\u1EE5 n\u00E0y trong khi tr\u1EA3 l\u1EDDi</string>
+    <string name="tools_example_label">V\u00ED d\u1EE5: %1$s</string>
+    <string name="tool_call_input">\u0110\u1EA7u v\u00E0o</string>
+    <string name="tool_call_output">\u0110\u1EA7u ra</string>
+    <string name="tool_web_search_title">T\u00ECm ki\u1EBFm web</string>
+    <string name="tool_web_search_desc">T\u00ECm ki\u1EBFm tr\u00EAn web v\u00E0 tr\u1EA3 v\u1EC1 ti\u00EAu \u0111\u1EC1 k\u1EBFt qu\u1EA3, li\u00EAn k\u1EBFt v\u00E0 \u0111o\u1EA1n tr\u00EDch \u0111\u1EC3 m\u00F4 h\u00ECnh t\u00ECm th\u00F4ng tin m\u1EDBi nh\u1EA5t.</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">T\u1EA3i trang web</string>
+    <string name="tool_web_fetch_desc">M\u1EDF m\u1ED9t li\u00EAn k\u1EBFt v\u00E0 \u0111\u1ECDc n\u1ED9i dung ch\u00EDnh d\u01B0\u1EDBi d\u1EA1ng v\u0103n b\u1EA3n \u0111\u1EC3 m\u00F4 h\u00ECnh c\u00F3 th\u1EC3 t\u00F3m t\u1EAFt ho\u1EB7c tr\u00EDch d\u1EABn m\u1ED9t trang.</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+    <string name="tool_run_javascript_title">Ch\u1EA1y JavaScript</string>
+    <string name="tool_run_javascript_desc">Ch\u1EA1y JavaScript trong m\u00F4i tr\u01B0\u1EDDng th\u1EED nghi\u1EC7m an to\u00E0n \u0111\u1EC3 t\u00EDnh to\u00E1n, x\u1EED l\u00FD ng\u00E0y th\u00E1ng v\u00E0 v\u0103n b\u1EA3n. Kh\u00F4ng truy c\u1EADp internet ho\u1EB7c t\u1EC7p.</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) \u00D7 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="whats_new_tools">T\u00ECm ki\u1EBFm web, t\u1EA3i trang v\u00E0 ch\u1EA1y JavaScript</string>
+    <string name="whats_new_cache">Ph\u1EA3n h\u1ED3i nhanh h\u01A1n v\u1EDBi l\u1EDDi nh\u1EAFc &amp; c\u00F4ng c\u1EE5 \u0111\u01B0\u1EE3c l\u01B0u trong b\u1ED9 nh\u1EDB \u0111\u1EC7m</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d token</item>
+    </plurals>
 </resources>

@@ -190,6 +190,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Eres un tutor de ciencias conciso. Explica las ideas con claridad usando ejemplos cotidianos.</string>
+    <string name="screenshot_prompts">Prompts reutilizables</string>
+    <string name="screenshot_prompts_sub">define el tono una vez, úsalo donde quieras</string>
+    <string name="screenshot_tools">Da herramientas a los modelos</string>
+    <string name="screenshot_tools_sub">búsqueda web, fetch &amp; JavaScript</string>
+    <string name="screenshot_notification">Funciona en segundo plano</string>
+    <string name="screenshot_notification_sub">recibe un aviso cuando termine</string>
+    <string name="screenshot_prompt_sample_code">Eres un revisor de código sénior. Señala errores, casos límite y problemas de seguridad. Sé directo y específico.</string>
+    <string name="screenshot_prompt_sample_translator">Eres un traductor. Convierte todo lo que te envíe en francés natural y fluido, y conserva el formato.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Eres un compañero creativo de lluvia de ideas. Propón ideas audaces e inesperadas y desarrolla las mías.</string>
     <string name="screenshot_chat_question">\u00BFQu\u00E9 es el aprendizaje autom\u00E1tico?</string>
     <string name="screenshot_chat_response">El aprendizaje autom\u00E1tico es una rama de la inteligencia artificial donde las computadoras **aprenden de los datos** en lugar de ser programadas expl\u00EDcitamente.\n\nConceptos clave:\n\n\u2022 **Entrenamiento**: alimentar algoritmos con datos\n\u2022 **Modelos**: patrones aprendidos de los datos\n\u2022 **Inferencia**: hacer predicciones con datos nuevos</string>
 
@@ -235,4 +244,49 @@
     <string name="model_load_failed_title">No se pudo cargar el modelo</string>
     <string name="model_load_failed_message">No se pudo cargar %1$s. Puede que el archivo esté dañado o que use una arquitectura que esta versión de la app aún no admite. Prueba con otro modelo o actualiza la app.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- Inference notifications -->
+    <string name="inference_notification_generating_title">Generando respuesta…</string>
+    <string name="inference_notification_ready_title">Respuesta lista</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokens</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">El motor de inferencia no está disponible ahora mismo. Inténtalo de nuevo en un momento.</string>
+
+    <!-- Sound and haptic -->
+    <string name="sound_and_haptic">Sonido y vibración</string>
+    <string name="sound_and_haptic_subtitle">Sonido al terminar y vibración al escribir</string>
+    <string name="sound_on_completion_title">Reproducir sonido al terminar la generación</string>
+    <string name="sound_on_completion_desc">Reproduce un breve tono cuando el modelo termina una respuesta mientras la app está en segundo plano.</string>
+    <string name="haptic_on_generation_title">Vibración durante la generación</string>
+    <string name="haptic_on_generation_desc">Una suave vibración a medida que cada parte de la respuesta va llegando.</string>
+
+    <!-- Tools -->
+    <string name="tools">Herramientas</string>
+    <string name="tools_subtitle">Deja que los modelos capaces realicen acciones</string>
+    <string name="set_up_tools">Configurar herramientas</string>
+    <string name="tools_section_intro">Las herramientas permiten que los modelos capaces realicen acciones durante una respuesta, como buscar en la web o hacer un cálculo. Cada herramienta está desactivada por defecto: activa solo las que quieras. Las herramientas funcionan únicamente con modelos compatibles (busca la insignia con el icono de la llave).</string>
+    <string name="tools_params_sheet_subtitle">El modelo puede usarlas durante una respuesta</string>
+    <string name="tools_example_label">Ejemplo: %1$s</string>
+    <string name="cd_supports_tools">Compatible con herramientas</string>
+    <string name="cd_supports_thinking">Compatible con razonamiento</string>
+    <string name="tool_web_search_title">Búsqueda web</string>
+    <string name="tool_web_search_desc">Busca en la web y devuelve títulos de resultados, enlaces y fragmentos para que el modelo pueda encontrar información actual.</string>
+    <string name="tool_web_search_example">\"Busca reseñas recientes del último teléfono Pixel.\"</string>
+    <string name="tool_web_fetch_title">Obtener página web</string>
+    <string name="tool_web_fetch_desc">Abre un enlace y lee su contenido principal como texto para que el modelo pueda resumir o citar una página.</string>
+    <string name="tool_web_fetch_example">\"Resume el artículo de este enlace.\"</string>
+    <string name="tool_run_javascript_title">Ejecutar JavaScript</string>
+    <string name="tool_run_javascript_desc">Ejecuta JavaScript en un entorno aislado seguro para matemáticas, fechas y procesamiento de texto. Sin acceso a internet ni a archivos.</string>
+    <string name="tool_run_javascript_example">\"¿Cuánto es (2 + 3) × 4 y qué día de la semana es el 1 de enero de 2027?\"</string>
+    <string name="tool_call_input">Entrada</string>
+    <string name="tool_call_output">Salida</string>
+    <string name="response_copied">Copiado al portapapeles</string>
+    <string name="folder_picker_unavailable">No hay ninguna app disponible para elegir una carpeta. Instala o activa la app de Archivos / Documentos del sistema.</string>
+
+    <!-- What's new -->
+    <string name="whats_new_tools">Búsqueda web, obtener página y ejecutar JavaScript</string>
+    <string name="whats_new_cache">Respuestas más rápidas con prompts y herramientas en caché</string>
 </resources>

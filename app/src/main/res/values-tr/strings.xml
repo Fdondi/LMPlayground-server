@@ -189,6 +189,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Sen k\u0131sa ve \u00F6z bir fen \u00F6\u011Fretmenisin. Fikirleri g\u00FCnl\u00FCk hayattan \u00F6rneklerle a\u00E7\u0131k\u00E7a a\u00E7\u0131kla.</string>
+    <string name="screenshot_prompts">Yeniden kullan\u0131labilir istemler</string>
+    <string name="screenshot_prompts_sub">tonu bir kez ayarla, her yerde kullan</string>
+    <string name="screenshot_tools">Modellere ara\u00E7lar ver</string>
+    <string name="screenshot_tools_sub">web aramas\u0131, getirme &amp; JavaScript</string>
+    <string name="screenshot_notification">Arka planda \u00E7al\u0131\u015F\u0131r</string>
+    <string name="screenshot_notification_sub">bitince haber ver</string>
+    <string name="screenshot_prompt_sample_code">Sen k\u0131demli bir kod incelemecisisin. Hatalar\u0131, u\u00E7 durumlar\u0131 ve g\u00FCvenlik sorunlar\u0131n\u0131 belirt. Do\u011Frudan ve net ol.</string>
+    <string name="screenshot_prompt_sample_translator">Sen bir \u00E7evirmensin. Sana g\u00F6nderdi\u011Fim her \u015Feyi do\u011Fal ve ak\u0131c\u0131 Frans\u0131zcaya \u00E7evir ve bi\u00E7imlendirmeyi koru.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Sen yarat\u0131c\u0131 bir beyin f\u0131rt\u0131nas\u0131 orta\u011F\u0131s\u0131n. C\u00FCretkar, beklenmedik fikirler sun ve benimkilerin \u00FCzerine ekle.</string>
     <string name="screenshot_chat_question">Makine \u00F6\u011Frenimi nedir?</string>
     <string name="screenshot_chat_response">Makine \u00F6\u011Frenimi, bilgisayarlar\u0131n a\u00E7\u0131k\u00E7a programlanmak yerine **verilerden \u00F6\u011Frendi\u011Fi** bir yapay zeka dal\u0131d\u0131r.\n\nTemel kavramlar:\n\n\u2022 **E\u011Fitim**: algoritmalara veri beslenmesi\n\u2022 **Modeller**: verilerden \u00F6\u011Frenilen \u00F6r\u00FCnt\u00FCler\n\u2022 **\u00C7\u0131kar\u0131m**: yeni veriler \u00FCzerinde tahmin yapma</string>
 
@@ -234,4 +243,49 @@
     <string name="model_load_failed_title">Model yüklenemedi</string>
     <string name="model_load_failed_message">%1$s yüklenemedi. Dosya bozuk olabilir veya uygulamanın bu sürümünün henüz desteklemediği bir mimari kullanıyor olabilir. Farklı bir model deneyin ya da uygulamayı güncelleyin.</string>
     <string name="model_load_failed_dismiss">Tamam</string>
+
+    <!-- What's New (1.7.0) -->
+    <string name="whats_new_tools">Web aramas\u0131, sayfa getirme ve JavaScript \u00E7al\u0131\u015Ft\u0131rma</string>
+    <string name="whats_new_cache">\u00D6nbelle\u011Fe al\u0131nm\u0131\u015F istemler &amp; ara\u00E7larla daha h\u0131zl\u0131 yan\u0131tlar</string>
+    <string name="set_up_tools">Ara\u00E7lar\u0131 ayarla</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">Ses ve Titre\u015Fim</string>
+    <string name="sound_and_haptic_subtitle">Tamamlanma sesi ve yazma titre\u015Fimleri</string>
+    <string name="sound_on_completion_title">\u00DCretim bitti\u011Finde ses \u00E7al</string>
+    <string name="sound_on_completion_desc">Uygulama arka plandayken model bir yan\u0131t\u0131 tamamlad\u0131\u011F\u0131nda k\u0131sa bir bildirim sesi \u00E7alar.</string>
+    <string name="haptic_on_generation_title">\u00DCretim s\u0131ras\u0131nda titre\u015Fim geri bildirimi</string>
+    <string name="haptic_on_generation_desc">Yan\u0131t\u0131n her par\u00E7as\u0131 ak\u0131\u015F halinde geldik\u00E7e hafif bir titre\u015Fim verir.</string>
+
+    <!-- Tools -->
+    <string name="tools">Ara\u00E7lar</string>
+    <string name="tools_subtitle">Yetenekli modellerin i\u015Flem yapmas\u0131n\u0131 sa\u011Fla</string>
+    <string name="tools_section_intro">Ara\u00E7lar, yetenekli modellerin yan\u0131t s\u0131ras\u0131nda webde arama yapma veya hesaplama \u00E7al\u0131\u015Ft\u0131rma gibi i\u015Flemler yapmas\u0131n\u0131 sa\u011Flar. Her ara\u00E7 varsay\u0131lan olarak kapal\u0131d\u0131r — yaln\u0131zca istedi\u011Finiz ara\u00E7lar\u0131 a\u00E7\u0131n. Ara\u00E7lar yaln\u0131zca onlar\u0131 destekleyen modellerle \u00E7al\u0131\u015F\u0131r (\u00E7eki\u00E7 rozetine bak\u0131n).</string>
+    <string name="tools_example_label">\u00D6rnek: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Model, yan\u0131t s\u0131ras\u0131nda bunlar\u0131 \u00E7a\u011F\u0131rabilir</string>
+    <string name="tool_call_input">Girdi</string>
+    <string name="tool_call_output">\u00C7\u0131kt\u0131</string>
+    <string name="cd_supports_tools">Ara\u00E7lar\u0131 destekler</string>
+    <string name="cd_supports_thinking">D\u00FC\u015F\u00FCnmeyi destekler</string>
+    <string name="tool_run_javascript_title">JavaScript \u00E7al\u0131\u015Ft\u0131r</string>
+    <string name="tool_run_javascript_desc">Matematik, tarih ve metin i\u015Fleme i\u00E7in g\u00FCvenli bir korumal\u0131 alanda JavaScript \u00E7al\u0131\u015Ft\u0131r\u0131r. \u0130nternet veya dosya eri\u015Fimi yoktur.</string>
+    <string name="tool_run_javascript_example">\"(2 + 3) × 4 ka\u00E7 eder ve 1 Ocak 2027 hangi g\u00FCne denk gelir?\"</string>
+    <string name="tool_web_search_title">Web aramas\u0131</string>
+    <string name="tool_web_search_desc">Webde arama yapar ve sonu\u00E7 ba\u015Fl\u0131klar\u0131n\u0131, ba\u011Flant\u0131lar\u0131 ve al\u0131nt\u0131lar\u0131 d\u00F6nd\u00FCrerek modelin g\u00FCncel bilgi bulmas\u0131n\u0131 sa\u011Flar.</string>
+    <string name="tool_web_search_example">\"En yeni Pixel telefonunun son incelemelerini bul.\"</string>
+    <string name="tool_web_fetch_title">Web sayfas\u0131 getir</string>
+    <string name="tool_web_fetch_desc">Bir ba\u011Flant\u0131y\u0131 a\u00E7ar ve ana i\u00E7eri\u011Fini metin olarak okur, b\u00F6ylece model bir sayfay\u0131 \u00F6zetleyebilir veya al\u0131nt\u0131layabilir.</string>
+    <string name="tool_web_fetch_example">\"Bu ba\u011Flant\u0131daki makaleyi \u00F6zetle.\"</string>
+
+    <!-- Inference engine notifications (1.7.0) -->
+    <string name="inference_notification_generating_title">Yan\u0131t \u00FCretiliyor…</string>
+    <string name="inference_notification_ready_title">Yan\u0131t haz\u0131r</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d token</item>
+    </plurals>
+    <string name="response_copied">Panoya kopyaland\u0131</string>
+    <string name="inference_engine_unavailable">\u00C7\u0131kar\u0131m motoru \u015Fu anda kullan\u0131lam\u0131yor. Birazdan tekrar deneyin.</string>
+    <string name="folder_picker_unavailable">Klas\u00F6r se\u00E7mek i\u00E7in kullan\u0131labilir uygulama yok. Sistem Dosyalar / Belgeler uygulamas\u0131n\u0131 y\u00FCkleyin veya etkinle\u015Ftirin.</string>
 </resources>

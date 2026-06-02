@@ -10,6 +10,10 @@ Rijke chatervaring — antwoorden worden weergegeven met volledige markdown-onde
 
 Redeneermodellen — zie het denkproces van modellen zoals DeepSeek R1, Nemotron en LFM2.5 Thinking, weergegeven in een gestileerde, inklapbare sectie met aanpasbaar denkbudget.
 
+Tools — krachtige modellen kunnen het web doorzoeken, een pagina ophalen en JavaScript direct binnen een antwoord uitvoeren. Elke tool staat standaard uit; schakel per model alleen de tools in die je wilt, via Instellingen → Tools. Webzoeken en ophalen maken alleen verbinding met internet wanneer je ze inschakelt — al het andere blijft op je apparaat.
+
+Generatie op de achtergrond — start een antwoord, verlaat de app en hij blijft draaien. Een live melding toont de generatiestatus en het aantal tokens, laat je het resultaat kopiëren of delen zonder de app opnieuw te openen, en geeft een geluidje wanneer het klaar is.
+
 Bijhouden van generatiesnelheid — bekijk het aantal tokens, de generatietijd en de snelheid in tok/s voor elk antwoord.
 
 Parameters per model — elk model onthoudt zijn eigen generatie-instellingen. Stel de contextgrootte, het denkbudget, temperature, Top-P, Top-K, Min-P, herhalingsboete en seed nauwkeurig in.
@@ -28,6 +32,7 @@ ONDERSTEUNDE MODELLEN
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ ONDERSTEUNDE MODELLEN
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-Vanaf slechts 267 MB voor het kleinste model. Grotere modellen (4B–8B) profiteren van 8+ GB RAM. Je kunt ook elk aangepast GGUF-model laden.
+Vanaf slechts 267 MB voor het kleinste model. Grotere modellen (4B–8B) profiteren van 8+ GB RAM, en het 20B-model vereist een high-end apparaat met veel geheugen. Je kunt ook elk aangepast GGUF-model laden.
 
 OPEN SOURCE
 

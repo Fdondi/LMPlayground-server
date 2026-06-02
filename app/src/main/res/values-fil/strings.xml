@@ -230,6 +230,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">Ikaw ay isang maikling tagapagturo ng agham. Ipaliwanag ang mga ideya nang malinaw gamit ang mga halimbawa sa pang-araw-araw na buhay.</string>
+    <string name="screenshot_prompts">Mga prompt na magagamit-muli</string>
+    <string name="screenshot_prompts_sub">itakda ang tono nang minsan, gamitin saanman</string>
+    <string name="screenshot_tools">Bigyan ng mga tool ang modelo</string>
+    <string name="screenshot_tools_sub">web search, fetch &amp; JavaScript</string>
+    <string name="screenshot_notification">Tumatakbo sa background</string>
+    <string name="screenshot_notification_sub">makakuha ng abiso kapag tapos na</string>
+    <string name="screenshot_prompt_sample_code">Ikaw ay isang senior na code reviewer. Ituro ang mga bug, edge case, at isyu sa seguridad. Maging direkta at tiyak.</string>
+    <string name="screenshot_prompt_sample_translator">Ikaw ay isang tagasalin. Gawing natural at madulas na Pranses ang lahat ng ipapadala ko at panatilihin ang pormat.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Ikaw ay isang malikhaing katuwang sa brainstorming. Mag-alok ng matatapang at hindi inaasahang mga ideya at palawakin ang sa akin.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">Ano ang machine learning?</string>
@@ -272,4 +281,44 @@
     <string name="model_load_failed_title">Hindi ma-load ang modelo</string>
     <string name="model_load_failed_message">Hindi ma-load ang %1$s. Maaaring sira ang file, o gumagamit ito ng arkitekturang hindi pa sinusuportahan ng bersyong ito ng app. Subukan ang ibang modelo, o i-update ang app.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0: Sound & haptics, tools, inference notifications -->
+    <string name="share">Ibahagi</string>
+    <string name="cd_supports_thinking">Sumusuporta sa thinking</string>
+    <string name="cd_supports_tools">Sumusuporta sa mga tool</string>
+    <string name="folder_picker_unavailable">Walang app na available para pumili ng folder. I-install o i-enable ang Files / Documents app ng system.</string>
+    <string name="haptic_on_generation_title">Haptic feedback sa generation</string>
+    <string name="haptic_on_generation_desc">Banayad na tick habang dumarating ang bawat bahagi ng tugon.</string>
+    <string name="sound_and_haptic">Tunog at Haptic</string>
+    <string name="sound_and_haptic_subtitle">Tunog kapag tapos at haptic sa pag-type</string>
+    <string name="sound_on_completion_title">Mag-play ng tunog kapag tapos ang generation</string>
+    <string name="sound_on_completion_desc">Nagpapatugtog ng maikling chime kapag natapos ng model ang tugon habang nasa background ang app.</string>
+    <string name="response_copied">Kinopya sa clipboard</string>
+    <string name="inference_engine_unavailable">Hindi available ang inference engine sa ngayon. Subukan muli mamaya.</string>
+    <string name="inference_notification_generating_title">Gumagawa ng tugon…</string>
+    <string name="inference_notification_ready_title">Handa na ang tugon</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="set_up_tools">I-set up ang mga tool</string>
+    <string name="tools">Mga Tool</string>
+    <string name="tools_subtitle">Hayaang magsagawa ng aksyon ang mga magagaling na model</string>
+    <string name="tools_section_intro">Pinapayagan ng mga tool ang magagaling na model na magsagawa ng mga aksyon habang tumutugon, tulad ng paghahanap sa web o pagkukwenta. Naka-off bilang default ang bawat tool — i-on lang ang mga gusto mo. Gumagana lang ang mga tool sa mga model na sumusuporta sa mga ito (hanapin ang hammer badge).</string>
+    <string name="tools_params_sheet_subtitle">Maaaring tawagin ng model ang mga ito habang tumutugon</string>
+    <string name="tools_example_label">Halimbawa: %1$s</string>
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <string name="tool_web_search_title">Web search</string>
+    <string name="tool_web_search_desc">Naghahanap sa web at nagbabalik ng mga title ng resulta, link, at snippet para makahanap ang model ng kasalukuyang impormasyon.</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">Kunin ang web page</string>
+    <string name="tool_web_fetch_desc">Nagbubukas ng link at binabasa ang pangunahing nilalaman nito bilang teksto para mabuod o ma-quote ng model ang isang page.</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+    <string name="tool_run_javascript_title">Patakbuhin ang JavaScript</string>
+    <string name="tool_run_javascript_desc">Nagpapatakbo ng JavaScript sa isang secure na sandbox para sa math, mga petsa, at pagproseso ng teksto. Walang access sa internet o file.</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="whats_new_tools">Web search, fetch page, at run JavaScript</string>
+    <string name="whats_new_cache">Mas mabilis na tugon gamit ang naka-cache na mga prompt &amp; tool</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d na token</item>
+    </plurals>
 </resources>

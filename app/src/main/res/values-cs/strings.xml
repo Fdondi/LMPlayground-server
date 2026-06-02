@@ -53,6 +53,7 @@
     <string name="record_message">Nahrát hlasovou zprávu</string>
     <string name="stop">Zastavit</string>
 
+    <string name="share">Sdílet</string>
     <string name="copy">Kopírovat</string>
     <string name="upvote">Hlasovat pro</string>
     <string name="downvote">Hlasovat proti</string>
@@ -231,6 +232,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">Jste stručný učitel přírodních věd. Vysvětlujte myšlenky jasně pomocí každodenních příkladů.</string>
+    <string name="screenshot_prompts">Opakovaně použitelné prompty</string>
+    <string name="screenshot_prompts_sub">nastavte tón jednou, používejte kdekoli</string>
+    <string name="screenshot_tools">Dejte modelům nástroje</string>
+    <string name="screenshot_tools_sub">vyhledávání na webu, načtení &amp; JavaScript</string>
+    <string name="screenshot_notification">Běží na pozadí</string>
+    <string name="screenshot_notification_sub">dostanete upozornění, až bude hotovo</string>
+    <string name="screenshot_prompt_sample_code">Jste zkušený recenzent kódu. Upozorňujte na chyby, hraniční případy a bezpečnostní problémy. Buďte přímí a konkrétní.</string>
+    <string name="screenshot_prompt_sample_translator">Jste překladatel. Vše, co pošlu, převeďte do přirozené, plynulé francouzštiny a zachovejte formátování.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Jste kreativní partner pro brainstorming. Nabízejte odvážné, nečekané nápady a rozvíjejte ty moje.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">Co je strojové učení?</string>
@@ -272,4 +282,45 @@
     <string name="model_load_failed_title">Nepodařilo se načíst model</string>
     <string name="model_load_failed_message">Nepodařilo se načíst %1$s. Soubor může být poškozený nebo používá architekturu, kterou tato verze aplikace zatím nepodporuje. Zkuste jiný model nebo aktualizujte aplikaci.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0 -->
+    <string name="cd_supports_thinking">Podporuje přemýšlení</string>
+    <string name="cd_supports_tools">Podporuje nástroje</string>
+    <string name="folder_picker_unavailable">Žádná aplikace pro výběr složky. Nainstalujte nebo povolte systémovou aplikaci Soubory / Dokumenty.</string>
+    <string name="haptic_on_generation_desc">Jemné cuknutí při příchodu každé části odpovědi.</string>
+    <string name="haptic_on_generation_title">Haptická odezva při generování</string>
+    <string name="inference_engine_unavailable">Inferenční engine není právě teď dostupný. Zkuste to za okamžik znovu.</string>
+    <string name="inference_notification_generating_title">Generuji odpověď…</string>
+    <string name="inference_notification_ready_title">Odpověď připravena</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="few">%d tokeny</item>
+        <item quantity="many">%d tokenu</item>
+        <item quantity="other">%d tokenů</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="response_copied">Zkopírováno do schránky</string>
+    <string name="set_up_tools">Nastavit nástroje</string>
+    <string name="sound_and_haptic">Zvuk a haptika</string>
+    <string name="sound_and_haptic_subtitle">Zvuk dokončení a haptika při psaní</string>
+    <string name="sound_on_completion_desc">Přehraje krátký tón, když model dokončí odpověď a aplikace je na pozadí.</string>
+    <string name="sound_on_completion_title">Přehrát zvuk po dokončení generování</string>
+    <string name="tool_call_input">Vstup</string>
+    <string name="tool_call_output">Výstup</string>
+    <string name="tool_run_javascript_desc">Spouští JavaScript v zabezpečeném sandboxu pro výpočty, data a zpracování textu. Bez přístupu k internetu nebo souborům.</string>
+    <string name="tool_run_javascript_example">\"Kolik je (2 + 3) × 4 a jaký den v týdnu připadá na 1. ledna 2027?\"</string>
+    <string name="tool_run_javascript_title">Spustit JavaScript</string>
+    <string name="tool_web_fetch_desc">Otevře odkaz a načte jeho hlavní obsah jako text, aby model mohl stránku shrnout nebo citovat.</string>
+    <string name="tool_web_fetch_example">\"Shrň článek na tomto odkazu.\"</string>
+    <string name="tool_web_fetch_title">Načíst webovou stránku</string>
+    <string name="tool_web_search_desc">Prohledá web a vrátí názvy výsledků, odkazy a úryvky, aby model mohl najít aktuální informace.</string>
+    <string name="tool_web_search_example">\"Najdi nedávné recenze nejnovějšího telefonu Pixel.\"</string>
+    <string name="tool_web_search_title">Vyhledávání na webu</string>
+    <string name="tools">Nástroje</string>
+    <string name="tools_example_label">Příklad: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Model je může během odpovědi vyvolat</string>
+    <string name="tools_section_intro">Nástroje umožňují schopným modelům provádět akce během odpovědi, jako je vyhledávání na webu nebo provedení výpočtu. Každý nástroj je ve výchozím nastavení vypnutý — zapněte jen ty, které chcete. Nástroje fungují pouze s modely, které je podporují (hledejte odznak s kladivem).</string>
+    <string name="tools_subtitle">Umožněte schopným modelům provádět akce</string>
+    <string name="whats_new_cache">Rychlejší odpovědi díky cache promptů &amp; nástrojů</string>
+    <string name="whats_new_tools">Vyhledávání na webu, načtení stránky a spuštění JavaScriptu</string>
 </resources>

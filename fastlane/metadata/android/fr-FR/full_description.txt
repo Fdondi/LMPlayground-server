@@ -10,6 +10,10 @@ Expérience de chat riche — les réponses sont rendues avec un support complet
 
 Modèles de raisonnement — visualisez le processus de réflexion de modèles comme DeepSeek R1, Nemotron et LFM2.5 Thinking dans une section stylisée et repliable avec un budget de raisonnement ajustable.
 
+Outils — les modèles capables peuvent rechercher sur le web, récupérer une page et exécuter du JavaScript directement dans une réponse. Chaque outil est désactivé par défaut ; activez uniquement ceux que vous voulez, par modèle, dans Paramètres → Outils. La recherche web et la récupération de pages accèdent à internet uniquement lorsque vous les activez — tout le reste reste sur votre appareil.
+
+Génération en arrière-plan — lancez une réponse, puis quittez l'application : elle continue de tourner. Une notification en direct affiche l'état de la génération et le nombre de tokens, vous permet de copier ou partager le résultat sans rouvrir l'application, et émet un son une fois terminée.
+
 Suivi de la vitesse de génération — consultez le nombre de tokens, le temps de génération et la vitesse en tok/s pour chaque réponse.
 
 Paramètres par modèle — chaque modèle mémorise ses propres réglages de génération. Ajustez la taille du contexte, le budget de raisonnement, la température, Top-P, Top-K, Min-P, la pénalité de répétition et la graine.
@@ -28,6 +32,7 @@ MODÈLES COMPATIBLES
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ MODÈLES COMPATIBLES
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-À partir de seulement 267 Mo pour le plus petit modèle. Les modèles plus grands (4B–8B) bénéficient de 8+ Go de RAM. Vous pouvez aussi charger n'importe quel modèle GGUF personnalisé.
+À partir de seulement 267 Mo pour le plus petit modèle. Les modèles plus grands (4B–8B) bénéficient de 8+ Go de RAM, et le modèle 20B nécessite un appareil haut de gamme doté de beaucoup de mémoire. Vous pouvez aussi charger n'importe quel modèle GGUF personnalisé.
 
 OPEN SOURCE
 

@@ -10,6 +10,10 @@ Rikas keskustelukokemus — vastaukset esitetään täydellä markdown-tuella, m
 
 Päättelymallit — näe mallien kuten DeepSeek R1, Nemotron ja LFM2.5 Thinking ajatusprosessi tyylitellyssä, laskostuvassa osiossa, jossa on säädettävä ajattelubudjetti.
 
+Työkalut — kyvykkäät mallit voivat hakea verkosta, noutaa sivun ja suorittaa JavaScriptiä suoraan vastauksessa. Jokainen työkalu on oletuksena pois päältä; ota käyttöön vain haluamasi, mallikohtaisesti, kohdassa Asetukset → Työkalut. Verkkohaku ja nouto ottavat yhteyden internetiin vain, kun otat ne käyttöön — kaikki muu pysyy laitteellasi.
+
+Generointi taustalla — aloita vastaus, poistu sitten sovelluksesta, ja se jatkaa toimintaansa. Reaaliaikainen ilmoitus näyttää generoinnin tilan ja tokenien määrän, antaa kopioida tai jakaa tuloksen avaamatta sovellusta uudelleen ja soi, kun se on valmis.
+
 Generointinopeuden seuranta — näe tokenien määrä, generointiaika ja nopeus tok/s jokaisesta vastauksesta.
 
 Mallikohtaiset parametrit — jokainen malli muistaa omat generointiasetuksensa. Hienosäädä kontekstin kokoa, ajattelubudjettia, lämpötilaa, Top-P, Top-K, Min-P, toistorangaistusta ja siementä.
@@ -28,6 +32,7 @@ TUETUT MALLIT
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ TUETUT MALLIT
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-Alkaen vain 267 MB pienimmälle mallille. Suuremmat mallit (4B–8B) hyötyvät 8+ GB:n RAM-muistista. Voit myös ladata minkä tahansa mukautetun GGUF-mallin.
+Alkaen vain 267 MB pienimmälle mallille. Suuremmat mallit (4B–8B) hyötyvät 8+ GB:n RAM-muistista, ja 20B-malli vaatii huippuluokan laitteen, jossa on runsaasti muistia. Voit myös ladata minkä tahansa mukautetun GGUF-mallin.
 
 AVOIN LÄHDEKOODI
 

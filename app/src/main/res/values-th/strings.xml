@@ -231,6 +231,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">คุณเป็นติวเตอร์วิทยาศาสตร์ที่กระชับ อธิบายแนวคิดให้ชัดเจนด้วยตัวอย่างในชีวิตประจำวัน</string>
+    <string name="screenshot_prompts">พรอมต์ที่ใช้ซ้ำได้</string>
+    <string name="screenshot_prompts_sub">ตั้งโทนครั้งเดียว ใช้ได้ทุกที่</string>
+    <string name="screenshot_tools">มอบเครื่องมือให้โมเดล</string>
+    <string name="screenshot_tools_sub">ค้นเว็บ ดึงหน้าเว็บ &amp; JavaScript</string>
+    <string name="screenshot_notification">ทำงานอยู่เบื้องหลัง</string>
+    <string name="screenshot_notification_sub">รับการแจ้งเตือนเมื่อเสร็จ</string>
+    <string name="screenshot_prompt_sample_code">คุณเป็นผู้ตรวจรีวิวโค้ดระดับอาวุโส ชี้ให้เห็นบั๊ก กรณีขอบเขต และปัญหาด้านความปลอดภัย ตรงไปตรงมาและเฉพาะเจาะจง</string>
+    <string name="screenshot_prompt_sample_translator">คุณเป็นนักแปล แปลงทุกอย่างที่ฉันส่งให้เป็นภาษาฝรั่งเศสที่เป็นธรรมชาติและลื่นไหล และคงรูปแบบไว้</string>
+    <string name="screenshot_prompt_sample_brainstorm">คุณเป็นคู่หูระดมความคิดที่สร้างสรรค์ เสนอไอเดียที่กล้าและเหนือความคาดหมาย และต่อยอดจากไอเดียของฉัน</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">แมชชีนเลิร์นนิงคืออะไร?</string>
@@ -273,4 +282,43 @@
     <string name="model_load_failed_title">โหลดโมเดลไม่สำเร็จ</string>
     <string name="model_load_failed_message">ไม่สามารถโหลด %1$s ได้ ไฟล์อาจเสียหาย หรือใช้สถาปัตยกรรมที่แอปเวอร์ชันนี้ยังไม่รองรับ ลองใช้โมเดลอื่น หรืออัปเดตแอป</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0: Sound & haptics, tools, inference notifications -->
+    <string name="share">แชร์</string>
+    <string name="cd_supports_thinking">รองรับการคิด</string>
+    <string name="cd_supports_tools">รองรับเครื่องมือ</string>
+    <string name="folder_picker_unavailable">ไม่มีแอปสำหรับเลือกโฟลเดอร์ ติดตั้งหรือเปิดใช้งานแอปไฟล์ / เอกสารของระบบ</string>
+    <string name="haptic_on_generation_title">การสั่นตอบสนองขณะสร้าง</string>
+    <string name="haptic_on_generation_desc">การสั่นเบาๆ ขณะที่แต่ละส่วนของคำตอบสตรีมเข้ามา</string>
+    <string name="sound_and_haptic">เสียงและการสั่น</string>
+    <string name="sound_and_haptic_subtitle">เสียงเมื่อเสร็จและการสั่นขณะพิมพ์</string>
+    <string name="sound_on_completion_title">เล่นเสียงเมื่อสร้างเสร็จ</string>
+    <string name="sound_on_completion_desc">เล่นเสียงสั้นๆ เมื่อโมเดลตอบเสร็จขณะที่แอปทำงานอยู่เบื้องหลัง</string>
+    <string name="response_copied">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
+    <string name="inference_engine_unavailable">เครื่องมือประมวลผลไม่พร้อมใช้งานในขณะนี้ โปรดลองอีกครั้งในอีกสักครู่</string>
+    <string name="inference_notification_generating_title">กำลังสร้างคำตอบ…</string>
+    <string name="inference_notification_ready_title">คำตอบพร้อมแล้ว</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="set_up_tools">ตั้งค่าเครื่องมือ</string>
+    <string name="tools">เครื่องมือ</string>
+    <string name="tools_subtitle">ให้โมเดลที่มีความสามารถลงมือทำ</string>
+    <string name="tools_section_intro">เครื่องมือช่วยให้โมเดลที่มีความสามารถลงมือทำสิ่งต่างๆ ระหว่างการตอบ เช่น ค้นหาเว็บหรือคำนวณ เครื่องมือแต่ละอย่างปิดอยู่โดยค่าเริ่มต้น — เปิดเฉพาะที่คุณต้องการ เครื่องมือใช้ได้เฉพาะกับโมเดลที่รองรับเท่านั้น (มองหาตราค้อน)</string>
+    <string name="tools_params_sheet_subtitle">โมเดลสามารถเรียกใช้สิ่งเหล่านี้ระหว่างการตอบ</string>
+    <string name="tools_example_label">ตัวอย่าง: %1$s</string>
+    <string name="tool_call_input">อินพุต</string>
+    <string name="tool_call_output">เอาต์พุต</string>
+    <string name="tool_web_search_title">ค้นหาเว็บ</string>
+    <string name="tool_web_search_desc">ค้นหาบนเว็บและส่งคืนชื่อผลลัพธ์ ลิงก์ และข้อความตัวอย่าง เพื่อให้โมเดลค้นหาข้อมูลล่าสุดได้</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">ดึงหน้าเว็บ</string>
+    <string name="tool_web_fetch_desc">เปิดลิงก์และอ่านเนื้อหาหลักเป็นข้อความ เพื่อให้โมเดลสรุปหรืออ้างอิงหน้าเว็บได้</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+    <string name="tool_run_javascript_title">รัน JavaScript</string>
+    <string name="tool_run_javascript_desc">รัน JavaScript ในแซนด์บ็อกซ์ที่ปลอดภัยสำหรับคณิตศาสตร์ วันที่ และการประมวลผลข้อความ ไม่มีการเข้าถึงอินเทอร์เน็ตหรือไฟล์</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="whats_new_tools">ค้นหาเว็บ ดึงหน้าเว็บ และรัน JavaScript</string>
+    <string name="whats_new_cache">ตอบเร็วขึ้นด้วยพรอมต์ &amp; เครื่องมือที่แคชไว้</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d โทเค็น</item>
+    </plurals>
 </resources>

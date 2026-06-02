@@ -190,6 +190,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">Ти лаконічний викладач природничих наук. Пояснюй ідеї зрозуміло, використовуючи приклади з повсякденного життя.</string>
+    <string name="screenshot_prompts">Багаторазові промпти</string>
+    <string name="screenshot_prompts_sub">задай тон один раз, використовуй будь-де</string>
+    <string name="screenshot_tools">Дай моделям інструменти</string>
+    <string name="screenshot_tools_sub">пошук у мережі, завантаження &amp; JavaScript</string>
+    <string name="screenshot_notification">Працює у фоні</string>
+    <string name="screenshot_notification_sub">отримай сповіщення, коли все готово</string>
+    <string name="screenshot_prompt_sample_code">Ти досвідчений рецензент коду. Вказуй на помилки, граничні випадки та проблеми безпеки. Будь прямим і конкретним.</string>
+    <string name="screenshot_prompt_sample_translator">Ти перекладач. Перетворюй усе, що я надсилаю, на природну, плавну французьку та зберігай форматування.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Ти креативний партнер для мозкового штурму. Пропонуй сміливі, несподівані ідеї та розвивай мої.</string>
     <string name="screenshot_chat_question">Що таке машинне навчання?</string>
     <string name="screenshot_chat_response">Машинне навчання \u2013 це галузь штучного інтелекту, де комп\'ютери **навчаються на даних** замість того, щоб бути явно запрограмованими.\n\nКлючові поняття:\n\n\u2022 **Тренування**: подача даних алгоритмам\n\u2022 **Моделі**: вивчені закономірності з даних\n\u2022 **Висновування**: прогнозування на нових даних</string>
 
@@ -233,4 +242,45 @@
     <string name="model_load_failed_title">Не вдалося завантажити модель</string>
     <string name="model_load_failed_message">Не вдалося завантажити %1$s. Файл може бути пошкоджений або використовує архітектуру, яку ця версія застосунку ще не підтримує. Спробуйте іншу модель або оновіть застосунок.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0 -->
+    <string name="cd_supports_thinking">Підтримує мислення</string>
+    <string name="cd_supports_tools">Підтримує інструменти</string>
+    <string name="folder_picker_unavailable">Немає додатка для вибору папки. Установіть або увімкніть системний додаток Файли / Документи.</string>
+    <string name="haptic_on_generation_desc">Легке посмикування під час надходження кожної частини відповіді.</string>
+    <string name="haptic_on_generation_title">Тактильний відгук під час генерації</string>
+    <string name="inference_engine_unavailable">Рушій інференсу зараз недоступний. Спробуйте ще раз за мить.</string>
+    <string name="inference_notification_generating_title">Генерування відповіді…</string>
+    <string name="inference_notification_ready_title">Відповідь готова</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d токен</item>
+        <item quantity="few">%d токени</item>
+        <item quantity="many">%d токенів</item>
+        <item quantity="other">%d токена</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="response_copied">Скопійовано в буфер обміну</string>
+    <string name="set_up_tools">Налаштувати інструменти</string>
+    <string name="sound_and_haptic">Звук і вібрація</string>
+    <string name="sound_and_haptic_subtitle">Звук завершення та вібрація при наборі</string>
+    <string name="sound_on_completion_desc">Відтворює короткий сигнал, коли модель завершує відповідь, а додаток працює у фоні.</string>
+    <string name="sound_on_completion_title">Відтворювати звук після завершення генерації</string>
+    <string name="tool_call_input">Вхід</string>
+    <string name="tool_call_output">Вихід</string>
+    <string name="tool_run_javascript_desc">Виконує JavaScript у безпечній пісочниці для обчислень, дат і обробки тексту. Без доступу до інтернету та файлів.</string>
+    <string name="tool_run_javascript_example">\"Скільки буде (2 + 3) × 4 і який день тижня припадає на 1 січня 2027?\"</string>
+    <string name="tool_run_javascript_title">Виконати JavaScript</string>
+    <string name="tool_web_fetch_desc">Відкриває посилання й читає його основний вміст як текст, щоб модель могла підсумувати або процитувати сторінку.</string>
+    <string name="tool_web_fetch_example">\"Підсумуй статтю за цим посиланням.\"</string>
+    <string name="tool_web_fetch_title">Завантажити вебсторінку</string>
+    <string name="tool_web_search_desc">Шукає в інтернеті й повертає заголовки результатів, посилання та фрагменти, щоб модель могла знайти актуальну інформацію.</string>
+    <string name="tool_web_search_example">\"Знайди свіжі огляди найновішого телефона Pixel.\"</string>
+    <string name="tool_web_search_title">Пошук у мережі</string>
+    <string name="tools">Інструменти</string>
+    <string name="tools_example_label">Приклад: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Модель може викликати їх під час відповіді</string>
+    <string name="tools_section_intro">Інструменти дозволяють потужним моделям виконувати дії під час відповіді, як-от пошук у мережі чи виконання обчислень. Кожен інструмент вимкнено за замовчуванням — увімкніть лише ті, які потрібні. Інструменти працюють лише з моделями, що їх підтримують (шукайте значок із молотком).</string>
+    <string name="tools_subtitle">Дозвольте потужним моделям виконувати дії</string>
+    <string name="whats_new_cache">Швидші відповіді завдяки кешуванню промптів &amp; інструментів</string>
+    <string name="whats_new_tools">Пошук у мережі, завантаження сторінок і виконання JavaScript</string>
 </resources>

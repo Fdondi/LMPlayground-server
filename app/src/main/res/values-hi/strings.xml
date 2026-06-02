@@ -189,6 +189,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">\u0906\u092A \u090F\u0915 \u0938\u0902\u0915\u094D\u0937\u093F\u092A\u094D\u0924 \u0935\u093F\u091C\u094D\u091E\u093E\u0928 \u0936\u093F\u0915\u094D\u0937\u0915 \u0939\u0948\u0902\u0964 \u0930\u094B\u091C\u092E\u0930\u094D\u0930\u093E \u0915\u0947 \u0909\u0926\u093E\u0939\u0930\u0923\u094B\u0902 \u0915\u0947 \u0938\u093E\u0925 \u0935\u093F\u091A\u093E\u0930\u094B\u0902 \u0915\u094B \u0938\u094D\u092A\u0937\u094D\u091F \u0930\u0942\u092A \u0938\u0947 \u0938\u092E\u091D\u093E\u090F\u0902\u0964</string>
+    <string name="screenshot_prompts">\u0926\u094B\u092C\u093E\u0930\u093E \u0907\u0938\u094D\u0924\u0947\u092E\u093E\u0932 \u092F\u094B\u0917\u094D\u092F \u092A\u094D\u0930\u0949\u092E\u094D\u092A\u094D\u091F</string>
+    <string name="screenshot_prompts_sub">\u090F\u0915 \u092C\u093E\u0930 \u091F\u094B\u0928 \u0924\u092F \u0915\u0930\u0947\u0902, \u0939\u0930 \u091C\u0917\u0939 \u0907\u0938\u094D\u0924\u0947\u092E\u093E\u0932 \u0915\u0930\u0947\u0902</string>
+    <string name="screenshot_tools">\u092E\u0949\u0921\u0932\u094B\u0902 \u0915\u094B \u091F\u0942\u0932 \u0926\u0947\u0902</string>
+    <string name="screenshot_tools_sub">\u0935\u0947\u092C \u0938\u0930\u094D\u091A, \u092B\u093C\u0947\u091A \u0914\u0930 JavaScript</string>
+    <string name="screenshot_notification">\u092C\u0948\u0915\u0917\u094D\u0930\u093E\u0909\u0902\u0921 \u092E\u0947\u0902 \u091A\u0932\u0924\u093E \u0939\u0948</string>
+    <string name="screenshot_notification_sub">\u092A\u0942\u0930\u093E \u0939\u094B\u0928\u0947 \u092A\u0930 \u0938\u0942\u091A\u0928\u093E \u092A\u093E\u090F\u0902</string>
+    <string name="screenshot_prompt_sample_code">\u0906\u092A \u090F\u0915 \u0935\u0930\u093F\u0937\u094D\u0920 \u0915\u094B\u0921 \u0938\u092E\u0940\u0915\u094D\u0937\u0915 \u0939\u0948\u0902\u0964 \u092C\u0917, \u090F\u091C \u0915\u0947\u0938 \u0914\u0930 \u0938\u0941\u0930\u0915\u094D\u0937\u093E \u0938\u092E\u0938\u094D\u092F\u093E\u0913\u0902 \u0915\u094B \u092C\u0924\u093E\u090F\u0902\u0964 \u0938\u0940\u0927\u0947 \u0914\u0930 \u0938\u091F\u0940\u0915 \u0930\u0939\u0947\u0902\u0964</string>
+    <string name="screenshot_prompt_sample_translator">\u0906\u092A \u090F\u0915 \u0905\u0928\u0941\u0935\u093E\u0926\u0915 \u0939\u0948\u0902\u0964 \u092E\u0948\u0902 \u091C\u094B \u0915\u0941\u091B \u092D\u0940 \u092D\u0947\u091C\u0942\u0902 \u0909\u0938\u0947 \u0938\u094D\u0935\u093E\u092D\u093E\u0935\u093F\u0915, \u0927\u093E\u0930\u093E\u092A\u094D\u0930\u0935\u093E\u0939 \u092B\u094D\u0930\u0947\u0902\u091A \u092E\u0947\u0902 \u092C\u0926\u0932\u0947\u0902 \u0914\u0930 \u092B\u093C\u0949\u0930\u094D\u092E\u0947\u091F\u093F\u0902\u0917 \u092C\u0928\u093E\u090F \u0930\u0916\u0947\u0902\u0964</string>
+    <string name="screenshot_prompt_sample_brainstorm">\u0906\u092A \u090F\u0915 \u0930\u091A\u0928\u093E\u0924\u094D\u092E\u0915 \u0935\u093F\u091A\u093E\u0930-\u092E\u0902\u0925\u0928 \u0938\u093E\u0925\u0940 \u0939\u0948\u0902\u0964 \u0938\u093E\u0939\u0938\u0940, \u0905\u092A\u094D\u0930\u0924\u094D\u092F\u093E\u0936\u093F\u0924 \u0935\u093F\u091A\u093E\u0930 \u0926\u0947\u0902 \u0914\u0930 \u092E\u0947\u0930\u0947 \u0935\u093F\u091A\u093E\u0930\u094B\u0902 \u0915\u094B \u0906\u0917\u0947 \u092C\u0922\u093C\u093E\u090F\u0902\u0964</string>
     <string name="screenshot_chat_question">\u092E\u0936\u0940\u0928 \u0932\u0930\u094D\u0928\u093F\u0902\u0917 \u0915\u094D\u092F\u093E \u0939\u0948?</string>
     <string name="screenshot_chat_response">\u092E\u0936\u0940\u0928 \u0932\u0930\u094D\u0928\u093F\u0902\u0917 \u0915\u0943\u0924\u094D\u0930\u093F\u092E \u092C\u0941\u0926\u094D\u0927\u093F\u092E\u0924\u094D\u0924\u093E \u0915\u0940 \u090F\u0915 \u0936\u093E\u0916\u093E \u0939\u0948 \u091C\u0939\u093E\u0901 \u0915\u0902\u092A\u094D\u092F\u0942\u091F\u0930 \u0938\u094D\u092A\u0937\u094D\u091F \u0930\u0942\u092A \u0938\u0947 \u092A\u094D\u0930\u094B\u0917\u094D\u0930\u093E\u092E \u0915\u093F\u090F \u091C\u093E\u0928\u0947 \u0915\u0947 \u092C\u091C\u093E\u092F **\u0921\u0947\u091F\u093E \u0938\u0947 \u0938\u0940\u0916\u0924\u0947** \u0939\u0948\u0902\u0964\n\n\u092E\u0941\u0916\u094D\u092F \u0905\u0935\u0927\u093E\u0930\u0923\u093E\u090F\u0901:\n\n\u2022 **\u092A\u094D\u0930\u0936\u093F\u0915\u094D\u0937\u0923**: \u090F\u0932\u094D\u0917\u094B\u0930\u093F\u0926\u092E \u0915\u094B \u0921\u0947\u091F\u093E \u0926\u0947\u0928\u093E\n\u2022 **\u092E\u0949\u0921\u0932**: \u0921\u0947\u091F\u093E \u0938\u0947 \u0938\u0940\u0916\u0947 \u0917\u090F \u092A\u0948\u091F\u0930\u094D\u0928\n\u2022 **\u0905\u0928\u0941\u092E\u093E\u0928**: \u0928\u090F \u0921\u0947\u091F\u093E \u092A\u0930 \u092D\u0935\u093F\u0937\u094D\u092F\u0935\u093E\u0923\u0940 \u0915\u0930\u0928\u093E</string>
 
@@ -234,4 +243,53 @@
     <string name="model_load_failed_title">मॉडल लोड नहीं हो सका</string>
     <string name="model_load_failed_message">%1$s लोड नहीं हो सका। फ़ाइल खराब हो सकती है, या यह ऐसी आर्किटेक्चर का उपयोग करती है जिसे ऐप का यह संस्करण अभी समर्थन नहीं करता। कोई दूसरा मॉडल आज़माएँ, या ऐप अपडेट करें।</string>
     <string name="model_load_failed_dismiss">ठीक है</string>
+
+    <!-- Inference notifications -->
+    <string name="inference_notification_generating_title">जवाब तैयार किया जा रहा है…</string>
+    <string name="inference_notification_ready_title">जवाब तैयार है</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d टोकन</item>
+        <item quantity="other">%d टोकन</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">इन्फ़रेंस इंजन अभी उपलब्ध नहीं है। थोड़ी देर बाद फिर से कोशिश करें।</string>
+
+    <!-- Common actions -->
+    <string name="response_copied">क्लिपबोर्ड पर कॉपी किया गया</string>
+    <string name="folder_picker_unavailable">फ़ोल्डर चुनने के लिए कोई ऐप उपलब्ध नहीं है। सिस्टम फ़ाइल्स / डॉक्युमेंट्स ऐप इंस्टॉल या सक्षम करें।</string>
+
+    <!-- Model capability badges -->
+    <string name="cd_supports_thinking">सोच का समर्थन करता है</string>
+    <string name="cd_supports_tools">टूल का समर्थन करता है</string>
+
+    <!-- Sound and haptic -->
+    <string name="sound_and_haptic">ध्वनि और हैप्टिक</string>
+    <string name="sound_and_haptic_subtitle">पूरा होने पर ध्वनि और टाइपिंग के दौरान हैप्टिक</string>
+    <string name="sound_on_completion_title">जनरेशन पूरा होने पर ध्वनि बजाएँ</string>
+    <string name="sound_on_completion_desc">जब ऐप बैकग्राउंड में हो और मॉडल जवाब पूरा करे, तो एक छोटी ध्वनि बजती है।</string>
+    <string name="haptic_on_generation_title">जनरेशन पर हैप्टिक फ़ीडबैक</string>
+    <string name="haptic_on_generation_desc">जवाब का हर हिस्सा स्ट्रीम होते ही एक हल्की कंपन।</string>
+
+    <!-- Tools -->
+    <string name="tools">टूल</string>
+    <string name="tools_subtitle">सक्षम मॉडलों को कार्रवाई करने दें</string>
+    <string name="set_up_tools">टूल सेट अप करें</string>
+    <string name="tools_section_intro">टूल सक्षम मॉडलों को जवाब के दौरान कार्रवाई करने देते हैं, जैसे वेब पर खोजना या कोई गणना करना। हर टूल डिफ़ॉल्ट रूप से बंद है — केवल वही चालू करें जो आप चाहते हैं। टूल केवल उन्हीं मॉडलों के साथ काम करते हैं जो इन्हें सपोर्ट करते हैं (हैमर बैज देखें)।</string>
+    <string name="tools_params_sheet_subtitle">मॉडल जवाब के दौरान इन्हें कॉल कर सकता है</string>
+    <string name="tools_example_label">उदाहरण: %1$s</string>
+    <string name="tool_call_input">इनपुट</string>
+    <string name="tool_call_output">आउटपुट</string>
+    <string name="tool_web_search_title">वेब खोज</string>
+    <string name="tool_web_search_desc">वेब पर खोजता है और परिणाम के शीर्षक, लिंक और स्निपेट लौटाता है ताकि मॉडल मौजूदा जानकारी पा सके।</string>
+    <string name="tool_web_search_example">\"नवीनतम Pixel फ़ोन की हालिया समीक्षाएँ खोजें।\"</string>
+    <string name="tool_web_fetch_title">वेब पेज फ़ेच करें</string>
+    <string name="tool_web_fetch_desc">एक लिंक खोलता है और उसकी मुख्य सामग्री को टेक्स्ट के रूप में पढ़ता है ताकि मॉडल किसी पेज का सारांश दे सके या उद्धृत कर सके।</string>
+    <string name="tool_web_fetch_example">\"इस लिंक पर मौजूद लेख का सारांश दें।\"</string>
+    <string name="tool_run_javascript_title">JavaScript चलाएँ</string>
+    <string name="tool_run_javascript_desc">गणित, तारीखों और टेक्स्ट प्रोसेसिंग के लिए एक सुरक्षित सैंडबॉक्स में JavaScript चलाता है। इंटरनेट या फ़ाइल एक्सेस नहीं।</string>
+    <string name="tool_run_javascript_example">\"(2 + 3) × 4 कितना है, और 1 जनवरी 2027 को सप्ताह का कौन सा दिन है?\"</string>
+
+    <!-- What\'s New (1.7.0) -->
+    <string name="whats_new_tools">वेब खोज, पेज फ़ेच और JavaScript चलाना</string>
+    <string name="whats_new_cache">कैश किए गए प्रॉम्प्ट और टूल के साथ तेज़ जवाब</string>
 </resources>

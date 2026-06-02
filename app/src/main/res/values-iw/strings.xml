@@ -231,6 +231,15 @@
 
     <!-- Screenshot sample system prompt -->
     <string name="screenshot_system_prompt_sample">אתה מורה תמציתי למדעים. הסבר רעיונות בבהירות בעזרת דוגמאות מחיי היום-יום.</string>
+    <string name="screenshot_prompts">הנחיות לשימוש חוזר</string>
+    <string name="screenshot_prompts_sub">הגדירו את הטון פעם אחת, השתמשו בכל מקום</string>
+    <string name="screenshot_tools">תנו למודלים כלים</string>
+    <string name="screenshot_tools_sub">חיפוש באינטרנט, שליפה ו-JavaScript</string>
+    <string name="screenshot_notification">פועל ברקע</string>
+    <string name="screenshot_notification_sub">קבלו התראה כשזה מסתיים</string>
+    <string name="screenshot_prompt_sample_code">אתה מבקר קוד בכיר. הצבע על באגים, מקרי קצה ובעיות אבטחה. היה ישיר וספציפי.</string>
+    <string name="screenshot_prompt_sample_translator">אתה מתרגם. הפוך כל מה שאני שולח לצרפתית טבעית וזורמת ושמור על העיצוב.</string>
+    <string name="screenshot_prompt_sample_brainstorm">אתה שותף יצירתי לסיעור מוחות. הצע רעיונות נועזים ובלתי צפויים ופתח את אלה שלי.</string>
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_chat_question">מהי למידת מכונה?</string>
@@ -273,4 +282,56 @@
     <string name="model_load_failed_title">לא ניתן לטעון את המודל</string>
     <string name="model_load_failed_message">לא ניתן לטעון את %1$s. ייתכן שהקובץ פגום, או שהוא משתמש בארכיטקטורה שגרסה זו של האפליקציה עדיין אינה תומכת בה. נסה מודל אחר, או עדכן את האפליקציה.</string>
     <string name="model_load_failed_dismiss">אישור</string>
+
+    <!-- Inference notifications -->
+    <string name="inference_notification_generating_title">יוצר תגובה…</string>
+    <string name="inference_notification_ready_title">התגובה מוכנה</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">טוקן %d</item>
+        <item quantity="two">%d טוקנים</item>
+        <item quantity="many">%d טוקנים</item>
+        <item quantity="other">%d טוקנים</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">מנוע ההיסק אינו זמין כעת. נסה שוב בעוד רגע.</string>
+
+    <!-- Common actions -->
+    <string name="share">שתף</string>
+    <string name="response_copied">הועתק ללוח</string>
+    <string name="folder_picker_unavailable">אין אפליקציה זמינה לבחירת תיקייה. התקן או הפעל את אפליקציית הקבצים / המסמכים של המערכת.</string>
+
+    <!-- Model capability badges -->
+    <string name="cd_supports_thinking">תומך בחשיבה</string>
+    <string name="cd_supports_tools">תומך בכלים</string>
+
+    <!-- Sound and haptic -->
+    <string name="sound_and_haptic">צליל ורטט</string>
+    <string name="sound_and_haptic_subtitle">צליל סיום ורטט בעת הקלדה</string>
+    <string name="sound_on_completion_title">השמע צליל בסיום היצירה</string>
+    <string name="sound_on_completion_desc">משמיע צליל קצר כשהמודל מסיים תגובה בזמן שהאפליקציה ברקע.</string>
+    <string name="haptic_on_generation_title">משוב מישושי בעת יצירה</string>
+    <string name="haptic_on_generation_desc">רטט עדין עם הזרמת כל חלק של התגובה.</string>
+
+    <!-- Tools -->
+    <string name="tools">כלים</string>
+    <string name="tools_subtitle">אפשר למודלים מתאימים לבצע פעולות</string>
+    <string name="set_up_tools">הגדר כלים</string>
+    <string name="tools_section_intro">כלים מאפשרים למודלים מתאימים לבצע פעולות במהלך תגובה, כמו חיפוש באינטרנט או ביצוע חישוב. כל כלי מושבת כברירת מחדל — הפעל רק את אלה שאתה רוצה. כלים פועלים רק עם מודלים שתומכים בהם (חפש את תג הפטיש).</string>
+    <string name="tools_params_sheet_subtitle">המודל יכול לקרוא לאלה במהלך תגובה</string>
+    <string name="tools_example_label">דוגמה: %1$s</string>
+    <string name="tool_call_input">קלט</string>
+    <string name="tool_call_output">פלט</string>
+    <string name="tool_web_search_title">חיפוש באינטרנט</string>
+    <string name="tool_web_search_desc">מחפש באינטרנט ומחזיר כותרות תוצאות, קישורים וקטעים כדי שהמודל יוכל למצוא מידע עדכני.</string>
+    <string name="tool_web_search_example">\"מצא ביקורות אחרונות על טלפון ה-Pixel האחרון.\"</string>
+    <string name="tool_web_fetch_title">שלוף דף אינטרנט</string>
+    <string name="tool_web_fetch_desc">פותח קישור וקורא את התוכן המרכזי שלו כטקסט כדי שהמודל יוכל לסכם או לצטט דף.</string>
+    <string name="tool_web_fetch_example">\"סכם את המאמר בקישור הזה.\"</string>
+    <string name="tool_run_javascript_title">הרץ JavaScript</string>
+    <string name="tool_run_javascript_desc">מריץ JavaScript בארגז חול מאובטח לחישובים, תאריכים ועיבוד טקסט. ללא גישה לאינטרנט או לקבצים.</string>
+    <string name="tool_run_javascript_example">\"כמה זה (2 + 3) × 4, ובאיזה יום בשבוע חל 1 בינואר 2027?\"</string>
+
+    <!-- What's New (1.7.0) -->
+    <string name="whats_new_tools">חיפוש באינטרנט, שליפת דף והרצת JavaScript</string>
+    <string name="whats_new_cache">תגובות מהירות יותר עם פרומפטים וכלים שנשמרו במטמון</string>
 </resources>

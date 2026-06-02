@@ -10,6 +10,10 @@ Trải nghiệm trò chuyện phong phú — phản hồi được hiển thị 
 
 Mô hình suy luận — xem quá trình suy nghĩ của các mô hình như DeepSeek R1, Nemotron và LFM2.5 Thinking được hiển thị trong phần có kiểu dáng đẹp, có thể thu gọn với ngân sách suy nghĩ có thể điều chỉnh.
 
+Công cụ — các mô hình có khả năng có thể tìm kiếm web, tải một trang và chạy JavaScript ngay trong một phản hồi. Mỗi công cụ đều tắt theo mặc định; chỉ bật những công cụ bạn muốn, cho từng mô hình, trong Cài đặt → Công cụ. Tìm kiếm web và tải trang chỉ kết nối internet khi bạn bật chúng — mọi thứ khác đều ở trên thiết bị của bạn.
+
+Tạo phản hồi ở chế độ nền — bắt đầu một phản hồi, sau đó rời khỏi ứng dụng và nó vẫn tiếp tục chạy. Một thông báo trực tiếp hiển thị trạng thái tạo và số lượng token, cho phép bạn sao chép hoặc chia sẻ kết quả mà không cần mở lại ứng dụng, và phát âm báo khi hoàn tất.
+
 Theo dõi tốc độ tạo — xem số lượng token, thời gian tạo và tốc độ tok/s cho mỗi phản hồi.
 
 Tham số theo mô hình — mỗi mô hình ghi nhớ cài đặt tạo riêng. Tinh chỉnh kích thước ngữ cảnh, ngân sách suy nghĩ, nhiệt độ, Top-P, Top-K, Min-P, hình phạt lặp lại và hạt giống.
@@ -28,6 +32,7 @@ MÔ HÌNH ĐƯỢC HỖ TRỢ
 
 • Qwen 3.5 (0.8B, 2B, 4B) — Alibaba
 • Gemma 4 (E2B, E4B) — Google
+• GPT-OSS 20B — OpenAI
 • Nemotron 3 Nano (4B) — NVIDIA
 • Granite 4.0 (Micro, H-Tiny) — IBM
 • DeepSeek R1 Distill (1.5B, 7B) — DeepSeek
@@ -36,7 +41,7 @@ MÔ HÌNH ĐƯỢC HỖ TRỢ
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-Bắt đầu từ chỉ 267 MB cho mô hình nhỏ nhất. Mô hình lớn hơn (4B–8B) cần RAM 8+ GB. Bạn cũng có thể tải bất kỳ mô hình GGUF tùy chỉnh nào.
+Bắt đầu từ chỉ 267 MB cho mô hình nhỏ nhất. Mô hình lớn hơn (4B–8B) cần RAM 8+ GB, và mô hình 20B cần một thiết bị cao cấp với bộ nhớ dồi dào. Bạn cũng có thể tải bất kỳ mô hình GGUF tùy chỉnh nào.
 
 MÃ NGUỒN MỞ
 

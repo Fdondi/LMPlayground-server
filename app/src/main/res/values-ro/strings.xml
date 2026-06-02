@@ -190,6 +190,15 @@
 
     <!-- Screenshot sample chat -->
     <string name="screenshot_system_prompt_sample">E\u0219ti un profesor de \u0219tiin\u021Be concis. Explic\u0103 ideile clar, cu exemple din via\u021Ba de zi cu zi.</string>
+    <string name="screenshot_prompts">Prompturi reutilizabile</string>
+    <string name="screenshot_prompts_sub">setezi tonul o dat\u0103, \u00EEl folose\u0219ti oriunde</string>
+    <string name="screenshot_tools">Ofer\u0103 instrumente modelelor</string>
+    <string name="screenshot_tools_sub">c\u0103utare web, fetch &amp; JavaScript</string>
+    <string name="screenshot_notification">Ruleaz\u0103 \u00EEn fundal</string>
+    <string name="screenshot_notification_sub">prime\u0219ti o notificare c\u00E2nd termin\u0103</string>
+    <string name="screenshot_prompt_sample_code">E\u0219ti un recenzent de cod experimentat. Semnaleaz\u0103 bug-uri, cazuri limit\u0103 \u0219i probleme de securitate. Fii direct \u0219i specific.</string>
+    <string name="screenshot_prompt_sample_translator">E\u0219ti un traduc\u0103tor. Transform\u0103 tot ce \u00EE\u021Bi trimit \u00EEn francez\u0103 natural\u0103 \u0219i fluent\u0103 \u0219i p\u0103streaz\u0103 formatarea.</string>
+    <string name="screenshot_prompt_sample_brainstorm">E\u0219ti un partener creativ de brainstorming. Propune idei \u00EEndr\u0103zne\u021Be \u0219i nea\u0219teptate \u0219i dezvolt\u0103-le pe ale mele.</string>
     <string name="screenshot_chat_question">Ce este \u00EEnv\u0103\u021Barea automat\u0103?</string>
     <string name="screenshot_chat_response">\u00CEnv\u0103\u021Barea automat\u0103 este o ramur\u0103 a inteligen\u021Bei artificiale \u00EEn care computerele **\u00EEnva\u021B\u0103 din date** \u00EEn loc s\u0103 fie programate explicit.\n\nConcepte cheie:\n\n\u2022 **Antrenament**: furnizarea de date algoritmilor\n\u2022 **Modele**: tipare \u00EEnv\u0103\u021Bate din date\n\u2022 **Inferen\u021B\u0103**: realizarea de predic\u021Bii pe date noi</string>
 
@@ -235,4 +244,50 @@
     <string name="model_load_failed_title">Modelul nu a putut fi încărcat</string>
     <string name="model_load_failed_message">%1$s nu a putut fi încărcat. Fișierul poate fi corupt sau folosește o arhitectură pe care această versiune a aplicației nu o acceptă încă. Încearcă alt model sau actualizează aplicația.</string>
     <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- Notificări de inferență -->
+    <string name="inference_notification_generating_title">Se generează răspunsul…</string>
+    <string name="inference_notification_ready_title">Răspuns gata</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="few">%d tokeni</item>
+        <item quantity="other">%d de tokeni</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">Motorul de inferență nu este disponibil momentan. Încearcă din nou peste o clipă.</string>
+
+    <!-- Sunet și vibrații -->
+    <string name="sound_and_haptic">Sunet și vibrații</string>
+    <string name="sound_and_haptic_subtitle">Sunet la finalizare și vibrații la tastare</string>
+    <string name="sound_on_completion_title">Redă un sunet la finalizarea generării</string>
+    <string name="sound_on_completion_desc">Redă un scurt semnal sonor când modelul termină un răspuns în timp ce aplicația este în fundal.</string>
+    <string name="haptic_on_generation_title">Vibrații în timpul generării</string>
+    <string name="haptic_on_generation_desc">O vibrație ușoară pe măsură ce fiecare parte a răspunsului sosește.</string>
+
+    <!-- Instrumente -->
+    <string name="tools">Instrumente</string>
+    <string name="tools_subtitle">Lasă modelele capabile să întreprindă acțiuni</string>
+    <string name="set_up_tools">Configurează instrumentele</string>
+    <string name="tools_section_intro">Instrumentele permit modelelor capabile să întreprindă acțiuni în timpul unui răspuns, cum ar fi căutarea pe web sau efectuarea unui calcul. Fiecare instrument este dezactivat implicit — activează-le doar pe cele dorite. Instrumentele funcționează numai cu modelele care le acceptă (caută insigna cu pictograma cheii).</string>
+    <string name="tools_params_sheet_subtitle">Modelul le poate folosi în timpul unui răspuns</string>
+    <string name="tools_example_label">Exemplu: %1$s</string>
+    <string name="cd_supports_tools">Acceptă instrumente</string>
+    <string name="cd_supports_thinking">Acceptă raționamentul</string>
+    <string name="tool_web_search_title">Căutare web</string>
+    <string name="tool_web_search_desc">Caută pe web și returnează titluri de rezultate, linkuri și fragmente pentru ca modelul să poată găsi informații actuale.</string>
+    <string name="tool_web_search_example">\"Găsește recenzii recente despre cel mai nou telefon Pixel.\"</string>
+    <string name="tool_web_fetch_title">Încarcă pagină web</string>
+    <string name="tool_web_fetch_desc">Deschide un link și îi citește conținutul principal ca text pentru ca modelul să poată rezuma sau cita o pagină.</string>
+    <string name="tool_web_fetch_example">\"Rezumă articolul de la acest link.\"</string>
+    <string name="tool_run_javascript_title">Rulează JavaScript</string>
+    <string name="tool_run_javascript_desc">Rulează JavaScript într-un mediu izolat securizat pentru calcule, date și procesarea textului. Fără acces la internet sau la fișiere.</string>
+    <string name="tool_run_javascript_example">\"Cât este (2 + 3) × 4 și în ce zi a săptămânii cade 1 ianuarie 2027?\"</string>
+    <string name="tool_call_input">Intrare</string>
+    <string name="tool_call_output">Ieșire</string>
+    <string name="response_copied">Copiat în clipboard</string>
+    <string name="folder_picker_unavailable">Nicio aplicație disponibilă pentru a alege un folder. Instalează sau activează aplicația Fișiere / Documente a sistemului.</string>
+
+    <!-- Noutăți -->
+    <string name="whats_new_tools">Căutare web, încărcare pagină și rulare JavaScript</string>
+    <string name="whats_new_cache">Răspunsuri mai rapide cu prompturi &amp; instrumente în cache</string>
 </resources>
