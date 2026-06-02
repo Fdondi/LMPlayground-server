@@ -967,17 +967,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     override fun onFullResponse(response: String) {
                         totalTokens++
                         val nowMs = System.currentTimeMillis()
-                        // Typewriter-style haptic: a light tick per token,
-                        // throttled, and only while the chat is actually
-                        // on-screen (also satisfies the OS rule that bars
-                        // background vibration).
-                        if (hapticsAllowed &&
-                            nowMs - lastHapticMs >= HAPTIC_MIN_INTERVAL_MS &&
-                            (app as? App)?.isAppInForeground == true
-                        ) {
-                            lastHapticMs = nowMs
-                            GenerationHaptics.tick(app)
-                        }
                         if (nowMs - lastNotifUpdateMs >= 1000L) {
                             lastNotifUpdateMs = nowMs
                             updateInferenceNotification(
@@ -1001,6 +990,22 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             thinkingTokenCount = totalTokens
                         }
                         val currentThinkingTokens = if (thinkingComplete) thinkingTokenCount else totalTokens
+
+                        // Typewriter-style haptic: a light tick per *output*
+                        // token. Gated on thinkingComplete so the stream only
+                        // buzzes for the visible answer, never the hidden
+                        // thinking. Throttled, and only while the chat is
+                        // on-screen (also satisfies the OS rule that bars
+                        // background vibration).
+                        if (hapticsAllowed &&
+                            thinkingComplete &&
+                            nowMs - lastHapticMs >= HAPTIC_MIN_INTERVAL_MS &&
+                            (app as? App)?.isAppInForeground == true
+                        ) {
+                            lastHapticMs = nowMs
+                            GenerationHaptics.tick(app)
+                        }
+
                         val finalString = string
                         Snapshot.withMutableSnapshot {
                             if (thinkingJustStarted) {
