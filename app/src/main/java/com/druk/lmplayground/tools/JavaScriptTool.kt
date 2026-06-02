@@ -31,8 +31,11 @@ class JavaScriptTool(private val context: Context) : Tool {
                     // AndroidX JS engine returns empty string unless the code explicitly
                     // produces a String value. Wrap with String() to capture the result
                     // of the last expression, using eval() to handle multi-statement code.
-                    val escaped = code.replace("\\", "\\\\").replace("`", "\\`")
-                    val wrapped = "String(eval(`$escaped`))"
+                    // Pass the user code to eval() as a JSON-quoted string literal rather
+                    // than a template literal: a template literal would run `${...}`
+                    // interpolation against the wrong scope and collide with backticks in
+                    // the user code, breaking any code that uses template strings.
+                    val wrapped = "String(eval(${JSONObject.quote(code)}))"
                     val result = isolate.evaluateJavaScriptAsync(wrapped)
                         .get(10, TimeUnit.SECONDS)
                     """{"result":${JSONObject.quote(result)}}"""

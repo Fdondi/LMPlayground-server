@@ -977,6 +977,89 @@ class ToolCallingTest {
         assertTrue("Should have error for syntax error", json.has("error"))
     }
 
+    // -- Regression tests for the template-literal eval bug --
+    //
+    // The tool used to wrap user code in a JS *template literal*:
+    //   String(eval(`<user code>`))
+    // That made the engine run `${...}` interpolation (and collide with
+    // backticks) against the wrong scope, so any code using template
+    // strings — which models emit constantly — either threw a
+    // ReferenceError or produced wrong values. The fix passes the code to
+    // eval() as a JSON-quoted plain string literal instead. These tests
+    // would fail on the old wrapper and pass on the fix.
+
+    @Test
+    fun testJavaScriptTemplateLiteralInterpolation() {
+        // Model-style code that builds a string with `${...}`. Under the old
+        // wrapper `${name}` interpolated at the outer (empty) scope ->
+        // ReferenceError: name is not defined.
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val code = "const name = \"World\"; `Hello, \${name}!`"
+        val result = tool.execute("""{"code":${org.json.JSONObject.quote(code)}}""")
+        Log.d(TAG, "JS template literal: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertEquals("Hello, World!", json.getString("result"))
+    }
+
+    @Test
+    fun testJavaScriptTemplateLiteralArithmetic() {
+        // `${x * 2}` must be evaluated *inside* eval, against the user's
+        // own `x`, not the outer wrapper scope.
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val code = "const x = 5; `value=\${x * 2}`"
+        val result = tool.execute("""{"code":${org.json.JSONObject.quote(code)}}""")
+        Log.d(TAG, "JS template literal arithmetic: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertEquals("value=10", json.getString("result"))
+    }
+
+    @Test
+    fun testJavaScriptLiteralDollarBraceIsNotInterpolated() {
+        // A literal `${...}` inside an ordinary (single-quoted) string must
+        // survive verbatim — it is data, not interpolation. The old wrapper
+        // treated it as interpolation against the outer scope (ReferenceError).
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val code = "'cost is \${total}'"
+        val result = tool.execute("""{"code":${org.json.JSONObject.quote(code)}}""")
+        Log.d(TAG, "JS literal dollar-brace: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertEquals("cost is \${total}", json.getString("result"))
+    }
+
+    @Test
+    fun testJavaScriptBacktickInUserCode() {
+        // User code that itself contains backticks must not break out of the
+        // wrapper. Build and return a tagged-template-style string.
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val code = "const items = ['a', 'b']; `[\${items.join('-')}]`"
+        val result = tool.execute("""{"code":${org.json.JSONObject.quote(code)}}""")
+        Log.d(TAG, "JS backtick in code: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertEquals("[a-b]", json.getString("result"))
+    }
+
+    @Test
+    fun testJavaScriptMultiStatementLastExpression() {
+        // Multi-statement code whose final line is a bare expression returns
+        // that expression's value (eval completion-value semantics).
+        val ctx = InstrumentationRegistry.getInstrumentation().targetContext
+        val tool = JavaScriptTool(ctx)
+        val code = "let a = 6;\nlet b = 7;\na * b"
+        val result = tool.execute("""{"code":${org.json.JSONObject.quote(code)}}""")
+        Log.d(TAG, "JS multi-statement: $result")
+        val json = org.json.JSONObject(result)
+        assertFalse("Should not have error: $result", json.has("error"))
+        assertEquals("42", json.getString("result"))
+    }
+
     // -- Diagnostic: does the model REALLY emit tool calls? --
     //
     // supportsToolCalling() only reports whether the chat template injects tool
