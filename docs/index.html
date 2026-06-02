@@ -817,7 +817,7 @@
         "name": "Does the app require an internet connection?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Internet is only needed to download models. Once downloaded, models run completely offline on your device."
+          "text": "Internet is needed to download models, and — if you turn them on — for the optional web tools (web search and fetch page). Apart from that, once a model is downloaded it runs completely offline on your device."
         }
       },
       {
@@ -825,7 +825,7 @@
         "name": "Is my data private?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. All conversations are processed locally on your device. No data is sent to external servers. See the Privacy Policy for details."
+          "text": "Your conversations are processed locally on your device and are never sent to a server by the app. The one exception is the optional web tools: if you enable web search or fetch page, the model's search queries and the pages it opens are sent to those websites (search uses DuckDuckGo). Tools are off by default, so nothing leaves your device unless you turn them on. See the Privacy Policy for details."
         }
       },
       {
@@ -866,6 +866,38 @@
         "acceptedAnswer": {
           "@type": "Answer",
           "text": "Go to Settings, then Models. In the “Downloaded” section, tap the delete icon next to the model you want to remove."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are system prompts?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A system prompt is a reusable instruction that shapes how the model responds — for example, “Always answer in French” or “Be concise.” Create and manage them in Settings → System Prompts, then apply one to your chat. They are stored on your device and sent only to the local model."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are tools and which ones are available?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Tools let capable models take actions during a reply. Three are available: Run JavaScript (math, dates, and text processing in an on-device sandbox), Web search (finds current information on the web), and Fetch web page (reads a page so the model can summarize or quote it). Turn them on in Settings → Tools. Each is off by default and works only with models that support tool calling — look for the hammer badge in the model selector."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do the web tools send my data online?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only when you enable them. Web search sends the model's query to DuckDuckGo, and Fetch web page downloads the pages the model chooses to open — those requests go to the websites themselves, not to the developer. Run JavaScript stays entirely on your device with no internet access. With every tool off (the default), nothing leaves your device. See the Privacy Policy for details."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Will the app notify me when a response is ready?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. While the app is in the background, a notification tracks the model's status — loaded, generating, then response ready — and lets you copy or share the reply. You can also enable a short completion chime in Settings → Sound and Haptic. Model downloads show their own progress notification with speed and ETA."
         }
       }
     ]
@@ -1350,6 +1382,7 @@
       </div>
       <div class="footer-bot">
         <div>© 2026 <a href="https://druk.me">Andrew Druk</a></div>
+        <div><a href="/privacy-policy/" data-i18n="footer.privacy">Privacy Policy</a></div>
       </div>
     </div>
   </footer>
@@ -1603,7 +1636,7 @@
       if (!list) return;
       const ICON = '<svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
       const html = [];
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 14; i++) {
         const q = getTranslation(lang, 'faq.q' + i);
         const a = getTranslation(lang, 'faq.a' + i);
         if (!q || !a) continue;

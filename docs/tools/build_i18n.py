@@ -138,10 +138,18 @@ EN = {
     "footer.copy": "© 2026 Andrew Druk · Built with llama.cpp",
 }
 
-# Stub-fill FAQ + phone keys; will be filled from app strings.
-for i in range(1, 11):
+# Stub-fill FAQ + phone + privacy keys; will be filled from app strings.
+for i in range(1, 15):
     EN[f"faq.q{i}"] = ""; EN[f"faq.a{i}"] = ""
 EN["phone.q"] = ""; EN["phone.a"] = ""
+EN["privacy.title"] = ""; EN["privacy.date"] = ""; EN["privacy.intro"] = ""
+for i in range(1, 8):
+    EN[f"privacy.s{i}.title"] = ""; EN[f"privacy.s{i}.body"] = ""
+
+# Website-original chrome: privacy-page contact label + home-page footer link.
+# Fall back to English for locales until translated; PRs welcome.
+EN["privacy.contact_label"] = "Contact"
+EN["footer.privacy"] = "Privacy Policy"
 
 
 # ============================================================
@@ -2541,9 +2549,16 @@ for _code, _ex in EXTRA.items():
 # ============================================================
 def fill_app_strings(d, lang):
     src = APP.get(lang, {})
-    for i in range(1, 11):
+    for i in range(1, 15):
         if f"faq_q{i}" in src: d[f"faq.q{i}"] = src[f"faq_q{i}"]
         if f"faq_a{i}" in src: d[f"faq.a{i}"] = src[f"faq_a{i}"]
+    # Privacy policy — mirrors the app copy so the hosted page localizes too.
+    if "privacy_policy" in src: d["privacy.title"] = src["privacy_policy"]
+    if "privacy_policy_effective_date" in src: d["privacy.date"] = src["privacy_policy_effective_date"]
+    if "privacy_policy_intro" in src: d["privacy.intro"] = src["privacy_policy_intro"]
+    for i in range(1, 8):
+        if f"privacy_policy_s{i}_title" in src: d[f"privacy.s{i}.title"] = src[f"privacy_policy_s{i}_title"]
+        if f"privacy_policy_s{i}_body" in src: d[f"privacy.s{i}.body"] = src[f"privacy_policy_s{i}_body"]
     if "screenshot_chat_question" in src: d["phone.q"] = src["screenshot_chat_question"]
     if "screenshot_chat_response" in src: d["phone.a"] = src["screenshot_chat_response"]
     if "supports_your_language" in src: d["models.supports_your_language"] = src["supports_your_language"]
@@ -2604,5 +2619,5 @@ for code in sorted(BUNDLE):
     if code == 'en': continue
     have = len(T.get(code, {}))
     total_w += have
-    print(f"  {code}: {have}/{len(EN) - 22} website-original keys", file=sys.stderr)
+    print(f"  {code}: {have}/{len(EN) - 47} website-original keys", file=sys.stderr)
 print(f"Total website-original translations: {total_w}", file=sys.stderr)
