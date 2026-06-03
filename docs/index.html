@@ -293,14 +293,13 @@
     .lmp-model-name svg { width: 11px; height: 11px; opacity: 0.75; }
     .lmp-model-size { font-size: 10.5px; color: #9096AE; margin-top: 2px; letter-spacing: 0.01em; }
     .lmp-chat { flex: 1; padding: 6px 16px 4px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
-    .lmp-user-msg { align-self: flex-end; max-width: 82%; background: #C9CEF9; color: #1D2040; padding: 9px 16px; border-radius: 22px; font-size: 12.5px; line-height: 1.35; }
-    .lmp-think { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; color: #9096AE; padding: 2px 0; }
-    .lmp-think svg { width: 11px; height: 11px; opacity: 0.85; }
+    .lmp-user-msg { align-self: flex-end; max-width: 82%; background: #C9CEF9; color: #1D2040; padding: 9px 16px; border-radius: 22px; font-size: 12.5px; line-height: 1.35; overflow-wrap: anywhere; }
+    .lmp-think { font-size: 12px; color: #9096AE; padding: 2px 0; font-style: italic; }
     .lmp-asst { font-size: 12px; line-height: 1.5; color: #D8DAE8; }
     .lmp-asst p { margin: 0 0 8px; }
     .lmp-asst p:last-child { margin-bottom: 0; }
     .lmp-asst b { font-weight: 700; color: #F2F4FA; }
-    .lmp-msg-actions { padding: 6px 16px 0; display: flex; align-items: center; gap: 14px; }
+    .lmp-msg-actions { padding: 6px 0 0; display: flex; align-items: center; gap: 14px; }
     .lmp-msg-actions svg { width: 16px; height: 16px; color: #9096AE; cursor: pointer; }
     .lmp-msg-stats { font-size: 10.5px; color: #9096AE; font-variant-numeric: tabular-nums; letter-spacing: 0.01em; margin-left: 6px; }
     .lmp-spacer { flex: 1; }
@@ -341,6 +340,15 @@
       .lmp-anim-actions { opacity: 1; }
       .lmp-anim-p1 .tc, .lmp-anim-p2 .tc { opacity: 1; }
     }
+    /* Thinking / tool "steps" in the hero chat — collapsed rows, like the app's
+       chat (a chevron + muted label; both thinking and tool calls look alike). */
+    .lmp-steps { display: flex; flex-direction: column; gap: 5px; margin: 1px 0; }
+    .lmp-step { font-size: 11.5px; color: #9096AE; }
+    .lmp-step-head { display: flex; align-items: center; gap: 3px; cursor: pointer; }
+    .lmp-step-head svg { width: 15px; height: 15px; flex-shrink: 0; opacity: 0.9; transition: transform 0.2s ease; }
+    .lmp-step.open .lmp-step-head svg { transform: rotate(180deg); }
+    .lmp-step-body { display: none; margin: 3px 0 1px 18px; font-style: italic; font-size: 11px; line-height: 1.45; color: #7E84A0; white-space: pre-wrap; }
+    .lmp-step.open .lmp-step-body { display: block; }
     .input-bar { border-top: 1px solid var(--line); padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; }
     .input-bar .placeholder { color: var(--fg-mute); font-size: 12px; }
     .send-btn { padding: 5px 14px; border-radius: 999px; background: var(--accent); color: white; font-size: 11px; font-weight: 500; }
@@ -993,14 +1001,13 @@
             </div>
             <div class="lmp-chat">
               <div class="lmp-user-msg" data-i18n="phone.q">What is machine learning?</div>
-              <span class="lmp-think">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>
-                <span class="lmp-think-text"><span data-i18n="phone.thinking">Thinking</span><span class="lmp-dots"><span>.</span><span>.</span><span>.</span></span></span>
-              </span>
+              <span class="lmp-think"><span class="lmp-think-text" data-i18n="phone.thinking">Thinking</span><span class="lmp-dots"><span>.</span><span>.</span><span>.</span></span></span>
               <div class="lmp-asst" id="lmpAsstHost">
-                <!-- assistant text rendered by JS from i18n key 'phone.a' (markdown-ish) -->
+                <!-- Chat is rebuilt + animated by JS (scene cycler). This static
+                     markup is the no-JS fallback and the ACTION_ICONS source. -->
               </div>
               <div class="lmp-msg-actions lmp-anim-actions">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M9 21h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2zM9 9l4.34-4.34L12 10h9v2l-3 7H9V9zM1 9h4v12H1V9z"/></svg>
                 <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05c-.09.23-.14.47-.14.73v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm0 12l-4.34 4.34L12 14H3v-2l3-7h9v10zm4-12h4v12h-4V3z"/></svg>
@@ -1687,87 +1694,199 @@
       });
     }
 
-    function renderHeroChat(lang) {
-      const userMsg = document.querySelector('.lmp-user-msg');
-      const host = document.getElementById('lmpAsstHost');
-      if (!userMsg || !host) return;
-      const q = getTranslation(lang, 'phone.q') || '';
-      userMsg.textContent = q;
+    // ===== Hero chat: cycle through demo conversations, one at a time. =====
+    // Scene 0 (q/a) is localized from the app strings; the three tool scenes are
+    // website-original English demos — one per tool. After an answer finishes we
+    // wait 5s, then play the next scene, looping forever.
+    let currentHeroLang = 'en';
+    let _animTimers = [];
 
-      // The assistant text comes from app strings — newlines split paragraphs;
-      // bullet items begin with "• ". We render paragraphs into anim-p1/p2 so the
-      // existing typewriter works on whatever language we got.
-      const a = getTranslation(lang, 'phone.a') || '';
-      // Split into "blocks" by blank line; first block → p1, rest joined → p2.
-      const blocks = a.split(/\n{2,}/).map(s => s.trim()).filter(Boolean);
-      const p1 = blocks[0] || '';
-      const p2 = blocks.slice(1).join('\n');
-      host.innerHTML =
-        '<p class="lmp-anim-p1">' + renderInline(p1).replace(/\n/g, '<br/>') + '</p>'
-        + (p2 ? '<p class="lmp-anim-p2">' + renderInline(p2).replace(/\n/g, '<br/>') + '</p>' : '');
-      // (Re-)play typewriter for the new content.
-      runHeroAnimation(lang);
+    // Capture the action-row icons from the first paint so each rebuilt scene
+    // can reuse them without duplicating the SVG markup.
+    const ACTION_ICONS = (function () {
+      const a = document.querySelector('.lmp-msg-actions');
+      return a ? Array.from(a.querySelectorAll('svg')).map(s => s.outerHTML).join('') : '';
+    })();
+    // Down-chevron for collapsed "step" rows (matches the app's chat).
+    const CHEVRON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg>';
+
+    function escHtml(s) {
+      return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    // A collapsible step row (chevron + label + expandable body) — used for BOTH
+    // the thinking block and tool calls, exactly like the app's chat. The chevron
+    // is present from the start so the row can be expanded even while it ticks.
+    // Returns the row plus its label node so the caller can update it in place
+    // (keeping the DOM stable preserves the expand state across ticks).
+    function makeStepRow(label, content) {
+      const row = document.createElement('div');
+      row.className = 'lmp-step';
+      const head = document.createElement('div');
+      head.className = 'lmp-step-head';
+      head.innerHTML = CHEVRON;
+      const lab = document.createElement('span');
+      lab.className = 'lmp-step-label';
+      lab.textContent = label;
+      head.appendChild(lab);
+      row.appendChild(head);
+      if (content) {
+        const body = document.createElement('div');
+        body.className = 'lmp-step-body';
+        body.textContent = content;
+        row.appendChild(body);
+        head.addEventListener('click', () => row.classList.toggle('open'));
+      }
+      return { row: row, label: lab };
     }
 
-    let _animTimers = [];
-    function runHeroAnimation(lang) {
-      // Cancel any outstanding timers from a previous run (language switch).
+    function heroScenes(lang) {
+      return [
+        // Scene 0: plain thinking model, localized from the app strings.
+        { q: getTranslation(lang, 'phone.q') || 'What is machine learning?',
+          think: { secs: 2, content: 'The user wants a simple definition. Cover learning from data versus explicit rules, then the core steps: training, models, and inference. Keep it beginner-friendly.' },
+          a: getTranslation(lang, 'phone.a') || '',
+          resp: 110 },
+        // Tool scenes (English) — one per tool. Tools run fast; the thinking
+        // phase after the tool is what takes the time, then the answer.
+        { q: 'If I invest $5,000 at 4% annual interest, what will it be worth in 10 years?',
+          tool: { name: 'Run JavaScript', secs: 1, input: '5000 * Math.pow(1.04, 10)', output: '7401.221518...' },
+          think: { secs: 3, content: 'Future value with compound interest: FV = P(1 + r)^n, with P = 5000, r = 0.04, n = 10. 1.04^10 is about 1.4802, so FV is about 7401.22. Interest = FV − P, about 2401.' },
+          a: 'At 4% compounded annually, $5,000 grows to **$7,401.22** in 10 years — that is 5,000 × 1.04^10. So you would earn about **$2,401** in interest on top of your $5,000 principal.',
+          resp: 80 },
+        { q: 'What are reviewers saying about the latest Pixel?',
+          tool: { name: 'Web search', secs: 2, input: 'latest Pixel phone reviews', output: '5 results: theverge.com, dxomark.com, gsmarena.com …' },
+          think: { secs: 4, content: 'The results agree on display, battery, and camera gains, plus faster on-device AI. The recurring negative is the higher price. Summarize as praise versus the main drawback.' },
+          a: 'Reviewers are largely positive. The wins: a much brighter **3000-nit display**, about **20% better battery life**, and a sharper telephoto camera, plus faster on-device AI. The main gripe is the **higher starting price** — but most still call it the best Pixel yet.',
+          resp: 120 },
+        { q: 'Summarize this article: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f',
+          tool: { name: 'Fetch web page', secs: 1, input: 'https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f', output: '6,480 chars → markdown' },
+          think: { secs: 3, content: 'Karpathy proposes an LLM-maintained personal wiki. Three layers: immutable raw sources, an LLM-generated wiki, and a schema file. The model updates pages and cross-links as new sources arrive, so knowledge compounds. Summarize the idea and the layering.' },
+          a: 'Karpathy proposes an **LLM-maintained wiki** — a persistent, cross-linked markdown layer the model builds between you and your raw sources. Rather than re-reading everything per query, it updates pages and links as new material arrives, so your knowledge base **compounds** instead of being re-derived each time.',
+          resp: 130 }
+      ];
+    }
+
+    function buildSceneHTML(s) {
+      const blocks = (s.a || '').split(/\n{2,}/).map(x => x.trim()).filter(Boolean);
+      const p1 = blocks[0] || '';
+      const p2 = blocks.slice(1).join('\n');
+      return '<div class="lmp-user-msg">' + escHtml(s.q) + '</div>'
+        + '<div class="lmp-steps"></div>'
+        + '<div class="lmp-asst">'
+        +   '<p class="lmp-anim-p1">' + renderInline(p1).replace(/\n/g, '<br/>') + '</p>'
+        +   (p2 ? '<p class="lmp-anim-p2">' + renderInline(p2).replace(/\n/g, '<br/>') + '</p>' : '')
+        + '</div>'
+        + '<div class="lmp-msg-actions lmp-anim-actions">' + ACTION_ICONS
+        +   '<span class="lmp-msg-stats"></span></div>'
+        + '<div class="lmp-spacer"></div>';
+    }
+
+    function wrapChars(el) {
+      Array.from(el.childNodes).forEach(n => {
+        if (n.nodeType === 3) {
+          const frag = document.createDocumentFragment();
+          for (const ch of n.textContent) {
+            const sp = document.createElement('span');
+            sp.className = 'tc'; sp.textContent = ch;
+            frag.appendChild(sp);
+          }
+          n.parentNode.replaceChild(frag, n);
+        } else if (n.nodeType === 1 && n.tagName !== 'BR') {
+          wrapChars(n);
+        }
+      });
+    }
+    function typeEl(root, sel, startMs, charMs) {
+      const el = root.querySelector(sel);
+      if (!el) return startMs;
+      wrapChars(el);
+      const chars = el.querySelectorAll('.tc');
+      chars.forEach((c, i) => _animTimers.push(setTimeout(() => c.classList.add('on'), startMs + (i + 1) * charMs)));
+      return startMs + chars.length * charMs;
+    }
+
+    function playScene(idx, lang) {
       _animTimers.forEach(t => clearTimeout(t));
       _animTimers = [];
-      const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      const actions = document.querySelector('.lmp-anim-actions');
-      if (actions) actions.classList.remove('lmp-show');
+      const chat = document.querySelector('.lmp-chat');
+      if (!chat) return;
+      const scenes = heroScenes(lang);
+      const n = scenes.length;
+      const i = ((idx % n) + n) % n;
+      const s = scenes[i];
+      chat.innerHTML = buildSceneHTML(s);
 
-      const thinkBase = getTranslation(lang, 'phone.thinking') || 'Thinking';
-      const thinkText = document.querySelector('.lmp-think-text');
+      const steps = chat.querySelector('.lmp-steps');
+      const actions = chat.querySelector('.lmp-anim-actions');
+      const base = getTranslation(lang, 'phone.thinking') || 'Thinking';
 
-      if (prefersReduced) {
+      // Token counter ticks fast: +3 tokens every 100ms, but the seconds part
+      // only updates once per second. The thinking row is a single stable element
+      // (same chevron + font throughout) — its label is updated in place, so the
+      // ticking state and the final state look identical and stay expandable.
+      const TICK_MS = 100, TOK_PER_TICK = 3;
+      const secs = s.think.secs;
+      const totalTicks = secs * (1000 / TICK_MS);
+      const finalTokens = totalTicks * TOK_PER_TICK;
+      const finalThink = base + ' · ' + secs + 's · ' + finalTokens + ' tokens';
+      const toolLabel = s.tool ? (s.tool.name + ' · ' + s.tool.secs + 's') : null;
+      const toolContent = s.tool ? ('Input\n' + s.tool.input + '\n\nOutput\n' + s.tool.output) : null;
+      const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // Final stats are accumulative for the whole message: total tokens =
+      // thinking + tool + response; total time is at least tool + thinking time
+      // plus the response, so it can never be less than the steps above it.
+      const toolSecs = s.tool ? s.tool.secs : 0;
+      const toolTokens = s.tool ? 24 : 0;
+      const respTokens = s.resp || 0;
+      const respSecs = Math.max(1, Math.round(respTokens / 50));
+      const totalTokens = finalTokens + toolTokens + respTokens;
+      const totalSecs = toolSecs + secs + respSecs;
+      const statsText = totalTokens + ' tokens · ' + totalSecs + 's · '
+        + Math.round(totalTokens / totalSecs) + ' tok/s';
+      const statsEl = chat.querySelector('.lmp-msg-stats');
+      if (statsEl) statsEl.textContent = statsText;
+
+      if (reduced) {
+        // Respect reduced motion: show finished rows + answer, no ticking, no loop.
+        if (s.tool) steps.appendChild(makeStepRow(toolLabel, toolContent).row);
+        steps.appendChild(makeStepRow(finalThink, s.think.content).row);
         if (actions) actions.classList.add('lmp-show');
         return;
       }
 
-      if (thinkText) {
-        // Reset thinking text to base + animated dots (rebuild for re-runs).
-        thinkText.innerHTML = '<span data-i18n="phone.thinking">' + thinkBase
-          + '</span><span class="lmp-dots"><span>.</span><span>.</span><span>.</span></span>';
-        _animTimers.push(setTimeout(() => { thinkText.textContent = thinkBase + ' · 1s · 19 tokens'; }, 900));
-        _animTimers.push(setTimeout(() => { thinkText.textContent = thinkBase + ' · 2s · 38 tokens'; }, 1900));
-      }
+      // Thinking row — chevron from the start, expandable while it ticks.
+      const think = makeStepRow(base + ' · 0s · 0 tokens', s.think.content);
+      steps.appendChild(think.row);
 
-      function wrapChars(el) {
-        const kids = Array.from(el.childNodes);
-        kids.forEach(n => {
-          if (n.nodeType === 3) {
-            const frag = document.createDocumentFragment();
-            for (const ch of n.textContent) {
-              const s = document.createElement('span');
-              s.className = 'tc';
-              s.textContent = ch;
-              frag.appendChild(s);
-            }
-            n.parentNode.replaceChild(frag, n);
-          } else if (n.nodeType === 1 && n.tagName !== 'BR') {
-            wrapChars(n);
-          }
-        });
+      // Tool scenes: the (fast) tool call appears first, above the thinking row;
+      // then the thinking phase ticks — that is the part that takes the time.
+      const thinkStart = s.tool ? 500 : 0;
+      if (s.tool) {
+        const toolRow = makeStepRow(toolLabel, toolContent).row;
+        _animTimers.push(setTimeout(() => { steps.insertBefore(toolRow, think.row); }, thinkStart));
       }
-      function typeEl(sel, startMs, charMs) {
-        const el = document.querySelector(sel);
-        if (!el) return startMs;
-        wrapChars(el);
-        const chars = el.querySelectorAll('.tc');
-        _animTimers.push(setTimeout(() => el.classList.add('typing'), startMs));
-        chars.forEach((c, i) => {
-          _animTimers.push(setTimeout(() => c.classList.add('on'), startMs + (i + 1) * charMs));
-        });
-        const endMs = startMs + chars.length * charMs;
-        _animTimers.push(setTimeout(() => el.classList.remove('typing'), endMs));
-        return endMs;
+      for (let t = 1; t <= totalTicks; t++) {
+        const tokens = t * TOK_PER_TICK;
+        const sec = Math.floor((t * TICK_MS) / 1000);
+        _animTimers.push(setTimeout(() => {
+          think.label.textContent = base + ' · ' + sec + 's · ' + tokens + ' tokens';
+        }, thinkStart + t * TICK_MS));
       }
-      const RESPONSE_START_MS = 2200;
-      const p1End = typeEl('.lmp-anim-p1', RESPONSE_START_MS, 5);
-      const p2End = typeEl('.lmp-anim-p2', p1End, 5);
+      const answerStart = thinkStart + secs * 1000 + 300;
+
+      // Typewriter the answer, then reveal the action row.
+      const p1End = typeEl(chat, '.lmp-anim-p1', answerStart, 5);
+      const p2End = typeEl(chat, '.lmp-anim-p2', p1End, 5);
       if (actions) _animTimers.push(setTimeout(() => actions.classList.add('lmp-show'), p2End));
+
+      // Hold the finished answer for 5s, then advance to the next scene.
+      _animTimers.push(setTimeout(() => playScene(i + 1, currentHeroLang), p2End + 5000));
+    }
+
+    function renderHeroChat(lang) {
+      currentHeroLang = lang;
+      playScene(0, lang);
     }
 
     function setLang(lang) {
