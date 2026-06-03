@@ -56,6 +56,9 @@ WANT = [
     'screenshot_chat_response',
     'screenshot_chat',
     'screenshot_chat_sub',
+    # Token-count unit ("%d tokens") — reused for the hero chat stats so the
+    # word is localized (and keeps each locale's word order).
+    'tokens_value',
     # Section headers used when the models list is split by language support.
     'supports_your_language',
     'other_models',

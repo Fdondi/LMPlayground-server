@@ -1740,28 +1740,32 @@
     }
 
     function heroScenes(lang) {
+      // All scene copy is localized via the shared i18n bundle (English fallback
+      // baked in). Scene 0 q/a come from the app strings (phone.q / phone.a); the
+      // tool scenes use website-original phone.qN/aN/rN + the localized tool titles.
+      const t = (k, fb) => getTranslation(lang, k) || fb;
       return [
-        // Scene 0: plain thinking model, localized from the app strings.
-        { q: getTranslation(lang, 'phone.q') || 'What is machine learning?',
-          think: { secs: 2, content: 'The user wants a simple definition. Cover learning from data versus explicit rules, then the core steps: training, models, and inference. Keep it beginner-friendly.' },
-          a: getTranslation(lang, 'phone.a') || '',
+        // Scene 0: plain thinking model.
+        { q: t('phone.q', 'What is machine learning?'),
+          think: { secs: 2, content: t('phone.r0', 'The user wants a simple definition. Cover learning from data versus explicit rules, then the core steps: training, models, and inference. Keep it beginner-friendly.') },
+          a: t('phone.a', ''),
           resp: 110 },
-        // Tool scenes (English) — one per tool. Tools run fast; the thinking
-        // phase after the tool is what takes the time, then the answer.
-        { q: 'If I invest $5,000 at 4% annual interest, what will it be worth in 10 years?',
-          tool: { name: 'Run JavaScript', secs: 1, input: '5000 * Math.pow(1.04, 10)', output: '7401.221518...' },
-          think: { secs: 3, content: 'Future value with compound interest: FV = P(1 + r)^n, with P = 5000, r = 0.04, n = 10. 1.04^10 is about 1.4802, so FV is about 7401.22. Interest = FV − P, about 2401.' },
-          a: 'At 4% compounded annually, $5,000 grows to **$7,401.22** in 10 years — that is 5,000 × 1.04^10. So you would earn about **$2,401** in interest on top of your $5,000 principal.',
+        // Tool scenes — one per tool. Tools run fast; the thinking phase after the
+        // tool is what takes the time, then the answer.
+        { q: t('phone.q1', 'If I invest $5,000 at 4% annual interest, what will it be worth in 10 years?'),
+          tool: { name: t('tools.t1.title', 'Run JavaScript'), secs: 1, input: '5000 * Math.pow(1.04, 10)', output: '7401.221518...' },
+          think: { secs: 3, content: t('phone.r1', 'Future value with compound interest: FV = P(1 + r)^n, with P = 5000, r = 0.04, n = 10. 1.04^10 is about 1.4802, so FV is about 7401.22. Interest = FV − P, about 2401.') },
+          a: t('phone.a1', 'At 4% compounded annually, $5,000 grows to **$7,401.22** in 10 years — that is 5,000 × 1.04^10. So you would earn about **$2,401** in interest on top of your $5,000 principal.'),
           resp: 80 },
-        { q: 'What are reviewers saying about the latest Pixel?',
-          tool: { name: 'Web search', secs: 2, input: 'latest Pixel phone reviews', output: '5 results: theverge.com, dxomark.com, gsmarena.com …' },
-          think: { secs: 4, content: 'The results agree on display, battery, and camera gains, plus faster on-device AI. The recurring negative is the higher price. Summarize as praise versus the main drawback.' },
-          a: 'Reviewers are largely positive. The wins: a much brighter **3000-nit display**, about **20% better battery life**, and a sharper telephoto camera, plus faster on-device AI. The main gripe is the **higher starting price** — but most still call it the best Pixel yet.',
+        { q: t('phone.q2', 'What are reviewers saying about the latest Pixel?'),
+          tool: { name: t('tools.t2.title', 'Web search'), secs: 2, input: 'latest Pixel phone reviews', output: '5 results: theverge.com, dxomark.com, gsmarena.com …' },
+          think: { secs: 4, content: t('phone.r2', 'The results agree on display, battery, and camera gains, plus faster on-device AI. The recurring negative is the higher price. Summarize as praise versus the main drawback.') },
+          a: t('phone.a2', 'Reviewers are largely positive. The wins: a much brighter **3000-nit display**, about **20% better battery life**, and a sharper telephoto camera, plus faster on-device AI. The main gripe is the **higher starting price** — but most still call it the best Pixel yet.'),
           resp: 120 },
-        { q: 'Summarize this article: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f',
-          tool: { name: 'Fetch web page', secs: 1, input: 'https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f', output: '6,480 chars → markdown' },
-          think: { secs: 3, content: 'Karpathy proposes an LLM-maintained personal wiki. Three layers: immutable raw sources, an LLM-generated wiki, and a schema file. The model updates pages and cross-links as new sources arrive, so knowledge compounds. Summarize the idea and the layering.' },
-          a: 'Karpathy proposes an **LLM-maintained wiki** — a persistent, cross-linked markdown layer the model builds between you and your raw sources. Rather than re-reading everything per query, it updates pages and links as new material arrives, so your knowledge base **compounds** instead of being re-derived each time.',
+        { q: t('phone.q3', 'Summarize this article: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f'),
+          tool: { name: t('tools.t3.title', 'Fetch web page'), secs: 1, input: 'https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f', output: '6,480 chars → markdown' },
+          think: { secs: 3, content: t('phone.r3', 'Karpathy proposes an LLM-maintained personal wiki. Three layers: immutable raw sources, an LLM-generated wiki, and a schema file. The model updates pages and cross-links as new sources arrive, so knowledge compounds. Summarize the idea and the layering.') },
+          a: t('phone.a3', 'Karpathy proposes an **LLM-maintained wiki** — a persistent, cross-linked markdown layer the model builds between you and your raw sources. Rather than re-reading everything per query, it updates pages and links as new material arrives, so your knowledge base **compounds** instead of being re-derived each time.'),
           resp: 130 }
       ];
     }
@@ -1819,6 +1823,9 @@
       const steps = chat.querySelector('.lmp-steps');
       const actions = chat.querySelector('.lmp-anim-actions');
       const base = getTranslation(lang, 'phone.thinking') || 'Thinking';
+      // Localized token-count unit ("%d tokens"), reused from the app strings.
+      const tokFmt = getTranslation(lang, 'units.tokens') || '%d tokens';
+      const tok = (nn) => tokFmt.replace('%d', nn);
 
       // Token counter ticks fast: +3 tokens every 100ms, but the seconds part
       // only updates once per second. The thinking row is a single stable element
@@ -1828,7 +1835,7 @@
       const secs = s.think.secs;
       const totalTicks = secs * (1000 / TICK_MS);
       const finalTokens = totalTicks * TOK_PER_TICK;
-      const finalThink = base + ' · ' + secs + 's · ' + finalTokens + ' tokens';
+      const finalThink = base + ' · ' + secs + 's · ' + tok(finalTokens);
       const toolLabel = s.tool ? (s.tool.name + ' · ' + s.tool.secs + 's') : null;
       const toolContent = s.tool ? ('Input\n' + s.tool.input + '\n\nOutput\n' + s.tool.output) : null;
       const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1842,7 +1849,7 @@
       const respSecs = Math.max(1, Math.round(respTokens / 50));
       const totalTokens = finalTokens + toolTokens + respTokens;
       const totalSecs = toolSecs + secs + respSecs;
-      const statsText = totalTokens + ' tokens · ' + totalSecs + 's · '
+      const statsText = tok(totalTokens) + ' · ' + totalSecs + 's · '
         + Math.round(totalTokens / totalSecs) + ' tok/s';
       const statsEl = chat.querySelector('.lmp-msg-stats');
       if (statsEl) statsEl.textContent = statsText;
@@ -1856,7 +1863,7 @@
       }
 
       // Thinking row — chevron from the start, expandable while it ticks.
-      const think = makeStepRow(base + ' · 0s · 0 tokens', s.think.content);
+      const think = makeStepRow(base + ' · 0s · ' + tok(0), s.think.content);
       steps.appendChild(think.row);
 
       // Tool scenes: the (fast) tool call appears first, above the thinking row;
@@ -1870,7 +1877,7 @@
         const tokens = t * TOK_PER_TICK;
         const sec = Math.floor((t * TICK_MS) / 1000);
         _animTimers.push(setTimeout(() => {
-          think.label.textContent = base + ' · ' + sec + 's · ' + tokens + ' tokens';
+          think.label.textContent = base + ' · ' + sec + 's · ' + tok(tokens);
         }, thinkStart + t * TICK_MS));
       }
       const answerStart = thinkStart + secs * 1000 + 300;
