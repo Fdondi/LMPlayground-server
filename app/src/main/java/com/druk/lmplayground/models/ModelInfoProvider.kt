@@ -227,6 +227,24 @@ object ModelInfoProvider {
             supportedLanguages = GRANITE_LANGS
         ),
         ModelInfo(
+            name = "Granite 4.1 3B",
+            filename = "granite-4.1-3b-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/granite-4.1-3b-GGUF/resolve/main/granite-4.1-3b-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-05-01"),
+            description = "IBM \u00B7 Enterprise chat model \u00B7 2.10Gb",
+            logoRes = R.drawable.logo_ibm,
+            supportedLanguages = GRANITE_LANGS
+        ),
+        ModelInfo(
+            name = "Granite 4.1 8B",
+            filename = "granite-4.1-8b-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/granite-4.1-8b-GGUF/resolve/main/granite-4.1-8b-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-05-01"),
+            description = "IBM \u00B7 Advanced enterprise model \u00B7 5.35Gb",
+            logoRes = R.drawable.logo_ibm,
+            supportedLanguages = GRANITE_LANGS
+        ),
+        ModelInfo(
             name = "Nemotron 3 Nano 4B",
             filename = "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF/resolve/main/NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf"),
@@ -369,6 +387,8 @@ object ModelInfoProvider {
         "Ministral-3-8B-Reasoning-2512-Q4_K_M.gguf",
         "granite-4.0-micro-Q4_K_M.gguf",
         "granite-4.0-h-tiny-Q4_K_M.gguf",
+        "granite-4.1-3b-Q4_K_M.gguf",
+        "granite-4.1-8b-Q4_K_M.gguf",
         "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
         "gemma-4-E2B-it-Q4_K_M.gguf",
         "gemma-4-E4B-it-Q4_K_M.gguf",
