@@ -24,12 +24,30 @@ object DeviceCapability {
     }
 
     /**
-     * True when the model alone exceeds 70 % of total device RAM. Even
-     * on a freshly-rebooted device with nothing else running, the kernel
-     * cannot keep enough weight pages resident to avoid eviction.
+     * Weight repacking keeps the repacked copy of the quantized weights in
+     * RAM on top of the still-mapped file buffer, so the peak resident
+     * footprint during load is ~2x the on-disk model size. (Measured on a
+     * 7.0 GB GGUF: load_tensors reports a ~7.0 GB CPU_Mapped buffer *and* a
+     * ~7.0 GB CPU_REPACK buffer.)
+     */
+    private const val REPACK_FOOTPRINT_MULTIPLIER = 2
+
+    /**
+     * True when loading [modelSizeBytes] *with repacking* would blow the RAM
+     * budget — the caller then loads the model memory-mapped instead
+     * (disableRepack), trading matmul speed for a far smaller resident set.
+     *
+     * We budget against the repacked footprint (~2x the on-disk size), not
+     * the raw size. Comparing only the raw size — as before — let models in
+     * the "fits once but not twice" band (e.g. a 7.4 GB model on a 12 GB
+     * phone: 63 % of RAM, under the old 70 % gate) pick the repack path and
+     * get OOM-killed mid-load when the second ~7 GB buffer is allocated.
+     * Repacking is kept only while the doubled footprint stays within 70 %
+     * of total RAM; above that we fall back to mmap-only loading.
      */
     fun exceedsRamBudget(modelSizeBytes: Long, totalRamBytes: Long): Boolean {
         if (modelSizeBytes <= 0 || totalRamBytes <= 0) return false
-        return modelSizeBytes * 10 > totalRamBytes * 7
+        val repackedFootprintBytes = modelSizeBytes * REPACK_FOOTPRINT_MULTIPLIER
+        return repackedFootprintBytes * 10 > totalRamBytes * 7
     }
 }
