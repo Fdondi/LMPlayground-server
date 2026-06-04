@@ -1,0 +1,6 @@
+- Ferramentas — modelos capazes podem pesquisar na web, abrir páginas e executar JavaScript na resposta. Ative por modelo em Configurações → Ferramentas
+- Novos modelos: Gemma 4 12B, além do Granite 4.1 (3B e 8B)
+- Respostas mais rápidas com cache de prompts e ferramentas
+- Compartilhe respostas ou copie/compartilhe pela notificação
+- Notificação ao vivo mostra o status e o total de tokens
+- Desempenho e estabilidade aprimorados

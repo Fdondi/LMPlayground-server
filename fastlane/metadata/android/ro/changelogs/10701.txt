@@ -1,0 +1,6 @@
+- Instrumente — modelele capabile pot căuta pe web, deschide pagini și rula JavaScript în răspuns. Activează-le pe model în Setări → Instrumente
+- Modele noi: Gemma 4 12B, plus Granite 4.1 (3B și 8B)
+- Răspunsuri mai rapide cu prompturi și instrumente în cache
+- Distribuie răspunsuri sau copiază/distribuie din notificare
+- Notificarea live arată starea generării și numărul de tokeni
+- Performanță și stabilitate îmbunătățite

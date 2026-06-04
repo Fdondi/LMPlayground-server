@@ -1,0 +1,6 @@
+- Herramientas — los modelos ya pueden buscar en la web, abrir páginas y ejecutar JavaScript. Actívalas: Ajustes → Herramientas
+- Nuevos modelos: Gemma 4 12B, además de Granite 4.1 (3B y 8B)
+- Respuestas más rápidas con la caché de prompts y herramientas
+- Comparte respuestas, o copia/comparte desde la notificación
+- La notificación en directo muestra el estado y el número de tokens
+- Rendimiento y estabilidad mejorados

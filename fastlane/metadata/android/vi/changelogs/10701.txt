@@ -1,0 +1,6 @@
+- Công cụ — các mô hình đủ mạnh giờ có thể tìm trên web, mở trang và chạy JavaScript khi trả lời. Bật theo từng mô hình trong Cài đặt → Công cụ
+- Mô hình mới: Gemma 4 12B, cùng Granite 4.1 (3B và 8B)
+- Trả lời nhanh hơn nhờ lời nhắc và công cụ được lưu đệm
+- Chia sẻ câu trả lời, hoặc sao chép/chia sẻ ngay từ thông báo
+- Thông báo trực tiếp hiển thị trạng thái tạo và số token
+- Cải thiện hiệu năng và độ ổn định

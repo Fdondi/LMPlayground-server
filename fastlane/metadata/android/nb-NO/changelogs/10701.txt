@@ -1,0 +1,6 @@
+- Verktøy — egnede modeller kan nå søke på nettet, hente en side og kjøre JavaScript under et svar. Slå dem på per modell i Innstillinger → Verktøy
+- Nye modeller: Gemma 4 12B, pluss Granite 4.1 (3B og 8B)
+- Raskere svar med bufrede ledetekster og verktøy
+- Del svar, eller kopier/del rett fra varselet
+- Sanntidsvarsel viser status og antall tokens
+- Forbedret ytelse og stabilitet

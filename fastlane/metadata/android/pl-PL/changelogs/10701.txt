@@ -1,0 +1,6 @@
+- Narzędzia — zdolne modele mogą szukać w sieci, pobierać strony i uruchamiać JavaScript w odpowiedzi. Włącz je per model w Ustawienia → Narzędzia
+- Nowe modele: Gemma 4 12B oraz Granite 4.1 (3B i 8B)
+- Szybsze odpowiedzi dzięki cache promptów i narzędzi
+- Udostępniaj odpowiedzi lub kopiuj/udostępniaj wprost z powiadomienia
+- Powiadomienie na żywo pokazuje stan generowania i liczbę tokenów
+- Wyższa wydajność i stabilność

@@ -1,0 +1,6 @@
+- Verktyg — kapabla modeller kan nu söka på webben, hämta sidor och köra JavaScript i ett svar. Aktivera per modell i Inställningar → Verktyg
+- Nya modeller: Gemma 4 12B, plus Granite 4.1 (3B och 8B)
+- Snabbare svar med cachade prompter och verktyg
+- Dela svar eller kopiera/dela direkt från aviseringen
+- Live-avisering visar genereringsstatus och antal tokens
+- Förbättrad prestanda och stabilitet

@@ -1,0 +1,6 @@
+- Strumenti — i modelli compatibili ora cercano sul web, aprono pagine ed eseguono JavaScript nelle risposte. Attivali per modello in Impostazioni → Strumenti
+- Nuovi modelli: Gemma 4 12B, oltre a Granite 4.1 (3B e 8B)
+- Risposte più rapide con prompt e strumenti in cache
+- Condividi le risposte, o copia/condividi dalla notifica
+- La notifica live mostra stato e token
+- Prestazioni e stabilità migliorate

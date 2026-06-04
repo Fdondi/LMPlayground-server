@@ -1,0 +1,6 @@
+- Araçlar — yetenekli modeller artık yanıt sırasında web'de arama yapabilir, sayfa getirebilir ve JavaScript çalıştırabilir. Modele göre Ayarlar → Araçlar bölümünden açın
+- Yeni modeller: Gemma 4 12B ve Granite 4.1 (3B ve 8B)
+- Önbelleğe alınan istem ve araçlarla hızlı yanıtlar
+- Yanıtları paylaşın veya doğrudan bildirimden kopyalayın
+- Canlı bildirim, oluşturma durumunu ve token sayısını gösterir
+- Geliştirilmiş performans ve kararlılık
