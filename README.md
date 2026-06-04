@@ -26,9 +26,11 @@ LM Playground is an Android application for running Large Language Models locall
 | GPT-OSS | 20B | OpenAI |
 | Qwen 3.5 | 0.8B, 2B, 4B | Alibaba |
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
+| Gemma 4 | E2B, E4B, 12B | Google |
 | Gemma 3n | E2B, E4B | Google |
 | Gemma 3 | 1B, 4B | Google |
 | Nemotron 3 Nano | 4B | NVIDIA |
+| Granite 4.1 | 3B, 8B | IBM |
 | Granite 4.0 | Micro, H-Tiny | IBM |
 | DeepSeek R1 Distill | 1.5B, 7B | DeepSeek |
 | Phi-4 mini | 3.8B | Microsoft |

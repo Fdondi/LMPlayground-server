@@ -1448,6 +1448,11 @@
     // Sorted by release date (newest first). `tools` mirrors the app's TOOL_CAPABLE set (hammer badge).
     // Sizes are Q4_K_M except Qwen 3.5 (Q3_K_M) and GPT-OSS (MXFP4).
     const MODELS = [
+      // 2026-06-03
+      { name:'Gemma 4 12B',              provider:'Google',    desc:'Advanced with thinking',          size:'7.38 GB',  quant:'Q4_K_M', tags:['new','reason','chat'],         tools:true,  langs:MULTILINGUAL_BROAD },
+      // 2026-05-01
+      { name:'Granite 4.1 8B',           provider:'IBM',       desc:'Advanced enterprise model',       size:'5.35 GB',  quant:'Q4_K_M', tags:['new','chat'],                  tools:true,  langs:GRANITE_LANGS },
+      { name:'Granite 4.1 3B',           provider:'IBM',       desc:'Enterprise chat model',           size:'2.10 GB',  quant:'Q4_K_M', tags:['new','chat'],                  tools:true,  langs:GRANITE_LANGS },
       // 2026-03-25
       { name:'Gemma 4 E4B',              provider:'Google',    desc:'Efficient with thinking',         size:'4.98 GB',  quant:'Q4_K_M', tags:['new','reason','chat'],         tools:true,  langs:MULTILINGUAL_BROAD },
       { name:'Gemma 4 E2B',              provider:'Google',    desc:'Efficient with thinking',         size:'3.11 GB',  quant:'Q4_K_M', tags:['new','reason','chat'],         tools:true,  langs:MULTILINGUAL_BROAD },
