@@ -272,6 +272,15 @@ object ModelInfoProvider {
             supportedLanguages = MULTILINGUAL_BROAD
         ),
         ModelInfo(
+            name = "Gemma 4 12B",
+            filename = "gemma-4-12B-it-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/ggml-org/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-06-03"),
+            description = "Google \u00B7 Advanced chat model \u00B7 7.38Gb",
+            logoRes = R.drawable.logo_google,
+            supportedLanguages = MULTILINGUAL_BROAD
+        ),
+        ModelInfo(
             name = "Qwen2.5 0.5B",
             filename = "Qwen2.5-0.5B-Instruct-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf"),
@@ -363,6 +372,7 @@ object ModelInfoProvider {
         "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
         "gemma-4-E2B-it-Q4_K_M.gguf",
         "gemma-4-E4B-it-Q4_K_M.gguf",
+        "gemma-4-12B-it-Q4_K_M.gguf",
         "Qwen2.5-0.5B-Instruct-Q4_K_M.gguf",
         "Qwen2.5-1.5B-Instruct-Q4_K_M.gguf",
         "Mistral-7B-Instruct-v0.3-Q4_K_M.gguf",
@@ -385,6 +395,7 @@ object ModelInfoProvider {
         "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
         "gemma-4-E2B-it-Q4_K_M.gguf",
         "gemma-4-E4B-it-Q4_K_M.gguf",
+        "gemma-4-12B-it-Q4_K_M.gguf",
         "gpt-oss-20b-mxfp4.gguf",
     )
 
@@ -425,7 +436,7 @@ object ModelInfoProvider {
             filename = filename,
             remoteUri = null,
             releaseDate = null,
-            description = "Custom model · $sizeLabel",
+            description = "Custom model \u00B7 $sizeLabel",
             logoRes = R.drawable.penrose_triangle
         )
     }
