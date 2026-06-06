@@ -6,18 +6,30 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
+    <!-- Per-token typewriter haptic while streaming a response. -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Large-screen / Chromebook posture: app works without touch input and
+         supports freeform window management. Keeping these as required="false"
+         ensures Play Store still surfaces the app to phones. -->
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.software.freeform_window_management" android:required="false" />
 
     <application
         android:name=".App"
         android:allowBackup="true"
         android:allowNativeHeapPointerTagging="false"
+        android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:localeConfig="@xml/locales_config"
+        android:resizeableActivity="true"
         android:supportsRtl="true"
         android:theme="@style/Theme.App.NoActionBar">
 
         <activity
             android:name="com.druk.lmplayground.MainActivity"
+            android:configChanges="screenSize|smallestScreenSize|screenLayout|orientation|keyboardHidden|density"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
             <intent-filter>
@@ -32,6 +44,30 @@
             android:exported="false"
             tools:node="merge" />
 
+        <!-- Inference engine service.
+             Runs in `:llama` so a SIGSEGV inside llama.cpp only kills this
+             process — the UI process catches the binder death via
+             InferenceClient.linkToDeath and surfaces a recoverable error.
+             Promoted to foreground while a model is loaded so Android does
+             not evict the process under memory pressure. -->
+        <service
+            android:name="com.druk.lmplayground.inference.LlamaService"
+            android:process=":llama"
+            android:foregroundServiceType="dataSync"
+            android:exported="false" />
+
+        <!-- AppCompat per-app language: enables automatic storage of the user's language
+             preference on pre-Android 13 devices. On Android 13+ the system handles it
+             via the android:localeConfig declaration above. -->
+        <service
+            android:name="androidx.appcompat.app.AppLocalesMetadataHolderService"
+            android:enabled="false"
+            android:exported="false">
+            <meta-data
+                android:name="autoStoreLocales"
+                android:value="true" />
+        </service>
+
         <receiver
             android:name="com.druk.lmplayground.download.DownloadNotificationManager$CancelDownloadReceiver"
             android:exported="false">
@@ -40,6 +76,8 @@
             </intent-filter>
         </receiver>
 
+        <!-- Image sharing for vision input: exposes copied chat images to the
+             system photo picker / share targets via a content:// URI. -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -49,6 +87,17 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- Invisible handler for the Copy/Share actions on the inference
+             notification. Runs in the main process (not :llama) so it has a
+             foreground context for the clipboard write and share chooser. -->
+        <activity
+            android:name="com.druk.lmplayground.inference.ResponseActionActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:excludeFromRecents="true"
+            android:noHistory="true"
+            android:taskAffinity=""
+            android:exported="false" />
 
     </application>
 </manifest>

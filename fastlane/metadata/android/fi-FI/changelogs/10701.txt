@@ -1,0 +1,6 @@
+- Työkalut — mallit voivat nyt hakea verkosta, noutaa sivun ja suorittaa JavaScriptiä. Ota käyttöön mallikohtaisesti: Asetukset → Työkalut
+- Uudet mallit: Gemma 4 12B sekä Granite 4.1 (3B ja 8B)
+- Nopeammat vastaukset kehotteiden ja työkalujen välimuistilla
+- Jaa vastauksia tai kopioi/jaa ne suoraan ilmoituksesta
+- Reaaliaikainen ilmoitus näyttää tilan ja tokenimäärän
+- Parannettu suorituskyky ja vakaus

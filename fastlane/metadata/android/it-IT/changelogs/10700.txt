@@ -1,0 +1,6 @@
+- Strumenti — i modelli compatibili ora cercano sul web, aprono pagine ed eseguono JavaScript nelle risposte. Attivali per modello in Impostazioni → Strumenti
+- Risposte più rapide con prompt e strumenti in cache
+- Condividi le risposte, o copia/condividi dalla notifica
+- La notifica live mostra stato e token
+- Suono e vibrazione — un suono a fine risposta in background e una vibrazione tipo tasti durante lo stream (Impostazioni → Suono e vibrazione)
+- Nuovo look vetro smerigliato in-app

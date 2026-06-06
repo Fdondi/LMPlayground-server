@@ -2,33 +2,36 @@
 <h1 align="center">LM Playground</h1>
 
 <p align="center">
-<img src="art/logo.png"/>
+<img src="logo.png"/>
 </p>
 
-LM Playground is an Android application for running Large Language Models locally on-device. Download models, load them in one tap, and chat - all offline, all private. Powered by [llama.cpp](https://github.com/ggergov/llama.cpp) with GGUF-format models from [Hugging Face](https://huggingface.co/).
+LM Playground is an Android application for running Large Language Models locally on-device. Download models, load them in one tap, and chat - all offline, all private. Powered by [llama.cpp](https://github.com/ggml-org/llama.cpp) with GGUF-format models from [Hugging Face](https://huggingface.co/).
 
-![preview](art/Preview.png)
+![preview](docs/banner.png)
 
 ## Features
 
 - **On-device inference** - no cloud, no API keys, fully offline
 - **Vision/image input** - attach images from gallery for vision-capable models (Qwen 3.5, Gemma 3, Ministral 3)
 - **Rich markdown** in chat responses - headers, code blocks, lists, and more
-- **Reasoning model support** - thinking steps from models like DeepSeek R1 and Nemotron are displayed in a styled section
+- **Reasoning model support** - thinking steps from models like GPT-OSS, DeepSeek R1, and Nemotron are displayed in a styled section
 - **Reliable background downloads** - custom download engine with OkHttp and WorkManager, progress notifications with speed and ETA, automatic resume on network interruptions
 - **Storage management** - choose where to keep multi-GB model files with Android's Storage Access Framework
 - **ARM optimized** - KleidiAI kernels and OpenMP for faster generation on arm64 devices
+- **Large-screen ready** - tablets, foldables, and Chromebooks get a permanent sessions sidebar, list-detail Settings, and freeform window resize support
 
 ## Supported Models
 
 | Family | Sizes | Provider |
 |--------|-------|----------|
+| GPT-OSS | 20B | OpenAI |
 | Qwen 3.5 | 0.8B, 2B, 4B (all vision) | Alibaba |
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
-| Gemma 4 | E2B, E4B (vision) | Google |
+| Gemma 4 | E2B, E4B, 12B (vision) | Google |
 | Gemma 3n | E2B, E4B | Google |
 | Gemma 3 | 1B, 4B (vision) | Google |
 | Nemotron 3 Nano | 4B | NVIDIA |
+| Granite 4.1 | 3B, 8B | IBM |
 | Granite 4.0 | Micro, H-Tiny | IBM |
 | DeepSeek R1 Distill | 1.5B, 7B | DeepSeek |
 | Phi-4 mini | 3.8B | Microsoft |
@@ -49,7 +52,7 @@ LM Playground is an Android application for running Large Language Models locall
 
 </details>
 
-Most models use Q4_K_M quantization; Qwen 3.5 uses Q3_K_M. See [`ModelInfoProvider.kt`](app/src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt) for the full list.
+Most models use Q4_K_M quantization; Qwen 3.5 uses Q3_K_M, and GPT-OSS ships in its native MXFP4 format. See [`ModelInfoProvider.kt`](app/src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt) for the full list.
 
 ## Install
 
@@ -76,7 +79,7 @@ This project is licensed under the [MIT License](LICENSE).
 
 ## Acknowledgments
 
-This project is built on [llama.cpp](https://github.com/ggergov/llama.cpp). Models are GGUF-format with Q4_K_M quantization sourced from [Hugging Face](https://huggingface.co/).
+This project is built on [llama.cpp](https://github.com/ggml-org/llama.cpp). Models are GGUF-format with Q4_K_M quantization sourced from [Hugging Face](https://huggingface.co/).
 
 ## Contact
 

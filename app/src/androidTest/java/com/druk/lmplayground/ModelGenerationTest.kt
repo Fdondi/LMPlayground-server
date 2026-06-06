@@ -1,9 +1,12 @@
 package com.druk.lmplayground
 
 import android.util.Log
-import com.druk.llamacpp.LlamaCpp
+import androidx.test.core.app.ApplicationProvider
 import com.druk.llamacpp.LlamaGenerationCallback
 import com.druk.llamacpp.LlamaProgressCallback
+import com.druk.llamacpp.jni.NativeLlamaCpp
+import com.druk.llamacpp.jni.NativeLlamaModel
+import com.druk.llamacpp.jni.NativeLlamaSession
 import com.druk.lmplayground.conversation.ResponseProcessor
 import org.junit.After
 import org.junit.Assert.*
@@ -13,8 +16,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.druk.llamacpp.LlamaGenerationSession
-import com.druk.llamacpp.LlamaModel
 import java.io.File
 
 /**
@@ -47,14 +48,15 @@ class ModelGenerationTest {
         private const val MODELS_PATH = "/data/local/tmp"
     }
 
-    private lateinit var llamaCpp: LlamaCpp
-    private var llamaModel: LlamaModel? = null
-    private var session: LlamaGenerationSession? = null
+    private lateinit var llamaCpp: NativeLlamaCpp
+    private var llamaModel: NativeLlamaModel? = null
+    private var session: NativeLlamaSession? = null
 
     @Before
     fun setUp() {
-        llamaCpp = LlamaCpp()
-        llamaCpp.init()
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        llamaCpp = NativeLlamaCpp()
+        llamaCpp.init(context.applicationInfo.nativeLibraryDir)
     }
 
     @After
@@ -75,7 +77,7 @@ class ModelGenerationTest {
         return null
     }
 
-    private fun loadModel(modelFile: File): LlamaModel {
+    private fun loadModel(modelFile: File): NativeLlamaModel {
         Log.d(TAG, "Loading model: ${modelFile.name} (${modelFile.length() / 1024 / 1024}MB)")
         val model = llamaCpp.loadModel(
             modelFile.absolutePath,
@@ -83,14 +85,15 @@ class ModelGenerationTest {
                 override fun onProgress(progress: Float) {
                     Log.d(TAG, "Loading: ${(progress * 100).toInt()}%")
                 }
-            }
-        )
+            },
+            disableRepack = false,
+        ) ?: error("native loadModel returned null for ${modelFile.absolutePath}")
         llamaModel = model
         return model
     }
 
     private fun generateFullResponse(
-        session: LlamaGenerationSession,
+        session: NativeLlamaSession,
         maxTokens: Int = 2048,
         timeoutMs: Long = 120_000
     ): String {
@@ -145,7 +148,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", true)
@@ -172,7 +175,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", false)
@@ -188,7 +191,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one short sentence", true)
@@ -211,7 +214,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH. Run: adb shell cp /sdcard/Models/<model>.gguf $MODELS_PATH/", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // First turn
@@ -239,7 +242,7 @@ class ModelGenerationTest {
         assumeTrue("No model file found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Turn 1
@@ -321,7 +324,7 @@ class ModelGenerationTest {
         model.loadMmprojModel(mmprojFile!!.absolutePath)
         assertTrue("Model should support vision", model.supportsVision())
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         val imageBytes = imageFile.readBytes()
@@ -344,7 +347,7 @@ class ModelGenerationTest {
         val model = loadModel(modelFile)
         model.loadMmprojModel(mmprojFile!!.absolutePath)
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Text-only message to a vision model should work normally
@@ -366,7 +369,7 @@ class ModelGenerationTest {
         val model = loadModel(modelFile)
         model.loadMmprojModel(mmprojFile!!.absolutePath)
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Turn 1: image + text
@@ -400,7 +403,7 @@ class ModelGenerationTest {
         Log.d(TAG, "supportsThinking: ${model.supportsThinking()}")
         assertTrue("Qwen 3.5 should support thinking", model.supportsThinking())
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", true)
@@ -418,7 +421,7 @@ class ModelGenerationTest {
         assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", false)
@@ -433,7 +436,7 @@ class ModelGenerationTest {
         assumeTrue("Qwen 3.5 model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Turn 1
@@ -464,7 +467,7 @@ class ModelGenerationTest {
         assertTrue("Model size should be > 0", model.getModelSize() > 0)
         Log.d(TAG, "Nemotron supportsThinking: ${model.supportsThinking()}")
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello in one sentence", false)
@@ -481,7 +484,7 @@ class ModelGenerationTest {
         val model = loadModel(modelFile!!)
         assumeTrue("Nemotron does not support thinking", model.supportsThinking())
 
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("What is 2+2?", true)
@@ -497,7 +500,7 @@ class ModelGenerationTest {
         assumeTrue("Nemotron model not found in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         session.addMessage("Say hello", false)
@@ -520,7 +523,7 @@ class ModelGenerationTest {
         assumeTrue("Model must support thinking", model.supportsThinking())
 
         val budget = 50
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, budget)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, budget, "")!!
         this.session = session
 
         session.addMessage("Explain quantum computing", true)
@@ -577,7 +580,7 @@ class ModelGenerationTest {
         return findMmprojFile()
     }
 
-    private fun setupVisionSession(): LlamaGenerationSession {
+    private fun setupVisionSession(): NativeLlamaSession {
         val modelFile = findVisionModel()
         assumeTrue("No vision model found in $MODELS_PATH", modelFile != null)
         val mmprojFile = findMmprojForModel(modelFile!!)
@@ -593,7 +596,7 @@ class ModelGenerationTest {
         Log.d(TAG, "supportsVision: $supportsVision")
         assertTrue("Model should support vision after loading mmproj", supportsVision)
 
-        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, 42, -1)!!
+        val session = model.createSession(4096, 0.6f, 0.95f, 1.0f, 40, 0.05f, 42, -1, "")!!
         this.session = session
         return session
     }
@@ -678,6 +681,102 @@ class ModelGenerationTest {
             "Response should mention dog, got: $raw",
             lower.contains("dog") || lower.contains("puppy") || lower.contains("canine")
         )
+    }
+
+    /** Resident set size of this test process in kB (rough RAM proxy incl. loaded model). */
+    private fun readVmRssKb(): Long {
+        return try {
+            File("/proc/self/status").readLines()
+                .firstOrNull { it.startsWith("VmRSS:") }
+                ?.replace(Regex("[^0-9]"), "")
+                ?.toLongOrNull() ?: -1L
+        } catch (e: Exception) {
+            -1L
+        }
+    }
+
+    /**
+     * Head-to-head performance benchmark: Gemma 4 E2B official QAT Q4_0 vs community Q4_K_M.
+     * Push both GGUFs to /data/local/tmp first:
+     *   adb shell "cp /sdcard/Models/gemma-4-E2B_q4_0-it.gguf /data/local/tmp/ && chmod 666 ..."
+     *   adb shell "cp /sdcard/Models/gemma-4-E2B-it-Q4_K_M.gguf /data/local/tmp/ && chmod 666 ..."
+     * Reads native llama.cpp perf counters (load time, prompt-eval t/s, generation t/s) via getReport().
+     */
+    @Test(timeout = 1_200_000)
+    fun testBenchmarkGemma4E2BQATvsQ4KM() {
+        val candidates = listOf(
+            "gemma-4-E2B_q4_0-it.gguf",    // official Google QAT Q4_0
+            "gemma-4-E2B-it-Q4_K_M.gguf"   // community PTQ Q4_K_M
+        )
+        val present = candidates
+            .map { File(MODELS_PATH, it) }
+            .filter { it.exists() && it.canRead() }
+        assumeTrue(
+            "No Gemma 4 E2B benchmark models found in $MODELS_PATH (need QAT and/or Q4_K_M)",
+            present.isNotEmpty()
+        )
+
+        // A non-trivial prompt so prompt-eval (prefill) t/s is measurable, with thinking
+        // disabled so the decode-speed comparison is clean and bounded.
+        val prompt = "Write a detailed, well-structured explanation of how photosynthesis works, " +
+            "covering the light-dependent reactions, the Calvin cycle, and why this process " +
+            "matters for life on Earth. Use a clear, encyclopedic tone."
+
+        val genTokenTarget = 128
+        for (modelFile in present) {
+            val sizeMb = modelFile.length() / 1024 / 1024
+            Log.d(TAG, "===== BENCHMARK START: ${modelFile.name} ($sizeMb MB) =====")
+
+            val rssBefore = readVmRssKb()
+            val loadStart = System.currentTimeMillis()
+            val model = loadModel(modelFile)
+            val loadWallMs = System.currentTimeMillis() - loadStart
+
+            val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
+            this.session = session
+
+            // Timed generation loop: measure time-to-first-token (prefill of the prompt +
+            // first decoded token) and steady-state decode throughput separately.
+            session.addMessage(prompt, false)
+            var lastResponse = ""
+            val callback = object : LlamaGenerationCallback {
+                override fun onFullResponse(response: String) { lastResponse = response }
+            }
+            var tokenCount = 0
+            var ttftMs = 0L
+            val genStart = System.currentTimeMillis()
+            val deadline = genStart + 120_000
+            while (session.generate(callback) == 0) {
+                tokenCount++
+                if (tokenCount == 1) ttftMs = System.currentTimeMillis() - genStart
+                if (tokenCount >= genTokenTarget) break
+                if (System.currentTimeMillis() > deadline) break
+            }
+            val genEnd = System.currentTimeMillis()
+            val rssAfter = readVmRssKb()
+
+            // Decode throughput = tokens after the first / time after the first token.
+            val decodeMs = genEnd - genStart - ttftMs
+            val decodeTps = if (tokenCount > 1 && decodeMs > 0)
+                (tokenCount - 1) * 1000.0 / decodeMs else 0.0
+            val totalGenMs = genEnd - genStart
+
+            Log.d(TAG, "===== BENCHMARK RESULT: ${modelFile.name} =====")
+            Log.d(TAG, "BENCH file_size_mb=$sizeMb")
+            Log.d(TAG, "BENCH load_wall_ms=$loadWallMs")
+            Log.d(TAG, "BENCH ttft_ms=$ttftMs (prompt prefill + first token)")
+            Log.d(TAG, "BENCH gen_tokens=$tokenCount total_gen_ms=$totalGenMs decode_tps=%.2f".format(decodeTps))
+            Log.d(TAG, "BENCH vmrss_after_kb=$rssAfter (delta ${rssAfter - rssBefore})")
+            Log.d(TAG, "BENCH native_report:\n${session.getReport()}")
+            Log.d(TAG, "BENCH sample_output: ${lastResponse.replace("\n", " ").take(180)}")
+            Log.d(TAG, "===== BENCHMARK END: ${modelFile.name} =====")
+
+            // Free memory before loading the next model.
+            session.destroy()
+            this.session = null
+            model.unloadModel()
+            this.llamaModel = null
+        }
     }
 
 }

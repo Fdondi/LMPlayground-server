@@ -1,0 +1,36 @@
+name: Update Play Store Listing
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'fastlane/metadata/android/**'
+      - '!fastlane/metadata/android/**/changelogs/**'
+  workflow_dispatch:
+
+jobs:
+  update-listing:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Ruby (for fastlane)
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '3.3'
+        bundler-cache: true
+
+    - name: Write service account JSON
+      run: echo '${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}' > "$RUNNER_TEMP/play-sa.json"
+
+    - name: Sync listing (title, descriptions, screenshots)
+      env:
+        GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_PATH: ${{ runner.temp }}/play-sa.json
+      run: bundle exec fastlane update_listing
+
+    - name: Cleanup secrets
+      if: always()
+      run: rm -f "$RUNNER_TEMP/play-sa.json"

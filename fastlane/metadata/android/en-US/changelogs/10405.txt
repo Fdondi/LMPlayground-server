@@ -1,0 +1,2 @@
+- Fixed crash when navigating from conversation screen
+- Hide response stats during generation

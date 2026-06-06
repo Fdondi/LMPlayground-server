@@ -1,0 +1,6 @@
+- Alat — model berkemampuan kini boleh mencari web, mengambil halaman, dan menjalankan JavaScript semasa membalas. Hidupkan per model di Tetapan → Alat
+- Balasan lebih pantas dengan gesaan dan alat cache
+- Kongsi balasan, atau salin/kongsi dari pemberitahuan
+- Pemberitahuan langsung memaparkan status penjanaan dan bilangan token
+- Bunyi & Haptik — loceng apabila balasan selesai di latar, serta getaran mesin taip semasa dialir (Tetapan → Bunyi dan Haptik)
+- Rupa kaca kabur baharu di seluruh apl

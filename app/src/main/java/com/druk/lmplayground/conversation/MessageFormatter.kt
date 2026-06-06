@@ -9,9 +9,11 @@ import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
+import com.druk.lmplayground.R
 import org.commonmark.ext.gfm.strikethrough.Strikethrough
 import org.commonmark.ext.gfm.strikethrough.StrikethroughExtension
 import org.commonmark.node.Block
@@ -97,6 +99,8 @@ fun messageFormatter(
     val thinkColor = colorScheme.outline
     val codeBackground = if (primary) colorScheme.secondary else colorScheme.surface
 
+    val thoughtsLabel = stringResource(R.string.thoughts)
+
     return buildAnnotatedString {
         val thinkMatches = thinkPattern.findAll(text).toList()
 
@@ -121,7 +125,7 @@ fun messageFormatter(
                     fontSize = 12.sp,
                     color = thinkColor
                 ))
-                append("Thoughts")
+                append(thoughtsLabel)
                 pop()
                 append("\n")
                 pushStyle(SpanStyle(fontStyle = FontStyle.Italic, color = thinkColor))

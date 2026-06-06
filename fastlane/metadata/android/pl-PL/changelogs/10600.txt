@@ -1,0 +1,3 @@
+- Obsługa Tabletów i Chromebooków — adaptacyjne układy dla dużych ekranów i urządzeń składanych
+- Do 2× szybsze generowanie na urządzeniu dzięki nowym optymalizacjom CPU
+- Naprawiono rzadkie zawieszanie się podczas otwierania selektora modeli

@@ -1,0 +1,3 @@
+- Stöd för Tablet och Chromebook — adaptiva layouter för stora skärmar och vikbara enheter
+- Upp till 2× snabbare generering på enheten med nya CPU-optimeringar
+- Åtgärdat en sällsynt frysning när modellväljaren öppnas

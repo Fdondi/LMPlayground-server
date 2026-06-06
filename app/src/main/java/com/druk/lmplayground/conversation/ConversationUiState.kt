@@ -54,6 +54,29 @@ class ConversationUiState(
         )
     }
 
+    fun addToolCallsToLastMessage(calls: List<ToolCallInfo>) {
+        if (_messages.isEmpty() || calls.isEmpty()) return
+        val message = _messages.last()
+        // Attach this round's thinking (everything streamed into `content`
+        // before the tool call) to the first call of the round, so the renderer
+        // can show think → call → think → call in order. Then clear `content`
+        // and the thinking timer for the next round.
+        val enriched = calls.toMutableList()
+        enriched[0] = enriched[0].copy(
+            precedingThinking = message.content,
+            precedingThinkingDurationSeconds = message.thinkingDurationSeconds,
+            precedingThinkingTokens = message.thinkingTokens
+        )
+        _messages[_messages.size - 1] = message.copy(
+            content = "",
+            thinkingDurationSeconds = 0,
+            thinkingStartTimeMs = 0,
+            thinkingTokens = 0,
+            toolCalls = (message.toolCalls.orEmpty()) + enriched,
+            responseStartTimeMs = System.currentTimeMillis()
+        )
+    }
+
     fun finalizeLastMessage() {
         if (_messages.isEmpty()) return
         val message = _messages.last()
@@ -75,9 +98,31 @@ class ConversationUiState(
     fun resetMessages() {
         _messages.clear()
     }
+
+    fun removeLastMessage() {
+        if (_messages.isNotEmpty()) {
+            _messages.removeAt(_messages.size - 1)
+        }
+    }
 }
 
 private val messageIdCounter = AtomicLong(0)
+
+@Immutable
+data class ToolCallInfo(
+    val name: String,
+    val arguments: String,
+    val result: String,
+    val durationMs: Long = 0,
+    // The thinking/content the model produced in THIS round, before emitting
+    // this tool call. Carried per-call so the UI can render
+    // think → call → think → call in chronological order across multiple
+    // rounds. Only the first call of a round carries it (parallel calls in the
+    // same round share the one preceding-thinking block).
+    val precedingThinking: String = "",
+    val precedingThinkingDurationSeconds: Int = 0,
+    val precedingThinkingTokens: Int = 0
+)
 
 @Immutable
 data class Message(
@@ -92,5 +137,6 @@ data class Message(
     val responseStartTimeMs: Long = 0,
     val responseDurationSeconds: Float = 0f,
     val timestamp: Long = System.currentTimeMillis(),
-    val id: Long = messageIdCounter.incrementAndGet()
+    val id: Long = messageIdCounter.incrementAndGet(),
+    val toolCalls: List<ToolCallInfo>? = null
 )

@@ -1,0 +1,6 @@
+- Työkalut — mallit voivat nyt hakea verkosta, noutaa sivun ja suorittaa JavaScriptiä. Ota käyttöön mallikohtaisesti: Asetukset → Työkalut
+- Nopeammat vastaukset kehotteiden ja työkalujen välimuistilla
+- Jaa vastauksia tai kopioi/jaa ne suoraan ilmoituksesta
+- Reaaliaikainen ilmoitus näyttää tilan ja tokenimäärän
+- Ääni ja haptiikka — kilahdus, kun vastaus valmistuu taustalla, ja kirjoituskonenapsahdus virrassa (Asetukset → Ääni ja haptiikka)
+- Huurrelasi-ilmeen päivitys koko sovelluksessa

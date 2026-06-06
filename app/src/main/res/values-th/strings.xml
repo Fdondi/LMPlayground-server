@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">เปิดลิ้นชักนำทาง</string>
+    <string name="navigation_drawer_close">ปิดลิ้นชักนำทาง</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">ส่วนหัวการนำทาง</string>
+    <string name="action_settings">การตั้งค่า</string>
+
+    <string name="menu_home">หน้าแรก</string>
+    <string name="menu_gallery">คลังภาพ</string>
+    <string name="menu_slideshow">สไลด์โชว์</string>
+    <string name="conversations">บทสนทนา</string>
+    <string name="profile">โปรไฟล์</string>
+    <string name="jumpBottom">ไปที่ด้านล่าง</string>
+    <string name="send">ส่ง</string>
+    <string name="author_me">ฉัน</string>
+    <string name="members">สมาชิก %d คน</string>
+    <string name="textfield_hint">ข้อความ</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; ปัดเพื่อยกเลิก</string>
+    <string name="emojis_label">อีโมจิ</string>
+    <string name="stickers_label">สติกเกอร์</string>
+
+    <string name="message">ข้อความ</string>
+    <string name="edit_profile">แก้ไขโปรไฟล์</string>
+    <string name="profile_error">เกิดข้อผิดพลาดในการโหลดโปรไฟล์</string>
+    <string name="bio">ประวัติย่อ</string>
+    <string name="display_name">ชื่อที่แสดง</string>
+    <string name="status">สถานะ</string>
+    <string name="timezone">เขตเวลา</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">ช่องที่มีร่วมกัน</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">ตัวเลือกอีโมจิ</string>
+    <string name="emoji_selector_bt_desc">แสดงตัวเลือกอีโมจิ</string>
+    <string name="dm_desc">ข้อความส่วนตัว</string>
+    <string name="attach_photo_desc">แนบรูปภาพ</string>
+    <string name="map_selector_desc">ตัวเลือกตำแหน่ง</string>
+    <string name="videochat_desc">เริ่มวิดีโอแชท</string>
+    <string name="textfield_desc">ช่องกรอกข้อความ</string>
+    <string name="not_available">ฟังก์ชันนี้ยังไม่พร้อมใช้งาน</string>
+    <string name="not_available_subtitle">หาอะไรดื่มแล้วกลับมาดูใหม่ภายหลัง!</string>
+    <string name="attached_image">รูปภาพที่แนบ</string>
+    <string name="search">ค้นหา</string>
+    <string name="info">ข้อมูล</string>
+    <string name="more_options">ตัวเลือกเพิ่มเติม</string>
+    <string name="touch_and_hold_to_record">แตะค้างเพื่อบันทึก</string>
+    <string name="record_message">บันทึกข้อความเสียง</string>
+    <string name="stop">หยุด</string>
+
+    <string name="copy">คัดลอก</string>
+    <string name="upvote">โหวตขึ้น</string>
+    <string name="downvote">โหวตลง</string>
+    <string name="rating_question">ทำไมคุณจึงเลือกคะแนนนี้?</string>
+    <string name="offensive_unsafe">ไม่เหมาะสม/ไม่ปลอดภัย</string>
+    <string name="not_correct">ไม่ถูกต้อง</string>
+    <string name="didnt_follow_instructions">ไม่ทำตามคำแนะนำ</string>
+    <string name="wrong_language">ภาษาไม่ถูกต้อง</string>
+    <string name="other">อื่นๆ</string>
+
+    <!-- Settings -->
+    <string name="settings">การตั้งค่า</string>
+    <string name="back">ย้อนกลับ</string>
+    <string name="version">เวอร์ชัน %s</string>
+    <string name="models_subtitle">ดาวน์โหลดและจัดการโมเดล</string>
+    <string name="privacy_policy">นโยบายความเป็นส่วนตัว</string>
+    <string name="privacy_policy_effective_date">มีผลบังคับใช้: 2 มิถุนายน 2026</string>
+    <string name="privacy_policy_intro">ยินดีต้อนรับสู่ LM Playground! ผมมุ่งมั่นที่จะรักษาความไว้วางใจและความเชื่อมั่นของทุกคนที่ใช้แอปของผม นโยบายความเป็นส่วนตัวฉบับนี้อธิบายว่าแอปเก็บและไม่เก็บข้อมูลอะไรบ้าง บทสนทนาของคุณยังคงอยู่บนอุปกรณ์ของคุณอย่างไร และในไม่กี่กรณี — เช่น เครื่องมือเว็บเสริม — ที่ข้อมูลออกจากอุปกรณ์ของคุณ เพื่อให้คุณรู้เสมอว่าจะคาดหวังอะไรได้บ้าง</string>
+    <string name="privacy_policy_s1_title">1. ไม่มีการเก็บข้อมูลส่วนบุคคล</string>
+    <string name="privacy_policy_s1_body">ผม Andriy Druk ผู้พัฒนา LM Playground ไม่เก็บ จัดเก็บ ใช้ หรือแบ่งปันข้อมูลส่วนบุคคลใดๆ จากผู้ใช้แอปของผม ไม่มีบัญชีผู้ใช้ ไม่มีโฆษณา และไม่มีการวิเคราะห์หรือติดตามการใช้งาน แอปถูกออกแบบโดยให้ความเป็นส่วนตัวของคุณเป็นสำคัญ เพื่อให้คุณสามารถใช้งานได้โดยไม่ต้องเสี่ยงกับข้อมูลส่วนบุคคลของคุณ</string>
+    <string name="privacy_policy_s2_title">2. การประมวลผลบนอุปกรณ์</string>
+    <string name="privacy_policy_s2_body">บทสนทนา พรอมต์ระบบ และคำตอบของโมเดลของคุณจะถูกประมวลผลในเครื่องบนอุปกรณ์ของคุณโดยโมเดลที่ทำงานบนอุปกรณ์ เนื้อหานี้จะไม่ถูกส่งไปยังผมหรือเซิร์ฟเวอร์ใดๆ เพื่อการอนุมาน มันจะยังคงอยู่บนอุปกรณ์ของคุณ เว้นแต่คุณจะเลือกใช้คุณสมบัติที่เชื่อมต่ออินเทอร์เน็ต ตามที่อธิบายด้านล่าง</string>
+    <string name="privacy_policy_s3_title">3. การเข้าถึงอินเทอร์เน็ต</string>
+    <string name="privacy_policy_s3_body">LM Playground ขอสิทธิ์อินเทอร์เน็ตเพื่อสองวัตถุประสงค์ ได้แก่ เพื่อดาวน์โหลดไฟล์โมเดลที่คุณเลือก และ — เฉพาะเมื่อคุณเปิดใช้งานเท่านั้น — เพื่อขับเคลื่อนเครื่องมือเว็บเสริม แอปไม่มีโฆษณา เทเลเมทรี หรือการวิเคราะห์การใช้งาน และไม่รายงานกิจกรรมของคุณกลับมายังผม</string>
+    <string name="privacy_policy_s4_title">4. เครื่องมือและการเข้าถึงเว็บ</string>
+    <string name="privacy_policy_s4_body">โมเดลที่มีความสามารถสามารถใช้เครื่องมือเสริมได้ ซึ่งปิดอยู่โดยค่าเริ่มต้น เมื่อคุณเปิดใช้งานเครื่องมือเว็บ ข้อมูลบางส่วนจะออกจากอุปกรณ์ของคุณ: เครื่องมือค้นหาเว็บจะส่งคำค้นหาของโมเดลไปยัง DuckDuckGo และเครื่องมือดึงหน้าเว็บจะดาวน์โหลดหน้าเว็บที่โมเดลตัดสินใจเปิดจากเว็บไซต์เหล่านั้น คำขอเหล่านั้นได้รับการจัดการโดยเว็บไซต์ของบุคคลที่สามภายใต้นโยบายความเป็นส่วนตัวของพวกเขาเอง — ผมไม่ได้รับและไม่ได้จัดเก็บไว้ เครื่องมือรัน JavaScript ทำงานทั้งหมดบนอุปกรณ์ของคุณในแซนด์บ็อกซ์ที่ไม่มีการเข้าถึงอินเทอร์เน็ต หากต้องการให้ทุกอย่างทำงานแบบออฟไลน์ เพียงปล่อยให้เครื่องมือปิดอยู่</string>
+    <string name="privacy_policy_s5_title">5. การอัปเดตนโยบายความเป็นส่วนตัว</string>
+    <string name="privacy_policy_s5_body">ในฐานะผู้พัฒนา LM Playground ผมขอสงวนสิทธิ์ในการอัปเดตนโยบายความเป็นส่วนตัวนี้ได้ตลอดเวลา การเปลี่ยนแปลงใดๆ จะมีผลทันทีเมื่อโพสต์นโยบายที่อัปเดตแล้ว ขอแนะนำให้ผู้ใช้ตรวจสอบหน้านี้เป็นระยะและรับทราบว่าความเป็นส่วนตัวของพวกเขาได้รับการคุ้มครองอย่างไร</string>
+    <string name="privacy_policy_s6_title">6. การยอมรับนโยบายนี้</string>
+    <string name="privacy_policy_s6_body">การใช้ LM Playground แสดงว่าคุณรับทราบและยอมรับนโยบายความเป็นส่วนตัวนี้ หากคุณไม่เห็นด้วยกับนโยบาย โปรดงดใช้แอป การใช้แอปต่อไปหลังจากการโพสต์การอัปเดตหรือการเปลี่ยนแปลงนโยบายนี้จะถือว่าคุณยอมรับการเปลี่ยนแปลงเหล่านั้น</string>
+    <string name="privacy_policy_s7_title">7. ติดต่อผม</string>
+    <string name="privacy_policy_s7_body">หากคุณมีคำถามหรือข้อเสนอแนะเกี่ยวกับนโยบายความเป็นส่วนตัวของผม โปรดอย่าลังเลที่จะติดต่อผม</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">ส่งความคิดเห็น</string>
+    <string name="faq">คำถามที่พบบ่อย</string>
+    <string name="faq_subtitle">คำถามที่พบบ่อย</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">LM Playground คืออะไร?</string>
+    <string name="faq_a1">LM Playground ช่วยให้คุณใช้งานโมเดลภาษาขนาดใหญ่ได้โดยตรงบนอุปกรณ์ Android การประมวลผลทั้งหมดเกิดขึ้นในเครื่อง \u2013 ไม่ต้องใช้เซิร์ฟเวอร์คลาวด์</string>
+    <string name="faq_q2">รองรับโมเดลใดบ้าง?</string>
+    <string name="faq_a2">แอปรองรับโมเดลในรูปแบบ GGUF ที่ใช้การ quantization แบบ Q4_K_M รวมถึง Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini และ DeepSeek R1 Distill ในขนาดต่างๆ</string>
+    <string name="faq_q3">ต้องการพื้นที่จัดเก็บเท่าไหร่?</string>
+    <string name="faq_a3">ขนาดโมเดลมีตั้งแต่ประมาณ 500 MB (โมเดลขนาดเล็กเช่น Qwen 3 0.6B) ถึงหลาย GB (โมเดลขนาดใหญ่เช่น DeepSeek R1 7B) โปรดตรวจสอบว่ามีพื้นที่ว่างเพียงพอก่อนดาวน์โหลด</string>
+    <string name="faq_q4">แอปนี้ต้องการการเชื่อมต่ออินเทอร์เน็ตหรือไม่?</string>
+    <string name="faq_a4">อินเทอร์เน็ตจำเป็นสำหรับการดาวน์โหลดโมเดล และ — หากคุณเปิดใช้งาน — สำหรับเครื่องมือเว็บเสริม (ค้นหาเว็บและดึงหน้าเว็บ) นอกเหนือจากนั้น เมื่อดาวน์โหลดโมเดลแล้ว มันจะทำงานแบบออฟไลน์อย่างสมบูรณ์บนอุปกรณ์ของคุณ</string>
+    <string name="faq_q5">ข้อมูลของฉันเป็นส่วนตัวหรือไม่?</string>
+    <string name="faq_a5">บทสนทนาของคุณถูกประมวลผลในเครื่องบนอุปกรณ์ของคุณ และแอปจะไม่ส่งไปยังเซิร์ฟเวอร์เลย ข้อยกเว้นเดียวคือเครื่องมือเว็บเสริม: หากคุณเปิดใช้งานการค้นหาเว็บหรือการดึงหน้าเว็บ คำค้นหาของโมเดลและหน้าที่มันเปิดจะถูกส่งไปยังเว็บไซต์เหล่านั้น (การค้นหาใช้ DuckDuckGo) เครื่องมือปิดอยู่โดยค่าเริ่มต้น ดังนั้นจึงไม่มีสิ่งใดออกจากอุปกรณ์ของคุณ เว้นแต่คุณจะเปิดใช้งาน ดูรายละเอียดได้ในนโยบายความเป็นส่วนตัว</string>
+    <string name="faq_q6">ทำไมการโหลดโมเดลจึงช้า?</string>
+    <string name="faq_a6">โมเดลขนาดใหญ่ใช้เวลามากกว่าในการโหลดเข้าสู่หน่วยความจำ เวลาในการโหลดขึ้นอยู่กับฮาร์ดแวร์ของอุปกรณ์ของคุณ เมื่อโหลดแล้ว โมเดลจะยังคงอยู่ในหน่วยความจำจนกว่าคุณจะยกเลิกการโหลด</string>
+    <string name="faq_q7">อุปกรณ์ใดทำงานได้ดีที่สุด?</string>
+    <string name="faq_a7">อุปกรณ์ที่มี RAM มากกว่าสามารถใช้งานโมเดลขนาดใหญ่ได้ เพื่อประสิทธิภาพที่ดีที่สุด ควรใช้อุปกรณ์ที่มี RAM อย่างน้อย 6 GB สำหรับโมเดลขนาดเล็ก และ 8 GB ขึ้นไปสำหรับโมเดลขนาดใหญ่</string>
+    <string name="faq_q8">ฉันสามารถโหลดโมเดล GGUF แบบกำหนดเองได้หรือไม่?</string>
+    <string name="faq_a8">ได้ วางไฟล์ .gguf ของคุณไว้ในโฟลเดอร์จัดเก็บที่เลือกไว้ใน การตั้งค่า \u2192 โมเดล (โฟลเดอร์เดียวกันกับที่ใช้สำหรับดาวน์โหลด) แอปจะตรวจพบโดยอัตโนมัติและแสดงในตัวเลือกโมเดลควบคู่กับแคตตาล็อกที่มีอยู่ในแอป เทมเพลตแชทและการตั้งค่า tokenizer จะถูกอ่านจากข้อมูลเมตาของไฟล์ GGUF หากโมเดลเฉพาะบางตัวไม่ทำงาน โปรดเปิด issue บน GitHub</string>
+    <string name="faq_q9">ฉันสามารถเปลี่ยนที่จัดเก็บโมเดลได้หรือไม่?</string>
+    <string name="faq_a9">ได้ ไปที่การตั้งค่า จากนั้นเลือก โมเดล และใช้ตัวเลือก \u201Cเปลี่ยนโฟลเดอร์\u201D เพื่อเลือกตำแหน่งที่จัดเก็บใหม่</string>
+    <string name="faq_q10">ฉันจะลบโมเดลได้อย่างไร?</string>
+    <string name="faq_a10">ไปที่การตั้งค่า จากนั้นเลือก โมเดล ในส่วน \u201Cดาวน์โหลดแล้ว\u201D ให้แตะไอคอนลบข้างๆ โมเดลที่คุณต้องการลบ</string>
+    <string name="faq_q11">พรอมต์ระบบคืออะไร?</string>
+    <string name="faq_a11">พรอมต์ระบบคือคำสั่งที่ใช้ซ้ำได้ซึ่งกำหนดวิธีที่โมเดลตอบสนอง — ตัวอย่างเช่น “คุณเป็นติวเตอร์วิทยาศาสตร์ที่กระชับ อธิบายแนวคิดให้ชัดเจนด้วยตัวอย่างในชีวิตประจำวัน” หรือ “คุณเป็นผู้ตรวจรีวิวโค้ดระดับอาวุโส ชี้ให้เห็นบั๊ก กรณีขอบเขต และปัญหาด้านความปลอดภัย” สร้างและจัดการได้ใน การตั้งค่า → พรอมต์ระบบ จากนั้นนำไปใช้กับแชทของคุณ พรอมต์จะถูกเก็บไว้บนอุปกรณ์ของคุณและส่งไปยังโมเดลในเครื่องเท่านั้น</string>
+    <string name="faq_q12">เครื่องมือคืออะไรและมีอะไรบ้าง?</string>
+    <string name="faq_a12">เครื่องมือช่วยให้โมเดลที่มีความสามารถลงมือทำสิ่งต่างๆ ระหว่างการตอบ มีให้ใช้สามอย่าง: รัน JavaScript (คณิตศาสตร์ วันที่ และการประมวลผลข้อความในแซนด์บ็อกซ์บนอุปกรณ์), ค้นหาเว็บ (ค้นหาข้อมูลล่าสุดบนเว็บ) และดึงหน้าเว็บ (อ่านหน้าเว็บเพื่อให้โมเดลสรุปหรืออ้างอิงได้) เปิดใช้งานได้ใน การตั้งค่า → เครื่องมือ แต่ละอย่างปิดอยู่โดยค่าเริ่มต้นและใช้ได้เฉพาะกับโมเดลที่รองรับการเรียกใช้เครื่องมือ — มองหาตราค้อนในตัวเลือกโมเดล</string>
+    <string name="faq_q13">เครื่องมือเว็บส่งข้อมูลของฉันออนไลน์หรือไม่?</string>
+    <string name="faq_a13">เฉพาะเมื่อคุณเปิดใช้งานเท่านั้น ค้นหาเว็บจะส่งคำค้นหาของโมเดลไปยัง DuckDuckGo และดึงหน้าเว็บจะดาวน์โหลดหน้าที่โมเดลเลือกเปิด — คำขอเหล่านั้นจะไปยังเว็บไซต์โดยตรง ไม่ใช่ไปยังผู้พัฒนา รัน JavaScript ทำงานทั้งหมดบนอุปกรณ์ของคุณโดยไม่มีการเข้าถึงอินเทอร์เน็ต เมื่อปิดเครื่องมือทุกอย่าง (ค่าเริ่มต้น) จะไม่มีสิ่งใดออกจากอุปกรณ์ของคุณ ดูรายละเอียดได้ในนโยบายความเป็นส่วนตัว</string>
+    <string name="faq_q14">แอปจะแจ้งเตือนฉันเมื่อคำตอบพร้อมหรือไม่?</string>
+    <string name="faq_a14">ใช่ ขณะที่แอปทำงานอยู่เบื้องหลัง การแจ้งเตือนจะติดตามสถานะของโมเดล — โหลดแล้ว กำลังสร้าง แล้วคำตอบพร้อม — และให้คุณคัดลอกหรือแชร์คำตอบได้ คุณยังสามารถเปิดเสียงสั้นๆ เมื่อเสร็จได้ใน การตั้งค่า → เสียงและการสั่น การดาวน์โหลดโมเดลจะแสดงการแจ้งเตือนความคืบหน้าของตัวเองพร้อมความเร็วและเวลาที่เหลือโดยประมาณ</string>
+
+    <!-- Models Screen -->
+    <string name="models">โมเดล</string>
+    <string name="change_folder">เปลี่ยนโฟลเดอร์</string>
+    <string name="delete_model">ลบ</string>
+    <string name="download_model">ดาวน์โหลด</string>
+    <string name="storage_used_models">โมเดล: %s</string>
+    <string name="storage_available">เหลือ %s</string>
+    <string name="downloads_folder">โฟลเดอร์ดาวน์โหลด</string>
+    <string name="custom_folder">โฟลเดอร์ที่กำหนดเอง</string>
+    <string name="delete_model_confirm">ลบ %s?</string>
+    <string name="delete_model_message">การดำเนินการนี้จะลบไฟล์โมเดลอย่างถาวร</string>
+    <string name="downloaded_models">ดาวน์โหลดแล้ว</string>
+    <string name="available_models">ดาวน์โหลดได้</string>
+    <string name="no_downloaded_models">ยังไม่มีโมเดลที่ดาวน์โหลด</string>
+    <string name="browse_more_models">เรียกดูโมเดล</string>
+    <string name="cancel">ยกเลิก</string>
+    <string name="low_ram_warning_title">โมเดลอาจไม่เสถียร</string>
+    <string name="low_ram_warning_message">โมเดลต้องการ RAM ประมาณ %1$s แต่อุปกรณ์นี้มีทั้งหมดเพียง %2$s อาจโหลดช้าหรือตอบสนองอย่างไม่คาดคิด</string>
+    <string name="load_anyway">โหลดต่อไป</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">การดาวน์โหลดโมเดล</string>
+    <string name="download_notification_channel_description">แสดงความคืบหน้าในการดาวน์โหลดไฟล์โมเดล</string>
+    <string name="download_complete">ดาวน์โหลดเสร็จสมบูรณ์</string>
+    <string name="moving_to_storage">กำลังย้ายไปที่พื้นที่จัดเก็บ\u2026</string>
+    <string name="starting_download">กำลังเริ่มดาวน์โหลด\u2026</string>
+    <string name="download_failed">การดาวน์โหลดล้มเหลว</string>
+    <string name="download_cancelled">ยกเลิกการดาวน์โหลดแล้ว</string>
+    <string name="waiting_for_network">รอการเชื่อมต่อเครือข่าย\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">ย้ายโมเดลหรือไม่?</string>
+    <string name="migrate_models_message">พบ %1$d โมเดล (%2$s) ในโฟลเดอร์เดิม คุณต้องการคัดลอกไปยังตำแหน่งใหม่หรือไม่?</string>
+    <string name="migrate_models_from_downloads">พบ %1$d โมเดล (%2$s) ในโฟลเดอร์ดาวน์โหลดของคุณ คุณต้องการย้ายไปยังตำแหน่งจัดเก็บที่เลือกหรือไม่?</string>
+    <string name="models_to_migrate">โมเดล:</string>
+    <string name="migrate">ย้าย</string>
+    <string name="skip">ข้าม</string>
+    <string name="migrating_models">กำลังย้ายโมเดล</string>
+    <string name="migration_progress">กำลังคัดลอก %1$d จาก %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">พรอมต์ระบบ</string>
+    <string name="system_prompts_subtitle">คำสั่งที่ใช้ซ้ำได้สำหรับทุกโมเดล</string>
+    <string name="system_prompts_empty">ยังไม่มีพรอมต์ระบบ แตะ + เพื่อเพิ่ม</string>
+    <string name="system_prompt_new">พรอมต์ระบบใหม่</string>
+    <string name="system_prompt_edit">แก้ไขพรอมต์ระบบ</string>
+    <string name="system_prompt_hint">เช่น คุณเป็นผู้ช่วยที่กระชับ ตอบเป็นภาษาไทยเสมอ</string>
+    <string name="system_prompt_current">พรอมต์ระบบปัจจุบัน</string>
+    <string name="system_prompt_current_empty">ยังไม่มีพรอมต์ระบบ — แตะเพื่อเพิ่ม</string>
+    <string name="system_prompt_update">อัปเดต</string>
+    <string name="save">บันทึก</string>
+    <string name="add">เพิ่ม</string>
+    <string name="clear">ล้าง</string>
+
+    <!-- General UI -->
+    <string name="select_model">เลือกโมเดล</string>
+    <string name="new_conversation">บทสนทนาใหม่</string>
+    <string name="close">ปิด</string>
+    <string name="pinned_label">ปักหมุดแล้ว</string>
+    <string name="unpin">ยกเลิกปักหมุด</string>
+    <string name="pin">ปักหมุด</string>
+    <string name="rename">เปลี่ยนชื่อ</string>
+    <string name="delete">ลบ</string>
+    <string name="rename_conversation">เปลี่ยนชื่อบทสนทนา</string>
+    <string name="previously_used_model">ใช้ล่าสุด: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">เลือกโฟลเดอร์จัดเก็บ</string>
+    <string name="choose_storage_folder_message">โปรดเลือกโฟลเดอร์ที่จะใช้เก็บโมเดล จำเป็นต้องเลือกเพื่อใช้แอปนี้</string>
+    <string name="choose_folder">เลือกโฟลเดอร์</string>
+
+    <!-- Session -->
+    <string name="session_info">ข้อมูลเซสชัน</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">พารามิเตอร์การสร้าง</string>
+    <string name="reset">รีเซ็ต</string>
+    <string name="context_size">ขนาดคอนเท็กซ์</string>
+    <string name="will_reset_conversation">บทสนทนาจะถูกรีเซ็ต</string>
+    <string name="thinking_budget">งบประมาณการคิด</string>
+    <string name="tokens_value">%d โทเค็น</string>
+    <string name="temperature">Temperature</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">โทษการทำซ้ำ</string>
+    <string name="advanced">ขั้นสูง</string>
+    <string name="collapse">ยุบ</string>
+    <string name="expand">ขยาย</string>
+    <string name="seed">Seed</string>
+    <string name="random">สุ่ม</string>
+    <string name="disabled_label">ปิดใช้งาน</string>
+    <string name="unload_model">ยกเลิกโหลดโมเดล</string>
+
+    <!-- Thinking -->
+    <string name="thinking">กำลังคิด</string>
+    <string name="collapse_thinking">ยุบการคิด</string>
+    <string name="expand_thinking">ขยายการคิด</string>
+    <string name="thoughts">ความคิด</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">ฟังก์ชันไม่พร้อมใช้งาน \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI บน</string>
+    <string name="screenshot_hero_title_emphasis">มือถือ</string>
+    <string name="screenshot_hero_title_suffix">ของคุณ</string>
+    <string name="screenshot_hero_title_suffix_tablet">แท็บเล็ตของคุณ</string>
+    <string name="screenshot_hero_subtitle">ส่วนตัว ในเครื่อง ออฟไลน์</string>
+    <string name="screenshot_hero_providers_label">25+ โมเดลจาก:</string>
+    <string name="screenshot_choose_model">เลือกโมเดล</string>
+    <string name="screenshot_choose_model_sub">จากผู้ให้บริการ AI ชั้นนำ</string>
+    <string name="screenshot_chat">แชทอย่างเป็นส่วนตัว</string>
+    <string name="screenshot_chat_sub">บนอุปกรณ์ของคุณ</string>
+    <string name="screenshot_fine_tune">ปรับแต่ง</string>
+    <string name="screenshot_fine_tune_sub">พารามิเตอร์การสร้าง</string>
+    <string name="screenshot_download_models">ดาวน์โหลดโมเดลใดก็ได้</string>
+    <string name="screenshot_download_models_sub">ไปยังโฟลเดอร์ที่คุณเลือก</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">คุณเป็นติวเตอร์วิทยาศาสตร์ที่กระชับ อธิบายแนวคิดให้ชัดเจนด้วยตัวอย่างในชีวิตประจำวัน</string>
+    <string name="screenshot_prompts">พรอมต์ที่ใช้ซ้ำได้</string>
+    <string name="screenshot_prompts_sub">ตั้งโทนครั้งเดียว ใช้ได้ทุกที่</string>
+    <string name="screenshot_tools">มอบเครื่องมือให้โมเดล</string>
+    <string name="screenshot_tools_sub">ค้นเว็บ ดึงหน้าเว็บ &amp; JavaScript</string>
+    <string name="screenshot_notification">ทำงานอยู่เบื้องหลัง</string>
+    <string name="screenshot_notification_sub">รับการแจ้งเตือนเมื่อเสร็จ</string>
+    <string name="screenshot_prompt_sample_code">คุณเป็นผู้ตรวจรีวิวโค้ดระดับอาวุโส ชี้ให้เห็นบั๊ก กรณีขอบเขต และปัญหาด้านความปลอดภัย ตรงไปตรงมาและเฉพาะเจาะจง</string>
+    <string name="screenshot_prompt_sample_translator">คุณเป็นนักแปล แปลงทุกอย่างที่ฉันส่งให้เป็นภาษาฝรั่งเศสที่เป็นธรรมชาติและลื่นไหล และคงรูปแบบไว้</string>
+    <string name="screenshot_prompt_sample_brainstorm">คุณเป็นคู่หูระดมความคิดที่สร้างสรรค์ เสนอไอเดียที่กล้าและเหนือความคาดหมาย และต่อยอดจากไอเดียของฉัน</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">แมชชีนเลิร์นนิงคืออะไร?</string>
+    <string name="screenshot_chat_response">แมชชีนเลิร์นนิงเป็นสาขาหนึ่งของปัญญาประดิษฐ์ที่คอมพิวเตอร์ **เรียนรู้จากข้อมูล** แทนที่จะถูกโปรแกรมไว้อย่างชัดเจน\n\nแนวคิดหลัก:\n\n\u2022 **การฝึก**: ป้อนข้อมูลให้อัลกอริทึม\n\u2022 **โมเดล**: รูปแบบที่เรียนรู้จากข้อมูล\n\u2022 **การอนุมาน**: การทำนายจากข้อมูลใหม่</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">โมเดลแชทน้ำหนักเบา</string>
+    <string name="model_category_general">โมเดลแชทอเนกประสงค์</string>
+    <string name="model_category_efficient">โมเดลบนอุปกรณ์ที่มีประสิทธิภาพ</string>
+    <string name="model_category_reasoning">โมเดลการให้เหตุผลแบบไฮบริด</string>
+    <string name="model_category_ultra_lightweight">โมเดลแชทน้ำหนักเบาพิเศษ</string>
+    <string name="model_category_compact_reasoning">โมเดลการให้เหตุผลแบบกะทัดรัด</string>
+    <string name="model_category_thinking">โมเดลการคิด</string>
+    <string name="model_category_enterprise">โมเดลแชทสำหรับองค์กร</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">มีอะไรใหม่</string>
+    <string name="whats_new_item_1">โมเดล Gemma 4 ใหม่ (E2B, E4B)</string>
+    <string name="whats_new_item_2">พารามิเตอร์การสร้างเฉพาะโมเดล</string>
+    <string name="whats_new_item_3">การควบคุมงบประมาณการคิด</string>
+
+    <string name="supports_your_language">รองรับภาษาของคุณ</string>
+    <string name="other_models">รุ่นอื่นๆ</string>
+    <string name="language">ภาษา</string>
+    <string name="language_system_default">ค่าเริ่มต้นของระบบ</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">เครื่องมือประมวลผล AI</string>
+    <string name="inference_notification_channel_description">รักษาโมเดล AI ให้โหลดอยู่และพร้อมตอบสนอง</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">โหลดโมเดลแล้ว — พร้อมแชท</string>
+    <string name="inference_notification_loaded_title">โหลดโมเดลแล้ว</string>
+    <string name="inference_engine_crashed">อุ๊ปส์ — เกิดข้อผิดพลาด\nโปรดโหลดโมเดลอีกครั้ง</string>
+    <string name="message_too_large">ข้อความมีขนาด %1$d KB เกินขีดจำกัด %2$d KB ลองส่งข้อความที่สั้นกว่านี้</string>
+    <string name="replay_history_too_large">ประวัติการสนทนาใหญ่เกินกว่าจะโหลดเข้าโมเดลนี้ใหม่ เริ่มแชทใหม่เพื่อดำเนินการต่อ</string>
+    <string name="system_prompt_too_large">พรอมต์ระบบมีขนาด %1$d KB เกินขีดจำกัด %2$d KB ลองพรอมต์ที่สั้นกว่านี้</string>
+    <string name="history_message_too_large">ข้อความที่บันทึกไว้ในการสนทนานี้ใหญ่เกินกว่าจะโหลดซ้ำได้ เริ่มแชทใหม่เพื่อดำเนินการต่อ</string>
+    <string name="model_load_failed_status">โหลดโมเดลไม่สำเร็จ</string>
+    <string name="model_load_failed_title">โหลดโมเดลไม่สำเร็จ</string>
+    <string name="model_load_failed_message">ไม่สามารถโหลด %1$s ได้ ไฟล์อาจเสียหาย หรือใช้สถาปัตยกรรมที่แอปเวอร์ชันนี้ยังไม่รองรับ ลองใช้โมเดลอื่น หรืออัปเดตแอป</string>
+    <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0: Sound & haptics, tools, inference notifications -->
+    <string name="share">แชร์</string>
+    <string name="cd_supports_thinking">รองรับการคิด</string>
+    <string name="cd_supports_tools">รองรับเครื่องมือ</string>
+    <string name="folder_picker_unavailable">ไม่มีแอปสำหรับเลือกโฟลเดอร์ ติดตั้งหรือเปิดใช้งานแอปไฟล์ / เอกสารของระบบ</string>
+    <string name="haptic_on_generation_title">การสั่นตอบสนองขณะสร้าง</string>
+    <string name="haptic_on_generation_desc">การสั่นเบาๆ ขณะที่แต่ละส่วนของคำตอบสตรีมเข้ามา</string>
+    <string name="sound_and_haptic">เสียงและการสั่น</string>
+    <string name="sound_and_haptic_subtitle">เสียงเมื่อเสร็จและการสั่นขณะพิมพ์</string>
+    <string name="sound_on_completion_title">เล่นเสียงเมื่อสร้างเสร็จ</string>
+    <string name="sound_on_completion_desc">เล่นเสียงสั้นๆ เมื่อโมเดลตอบเสร็จขณะที่แอปทำงานอยู่เบื้องหลัง</string>
+    <string name="response_copied">คัดลอกไปยังคลิปบอร์ดแล้ว</string>
+    <string name="inference_engine_unavailable">เครื่องมือประมวลผลไม่พร้อมใช้งานในขณะนี้ โปรดลองอีกครั้งในอีกสักครู่</string>
+    <string name="inference_notification_generating_title">กำลังสร้างคำตอบ…</string>
+    <string name="inference_notification_ready_title">คำตอบพร้อมแล้ว</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="set_up_tools">ตั้งค่าเครื่องมือ</string>
+    <string name="tools">เครื่องมือ</string>
+    <string name="tools_subtitle">ให้โมเดลที่มีความสามารถลงมือทำ</string>
+    <string name="tools_section_intro">เครื่องมือช่วยให้โมเดลที่มีความสามารถลงมือทำสิ่งต่างๆ ระหว่างการตอบ เช่น ค้นหาเว็บหรือคำนวณ เครื่องมือแต่ละอย่างปิดอยู่โดยค่าเริ่มต้น — เปิดเฉพาะที่คุณต้องการ เครื่องมือใช้ได้เฉพาะกับโมเดลที่รองรับเท่านั้น (มองหาตราค้อน)</string>
+    <string name="tools_params_sheet_subtitle">โมเดลสามารถเรียกใช้สิ่งเหล่านี้ระหว่างการตอบ</string>
+    <string name="tools_example_label">ตัวอย่าง: %1$s</string>
+    <string name="tool_call_input">อินพุต</string>
+    <string name="tool_call_output">เอาต์พุต</string>
+    <string name="tool_web_search_title">ค้นหาเว็บ</string>
+    <string name="tool_web_search_desc">ค้นหาบนเว็บและส่งคืนชื่อผลลัพธ์ ลิงก์ และข้อความตัวอย่าง เพื่อให้โมเดลค้นหาข้อมูลล่าสุดได้</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">ดึงหน้าเว็บ</string>
+    <string name="tool_web_fetch_desc">เปิดลิงก์และอ่านเนื้อหาหลักเป็นข้อความ เพื่อให้โมเดลสรุปหรืออ้างอิงหน้าเว็บได้</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+    <string name="tool_run_javascript_title">รัน JavaScript</string>
+    <string name="tool_run_javascript_desc">รัน JavaScript ในแซนด์บ็อกซ์ที่ปลอดภัยสำหรับคณิตศาสตร์ วันที่ และการประมวลผลข้อความ ไม่มีการเข้าถึงอินเทอร์เน็ตหรือไฟล์</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="whats_new_tools">ค้นหาเว็บ ดึงหน้าเว็บ และรัน JavaScript</string>
+    <string name="whats_new_cache">ตอบเร็วขึ้นด้วยพรอมต์ &amp; เครื่องมือที่แคชไว้</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d โทเค็น</item>
+    </plurals>
+</resources>

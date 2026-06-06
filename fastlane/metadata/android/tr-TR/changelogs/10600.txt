@@ -1,0 +1,3 @@
+- Tablet ve Chromebook desteği — büyük ekranlar ve katlanabilir cihazlar için uyarlanabilir düzenler
+- Yeni CPU optimizasyonlarıyla cihaz üzerinde 2× kata kadar daha hızlı üretim
+- Model seçici açılırken nadiren yaşanan donma sorunu giderildi

@@ -1,0 +1,333 @@
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">Buka laci navigasi</string>
+    <string name="navigation_drawer_close">Tutup laci navigasi</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">Pengepala navigasi</string>
+    <string name="action_settings">Tetapan</string>
+
+    <string name="menu_home">Utama</string>
+    <string name="menu_gallery">Galeri</string>
+    <string name="menu_slideshow">Tayangan slaid</string>
+    <string name="conversations">Perbualan</string>
+    <string name="profile">Profil</string>
+    <string name="jumpBottom">Lompat ke bawah</string>
+    <string name="send">Hantar</string>
+    <string name="author_me">saya</string>
+    <string name="members">%d ahli</string>
+    <string name="textfield_hint">Mesej</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; Leret untuk membatalkan</string>
+    <string name="emojis_label">Emoji</string>
+    <string name="stickers_label">Pelekat</string>
+
+    <string name="message">Mesej</string>
+    <string name="edit_profile">Edit Profil</string>
+    <string name="profile_error">Terdapat ralat memuatkan profil</string>
+    <string name="bio">Bio</string>
+    <string name="display_name">Nama paparan</string>
+    <string name="status">Status</string>
+    <string name="timezone">Zon waktu</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">Saluran yang sama</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">Pemilih emoji</string>
+    <string name="emoji_selector_bt_desc">Tunjukkan pemilih emoji</string>
+    <string name="dm_desc">Mesej Terus</string>
+    <string name="attach_photo_desc">Lampirkan Foto</string>
+    <string name="map_selector_desc">Pemilih lokasi</string>
+    <string name="videochat_desc">Mulakan sembang video</string>
+    <string name="textfield_desc">Input teks</string>
+    <string name="not_available">Fungsi tidak tersedia buat masa ini</string>
+    <string name="not_available_subtitle">Ambil minuman dan semak semula kemudian!</string>
+    <string name="attached_image">Imej yang dilampirkan</string>
+    <string name="search">Cari</string>
+    <string name="info">Maklumat</string>
+    <string name="more_options">Lagi pilihan</string>
+    <string name="touch_and_hold_to_record">Sentuh dan tahan untuk merakam</string>
+    <string name="record_message">Rakam mesej suara</string>
+    <string name="stop">Berhenti</string>
+
+    <string name="copy">Salin</string>
+    <string name="upvote">Undi naik</string>
+    <string name="downvote">Undi turun</string>
+    <string name="rating_question">Kenapa anda memilih penilaian ini?</string>
+    <string name="offensive_unsafe">Menyinggung/Tidak selamat</string>
+    <string name="not_correct">Tidak betul</string>
+    <string name="didnt_follow_instructions">Tidak mengikut arahan</string>
+    <string name="wrong_language">Bahasa yang salah</string>
+    <string name="other">Lain-lain</string>
+
+    <!-- Settings -->
+    <string name="settings">Tetapan</string>
+    <string name="back">Kembali</string>
+    <string name="version">Versi %s</string>
+    <string name="models_subtitle">Muat turun dan urus model</string>
+    <string name="privacy_policy">Dasar Privasi</string>
+    <string name="privacy_policy_effective_date">Tarikh Kuat Kuasa: 2 Jun 2026</string>
+    <string name="privacy_policy_intro">Selamat datang ke LM Playground! Saya komited untuk mengekalkan kepercayaan dan keyakinan semua orang yang menggunakan aplikasi saya. Dasar Privasi ini menerangkan apa yang dikumpul dan tidak dikumpul oleh aplikasi, bagaimana perbualan anda kekal pada peranti anda, dan beberapa keadaan — seperti alat web pilihan — apabila maklumat meninggalkan peranti anda, supaya anda sentiasa tahu apa yang dijangkakan.</string>
+    <string name="privacy_policy_s1_title">1. Tiada Pengumpulan Maklumat Peribadi</string>
+    <string name="privacy_policy_s1_body">Saya, Andriy Druk, pembangun LM Playground, tidak mengumpul, menyimpan, menggunakan atau berkongsi sebarang maklumat peribadi daripada pengguna aplikasi saya. Tiada akaun, tiada pengiklanan, dan tiada analitik atau penjejakan penggunaan. Aplikasi direka dengan privasi anda sebagai keutamaan, supaya anda boleh menggunakannya tanpa menjejaskan data peribadi anda.</string>
+    <string name="privacy_policy_s2_title">2. Pemprosesan pada Peranti</string>
+    <string name="privacy_policy_s2_body">Perbualan anda, gesaan sistem, dan respons model diproses secara setempat pada peranti anda oleh model pada peranti. Kandungan ini tidak pernah dihantar kepada saya atau ke mana-mana pelayan untuk inferens. Ia kekal pada peranti anda melainkan anda memilih untuk menggunakan ciri yang mencapai internet, seperti diterangkan di bawah.</string>
+    <string name="privacy_policy_s3_title">3. Akses Internet</string>
+    <string name="privacy_policy_s3_body">LM Playground meminta kebenaran Internet untuk dua tujuan: untuk memuat turun fail model yang anda pilih, dan — hanya jika anda menghidupkannya — untuk menggerakkan alat web pilihan. Aplikasi tidak mengandungi pengiklanan, telemetri atau analitik penggunaan, dan ia tidak melaporkan aktiviti anda kembali kepada saya.</string>
+    <string name="privacy_policy_s4_title">4. Alat dan Akses Web</string>
+    <string name="privacy_policy_s4_body">Model yang berkemampuan boleh menggunakan alat pilihan, yang dimatikan secara lalai. Apabila anda mendayakan alat web, sebahagian maklumat meninggalkan peranti anda: alat Carian web menghantar pertanyaan carian model ke DuckDuckGo, dan alat Ambil halaman web memuat turun halaman yang model putuskan untuk dibuka daripada tapak web tersebut. Permintaan tersebut dikendalikan oleh tapak pihak ketiga di bawah dasar privasi mereka sendiri — saya tidak menerima mahupun menyimpannya. Alat Jalankan JavaScript berjalan sepenuhnya pada peranti anda dalam kotak pasir tanpa akses internet. Untuk memastikan segalanya luar talian, biarkan sahaja alat dimatikan.</string>
+    <string name="privacy_policy_s5_title">5. Kemas Kini Dasar Privasi</string>
+    <string name="privacy_policy_s5_body">Sebagai pembangun LM Playground, saya berhak untuk mengemas kini Dasar Privasi ini pada bila-bila masa. Sebarang perubahan akan berkuat kuasa serta-merta setelah dasar yang dikemas kini disiarkan. Pengguna digalakkan untuk menyemak halaman ini secara berkala dan sentiasa dimaklumkan tentang bagaimana privasi mereka dilindungi.</string>
+    <string name="privacy_policy_s6_title">6. Penerimaan Dasar Ini</string>
+    <string name="privacy_policy_s6_body">Dengan menggunakan LM Playground, anda mengakui dan bersetuju dengan Dasar Privasi ini. Jika anda tidak bersetuju dengan dasar ini, sila berhenti menggunakan aplikasi. Penggunaan berterusan aplikasi selepas penyiaran sebarang kemas kini atau perubahan kepada dasar ini akan dianggap sebagai penerimaan anda terhadap perubahan tersebut.</string>
+    <string name="privacy_policy_s7_title">7. Hubungi Saya</string>
+    <string name="privacy_policy_s7_body">Jika anda mempunyai sebarang soalan atau cadangan tentang Dasar Privasi saya, jangan teragak-agak untuk menghubungi saya.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">Hantar Maklum Balas</string>
+    <string name="faq">Soalan Lazim</string>
+    <string name="faq_subtitle">Soalan yang sering ditanya</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">Apakah LM Playground?</string>
+    <string name="faq_a1">LM Playground membolehkan anda menjalankan model bahasa besar terus pada peranti Android anda. Semua pemprosesan berlaku secara tempatan \u2013 tiada pelayan awan diperlukan.</string>
+    <string name="faq_q2">Apakah model yang disokong?</string>
+    <string name="faq_a2">Aplikasi ini menyokong model dalam format GGUF dengan pengkuantuman Q4_K_M, termasuk Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini, dan DeepSeek R1 Distill dalam pelbagai saiz.</string>
+    <string name="faq_q3">Berapa banyak ruang storan yang saya perlukan?</string>
+    <string name="faq_a3">Saiz model berbeza dari kira-kira 500 MB (model kecil seperti Qwen 3 0.6B) hingga beberapa GB (model lebih besar seperti DeepSeek R1 7B). Pastikan anda mempunyai ruang kosong yang mencukupi sebelum memuat turun.</string>
+    <string name="faq_q4">Adakah aplikasi memerlukan sambungan internet?</string>
+    <string name="faq_a4">Internet diperlukan untuk memuat turun model, dan — jika anda menghidupkannya — untuk alat web pilihan (carian web dan ambil halaman). Selain itu, setelah model dimuat turun, ia berjalan sepenuhnya luar talian pada peranti anda.</string>
+    <string name="faq_q5">Adakah data saya peribadi?</string>
+    <string name="faq_a5">Perbualan anda diproses secara setempat pada peranti anda dan tidak pernah dihantar ke pelayan oleh aplikasi. Satu-satunya pengecualian ialah alat web pilihan: jika anda mendayakan carian web atau ambil halaman, pertanyaan carian model dan halaman yang dibukanya dihantar ke tapak web tersebut (carian menggunakan DuckDuckGo). Alat dimatikan secara lalai, jadi tiada apa-apa meninggalkan peranti anda melainkan anda menghidupkannya. Lihat Dasar Privasi untuk butiran.</string>
+    <string name="faq_q6">Mengapa pemuatan model perlahan?</string>
+    <string name="faq_a6">Model yang lebih besar mengambil lebih banyak masa untuk dimuat ke dalam memori. Masa pemuatan bergantung pada perkakasan peranti anda. Setelah dimuatkan, model kekal dalam memori sehingga anda menyahmuatkannya.</string>
+    <string name="faq_q7">Peranti manakah yang berfungsi paling baik?</string>
+    <string name="faq_a7">Peranti dengan lebih banyak RAM boleh menjalankan model yang lebih besar. Untuk prestasi terbaik, gunakan peranti dengan sekurang-kurangnya 6 GB RAM untuk model kecil dan 8+ GB untuk yang lebih besar.</string>
+    <string name="faq_q8">Bolehkah saya memuatkan model GGUF tersuai?</string>
+    <string name="faq_a8">Ya. Letakkan fail .gguf anda dalam folder storan yang dipilih di Tetapan \u2192 Model (folder yang sama digunakan untuk muat turun). Aplikasi akan mengesannya secara automatik dan memaparkannya dalam pemilih model bersama katalog terbina. Tetapan templat sembang dan tokenizer dibaca daripada metadata GGUF. Jika model tertentu tidak berfungsi, sila buka issue di GitHub.</string>
+    <string name="faq_q9">Bolehkah saya menukar tempat model disimpan?</string>
+    <string name="faq_a9">Ya. Pergi ke Tetapan, kemudian Model, dan gunakan pilihan \u201CTukar Folder\u201D untuk memilih lokasi storan yang berbeza.</string>
+    <string name="faq_q10">Bagaimana saya memadamkan model?</string>
+    <string name="faq_a10">Pergi ke Tetapan, kemudian Model. Di bahagian \u201CDimuat Turun\u201D, ketik ikon padam di sebelah model yang anda ingin buang.</string>
+    <string name="faq_q11">Apakah gesaan sistem?</string>
+    <string name="faq_a11">Gesaan sistem ialah arahan boleh guna semula yang membentuk cara model bertindak balas \u2014 sebagai contoh, \u201CAnda ialah tutor sains yang ringkas. Terangkan idea dengan jelas menggunakan contoh harian\u201D atau \u201CAnda ialah penyemak kod kanan. Tunjukkan pepijat, kes tepi dan isu keselamatan\u201D. Cipta dan urus di Tetapan \u2192 Gesaan Sistem, kemudian gunakan satu pada sembang anda. Ia disimpan pada peranti anda dan hanya dihantar ke model setempat.</string>
+    <string name="faq_q12">Apakah alat dan yang manakah tersedia?</string>
+    <string name="faq_a12">Alat membolehkan model yang berkemampuan mengambil tindakan semasa membalas. Tiga tersedia: Jalankan JavaScript (matematik, tarikh dan pemprosesan teks dalam kotak pasir pada peranti), Carian web (mencari maklumat semasa di web), dan Ambil halaman web (membaca halaman supaya model dapat meringkas atau memetiknya). Hidupkannya di Tetapan \u2192 Alat. Setiap satu dimatikan secara lalai dan hanya berfungsi dengan model yang menyokong pemanggilan alat \u2014 cari lencana tukul dalam pemilih model.</string>
+    <string name="faq_q13">Adakah alat web menghantar data saya dalam talian?</string>
+    <string name="faq_a13">Hanya apabila anda mendayakannya. Carian web menghantar pertanyaan model ke DuckDuckGo, dan Ambil halaman web memuat turun halaman yang model pilih untuk dibuka \u2014 permintaan tersebut pergi ke tapak web itu sendiri, bukan kepada pembangun. Jalankan JavaScript kekal sepenuhnya pada peranti anda tanpa akses internet. Dengan setiap alat dimatikan (lalai), tiada apa-apa meninggalkan peranti anda. Lihat Dasar Privasi untuk butiran.</string>
+    <string name="faq_q14">Adakah aplikasi akan memberitahu saya apabila respons sedia?</string>
+    <string name="faq_a14">Ya. Semasa aplikasi berada di latar belakang, satu pemberitahuan menjejaki status model \u2014 dimuatkan, menjana, kemudian respons sedia \u2014 dan membenarkan anda menyalin atau berkongsi balasan. Anda juga boleh mendayakan bunyi siap yang pendek di Tetapan \u2192 Bunyi dan Haptik. Muat turun model memaparkan pemberitahuan kemajuannya sendiri dengan kelajuan dan anggaran masa.</string>
+
+    <!-- Models Screen -->
+    <string name="models">Model</string>
+    <string name="change_folder">Tukar Folder</string>
+    <string name="delete_model">Padam</string>
+    <string name="download_model">Muat Turun</string>
+    <string name="storage_used_models">Model: %s</string>
+    <string name="storage_available">%s tersedia</string>
+    <string name="downloads_folder">Folder muat turun</string>
+    <string name="custom_folder">Folder tersuai</string>
+    <string name="delete_model_confirm">Padam %s?</string>
+    <string name="delete_model_message">Ini akan mengalih keluar fail model secara kekal.</string>
+    <string name="downloaded_models">Dimuat turun</string>
+    <string name="available_models">Tersedia untuk Dimuat Turun</string>
+    <string name="no_downloaded_models">Tiada model dimuat turun lagi</string>
+    <string name="browse_more_models">Layari Model</string>
+    <string name="cancel">Batal</string>
+    <string name="low_ram_warning_title">Model mungkin tidak stabil</string>
+    <string name="low_ram_warning_message">Model memerlukan ~%1$s RAM tetapi peranti ini hanya mempunyai %2$s secara keseluruhan. Ia mungkin dimuatkan perlahan atau bertindak balas tanpa diduga.</string>
+    <string name="load_anyway">Muatkan juga</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Muat Turun Model</string>
+    <string name="download_notification_channel_description">Menunjukkan kemajuan untuk muat turun fail model</string>
+    <string name="download_complete">Muat turun selesai</string>
+    <string name="moving_to_storage">Memindahkan ke storan\u2026</string>
+    <string name="starting_download">Memulakan muat turun\u2026</string>
+    <string name="download_failed">Muat turun gagal</string>
+    <string name="download_cancelled">Muat turun dibatalkan</string>
+    <string name="waiting_for_network">Menunggu rangkaian\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">Pindahkan Model?</string>
+    <string name="migrate_models_message">Menemui %1$d model (%2$s) dalam folder sebelumnya. Adakah anda ingin menyalinnya ke lokasi baharu?</string>
+    <string name="migrate_models_from_downloads">Menemui %1$d model (%2$s) dalam folder Muat Turun anda. Adakah anda ingin memindahkannya ke lokasi storan yang dipilih?</string>
+    <string name="models_to_migrate">Model:</string>
+    <string name="migrate">Pindahkan</string>
+    <string name="skip">Langkau</string>
+    <string name="migrating_models">Memindahkan Model</string>
+    <string name="migration_progress">Menyalin %1$d daripada %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">Gesaan Sistem</string>
+    <string name="system_prompts_subtitle">Arahan boleh guna semula untuk mana-mana model</string>
+    <string name="system_prompts_empty">Belum ada gesaan sistem. Ketik + untuk menambah.</string>
+    <string name="system_prompt_new">Gesaan sistem baharu</string>
+    <string name="system_prompt_edit">Edit gesaan sistem</string>
+    <string name="system_prompt_hint">cth: Anda adalah pembantu yang ringkas. Jawab sentiasa dalam bahasa Perancis.</string>
+    <string name="system_prompt_current">Gesaan sistem semasa</string>
+    <string name="system_prompt_current_empty">Tiada gesaan sistem — ketik untuk menambah</string>
+    <string name="system_prompt_update">Kemas kini</string>
+    <string name="save">Simpan</string>
+    <string name="add">Tambah</string>
+    <string name="clear">Kosongkan</string>
+
+    <!-- General UI -->
+    <string name="select_model">Pilih Model</string>
+    <string name="new_conversation">Perbualan Baharu</string>
+    <string name="close">Tutup</string>
+    <string name="pinned_label">Disematkan</string>
+    <string name="unpin">Nyahsemat</string>
+    <string name="pin">Sematkan</string>
+    <string name="rename">Namakan semula</string>
+    <string name="delete">Padam</string>
+    <string name="rename_conversation">Namakan Semula Perbualan</string>
+    <string name="previously_used_model">Sebelum ini digunakan: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Pilih Folder Storan</string>
+    <string name="choose_storage_folder_message">Sila pilih folder di mana model akan disimpan. Ini diperlukan untuk menggunakan aplikasi.</string>
+    <string name="choose_folder">Pilih Folder</string>
+
+    <!-- Session -->
+    <string name="session_info">Maklumat Sesi</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Parameter Penjanaan</string>
+    <string name="reset">Tetap semula</string>
+    <string name="context_size">Saiz Konteks</string>
+    <string name="will_reset_conversation">Akan menetapkan semula perbualan</string>
+    <string name="thinking_budget">Bajet Pemikiran</string>
+    <string name="tokens_value">%d token</string>
+    <string name="temperature">Suhu</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Penalti Pengulangan</string>
+    <string name="advanced">Lanjutan</string>
+    <string name="collapse">Runtuhkan</string>
+    <string name="expand">Kembangkan</string>
+    <string name="seed">Benih</string>
+    <string name="random">Rawak</string>
+    <string name="disabled_label">dilumpuhkan</string>
+    <string name="unload_model">Nyahmuatkan Model</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Berfikir</string>
+    <string name="collapse_thinking">Runtuhkan pemikiran</string>
+    <string name="expand_thinking">Kembangkan pemikiran</string>
+    <string name="thoughts">Fikiran</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Fungsi tidak tersedia \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI pada</string>
+    <string name="screenshot_hero_title_emphasis">telefon</string>
+    <string name="screenshot_hero_title_suffix">anda</string>
+    <string name="screenshot_hero_title_suffix_tablet">tablet anda</string>
+    <string name="screenshot_hero_subtitle">Peribadi. Tempatan. Luar talian.</string>
+    <string name="screenshot_hero_providers_label">25+ model daripada:</string>
+    <string name="screenshot_choose_model">Pilih model</string>
+    <string name="screenshot_choose_model_sub">daripada penyedia AI terkemuka</string>
+    <string name="screenshot_chat">Sembang secara peribadi</string>
+    <string name="screenshot_chat_sub">pada peranti anda</string>
+    <string name="screenshot_fine_tune">Halusi</string>
+    <string name="screenshot_fine_tune_sub">parameter penjanaan</string>
+    <string name="screenshot_download_models">Muat turun mana-mana model</string>
+    <string name="screenshot_download_models_sub">ke mana-mana folder pilihan anda</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">Anda adalah tutor sains yang ringkas. Terangkan idea dengan jelas menggunakan contoh harian.</string>
+    <string name="screenshot_prompts">Gesaan boleh guna semula</string>
+    <string name="screenshot_prompts_sub">tetapkan nada sekali, guna di mana-mana</string>
+    <string name="screenshot_tools">Beri model alat</string>
+    <string name="screenshot_tools_sub">carian web, ambil halaman &amp; JavaScript</string>
+    <string name="screenshot_notification">Berjalan di latar belakang</string>
+    <string name="screenshot_notification_sub">dapat pemberitahuan apabila siap</string>
+    <string name="screenshot_prompt_sample_code">Anda ialah penyemak kod kanan. Tunjukkan pepijat, kes tepi dan isu keselamatan. Berterus terang dan khusus.</string>
+    <string name="screenshot_prompt_sample_translator">Anda ialah seorang penterjemah. Tukar segala yang saya hantar kepada bahasa Perancis yang semula jadi dan lancar serta kekalkan formatnya.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Anda ialah rakan sumbang saran yang kreatif. Tawarkan idea yang berani dan tidak dijangka serta kembangkan daripada idea saya.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">Apakah pembelajaran mesin?</string>
+    <string name="screenshot_chat_response">Pembelajaran mesin adalah cabang kecerdasan buatan di mana komputer **belajar daripada data** bukannya diprogramkan secara eksplisit.\n\nKonsep utama:\n\n\u2022 **Latihan**: memberi data kepada algoritma\n\u2022 **Model**: corak yang dipelajari daripada data\n\u2022 **Inferens**: membuat ramalan pada data baharu</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Model sembang ringan</string>
+    <string name="model_category_general">Model sembang serbaguna</string>
+    <string name="model_category_efficient">Model cekap pada peranti</string>
+    <string name="model_category_reasoning">Model penaakulan hibrid</string>
+    <string name="model_category_ultra_lightweight">Model sembang ultra-ringan</string>
+    <string name="model_category_compact_reasoning">Model penaakulan padat</string>
+    <string name="model_category_thinking">Model pemikiran</string>
+    <string name="model_category_enterprise">Model sembang perusahaan</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">Apa yang Baharu</string>
+    <string name="whats_new_item_1">Model Gemma 4 baharu (E2B, E4B)</string>
+    <string name="whats_new_item_2">Parameter penjanaan setiap model</string>
+    <string name="whats_new_item_3">Kawalan bajet pemikiran</string>
+
+    <string name="supports_your_language">Menyokong bahasa anda</string>
+    <string name="other_models">Model lain</string>
+    <string name="language">Bahasa</string>
+    <string name="language_system_default">Lalai sistem</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Enjin inferens</string>
+    <string name="inference_notification_channel_description">Mengekalkan model AI dimuatkan dan sedia memberi respons.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model dimuatkan — sedia untuk bersembang.</string>
+    <string name="inference_notification_loaded_title">Model dimuatkan</string>
+    <string name="inference_engine_crashed">Alamak — sesuatu telah berlaku.\nSila muatkan semula model.</string>
+    <string name="message_too_large">Mesej bersaiz %1$d KB, melebihi had %2$d KB. Cuba hantar mesej yang lebih pendek.</string>
+    <string name="replay_history_too_large">Sejarah perbualan terlalu besar untuk dimuatkan semula ke dalam model ini. Mulakan sembang baharu untuk meneruskan.</string>
+    <string name="system_prompt_too_large">Prom sistem bersaiz %1$d KB, melebihi had %2$d KB. Cuba prom yang lebih pendek.</string>
+    <string name="history_message_too_large">Mesej tersimpan dalam perbualan ini terlalu besar untuk dimuatkan semula. Mulakan sembang baharu untuk meneruskan.</string>
+    <string name="model_load_failed_status">Tidak dapat memuatkan model</string>
+    <string name="model_load_failed_title">Tidak dapat memuatkan model</string>
+    <string name="model_load_failed_message">Tidak dapat memuatkan %1$s. Fail mungkin rosak, atau ia menggunakan seni bina yang belum disokong oleh versi aplikasi ini. Cuba model lain, atau kemas kini aplikasi.</string>
+    <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0: Sound & haptics, tools, inference notifications -->
+    <string name="share">Kongsi</string>
+    <string name="cd_supports_thinking">Menyokong pemikiran</string>
+    <string name="cd_supports_tools">Menyokong alat</string>
+    <string name="folder_picker_unavailable">Tiada aplikasi tersedia untuk memilih folder. Pasang atau dayakan aplikasi Fail / Dokumen sistem.</string>
+    <string name="haptic_on_generation_title">Maklum balas haptik semasa penjanaan</string>
+    <string name="haptic_on_generation_desc">Getaran halus apabila setiap bahagian respons dialirkan masuk.</string>
+    <string name="sound_and_haptic">Bunyi dan Haptik</string>
+    <string name="sound_and_haptic_subtitle">Bunyi siap dan haptik menaip</string>
+    <string name="sound_on_completion_title">Mainkan bunyi apabila penjanaan selesai</string>
+    <string name="sound_on_completion_desc">Memainkan bunyi pendek apabila model selesai memberi respons semasa aplikasi berada di latar belakang.</string>
+    <string name="response_copied">Disalin ke papan keratan</string>
+    <string name="inference_engine_unavailable">Enjin inferens tidak tersedia buat masa ini. Cuba lagi sebentar.</string>
+    <string name="inference_notification_generating_title">Menjana respons…</string>
+    <string name="inference_notification_ready_title">Respons sedia</string>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="set_up_tools">Sediakan alat</string>
+    <string name="tools">Alat</string>
+    <string name="tools_subtitle">Biar model yang berkemampuan mengambil tindakan</string>
+    <string name="tools_section_intro">Alat membolehkan model yang berkemampuan mengambil tindakan semasa membalas, seperti mencari di web atau melakukan pengiraan. Setiap alat dimatikan secara lalai — hidupkan hanya yang anda mahu. Alat hanya berfungsi dengan model yang menyokongnya (cari lencana tukul).</string>
+    <string name="tools_params_sheet_subtitle">Model boleh memanggil ini semasa membalas</string>
+    <string name="tools_example_label">Contoh: %1$s</string>
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <string name="tool_web_search_title">Carian web</string>
+    <string name="tool_web_search_desc">Mencari di web dan memulangkan tajuk hasil, pautan dan petikan supaya model dapat mencari maklumat terkini.</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">Ambil halaman web</string>
+    <string name="tool_web_fetch_desc">Membuka pautan dan membaca kandungan utamanya sebagai teks supaya model dapat meringkaskan atau memetik sesuatu halaman.</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+    <string name="tool_run_javascript_title">Jalankan JavaScript</string>
+    <string name="tool_run_javascript_desc">Menjalankan JavaScript dalam kotak pasir selamat untuk matematik, tarikh dan pemprosesan teks. Tiada akses internet atau fail.</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="whats_new_tools">Carian web, ambil halaman dan jalankan JavaScript</string>
+    <string name="whats_new_cache">Balasan lebih pantas dengan gesaan &amp; alat yang dicache</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="other">%d token</item>
+    </plurals>
+</resources>

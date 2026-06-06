@@ -1,0 +1,6 @@
+- Alat — model yang mampu kini bisa menelusuri web, membuka halaman, dan menjalankan JavaScript saat membalas. Aktifkan per model di Pengaturan → Alat
+- Balasan lebih cepat dengan prompt dan alat ter-cache
+- Bagikan balasan, atau salin/bagikan dari notifikasi
+- Notifikasi langsung menampilkan status pembuatan dan jumlah token
+- Suara & Haptik — denting saat balasan selesai di latar, plus getaran mesin tik saat mengalir (Pengaturan → Suara dan Haptik)
+- Tampilan kaca buram baru di seluruh apl

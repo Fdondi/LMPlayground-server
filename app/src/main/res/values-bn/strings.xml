@@ -1,0 +1,344 @@
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">নেভিগেশন ড্রয়ার খুলুন</string>
+    <string name="navigation_drawer_close">নেভিগেশন ড্রয়ার বন্ধ করুন</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">নেভিগেশন হেডার</string>
+    <string name="action_settings">সেটিংস</string>
+
+    <string name="menu_home">হোম</string>
+    <string name="menu_gallery">গ্যালারি</string>
+    <string name="menu_slideshow">স্লাইডশো</string>
+    <string name="conversations">কথোপকথন</string>
+    <string name="profile">প্রোফাইল</string>
+    <string name="jumpBottom">নিচে যান</string>
+    <string name="send">পাঠান</string>
+    <string name="author_me">আমি</string>
+    <string name="members">%d জন সদস্য</string>
+    <string name="textfield_hint">বার্তা</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; বাতিল করতে সোয়াইপ করুন</string>
+    <string name="emojis_label">ইমোজি</string>
+    <string name="stickers_label">স্টিকার</string>
+
+    <string name="message">বার্তা</string>
+    <string name="edit_profile">প্রোফাইল সম্পাদনা করুন</string>
+    <string name="profile_error">প্রোফাইল লোড করতে একটি ত্রুটি ঘটেছে</string>
+    <string name="bio">বায়ো</string>
+    <string name="display_name">প্রদর্শনের নাম</string>
+    <string name="status">স্ট্যাটাস</string>
+    <string name="timezone">সময় অঞ্চল</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">সাধারণ চ্যানেল</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">ইমোজি নির্বাচক</string>
+    <string name="emoji_selector_bt_desc">ইমোজি নির্বাচক দেখান</string>
+    <string name="dm_desc">ডাইরেক্ট মেসেজ</string>
+    <string name="attach_photo_desc">ছবি সংযুক্ত করুন</string>
+    <string name="map_selector_desc">অবস্থান নির্বাচক</string>
+    <string name="videochat_desc">ভিডিও চ্যাট শুরু করুন</string>
+    <string name="textfield_desc">টেক্সট ইনপুট</string>
+    <string name="not_available">এই মুহূর্তে কার্যকারিতা উপলব্ধ নয়</string>
+    <string name="not_available_subtitle">একটু পানীয় নিয়ে পরে ফিরে আসুন!</string>
+    <string name="attached_image">সংযুক্ত ছবি</string>
+    <string name="search">অনুসন্ধান</string>
+    <string name="info">তথ্য</string>
+    <string name="more_options">আরও বিকল্প</string>
+    <string name="touch_and_hold_to_record">রেকর্ড করতে স্পর্শ করে ধরে রাখুন</string>
+    <string name="record_message">ভয়েস বার্তা রেকর্ড করুন</string>
+    <string name="stop">বন্ধ করুন</string>
+
+    <string name="copy">কপি করুন</string>
+    <string name="upvote">আপভোট</string>
+    <string name="downvote">ডাউনভোট</string>
+    <string name="rating_question">আপনি কেন এই রেটিং বেছে নিয়েছেন?</string>
+    <string name="offensive_unsafe">আপত্তিকর/অনিরাপদ</string>
+    <string name="not_correct">সঠিক নয়</string>
+    <string name="didnt_follow_instructions">নির্দেশাবলী অনুসরণ করেনি</string>
+    <string name="wrong_language">ভুল ভাষা</string>
+    <string name="other">অন্যান্য</string>
+
+    <!-- Settings -->
+    <string name="settings">সেটিংস</string>
+    <string name="back">পেছনে</string>
+    <string name="version">সংস্করণ %s</string>
+    <string name="models_subtitle">মডেল ডাউনলোড ও পরিচালনা করুন</string>
+    <string name="privacy_policy">গোপনীয়তা নীতি</string>
+    <string name="privacy_policy_effective_date">কার্যকর তারিখ: ২ জুন, ২০২৬</string>
+    <string name="privacy_policy_intro">LM Playground-এ স্বাগতম! আমার অ্যাপ ব্যবহার করা প্রত্যেকের আস্থা ও বিশ্বাস বজায় রাখতে আমি প্রতিশ্রুতিবদ্ধ। এই গোপনীয়তা নীতি ব্যাখ্যা করে অ্যাপটি কী সংগ্রহ করে এবং কী করে না, আপনার কথোপকথন কীভাবে আপনার ডিভাইসেই থাকে, এবং সেই কয়েকটি ক্ষেত্র — যেমন ঐচ্ছিক ওয়েব টুল — যেখানে তথ্য আপনার ডিভাইসের বাইরে যায়, যাতে আপনি সবসময় জানেন কী আশা করতে হবে।</string>
+    <string name="privacy_policy_s1_title">১. কোনো ব্যক্তিগত তথ্য সংগ্রহ নেই</string>
+    <string name="privacy_policy_s1_body">আমি, অ্যান্ড্রি ড্রুক, LM Playground-এর ডেভেলপার, আমার অ্যাপের ব্যবহারকারীদের কাছ থেকে কোনো ব্যক্তিগত তথ্য সংগ্রহ, সঞ্চয়, ব্যবহার বা শেয়ার করি না। কোনো অ্যাকাউন্ট নেই, কোনো বিজ্ঞাপন নেই, এবং কোনো ব্যবহার অ্যানালিটিক্স বা ট্র্যাকিং নেই। অ্যাপটি আপনার গোপনীয়তাকে অগ্রাধিকার দিয়ে ডিজাইন করা হয়েছে, যাতে আপনি আপনার ব্যক্তিগত ডেটার সাথে আপস না করেই এটি ব্যবহার করতে পারেন।</string>
+    <string name="privacy_policy_s2_title">২. ডিভাইসে প্রক্রিয়াকরণ</string>
+    <string name="privacy_policy_s2_body">আপনার কথোপকথন, সিস্টেম প্রম্পট এবং মডেলের প্রতিক্রিয়া আপনার ডিভাইসেই অন-ডিভাইস মডেল দ্বারা স্থানীয়ভাবে প্রক্রিয়া করা হয়। এই বিষয়বস্তু ইনফারেন্সের জন্য কখনো আমাকে বা কোনো সার্ভারে পাঠানো হয় না। আপনি ইন্টারনেটে পৌঁছায় এমন কোনো বৈশিষ্ট্য ব্যবহার করতে বেছে না নেওয়া পর্যন্ত এটি আপনার ডিভাইসেই থাকে, যেমনটি নিচে বর্ণনা করা হয়েছে।</string>
+    <string name="privacy_policy_s3_title">৩. ইন্টারনেট অ্যাক্সেস</string>
+    <string name="privacy_policy_s3_body">LM Playground দুটি উদ্দেশ্যে ইন্টারনেট অনুমতি চায়: আপনার বেছে নেওয়া মডেল ফাইল ডাউনলোড করতে, এবং — কেবল আপনি যদি সেগুলি চালু করেন — ঐচ্ছিক ওয়েব টুল চালাতে। অ্যাপে কোনো বিজ্ঞাপন, টেলিমেট্রি বা ব্যবহার অ্যানালিটিক্স নেই, এবং এটি আপনার কার্যকলাপের তথ্য আমাকে ফেরত পাঠায় না।</string>
+    <string name="privacy_policy_s4_title">৪. টুল এবং ওয়েব অ্যাক্সেস</string>
+    <string name="privacy_policy_s4_body">সক্ষম মডেলগুলি ঐচ্ছিক টুল ব্যবহার করতে পারে, যেগুলি ডিফল্টভাবে বন্ধ থাকে। আপনি যখন ওয়েব টুল চালু করেন, তখন কিছু তথ্য আপনার ডিভাইসের বাইরে যায়: ওয়েব অনুসন্ধান টুল মডেলের অনুসন্ধান কোয়েরি DuckDuckGo-তে পাঠায়, এবং ওয়েব পেজ ফেচ করুন টুল মডেল যে পেজগুলি খুলতে সিদ্ধান্ত নেয় সেগুলি ওই ওয়েবসাইটগুলি থেকে ডাউনলোড করে। ওই অনুরোধগুলি তৃতীয় পক্ষের সাইটগুলি তাদের নিজস্ব গোপনীয়তা নীতির অধীনে পরিচালনা করে — আমি সেগুলি গ্রহণও করি না, সঞ্চয়ও করি না। JavaScript চালান টুল সম্পূর্ণরূপে আপনার ডিভাইসে একটি স্যান্ডবক্সে চলে যেখানে কোনো ইন্টারনেট অ্যাক্সেস নেই। সবকিছু অফলাইন রাখতে, কেবল টুলগুলি বন্ধ রাখুন।</string>
+    <string name="privacy_policy_s5_title">৫. গোপনীয়তা নীতির আপডেট</string>
+    <string name="privacy_policy_s5_body">LM Playground-এর ডেভেলপার হিসেবে, আমি যেকোনো সময় এই গোপনীয়তা নীতি আপডেট করার অধিকার সংরক্ষণ করি। আপডেট করা নীতি পোস্ট করার সাথে সাথেই যেকোনো পরিবর্তন কার্যকর হবে। ব্যবহারকারীদের নিয়মিত এই পৃষ্ঠাটি পর্যালোচনা করতে এবং তাদের গোপনীয়তা কীভাবে সুরক্ষিত তা সম্পর্কে অবগত থাকতে উৎসাহিত করা হয়।</string>
+    <string name="privacy_policy_s6_title">৬. এই নীতি গ্রহণ</string>
+    <string name="privacy_policy_s6_body">LM Playground ব্যবহার করে, আপনি এই গোপনীয়তা নীতি স্বীকার ও সম্মত হন। আপনি যদি নীতির সাথে একমত না হন, অনুগ্রহ করে অ্যাপটি ব্যবহার করা থেকে বিরত থাকুন। এই নীতিতে কোনো আপডেট বা পরিবর্তন পোস্ট করার পরেও আপনার অ্যাপের অব্যাহত ব্যবহার সেই পরিবর্তনগুলি গ্রহণ হিসাবে বিবেচিত হবে।</string>
+    <string name="privacy_policy_s7_title">৭. আমার সাথে যোগাযোগ করুন</string>
+    <string name="privacy_policy_s7_body">আমার গোপনীয়তা নীতি সম্পর্কে আপনার যদি কোনো প্রশ্ন বা পরামর্শ থাকে, আমার সাথে যোগাযোগ করতে দ্বিধা করবেন না।</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">মতামত পাঠান</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_subtitle">প্রায়শই জিজ্ঞাসিত প্রশ্ন</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">LM Playground কী?</string>
+    <string name="faq_a1">LM Playground আপনাকে সরাসরি আপনার Android ডিভাইসে বড় ভাষা মডেল চালাতে দেয়। সমস্ত প্রক্রিয়াকরণ স্থানীয়ভাবে ঘটে \u2013 কোনো ক্লাউড সার্ভারের প্রয়োজন নেই।</string>
+    <string name="faq_q2">কোন মডেলগুলি সমর্থিত?</string>
+    <string name="faq_a2">অ্যাপটি Q4_K_M কোয়ান্টাইজেশন সহ GGUF ফরম্যাটে মডেল সমর্থন করে, যার মধ্যে রয়েছে Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini এবং DeepSeek R1 Distill বিভিন্ন আকারে।</string>
+    <string name="faq_q3">আমার কত স্টোরেজ স্পেস দরকার?</string>
+    <string name="faq_a3">মডেলের আকার প্রায় ৫০০ এমবি (Qwen 3 0.6B-এর মতো ছোট মডেল) থেকে কয়েক জিবি (DeepSeek R1 7B-এর মতো বড় মডেল) পর্যন্ত পরিবর্তিত হয়। ডাউনলোড করার আগে নিশ্চিত হন যে আপনার কাছে পর্যাপ্ত ফ্রি স্পেস আছে।</string>
+    <string name="faq_q4">অ্যাপটির জন্য কি ইন্টারনেট সংযোগ প্রয়োজন?</string>
+    <string name="faq_a4">মডেল ডাউনলোড করতে, এবং — আপনি যদি সেগুলি চালু করেন — ঐচ্ছিক ওয়েব টুলের (ওয়েব অনুসন্ধান ও পেজ ফেচ) জন্য ইন্টারনেট প্রয়োজন। এ ছাড়া, একবার মডেল ডাউনলোড হয়ে গেলে এটি আপনার ডিভাইসে সম্পূর্ণ অফলাইনে চলে।</string>
+    <string name="faq_q5">আমার ডেটা কি গোপন?</string>
+    <string name="faq_a5">আপনার কথোপকথন আপনার ডিভাইসে স্থানীয়ভাবে প্রক্রিয়া করা হয় এবং অ্যাপ কখনো এগুলি কোনো সার্ভারে পাঠায় না। একমাত্র ব্যতিক্রম হলো ঐচ্ছিক ওয়েব টুল: আপনি যদি ওয়েব অনুসন্ধান বা পেজ ফেচ চালু করেন, তাহলে মডেলের অনুসন্ধান কোয়েরি ও এটি যে পেজগুলি খোলে সেগুলি ওই ওয়েবসাইটগুলিতে পাঠানো হয় (অনুসন্ধান DuckDuckGo ব্যবহার করে)। টুল ডিফল্টভাবে বন্ধ থাকে, তাই আপনি চালু না করা পর্যন্ত কিছুই আপনার ডিভাইসের বাইরে যায় না। বিস্তারিত জানতে গোপনীয়তা নীতি দেখুন।</string>
+    <string name="faq_q6">মডেল লোডিং কেন ধীর?</string>
+    <string name="faq_a6">বড় মডেলগুলি মেমরিতে লোড হতে বেশি সময় নেয়। লোড হওয়ার সময় আপনার ডিভাইসের হার্ডওয়্যারের উপর নির্ভর করে। একবার লোড হয়ে গেলে, আপনি এটি আনলোড না করা পর্যন্ত মডেল মেমরিতে থাকে।</string>
+    <string name="faq_q7">কোন ডিভাইসগুলি সবচেয়ে ভালো কাজ করে?</string>
+    <string name="faq_a7">বেশি RAM সহ ডিভাইসগুলি বড় মডেল চালাতে পারে। সেরা পারফরম্যান্সের জন্য, ছোট মডেলের জন্য কমপক্ষে ৬ জিবি RAM এবং বড়গুলির জন্য ৮+ জিবি RAM সহ একটি ডিভাইস ব্যবহার করুন।</string>
+    <string name="faq_q8">আমি কি একটি কাস্টম GGUF মডেল লোড করতে পারি?</string>
+    <string name="faq_a8">হ্যাঁ। আপনার .gguf ফাইলটি সেটিংস \u2192 মডেল-এ নির্বাচিত স্টোরেজ ফোল্ডারে রাখুন (ডাউনলোডের জন্য ব্যবহৃত একই ফোল্ডার)। অ্যাপটি এটি স্বয়ংক্রিয়ভাবে সনাক্ত করবে এবং অন্তর্নির্মিত ক্যাটালগের পাশে মডেল সিলেক্টরে প্রদর্শন করবে। চ্যাট টেমপ্লেট এবং টোকেনাইজার সেটিংস GGUF মেটাডেটা থেকে পড়া হয়। যদি কোনো নির্দিষ্ট মডেল কাজ না করে, অনুগ্রহ করে GitHub-এ একটি issue খুলুন।</string>
+    <string name="faq_q9">আমি কি মডেলগুলি কোথায় সংরক্ষিত হয় তা পরিবর্তন করতে পারি?</string>
+    <string name="faq_a9">হ্যাঁ। সেটিংসে যান, তারপর মডেলে, এবং একটি ভিন্ন স্টোরেজ অবস্থান নির্বাচন করতে \u201Cফোল্ডার পরিবর্তন করুন\u201D অপশনটি ব্যবহার করুন।</string>
+    <string name="faq_q10">আমি কীভাবে একটি মডেল মুছে ফেলব?</string>
+    <string name="faq_a10">সেটিংসে যান, তারপর মডেলে। \u201Cডাউনলোড করা\u201D বিভাগে, আপনি যে মডেলটি সরাতে চান তার পাশে মুছে ফেলার আইকনে ট্যাপ করুন।</string>
+    <string name="faq_q11">সিস্টেম প্রম্পট কী?</string>
+    <string name="faq_a11">সিস্টেম প্রম্পট হলো একটি পুনঃব্যবহারযোগ্য নির্দেশনা যা মডেল কীভাবে সাড়া দেবে তা নির্ধারণ করে — উদাহরণস্বরূপ, “আপনি একজন সংক্ষিপ্ত বিজ্ঞান শিক্ষক। দৈনন্দিন উদাহরণ দিয়ে ধারণাগুলি স্পষ্টভাবে ব্যাখ্যা করুন।” অথবা “আপনি একজন সিনিয়র কোড রিভিউয়ার। বাগ, এজ কেস এবং নিরাপত্তা সমস্যা চিহ্নিত করুন।” সেটিংস → সিস্টেম প্রম্পট-এ এগুলি তৈরি ও পরিচালনা করুন, তারপর একটি আপনার চ্যাটে প্রয়োগ করুন। এগুলি আপনার ডিভাইসে সংরক্ষিত হয় এবং কেবল স্থানীয় মডেলে পাঠানো হয়।</string>
+    <string name="faq_q12">টুল কী এবং কোনগুলি উপলব্ধ?</string>
+    <string name="faq_a12">টুল সক্ষম মডেলকে প্রতিক্রিয়ার সময় কাজ করতে দেয়। তিনটি উপলব্ধ: JavaScript চালান (অন-ডিভাইস স্যান্ডবক্সে গণিত, তারিখ ও টেক্সট প্রক্রিয়াকরণ), ওয়েব অনুসন্ধান (ওয়েবে সাম্প্রতিক তথ্য খুঁজে পায়), এবং ওয়েব পেজ ফেচ করুন (একটি পেজ পড়ে যাতে মডেল এর সারসংক্ষেপ বা উদ্ধৃতি দিতে পারে)। এগুলি সেটিংস → টুল-এ চালু করুন। প্রতিটি ডিফল্টভাবে বন্ধ এবং কেবল সেই মডেলগুলির সাথে কাজ করে যেগুলি টুল কলিং সমর্থন করে — মডেল সিলেক্টরে হ্যামার ব্যাজ খুঁজুন।</string>
+    <string name="faq_q13">ওয়েব টুলগুলি কি আমার ডেটা অনলাইনে পাঠায়?</string>
+    <string name="faq_a13">কেবল আপনি যখন এগুলি চালু করেন তখনই। ওয়েব অনুসন্ধান মডেলের কোয়েরি DuckDuckGo-তে পাঠায়, এবং ওয়েব পেজ ফেচ করুন মডেল যে পেজগুলি খুলতে বেছে নেয় সেগুলি ডাউনলোড করে — ওই অনুরোধগুলি ওয়েবসাইটগুলিতে যায়, ডেভেলপারের কাছে নয়। JavaScript চালান সম্পূর্ণরূপে আপনার ডিভাইসে কোনো ইন্টারনেট অ্যাক্সেস ছাড়াই থাকে। প্রতিটি টুল বন্ধ থাকলে (ডিফল্ট), কিছুই আপনার ডিভাইসের বাইরে যায় না। বিস্তারিত জানতে গোপনীয়তা নীতি দেখুন।</string>
+    <string name="faq_q14">প্রতিক্রিয়া প্রস্তুত হলে অ্যাপ কি আমাকে জানাবে?</string>
+    <string name="faq_a14">হ্যাঁ। অ্যাপ ব্যাকগ্রাউন্ডে থাকা অবস্থায়, একটি বিজ্ঞপ্তি মডেলের স্ট্যাটাস ট্র্যাক করে — লোড হয়েছে, তৈরি হচ্ছে, তারপর প্রতিক্রিয়া প্রস্তুত — এবং আপনাকে প্রতিক্রিয়া কপি বা শেয়ার করতে দেয়। আপনি সেটিংস → শব্দ এবং হ্যাপটিক-এ একটি ছোট সমাপ্তি ধ্বনিও সক্ষম করতে পারেন। মডেল ডাউনলোড গতি ও ETA সহ নিজস্ব অগ্রগতি বিজ্ঞপ্তি দেখায়।</string>
+
+    <!-- Models Screen -->
+    <string name="models">মডেল</string>
+    <string name="change_folder">ফোল্ডার পরিবর্তন করুন</string>
+    <string name="delete_model">মুছে ফেলুন</string>
+    <string name="download_model">ডাউনলোড</string>
+    <string name="storage_used_models">মডেল: %s</string>
+    <string name="storage_available">%s উপলব্ধ</string>
+    <string name="downloads_folder">ডাউনলোড ফোল্ডার</string>
+    <string name="custom_folder">কাস্টম ফোল্ডার</string>
+    <string name="delete_model_confirm">%s মুছে ফেলবেন?</string>
+    <string name="delete_model_message">এটি মডেল ফাইলটি স্থায়ীভাবে সরিয়ে দেবে।</string>
+    <string name="downloaded_models">ডাউনলোড করা হয়েছে</string>
+    <string name="available_models">ডাউনলোডের জন্য উপলব্ধ</string>
+    <string name="no_downloaded_models">এখনো কোনো মডেল ডাউনলোড করা হয়নি</string>
+    <string name="browse_more_models">মডেল ব্রাউজ করুন</string>
+    <string name="cancel">বাতিল</string>
+    <string name="low_ram_warning_title">মডেলটি অস্থির হতে পারে</string>
+    <string name="low_ram_warning_message">মডেলের জন্য প্রায় %1$s RAM প্রয়োজন, কিন্তু এই ডিভাইসে মোট %2$s আছে। এটি ধীরে লোড হতে পারে বা অপ্রত্যাশিতভাবে সাড়া দিতে পারে।</string>
+    <string name="load_anyway">তবুও লোড করুন</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">মডেল ডাউনলোড</string>
+    <string name="download_notification_channel_description">মডেল ফাইল ডাউনলোডের অগ্রগতি দেখায়</string>
+    <string name="download_complete">ডাউনলোড সম্পন্ন</string>
+    <string name="moving_to_storage">স্টোরেজে সরানো হচ্ছে\u2026</string>
+    <string name="starting_download">ডাউনলোড শুরু হচ্ছে\u2026</string>
+    <string name="download_failed">ডাউনলোড ব্যর্থ হয়েছে</string>
+    <string name="download_cancelled">ডাউনলোড বাতিল করা হয়েছে</string>
+    <string name="waiting_for_network">নেটওয়ার্কের জন্য অপেক্ষা করা হচ্ছে\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">মডেল স্থানান্তর করবেন?</string>
+    <string name="migrate_models_message">পূর্ববর্তী ফোল্ডারে %1$d টি মডেল (%2$s) পাওয়া গেছে। আপনি কি সেগুলি নতুন অবস্থানে কপি করতে চান?</string>
+    <string name="migrate_models_from_downloads">আপনার ডাউনলোড ফোল্ডারে %1$d টি মডেল (%2$s) পাওয়া গেছে। আপনি কি সেগুলি নির্বাচিত স্টোরেজ অবস্থানে সরাতে চান?</string>
+    <string name="models_to_migrate">মডেল:</string>
+    <string name="migrate">স্থানান্তর করুন</string>
+    <string name="skip">এড়িয়ে যান</string>
+    <string name="migrating_models">মডেল স্থানান্তর করা হচ্ছে</string>
+    <string name="migration_progress">%2$d এর মধ্যে %1$d কপি করা হচ্ছে</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">সিস্টেম প্রম্পট</string>
+    <string name="system_prompts_subtitle">যেকোনো মডেলের জন্য পুনরায় ব্যবহারযোগ্য নির্দেশাবলী</string>
+    <string name="system_prompts_empty">এখনো কোনো সিস্টেম প্রম্পট নেই। যোগ করতে + ট্যাপ করুন।</string>
+    <string name="system_prompt_new">নতুন সিস্টেম প্রম্পট</string>
+    <string name="system_prompt_edit">সিস্টেম প্রম্পট সম্পাদনা করুন</string>
+    <string name="system_prompt_hint">যেমন: আপনি একজন সংক্ষিপ্ত সহকারী। সর্বদা ফরাসি ভাষায় উত্তর দিন।</string>
+    <string name="system_prompt_current">বর্তমান সিস্টেম প্রম্পট</string>
+    <string name="system_prompt_current_empty">কোনো সিস্টেম প্রম্পট নেই — যোগ করতে ট্যাপ করুন</string>
+    <string name="system_prompt_update">আপডেট করুন</string>
+    <string name="save">সংরক্ষণ</string>
+    <string name="add">যোগ করুন</string>
+    <string name="clear">মুছুন</string>
+
+    <!-- General UI -->
+    <string name="select_model">মডেল নির্বাচন করুন</string>
+    <string name="new_conversation">নতুন কথোপকথন</string>
+    <string name="close">বন্ধ করুন</string>
+    <string name="pinned_label">পিন করা</string>
+    <string name="unpin">আনপিন করুন</string>
+    <string name="pin">পিন করুন</string>
+    <string name="rename">নাম পরিবর্তন করুন</string>
+    <string name="delete">মুছে ফেলুন</string>
+    <string name="rename_conversation">কথোপকথনের নাম পরিবর্তন করুন</string>
+    <string name="previously_used_model">পূর্বে ব্যবহৃত: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">স্টোরেজ ফোল্ডার নির্বাচন করুন</string>
+    <string name="choose_storage_folder_message">অনুগ্রহ করে একটি ফোল্ডার নির্বাচন করুন যেখানে মডেলগুলি সংরক্ষণ করা হবে। অ্যাপ ব্যবহার করতে এটি প্রয়োজন।</string>
+    <string name="choose_folder">ফোল্ডার নির্বাচন করুন</string>
+
+    <!-- Session -->
+    <string name="session_info">সেশন তথ্য</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">জেনারেশন প্যারামিটার</string>
+    <string name="reset">রিসেট</string>
+    <string name="context_size">কনটেক্সট আকার</string>
+    <string name="will_reset_conversation">কথোপকথন রিসেট হবে</string>
+    <string name="thinking_budget">থিংকিং বাজেট</string>
+    <string name="tokens_value">%d টোকেন</string>
+    <string name="temperature">তাপমাত্রা</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">পুনরাবৃত্তি পেনাল্টি</string>
+    <string name="advanced">উন্নত</string>
+    <string name="collapse">সংকুচিত করুন</string>
+    <string name="expand">প্রসারিত করুন</string>
+    <string name="seed">সিড</string>
+    <string name="random">এলোমেলো</string>
+    <string name="disabled_label">নিষ্ক্রিয়</string>
+    <string name="unload_model">মডেল আনলোড করুন</string>
+
+    <!-- Thinking -->
+    <string name="thinking">ভাবছে</string>
+    <string name="collapse_thinking">চিন্তাভাবনা সংকুচিত করুন</string>
+    <string name="expand_thinking">চিন্তাভাবনা প্রসারিত করুন</string>
+    <string name="thoughts">চিন্তাভাবনা</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">কার্যকারিতা উপলব্ধ নয় \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">মডেল চালান</string>
+    <string name="screenshot_hero_title_emphasis">আপনার</string>
+    <string name="screenshot_hero_title_suffix">ফোনে</string>
+    <string name="screenshot_hero_title_suffix_tablet">ট্যাবলেটে</string>
+    <string name="screenshot_hero_subtitle">গোপনীয়। স্থানীয়। অফলাইন।</string>
+    <string name="screenshot_hero_providers_label">২৫+ মডেল এখান থেকে:</string>
+    <string name="screenshot_choose_model">মডেল বাছুন</string>
+    <string name="screenshot_choose_model_sub">শীর্ষস্থানীয় AI প্রদানকারীদের থেকে</string>
+    <string name="screenshot_chat">গোপনে চ্যাট করুন</string>
+    <string name="screenshot_chat_sub">আপনার ডিভাইসে</string>
+    <string name="screenshot_fine_tune">সূক্ষ্ম টিউন করুন</string>
+    <string name="screenshot_fine_tune_sub">জেনারেশন প্যারামিটার</string>
+    <string name="screenshot_download_models">যেকোনো মডেল ডাউনলোড করুন</string>
+    <string name="screenshot_download_models_sub">আপনার পছন্দের যেকোনো ফোল্ডারে</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">আপনি একজন সংক্ষিপ্ত বিজ্ঞান শিক্ষক। দৈনন্দিন উদাহরণ দিয়ে ধারণাগুলি স্পষ্টভাবে ব্যাখ্যা করুন।</string>
+    <string name="screenshot_prompts">পুনঃব্যবহারযোগ্য প্রম্পট</string>
+    <string name="screenshot_prompts_sub">একবার টোন ঠিক করুন, যেকোনো জায়গায় ব্যবহার করুন</string>
+    <string name="screenshot_tools">মডেলকে টুল দিন</string>
+    <string name="screenshot_tools_sub">ওয়েব সার্চ, ফেচ এবং JavaScript</string>
+    <string name="screenshot_notification">ব্যাকগ্রাউন্ডে চলে</string>
+    <string name="screenshot_notification_sub">শেষ হলে একটি বিজ্ঞপ্তি পান</string>
+    <string name="screenshot_prompt_sample_code">আপনি একজন সিনিয়র কোড রিভিউয়ার। বাগ, এজ কেস এবং নিরাপত্তা সমস্যা চিহ্নিত করুন। সরাসরি ও সুনির্দিষ্ট হন।</string>
+    <string name="screenshot_prompt_sample_translator">আপনি একজন অনুবাদক। আমি যা পাঠাই তা স্বাভাবিক, সাবলীল ফরাসিতে রূপান্তর করুন এবং ফর্ম্যাটিং বজায় রাখুন।</string>
+    <string name="screenshot_prompt_sample_brainstorm">আপনি একজন সৃজনশীল ভাবনা-বিনিময়ের সঙ্গী। সাহসী, অপ্রত্যাশিত ধারণা দিন এবং আমার ধারণাগুলিকে আরও এগিয়ে নিন।</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">মেশিন লার্নিং কী?</string>
+    <string name="screenshot_chat_response">মেশিন লার্নিং হলো কৃত্রিম বুদ্ধিমত্তার একটি শাখা যেখানে কম্পিউটার স্পষ্টভাবে প্রোগ্রাম করা হওয়ার পরিবর্তে **ডেটা থেকে শেখে**।\n\nমূল ধারণাসমূহ:\n\n\u2022 **প্রশিক্ষণ**: অ্যালগরিদমে ডেটা প্রদান\n\u2022 **মডেল**: ডেটা থেকে শেখা প্যাটার্ন\n\u2022 **ইনফারেন্স**: নতুন ডেটায় পূর্বাভাস তৈরি করা</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">হালকা চ্যাট মডেল</string>
+    <string name="model_category_general">সাধারণ উদ্দেশ্যে চ্যাট মডেল</string>
+    <string name="model_category_efficient">দক্ষ অন-ডিভাইস মডেল</string>
+    <string name="model_category_reasoning">হাইব্রিড যুক্তি মডেল</string>
+    <string name="model_category_ultra_lightweight">অতি-হালকা চ্যাট মডেল</string>
+    <string name="model_category_compact_reasoning">কম্প্যাক্ট যুক্তি মডেল</string>
+    <string name="model_category_thinking">চিন্তাশীল মডেল</string>
+    <string name="model_category_enterprise">এন্টারপ্রাইজ চ্যাট মডেল</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">নতুন কী আছে</string>
+    <string name="whats_new_item_1">নতুন Gemma 4 মডেল (E2B, E4B)</string>
+    <string name="whats_new_item_2">প্রতি-মডেল জেনারেশন প্যারামিটার</string>
+    <string name="whats_new_item_3">থিংকিং বাজেট নিয়ন্ত্রণ</string>
+
+    <string name="supports_your_language">আপনার ভাষা সমর্থিত</string>
+    <string name="other_models">অন্যান্য মডেল</string>
+    <string name="language">ভাষা</string>
+    <string name="language_system_default">সিস্টেম ডিফল্ট</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">ইনফারেন্স ইঞ্জিন</string>
+    <string name="inference_notification_channel_description">AI মডেলটিকে লোড করে এবং প্রতিক্রিয়া জানাতে প্রস্তুত রাখে।</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">মডেল লোড হয়েছে — চ্যাট করার জন্য প্রস্তুত।</string>
+    <string name="inference_notification_loaded_title">মডেল লোড হয়েছে</string>
+    <string name="inference_engine_crashed">উফ — কিছু একটা ভুল হয়েছে।\nঅনুগ্রহ করে মডেলটি আবার লোড করুন।</string>
+    <string name="message_too_large">বার্তাটি %1$d KB, যা %2$d KB সীমা ছাড়িয়েছে। আরও ছোট বার্তা পাঠিয়ে দেখুন।</string>
+    <string name="replay_history_too_large">কথোপকথনের ইতিহাস এই মডেলে পুনরায় লোড করার জন্য অনেক বড়। চালিয়ে যেতে নতুন চ্যাট শুরু করুন।</string>
+    <string name="system_prompt_too_large">সিস্টেম প্রম্পট %1$d KB, যা %2$d KB সীমা ছাড়িয়েছে। ছোট প্রম্পট চেষ্টা করুন।</string>
+    <string name="history_message_too_large">এই কথোপকথনে সংরক্ষিত একটি বার্তা পুনরায় লোড করার জন্য অনেক বড়। চালিয়ে যেতে নতুন চ্যাট শুরু করুন।</string>
+    <string name="model_load_failed_status">মডেল লোড করা যায়নি</string>
+    <string name="model_load_failed_title">মডেল লোড করা যায়নি</string>
+    <string name="model_load_failed_message">%1$s লোড করা যায়নি। ফাইলটি দূষিত হতে পারে, অথবা এটি এমন একটি আর্কিটেকচার ব্যবহার করে যা অ্যাপের এই সংস্করণ এখনও সমর্থন করে না। অন্য একটি মডেল চেষ্টা করুন, অথবা অ্যাপটি আপডেট করুন।</string>
+    <string name="model_load_failed_dismiss">ঠিক আছে</string>
+
+    <!-- Inference notifications -->
+    <string name="inference_notification_generating_title">প্রতিক্রিয়া তৈরি হচ্ছে…</string>
+    <string name="inference_notification_ready_title">প্রতিক্রিয়া প্রস্তুত</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d টোকেন</item>
+        <item quantity="other">%d টোকেন</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">ইনফারেন্স ইঞ্জিন এই মুহূর্তে উপলব্ধ নয়। কিছুক্ষণ পরে আবার চেষ্টা করুন।</string>
+
+    <!-- Common actions -->
+    <string name="share">শেয়ার করুন</string>
+    <string name="response_copied">ক্লিপবোর্ডে কপি করা হয়েছে</string>
+    <string name="folder_picker_unavailable">ফোল্ডার বাছাই করার জন্য কোনো অ্যাপ উপলব্ধ নেই। সিস্টেম ফাইলস / ডকুমেন্টস অ্যাপ ইনস্টল বা সক্ষম করুন।</string>
+
+    <!-- Model capability badges -->
+    <string name="cd_supports_thinking">চিন্তা সমর্থন করে</string>
+    <string name="cd_supports_tools">টুল সমর্থন করে</string>
+
+    <!-- Sound and haptic -->
+    <string name="sound_and_haptic">শব্দ এবং হ্যাপটিক</string>
+    <string name="sound_and_haptic_subtitle">সম্পন্ন হলে শব্দ এবং টাইপিংয়ের সময় হ্যাপটিক</string>
+    <string name="sound_on_completion_title">জেনারেশন শেষ হলে শব্দ বাজান</string>
+    <string name="sound_on_completion_desc">অ্যাপ ব্যাকগ্রাউন্ডে থাকা অবস্থায় মডেল প্রতিক্রিয়া শেষ করলে একটি ছোট ধ্বনি বাজে।</string>
+    <string name="haptic_on_generation_title">জেনারেশনে হ্যাপটিক ফিডব্যাক</string>
+    <string name="haptic_on_generation_desc">প্রতিক্রিয়ার প্রতিটি অংশ স্ট্রিম হওয়ার সাথে একটি মৃদু কম্পন।</string>
+
+    <!-- Tools -->
+    <string name="tools">টুল</string>
+    <string name="tools_subtitle">সক্ষম মডেলকে কাজ করতে দিন</string>
+    <string name="set_up_tools">টুল সেট আপ করুন</string>
+    <string name="tools_section_intro">টুল সক্ষম মডেলকে প্রতিক্রিয়ার সময় কাজ করতে দেয়, যেমন ওয়েবে অনুসন্ধান করা বা গণনা করা। প্রতিটি টুল ডিফল্টভাবে বন্ধ থাকে — শুধু আপনি যেগুলি চান সেগুলি চালু করুন। টুল কেবল সেই মডেলগুলির সাথেই কাজ করে যেগুলি এগুলি সমর্থন করে (হ্যামার ব্যাজ খুঁজুন)।</string>
+    <string name="tools_params_sheet_subtitle">মডেল প্রতিক্রিয়ার সময় এগুলি কল করতে পারে</string>
+    <string name="tools_example_label">উদাহরণ: %1$s</string>
+    <string name="tool_call_input">ইনপুট</string>
+    <string name="tool_call_output">আউটপুট</string>
+    <string name="tool_web_search_title">ওয়েব অনুসন্ধান</string>
+    <string name="tool_web_search_desc">ওয়েবে অনুসন্ধান করে এবং ফলাফলের শিরোনাম, লিঙ্ক ও স্নিপেট ফেরত দেয় যাতে মডেল সাম্প্রতিক তথ্য খুঁজে পেতে পারে।</string>
+    <string name="tool_web_search_example">\"সর্বশেষ Pixel ফোনের সাম্প্রতিক রিভিউ খুঁজুন।\"</string>
+    <string name="tool_web_fetch_title">ওয়েব পেজ ফেচ করুন</string>
+    <string name="tool_web_fetch_desc">একটি লিঙ্ক খোলে এবং এর মূল বিষয়বস্তু টেক্সট হিসেবে পড়ে যাতে মডেল কোনো পেজের সারসংক্ষেপ বা উদ্ধৃতি দিতে পারে।</string>
+    <string name="tool_web_fetch_example">\"এই লিঙ্কের নিবন্ধটির সারসংক্ষেপ দিন।\"</string>
+    <string name="tool_run_javascript_title">JavaScript চালান</string>
+    <string name="tool_run_javascript_desc">গণিত, তারিখ ও টেক্সট প্রক্রিয়াকরণের জন্য একটি নিরাপদ স্যান্ডবক্সে JavaScript চালায়। ইন্টারনেট বা ফাইল অ্যাক্সেস নেই।</string>
+    <string name="tool_run_javascript_example">\"(2 + 3) × 4 কত, এবং ১ জানুয়ারি ২০২৭ সপ্তাহের কোন দিন?\"</string>
+
+    <!-- What's New (1.7.0) -->
+    <string name="whats_new_tools">ওয়েব অনুসন্ধান, পেজ ফেচ এবং JavaScript চালানো</string>
+    <string name="whats_new_cache">ক্যাশ করা প্রম্পট ও টুলের সাথে দ্রুত প্রতিক্রিয়া</string>
+</resources>

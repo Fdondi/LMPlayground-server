@@ -56,6 +56,9 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.hazeEffect
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.SemanticsPropertyKey
@@ -86,7 +89,30 @@ fun UserInputPreview() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun UserInput(
+    /**
+     * On tablets / wide layouts, the parent renders a permanent sidebar so the
+     * chat pane only occupies part of the screen width. The original
+     * tonally-elevated bottom dock then looks like a half-coloured band that
+     * stops at the sidebar. Setting this to true flattens the surface so the
+     * input flows into the chat pane background.
+     */
+    integrateWithSurface: Boolean = false,
+    /**
+     * On the tablet (flat-surface) path the parent toggles this true only when
+     * the message list actually has content scrolled behind the input dock —
+     * so the divider acts as a scroll-edge indicator rather than always-on
+     * chrome. Defaults to [integrateWithSurface] for the standalone preview.
+     */
+    showTopDivider: Boolean = integrateWithSurface,
     modifier: Modifier = Modifier,
+    /**
+     * When supplied, the input dock blurs the chat content scrolling behind it
+     * (frosted glass) instead of painting an opaque tonal surface. The blur
+     * region spans the full dock — including the area behind the navigation bar
+     * and keyboard — since the nav/ime padding lives on the inner content.
+     */
+    hazeState: HazeState? = null,
+    hazeStyle: HazeStyle = HazeStyle.Unspecified,
     status: UserInputStatus = UserInputStatus.IDLE,
     focusRequester: FocusRequester = remember { FocusRequester() },
     supportsThinking: Boolean = false,
@@ -115,7 +141,19 @@ fun UserInput(
         dragAccumulator += delta
     }
 
-    Surface(tonalElevation = 2.dp, contentColor = MaterialTheme.colorScheme.secondary) {
+    val frosted = hazeState != null
+    Surface(
+        // Frosted: paint nothing of our own and let hazeEffect blur the chat
+        // behind the whole dock. Otherwise keep the original tonal surface.
+        modifier = if (frosted) {
+            Modifier.fillMaxWidth().hazeEffect(hazeState!!, hazeStyle)
+        } else {
+            Modifier
+        },
+        color = if (frosted) Color.Transparent else MaterialTheme.colorScheme.surface,
+        tonalElevation = if (frosted || integrateWithSurface) 0.dp else 2.dp,
+        contentColor = MaterialTheme.colorScheme.secondary
+    ) {
         Column(
             modifier = modifier.draggable(
                 state = draggableState,
@@ -129,6 +167,16 @@ fun UserInput(
                 }
             )
         ) {
+            // Scroll-edge divider: drawn only when the parent says the message
+            // list has content hidden behind the input. At the bottom of the
+            // chat we let the input float without a line.
+            // Left inset (matches the top-bar divider) keeps the line from
+            // butting against the master card on tablet layouts.
+            if (showTopDivider) {
+                androidx.compose.material3.HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp)
+                )
+            }
             // Image preview row
             if (attachedImageUri != null) {
                 Row(
@@ -186,7 +234,12 @@ fun UserInput(
                     // Move scroll to bottom
                     resetScroll()
                 },
-                onCancelClicked = onCancelClicked
+                onCancelClicked = onCancelClicked,
+                // On tablet landscape (integrateWithSurface) reduce the row's
+                // vertical padding from 8dp → 2dp so the input dock saves ~12dp
+                // of message area — vertical space is the constrained dimension
+                // when the IME is open.
+                compact = integrateWithSurface
             )
         }
     }
@@ -237,7 +290,8 @@ private fun UserInputText(
     onTextFieldFocused: (Boolean) -> Unit,
     sendMessageEnabled: Boolean,
     onMessageSent: () -> Unit,
-    onCancelClicked: () -> Unit
+    onCancelClicked: () -> Unit,
+    compact: Boolean = false
 ) {
     val a11ylabel = stringResource(id = R.string.textfield_desc)
     val hasLeftButtons = supportsThinking || supportsVision
@@ -245,8 +299,8 @@ private fun UserInputText(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
-            .heightIn(min = 48.dp, max = 320.dp),
+            .padding(vertical = if (compact) 2.dp else 8.dp)
+            .heightIn(min = if (compact) 40.dp else 48.dp, max = 320.dp),
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {

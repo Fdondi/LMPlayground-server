@@ -45,6 +45,12 @@ interface ChatDao {
         thinkingBudget: Int
     )
 
+    @Query("UPDATE chat_sessions SET systemPrompt = :systemPrompt WHERE id = :sessionId")
+    suspend fun updateSessionSystemPrompt(sessionId: String, systemPrompt: String)
+
+    @Query("UPDATE chat_sessions SET metadata = :metadata WHERE id = :sessionId")
+    suspend fun updateSessionMetadata(sessionId: String, metadata: String)
+
     @Query("SELECT * FROM chat_sessions WHERE id = :sessionId")
     suspend fun getSession(sessionId: String): ChatSessionEntity?
 

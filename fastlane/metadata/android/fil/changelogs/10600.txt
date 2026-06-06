@@ -1,0 +1,3 @@
+- Suporta sa Tablet at Chromebook — adaptive layout para sa malalaking screen at foldable
+- Hanggang 2× na mas mabilis na generation sa device gamit ang bagong CPU optimizations
+- Inayos ang bihirang freeze kapag binubuksan ang model picker

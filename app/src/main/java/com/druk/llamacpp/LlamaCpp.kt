@@ -1,46 +1,76 @@
 package com.druk.llamacpp
 
-/**
- * `LlamaCpp` class provides a Java (JNI) interface for interacting with the `llama.cpp` library,
- * enabling efficient local execution of large language models (LLMs).
- */
-class LlamaCpp {
+import android.os.ParcelFileDescriptor
 
-    companion object {
-        init {
-            System.loadLibrary("llamacpp")
-        }
+/**
+ * App-facing facade for the inference engine.
+ *
+ * Forwards calls over AIDL to the in-process `LlamaService` (and, after
+ * the service moves to `:llama`, the inference process). Replaces the
+ * previous direct-JNI `LlamaCpp` — that class moved to
+ * [com.druk.llamacpp.jni.NativeLlamaCpp] and is only used by the service
+ * implementation and the instrumented JNI tests.
+ */
+class LlamaCpp(private val client: InferenceClient) {
+
+    /** No-op — the service runs `initBackend()` automatically on bind. */
+    fun init(): Int = 0
+
+    fun systemInfo(): String = client.withService { it.systemInfo() }
+
+    /**
+     * Load a model identified by a filesystem path. Use this for paths
+     * the service can open directly (e.g. `/data/local/tmp/...` in tests).
+     * For SAF-backed files use the [ParcelFileDescriptor] overload — paths
+     * containing `fd:N` are not valid cross-process.
+     */
+    fun loadModel(
+        path: String,
+        progressCallback: LlamaProgressCallback,
+        disableRepack: Boolean = false,
+    ): LlamaModel {
+        val id = client.withService { it.loadModel(path, null, wrapProgress(progressCallback), disableRepack) }
+        if (id == 0) throw IllegalStateException("loadModel failed for $path")
+        return LlamaModel(client, id)
     }
 
     /**
-     * Initializes the underlying llama.cpp environment.
-     *
-     * @return A status code (0 - success).
+     * Load a model from a [ParcelFileDescriptor]. Binder dups the FD into
+     * the service process; the service builds its own `fd:N` string from
+     * its dup and holds the PFD alive for the model's lifetime.
      */
-    external fun init(): Int
+    fun loadModel(
+        pfd: ParcelFileDescriptor,
+        progressCallback: LlamaProgressCallback,
+        disableRepack: Boolean = false,
+    ): LlamaModel {
+        val id = client.withService { it.loadModel(null, pfd, wrapProgress(progressCallback), disableRepack) }
+        if (id == 0) throw IllegalStateException("loadModel failed for pfd")
+        return LlamaModel(client, id)
+    }
+
+    fun probeModelMetadata(path: String): Array<String>? =
+        client.withService { it.probeModelMetadata(path, null) }
+
+    fun probeModelMetadata(pfd: ParcelFileDescriptor): Array<String>? =
+        client.withService { it.probeModelMetadata(null, pfd) }
 
     /**
-     * Generate system information about the llama.cpp environment.
-     *
-     * @return A string containing system information.
+     * Replace the foreground-service notification's title and text. Use
+     * after a successful load to surface the loaded model's user-facing
+     * name and RAM footprint when the user expands the Silent group in
+     * the shade. Either argument may be null to keep the previous value.
      */
-    external fun systemInfo(): String
+    fun setForegroundContent(title: String?, text: String?, actionBody: String? = null) {
+        try {
+            client.withService { it.setForegroundContent(title, text, actionBody) }
+        } catch (_: Throwable) {
+            // No-op — the FGS will keep whatever content it had, and the
+            // next successful call will overwrite it.
+        }
+    }
 
-    /**
-     * Loads a pre-trained LLM model from the specified file path.
-     *
-     * @param path The path to the model file on disk.
-     * @param progressCallback A callback to receive progress updates during loading.
-     * @return A `LlamaModel` instance representing the loaded model.
-     */
-    external fun loadModel(path: String,
-                           progressCallback: LlamaProgressCallback): LlamaModel
-
-    /**
-     * Probes a GGUF file's metadata without loading model weights.
-     *
-     * @param path The path to the GGUF file (supports "fd:N" format).
-     * @return A String array [name, hasChatTemplate] or null on failure.
-     */
-    external fun probeModelMetadata(path: String): Array<String>?
+    private fun wrapProgress(cb: LlamaProgressCallback) = object : ILlamaProgressCallback.Stub() {
+        override fun onProgress(progress: Float) = cb.onProgress(progress)
+    }
 }

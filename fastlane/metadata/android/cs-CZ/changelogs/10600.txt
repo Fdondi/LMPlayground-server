@@ -1,0 +1,3 @@
+- Podpora Tabletů a Chromebooků — adaptivní rozvržení pro velké obrazovky a skládací zařízení
+- Až 2× rychlejší generování na zařízení díky novým optimalizacím CPU
+- Opravili jsme vzácné zamrznutí při otevírání výběru modelů

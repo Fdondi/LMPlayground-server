@@ -1,0 +1,6 @@
+- Nástroje — modely teď mohou prohledávat web, načíst stránku a spouštět JavaScript. Zapněte je u modelů v Nastavení → Nástroje
+- Nové modely: Gemma 4 12B a Granite 4.1 (3B a 8B)
+- Rychlejší odpovědi díky mezipaměti promptů a nástrojů
+- Sdílejte odpovědi nebo je kopírujte/sdílejte přímo z oznámení
+- Živé oznámení ukazuje stav generování a počet tokenů
+- Vyšší výkon a stabilita

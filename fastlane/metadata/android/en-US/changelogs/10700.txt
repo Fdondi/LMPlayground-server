@@ -1,0 +1,6 @@
+- Tools — capable models can now search the web, fetch a page, and run JavaScript during a reply. Turn them on per model in Settings → Tools
+- Faster replies with cached prompts and tools
+- Share responses, or copy/share straight from the notification
+- Live notification shows generation status and token count
+- Sound & haptics — a chime when a reply finishes in the background, plus a typewriter tick as it streams (Settings → Sound and Haptic)
+- Frosted-glass refresh across the app

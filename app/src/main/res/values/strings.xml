@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">LM Playground</string>
+    <string name="app_name" translatable="false">LM Playground</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Composer</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="action_settings">Settings</string>
 
@@ -31,7 +31,7 @@
     <string name="timezone">Timezone</string>
     <string name="twitter">Twitter</string>
     <string name="common_channels">Channels in common</string>
-    <string name="lorem">Lorem or Ipsum</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
 
     <!-- Accessibility descriptions -->
 
@@ -52,6 +52,7 @@
     <string name="record_message">Record voice message</string>
     <string name="stop">Stop</string>
 
+    <string name="share">Share</string>
     <string name="copy">Copy</string>
     <string name="upvote">Upvote</string>
     <string name="downvote">Downvote</string>
@@ -68,21 +69,23 @@
     <string name="version">Version %s</string>
     <string name="models_subtitle">Download and manage models</string>
     <string name="privacy_policy">Privacy Policy</string>
-    <string name="privacy_policy_effective_date">Effective Date: March 16, 2024</string>
-    <string name="privacy_policy_intro">Welcome to LM Playground! I am committed to maintaining the trust and confidence of all users of my app. In this Privacy Policy, I\'m providing detailed information on when and why I don\'t collect personal data, how I use the only permission required (Internet permission), and how I ensure your privacy is protected.</string>
+    <string name="privacy_policy_effective_date">Effective Date: June 2, 2026</string>
+    <string name="privacy_policy_intro">Welcome to LM Playground! I am committed to maintaining the trust and confidence of everyone who uses my app. This Privacy Policy explains what the app does and does not collect, how your conversations stay on your device, and the few cases — such as the optional web tools — where information leaves your device, so you always know what to expect.</string>
     <string name="privacy_policy_s1_title">1. No Personal Information Collection</string>
-    <string name="privacy_policy_s1_body">I, Andriy Druk, the developer of LM Playground, do not collect, store, use, or share any personal information from the users of my app. My app is designed with your privacy as a priority, ensuring you can use it without compromising your personal data.</string>
-    <string name="privacy_policy_s2_title">2. Non-Personal Information</string>
-    <string name="privacy_policy_s2_body">LM Playground is designed in such a way that it does not collect or use any non-personal information from its users. The app operates independently without tracking or analyzing user data, behavior, or preferences.</string>
-    <string name="privacy_policy_s3_title">3. Internet Permission Usage</string>
-    <string name="privacy_policy_s3_body">The only permission required by LM Playground is for Internet access. This permission is necessary to enable the DownloadManager to download files directly into the app. Please be assured that this function does not involve sending any data from your device to any servers or collecting information about your browsing habits.</string>
-    <string name="privacy_policy_s4_title">4. Privacy Policy Updates</string>
-    <string name="privacy_policy_s4_body">As the developer of LM Playground, I reserve the right to update this Privacy Policy at any time. Any changes will be effective immediately upon posting the updated policy on this page. Users are encouraged to frequently check this page for any changes and stay informed about how I am helping to protect the personal information I do not collect.</string>
-    <string name="privacy_policy_s5_title">5. Acceptance of This Policy</string>
-    <string name="privacy_policy_s5_body">By using LM Playground, you acknowledge and agree to this Privacy Policy. If you do not agree with the policy, please refrain from using the app. Your continued use of the app following the posting of any updates or changes to this policy will be deemed your acceptance of those changes.</string>
-    <string name="privacy_policy_s6_title">6. Contact Me</string>
-    <string name="privacy_policy_s6_body">If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me.</string>
-    <string name="privacy_policy_contact_email">andriydruk@gmail.com</string>
+    <string name="privacy_policy_s1_body">I, Andriy Druk, the developer of LM Playground, do not collect, store, use, or share any personal information from the users of my app. There are no accounts, no advertising, and no usage analytics or tracking. The app is designed with your privacy as a priority, so you can use it without compromising your personal data.</string>
+    <string name="privacy_policy_s2_title">2. On-Device Processing</string>
+    <string name="privacy_policy_s2_body">Your conversations, system prompts, and the model\'s responses are processed locally on your device by the on-device model. This content is never sent to me or to any server for inference. It stays on your device unless you choose to use a feature that reaches the internet, as described below.</string>
+    <string name="privacy_policy_s3_title">3. Internet Access</string>
+    <string name="privacy_policy_s3_body">LM Playground requests Internet permission for two purposes: to download the model files you choose, and — only if you turn them on — to power the optional web tools. The app contains no advertising, telemetry, or usage analytics, and it does not report your activity back to me.</string>
+    <string name="privacy_policy_s4_title">4. Tools and Web Access</string>
+    <string name="privacy_policy_s4_body">Capable models can use optional tools, which are turned off by default. When you enable the web tools, some information leaves your device: the Web search tool sends the model\'s search query to DuckDuckGo, and the Fetch web page tool downloads the pages the model decides to open from those websites. Those requests are handled by the third-party sites under their own privacy policies — I neither receive nor store them. The Run JavaScript tool runs entirely on your device in a sandbox with no internet access. To keep everything offline, simply leave the tools off.</string>
+    <string name="privacy_policy_s5_title">5. Privacy Policy Updates</string>
+    <string name="privacy_policy_s5_body">As the developer of LM Playground, I reserve the right to update this Privacy Policy at any time. Any changes will be effective immediately upon posting the updated policy. Users are encouraged to review this page periodically and stay informed about how their privacy is protected.</string>
+    <string name="privacy_policy_s6_title">6. Acceptance of This Policy</string>
+    <string name="privacy_policy_s6_body">By using LM Playground, you acknowledge and agree to this Privacy Policy. If you do not agree with the policy, please refrain from using the app. Your continued use of the app following the posting of any updates or changes to this policy will be deemed your acceptance of those changes.</string>
+    <string name="privacy_policy_s7_title">7. Contact Me</string>
+    <string name="privacy_policy_s7_body">If you have any questions or suggestions about my Privacy Policy, do not hesitate to contact me.</string>
+    <string name="privacy_policy_contact_email" translatable="false">me@andriydruk.com</string>
     <string name="send_feedback">Send Feedback</string>
     <string name="faq">FAQ</string>
     <string name="faq_subtitle">Frequently asked questions</string>
@@ -95,19 +98,27 @@
     <string name="faq_q3">How much storage space do I need?</string>
     <string name="faq_a3">Model sizes vary from about 500 MB (small models like Qwen 3 0.6B) to several GB (larger models like DeepSeek R1 7B). Make sure you have enough free space before downloading.</string>
     <string name="faq_q4">Does the app require an internet connection?</string>
-    <string name="faq_a4">Internet is only needed to download models. Once downloaded, models run completely offline on your device.</string>
+    <string name="faq_a4">Internet is needed to download models, and — if you turn them on — for the optional web tools (web search and fetch page). Apart from that, once a model is downloaded it runs completely offline on your device.</string>
     <string name="faq_q5">Is my data private?</string>
-    <string name="faq_a5">Yes. All conversations are processed locally on your device. No data is sent to external servers. See the Privacy Policy for details.</string>
+    <string name="faq_a5">Your conversations are processed locally on your device and are never sent to a server by the app. The one exception is the optional web tools: if you enable web search or fetch page, the model\'s search queries and the pages it opens are sent to those websites (search uses DuckDuckGo). Tools are off by default, so nothing leaves your device unless you turn them on. See the Privacy Policy for details.</string>
     <string name="faq_q6">Why is model loading slow?</string>
     <string name="faq_a6">Larger models take more time to load into memory. Loading times depend on your device\'s hardware. Once loaded, the model stays in memory until you unload it.</string>
     <string name="faq_q7">Which devices work best?</string>
     <string name="faq_a7">Devices with more RAM can run larger models. For best performance, use a device with at least 6 GB of RAM for small models and 8+ GB for larger ones.</string>
     <string name="faq_q8">Can I load a custom GGUF model?</string>
-    <string name="faq_a8">A model file alone is not enough for loading \u2013 each model requires a tailored, prebuilt configuration (chat template, tokenizer settings, etc.) that the app uses to run it correctly. If you\'d like to use a model not yet available in the app, please visit my GitHub repository and submit a request or contribute the configuration.</string>
+    <string name="faq_a8">Yes. Place your .gguf file in the storage folder selected in Settings \u2192 Models (the same folder used for downloads). The app will pick it up automatically and show it in the model selector alongside the built-in catalog. Chat template and tokenizer settings are read from the GGUF metadata. If a specific model doesn\'t work, please open an issue on GitHub.</string>
     <string name="faq_q9">Can I change where models are stored?</string>
     <string name="faq_a9">Yes. Go to Settings, then Models, and use the \u201CChange Folder\u201D option to select a different storage location.</string>
     <string name="faq_q10">How do I delete a model?</string>
     <string name="faq_a10">Go to Settings, then Models. In the \u201CDownloaded\u201D section, tap the delete icon next to the model you want to remove.</string>
+    <string name="faq_q11">What are system prompts?</string>
+    <string name="faq_a11">A system prompt is a reusable instruction that shapes how the model responds \u2014 for example, \u201CYou are a concise science tutor. Explain ideas clearly with everyday examples\u201D or \u201CYou are a senior code reviewer. Point out bugs, edge cases, and security issues.\u201D Create and manage them in Settings \u2192 System Prompts, then apply one to your chat. They are stored on your device and sent only to the local model.</string>
+    <string name="faq_q12">What are tools and which ones are available?</string>
+    <string name="faq_a12">Tools let capable models take actions during a reply. Three are available: Run JavaScript (math, dates, and text processing in an on-device sandbox), Web search (finds current information on the web), and Fetch web page (reads a page so the model can summarize or quote it). Turn them on in Settings \u2192 Tools. Each is off by default and works only with models that support tool calling \u2014 look for the hammer badge in the model selector.</string>
+    <string name="faq_q13">Do the web tools send my data online?</string>
+    <string name="faq_a13">Only when you enable them. Web search sends the model\'s query to DuckDuckGo, and Fetch web page downloads the pages the model chooses to open \u2014 those requests go to the websites themselves, not to the developer. Run JavaScript stays entirely on your device with no internet access. With every tool off (the default), nothing leaves your device. See the Privacy Policy for details.</string>
+    <string name="faq_q14">Will the app notify me when a response is ready?</string>
+    <string name="faq_a14">Yes. While the app is in the background, a notification tracks the model\'s status \u2014 loaded, generating, then response ready \u2014 and lets you copy or share the reply. You can also enable a short completion chime in Settings \u2192 Sound and Haptic. Model downloads show their own progress notification with speed and ETA.</string>
 
     <!-- Models Screen -->
     <string name="models">Models</string>
@@ -122,10 +133,17 @@
     <string name="delete_model_message">This will permanently remove the model file.</string>
     <string name="downloaded_models">Downloaded</string>
     <string name="available_models">Available to Download</string>
+    <string name="supports_your_language">Supports your language</string>
+    <string name="other_models">Other models</string>
+    <string name="language">Language</string>
+    <string name="language_system_default">System default</string>
     <string name="no_downloaded_models">No models downloaded yet</string>
     <string name="browse_more_models">Browse Models</string>
     <string name="cancel">Cancel</string>
-    
+    <string name="low_ram_warning_title">Model could be unstable</string>
+    <string name="low_ram_warning_message">Model needs ~%1$s RAM but this device only has %2$s total. It may load slowly or respond unpredictably.</string>
+    <string name="load_anyway">Load anyway</string>
+
     <!-- Download notifications -->
     <string name="download_notification_channel">Model Downloads</string>
     <string name="download_notification_channel_description">Shows progress for model file downloads</string>
@@ -145,5 +163,193 @@
     <string name="skip">Skip</string>
     <string name="migrating_models">Migrating Models</string>
     <string name="migration_progress">Copying %1$d of %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">System Prompts</string>
+    <string name="system_prompts_subtitle">Reusable instructions for any model</string>
+    <string name="system_prompts_empty">No system prompts yet. Tap + to add one.</string>
+    <string name="system_prompt_new">New system prompt</string>
+    <string name="system_prompt_edit">Edit system prompt</string>
+    <string name="system_prompt_hint">e.g. You are a concise assistant. Always answer in French.</string>
+    <string name="system_prompt_current">Current system prompt</string>
+    <string name="system_prompt_current_empty">No system prompt — tap to add</string>
+    <string name="system_prompt_update">Update</string>
+    <string name="save">Save</string>
+    <string name="add">Add</string>
+    <string name="clear">Clear</string>
+
+    <!-- General UI -->
+    <string name="select_model">Select Model</string>
+    <string name="new_conversation">New Conversation</string>
+    <string name="close">Close</string>
+    <string name="pinned_label">Pinned</string>
+    <string name="unpin">Unpin</string>
+    <string name="pin">Pin</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="rename_conversation">Rename Conversation</string>
+    <string name="previously_used_model">Previously used: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Choose Storage Folder</string>
+    <string name="choose_storage_folder_message">Please select a folder where models will be stored. This is required to use the app.</string>
+    <string name="choose_folder">Choose Folder</string>
+    <string name="folder_picker_unavailable">No app available to pick a folder. Install or enable the system Files / Documents app.</string>
+
+    <!-- Session -->
+    <string name="session_info">Session Info</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Generation Parameters</string>
+    <string name="reset">Reset</string>
+    <string name="context_size">Context Size</string>
+    <string name="will_reset_conversation">Will reset conversation</string>
+    <string name="thinking_budget">Thinking Budget</string>
+    <string name="tokens_value">%d tokens</string>
+    <string name="temperature">Temperature</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Repetition Penalty</string>
+    <string name="advanced">Advanced</string>
+    <string name="collapse">Collapse</string>
+    <string name="expand">Expand</string>
+    <string name="seed">Seed</string>
+    <string name="random">Random</string>
+    <string name="disabled_label">disabled</string>
+    <string name="unload_model">Unload Model</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Thinking</string>
+    <string name="collapse_thinking">Collapse thinking</string>
+    <string name="expand_thinking">Expand thinking</string>
+    <string name="thoughts">Thoughts</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Functionality not available \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">Run models on</string>
+    <string name="screenshot_hero_title_emphasis">your</string>
+    <string name="screenshot_hero_title_suffix">phone</string>
+    <!-- Hero title suffix variant for tablet marketing screenshots -->
+    <string name="screenshot_hero_title_suffix_tablet">tablet</string>
+    <string name="screenshot_hero_subtitle">Private. Local. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ models from:</string>
+    <string name="screenshot_choose_model">Choose model</string>
+    <string name="screenshot_choose_model_sub">from leading AI providers</string>
+    <string name="screenshot_chat">Chat privately</string>
+    <string name="screenshot_chat_sub">on your device</string>
+    <string name="screenshot_fine_tune">Fine-tune</string>
+    <string name="screenshot_fine_tune_sub">generation parameters</string>
+    <string name="screenshot_download_models">Download any model</string>
+    <string name="screenshot_download_models_sub">to any folder you choose</string>
+    <string name="screenshot_prompts">Reusable prompts</string>
+    <string name="screenshot_prompts_sub">set the tone once, use anywhere</string>
+    <string name="screenshot_tools">Give models tools</string>
+    <string name="screenshot_tools_sub">web search, fetch &amp; JavaScript</string>
+    <string name="screenshot_notification">Runs in the background</string>
+    <string name="screenshot_notification_sub">get a ping when it\'s done</string>
+
+    <!-- Screenshot sample system prompts -->
+    <string name="screenshot_system_prompt_sample">You are a concise science tutor. Explain ideas clearly with everyday examples.</string>
+    <string name="screenshot_prompt_sample_code">You are a senior code reviewer. Point out bugs, edge cases, and security issues. Be direct and specific.</string>
+    <string name="screenshot_prompt_sample_translator">You are a translator. Turn everything I send into natural, fluent French and keep the formatting.</string>
+    <string name="screenshot_prompt_sample_brainstorm">You are a creative brainstorming partner. Offer bold, unexpected ideas and build on mine.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">What is machine learning?</string>
+    <string name="screenshot_chat_response">Machine learning is a branch of artificial intelligence where computers **learn from data** instead of being explicitly programmed.\n\nKey concepts:\n\n\u2022 **Training**: feeding data to algorithms\n\u2022 **Models**: learned patterns from data\n\u2022 **Inference**: making predictions on new data</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Lightweight chat model</string>
+    <string name="model_category_general">General-purpose chat model</string>
+    <string name="model_category_efficient">Efficient on-device model</string>
+    <string name="model_category_reasoning">Hybrid reasoning model</string>
+    <string name="model_category_ultra_lightweight">Ultra-lightweight chat model</string>
+    <string name="model_category_compact_reasoning">Compact reasoning model</string>
+    <string name="model_category_thinking">Thinking model</string>
+    <string name="model_category_enterprise">Enterprise chat model</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">What\'s New</string>
+    <string name="whats_new_item_1">Tools — capable models can now use:</string>
+    <string name="whats_new_tools">Web search, fetch page, and run JavaScript</string>
+    <string name="whats_new_cache">Faster replies with cached prompts &amp; tools</string>
+    <string name="whats_new_item_2">Now available in 28 languages</string>
+    <string name="whats_new_item_3">Performance improvements</string>
+    <string name="set_up_tools">Set up tools</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">Sound and Haptic</string>
+    <string name="sound_and_haptic_subtitle">Completion sound and typing haptics</string>
+    <string name="sound_on_completion_title">Play sound when generation finishes</string>
+    <string name="sound_on_completion_desc">Plays a short chime when the model finishes a response while the app is in the background.</string>
+    <string name="haptic_on_generation_title">Haptic feedback on generation</string>
+    <string name="haptic_on_generation_desc">A gentle tick as each part of the response streams in.</string>
+
+    <!-- Tools -->
+    <string name="tools">Tools</string>
+    <string name="tools_subtitle">Let capable models take actions</string>
+    <string name="tools_section_intro">Tools let capable models take actions during a reply, like searching the web or running a calculation. Each tool is off by default — turn on only the ones you want. Tools work only with models that support them (look for the hammer badge).</string>
+    <string name="tools_example_label">Example: %1$s</string>
+    <string name="tools_params_sheet_subtitle">The model can call these during a reply</string>
+    <!-- Tool-call detail in the chat bubble -->
+    <string name="tool_call_input">Input</string>
+    <string name="tool_call_output">Output</string>
+    <!-- Model capability badges (content descriptions) -->
+    <string name="cd_supports_tools">Supports tools</string>
+    <string name="cd_supports_thinking">Supports thinking</string>
+    <!-- Per-tool copy -->
+    <string name="tool_run_javascript_title">Run JavaScript</string>
+    <string name="tool_run_javascript_desc">Runs JavaScript in a secure sandbox for math, dates, and text processing. No internet or file access.</string>
+    <string name="tool_run_javascript_example">\"What is (2 + 3) × 4, and what weekday is Jan 1 2027?\"</string>
+    <string name="tool_web_search_title">Web search</string>
+    <string name="tool_web_search_desc">Searches the web and returns result titles, links, and snippets so the model can find current information.</string>
+    <string name="tool_web_search_example">\"Find recent reviews of the latest Pixel phone.\"</string>
+    <string name="tool_web_fetch_title">Fetch web page</string>
+    <string name="tool_web_fetch_desc">Opens a link and reads its main content as text so the model can summarize or quote a page.</string>
+    <string name="tool_web_fetch_example">\"Summarize the article at this link.\"</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Inference engine</string>
+    <string name="inference_notification_channel_description">Keeps the AI model loaded and ready to respond.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model loaded — ready to chat.</string>
+    <!-- Title shown on the FGS notification while a model is loaded. The
+         description below is built from the user-facing model name and
+         the formatted RAM footprint, e.g. "Gemma 4 E2B - 3.41 GB". -->
+    <string name="inference_notification_loaded_title">Model is loaded</string>
+    <!-- Foreground-notification titles that silently track what the model
+         is doing. The description line ("<name> - <size>") stays put while
+         the title flips loaded -> generating -> ready as work progresses. -->
+    <string name="inference_notification_generating_title">Generating response…</string>
+    <string name="inference_notification_ready_title">Response ready</string>
+    <!-- Description line shown on the FGS notification during/after
+         generation, e.g. "Gemma 4 E2B · 342 tokens". -->
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokens</item>
+    </plurals>
+    <string name="response_copied">Copied to clipboard</string>
+    <string name="inference_engine_crashed">Whoops — something went wrong.\nPlease reload the model.</string>
+    <string name="message_too_large">Message is %1$d KB, exceeds the %2$d KB limit. Try sending a shorter message.</string>
+    <string name="replay_history_too_large">Conversation history is too large to reload into this model. Start a new chat to continue.</string>
+    <string name="system_prompt_too_large">System prompt is %1$d KB, exceeds the %2$d KB limit. Try a shorter prompt.</string>
+    <string name="history_message_too_large">A saved message in this conversation is too large to reload. Start a new chat to continue.</string>
+    <string name="inference_engine_unavailable">Inference engine is not available right now. Try again in a moment.</string>
+    <string name="model_load_failed_status">Couldn\'t load model</string>
+    <string name="model_load_failed_title">Couldn\'t load model</string>
+    <string name="model_load_failed_message">Couldn\'t load %1$s. The file may be corrupt, or it uses an architecture this version of the app doesn\'t support yet. Try a different model, or update the app.</string>
+    <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- Debug-only crash injection (only shown in debug builds — do not
+         translate, English only). -->
+    <string name="debug_crash_engine_title" translatable="false">Crash inference engine (debug)</string>
+    <string name="debug_crash_engine_subtitle" translatable="false">Kills the :llama process to verify crash isolation.</string>
+    <string name="debug_crash_engine_not_connected" translatable="false">Inference engine isn\'t connected.</string>
+    <string name="debug_crash_engine_done" translatable="false">Crash injected — check the chat for the recovery message.</string>
 
 </resources>

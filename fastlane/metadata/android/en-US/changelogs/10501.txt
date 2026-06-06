@@ -1,0 +1,3 @@
+- System prompts — save reusable instructions and pick the right one for each model, so your tone, role, or output format stick across sessions
+- 28 languages — the app is now localized in 28 languages including Arabic, Bengali, Hebrew, Hindi, Japanese, Korean, Polish, Thai, Ukrainian, Vietnamese, and more
+- Faster inference via the latest llama.cpp plus model selector fixes

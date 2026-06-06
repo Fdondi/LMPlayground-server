@@ -1,0 +1,3 @@
+- Prise en charge des Tablet et Chromebook — mises en page adaptatives pour grands écrans et appareils pliables
+- Génération sur l'appareil jusqu'à 2× plus rapide grâce à de nouvelles optimisations CPU
+- Correction d'un rare blocage à l'ouverture du sélecteur de modèles

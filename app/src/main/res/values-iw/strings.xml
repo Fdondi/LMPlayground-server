@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">פתח מגירת ניווט</string>
+    <string name="navigation_drawer_close">סגור מגירת ניווט</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">כותרת ניווט</string>
+    <string name="action_settings">הגדרות</string>
+
+    <string name="menu_home">בית</string>
+    <string name="menu_gallery">גלריה</string>
+    <string name="menu_slideshow">מצגת שקופיות</string>
+    <string name="conversations">שיחות</string>
+    <string name="profile">פרופיל</string>
+    <string name="jumpBottom">קפוץ לתחתית</string>
+    <string name="send">שלח</string>
+    <string name="author_me">אני</string>
+    <string name="members">%d חברים</string>
+    <string name="textfield_hint">הודעה</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; החלק לביטול</string>
+    <string name="emojis_label">אימוג\'ים</string>
+    <string name="stickers_label">מדבקות</string>
+
+    <string name="message">הודעה</string>
+    <string name="edit_profile">ערוך פרופיל</string>
+    <string name="profile_error">אירעה שגיאה בטעינת הפרופיל</string>
+    <string name="bio">אודות</string>
+    <string name="display_name">שם תצוגה</string>
+    <string name="status">סטטוס</string>
+    <string name="timezone">אזור זמן</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">ערוצים משותפים</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">בחירת אימוג\'י</string>
+    <string name="emoji_selector_bt_desc">הצג בחירת אימוג\'י</string>
+    <string name="dm_desc">הודעה פרטית</string>
+    <string name="attach_photo_desc">צרף תמונה</string>
+    <string name="map_selector_desc">בחירת מיקום</string>
+    <string name="videochat_desc">התחל שיחת וידאו</string>
+    <string name="textfield_desc">הזנת טקסט</string>
+    <string name="not_available">הפונקציונליות אינה זמינה כעת</string>
+    <string name="not_available_subtitle">הכנו לך משקה וחזור לבדוק מאוחר יותר!</string>
+    <string name="attached_image">תמונה מצורפת</string>
+    <string name="search">חיפוש</string>
+    <string name="info">מידע</string>
+    <string name="more_options">אפשרויות נוספות</string>
+    <string name="touch_and_hold_to_record">גע והחזק כדי להקליט</string>
+    <string name="record_message">הקלט הודעה קולית</string>
+    <string name="stop">עצור</string>
+
+    <string name="copy">העתק</string>
+    <string name="upvote">הצבעה חיובית</string>
+    <string name="downvote">הצבעה שלילית</string>
+    <string name="rating_question">מדוע בחרת בדירוג זה?</string>
+    <string name="offensive_unsafe">פוגעני/לא בטוח</string>
+    <string name="not_correct">לא נכון</string>
+    <string name="didnt_follow_instructions">לא עקב אחר ההוראות</string>
+    <string name="wrong_language">שפה שגויה</string>
+    <string name="other">אחר</string>
+
+    <!-- Settings -->
+    <string name="settings">הגדרות</string>
+    <string name="back">חזרה</string>
+    <string name="version">גרסה %s</string>
+    <string name="models_subtitle">הורד ונהל מודלים</string>
+    <string name="privacy_policy">מדיניות פרטיות</string>
+    <string name="privacy_policy_effective_date">תאריך תחילה: 2 ביוני, 2026</string>
+    <string name="privacy_policy_intro">ברוכים הבאים ל-LM Playground! אני מחויב לשמור על האמון של כל מי שמשתמש באפליקציה שלי. מדיניות פרטיות זו מסבירה מה האפליקציה אוספת ומה אינה אוספת, כיצד השיחות שלך נשארות במכשיר שלך, ואת המקרים המעטים — כמו כלי הווב האופציונליים — שבהם מידע יוצא מהמכשיר שלך, כך שתמיד תדע למה לצפות.</string>
+    <string name="privacy_policy_s1_title">1. אין איסוף של מידע אישי</string>
+    <string name="privacy_policy_s1_body">אני, Andriy Druk, המפתח של LM Playground, איני אוסף, שומר, משתמש או משתף מידע אישי כלשהו ממשתמשי האפליקציה שלי. אין חשבונות, אין פרסומות, ואין ניתוח שימוש או מעקב. האפליקציה תוכננה עם הפרטיות שלך כעדיפות, כך שתוכל להשתמש בה מבלי לסכן את הנתונים האישיים שלך.</string>
+    <string name="privacy_policy_s2_title">2. עיבוד במכשיר</string>
+    <string name="privacy_policy_s2_body">השיחות שלך, פרומפטים של מערכת ותגובות המודל מעובדים מקומית במכשיר שלך על ידי המודל הפועל במכשיר. תוכן זה לעולם אינו נשלח אליי או לשרת כלשהו לצורך היסק. הוא נשאר במכשיר שלך אלא אם תבחר להשתמש בתכונה הניגשת לאינטרנט, כמתואר להלן.</string>
+    <string name="privacy_policy_s3_title">3. גישה לאינטרנט</string>
+    <string name="privacy_policy_s3_body">LM Playground מבקש הרשאת אינטרנט לשתי מטרות: להוריד את קובצי המודלים שתבחר, ו — רק אם תפעיל אותם — להפעיל את כלי הווב האופציונליים. האפליקציה אינה מכילה פרסומות, טלמטריה או ניתוח שימוש, ואינה מדווחת לי על הפעילות שלך.</string>
+    <string name="privacy_policy_s4_title">4. כלים וגישה לווב</string>
+    <string name="privacy_policy_s4_body">מודלים מתאימים יכולים להשתמש בכלים אופציונליים, המושבתים כברירת מחדל. כשאתה מפעיל את כלי הווב, מידע מסוים יוצא מהמכשיר שלך: כלי החיפוש באינטרנט שולח את שאילתת החיפוש של המודל ל-DuckDuckGo, וכלי שלוף דף אינטרנט מוריד את הדפים שהמודל מחליט לפתוח מאותם אתרים. בקשות אלה מטופלות על ידי האתרים החיצוניים בהתאם למדיניות הפרטיות שלהם — אני איני מקבל או שומר אותן. הכלי הרץ JavaScript פועל כולו במכשיר שלך בארגז חול ללא גישה לאינטרנט. כדי לשמור על הכול במצב לא מקוון, פשוט השאר את הכלים מושבתים.</string>
+    <string name="privacy_policy_s5_title">5. עדכוני מדיניות פרטיות</string>
+    <string name="privacy_policy_s5_body">כמפתח של LM Playground, אני שומר לעצמי את הזכות לעדכן מדיניות פרטיות זו בכל עת. כל שינוי ייכנס לתוקף מיד עם פרסום המדיניות המעודכנת. משתמשים מתבקשים לבדוק דף זה מעת לעת ולהתעדכן כיצד הפרטיות שלהם מוגנת.</string>
+    <string name="privacy_policy_s6_title">6. הסכמה למדיניות זו</string>
+    <string name="privacy_policy_s6_body">על ידי שימוש ב-LM Playground, אתה מאשר ומסכים למדיניות פרטיות זו. אם אינך מסכים למדיניות, אנא הימנע משימוש באפליקציה. המשך השימוש שלך באפליקציה לאחר פרסום עדכונים או שינויים במדיניות זו ייחשב כהסכמתך לשינויים אלה.</string>
+    <string name="privacy_policy_s7_title">7. צור איתי קשר</string>
+    <string name="privacy_policy_s7_body">אם יש לך שאלות או הצעות לגבי מדיניות הפרטיות שלי, אל תהסס ליצור איתי קשר.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">שלח משוב</string>
+    <string name="faq">שאלות נפוצות</string>
+    <string name="faq_subtitle">שאלות שנשאלות לעתים קרובות</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">מה זה LM Playground?</string>
+    <string name="faq_a1">LM Playground מאפשר לך להפעיל מודלים שפתיים גדולים ישירות במכשיר ה-Android שלך. כל העיבוד מתבצע מקומית \u2013 ללא צורך בשרתי ענן.</string>
+    <string name="faq_q2">אילו מודלים נתמכים?</string>
+    <string name="faq_a2">האפליקציה תומכת במודלים בפורמט GGUF עם קוונטיזציה Q4_K_M, כולל Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini ו-DeepSeek R1 Distill בגדלים שונים.</string>
+    <string name="faq_q3">כמה נפח אחסון אני צריך?</string>
+    <string name="faq_a3">גדלי המודלים נעים בין כ-500 MB (מודלים קטנים כמו Qwen 3 0.6B) למספר GB (מודלים גדולים יותר כמו DeepSeek R1 7B). ודא שיש לך מספיק מקום פנוי לפני ההורדה.</string>
+    <string name="faq_q4">האם האפליקציה דורשת חיבור לאינטרנט?</string>
+    <string name="faq_a4">אינטרנט נדרש להורדת מודלים, ו — אם תפעיל אותם — לכלי הווב האופציונליים (חיפוש באינטרנט ושליפת דף). מלבד זאת, לאחר שמודל הורד הוא פועל לחלוטין במצב לא מקוון במכשיר שלך.</string>
+    <string name="faq_q5">האם הנתונים שלי פרטיים?</string>
+    <string name="faq_a5">השיחות שלך מעובדות מקומית במכשיר שלך והאפליקציה לעולם אינה שולחת אותן לשרת. החריג היחיד הוא כלי הווב האופציונליים: אם תפעיל חיפוש באינטרנט או שליפת דף, שאילתות החיפוש של המודל והדפים שהוא פותח נשלחים לאותם אתרים (החיפוש משתמש ב-DuckDuckGo). הכלים מושבתים כברירת מחדל, כך ששום דבר אינו יוצא מהמכשיר שלך אלא אם תפעיל אותם. ראה את מדיניות הפרטיות לפרטים.</string>
+    <string name="faq_q6">מדוע טעינת המודל איטית?</string>
+    <string name="faq_a6">מודלים גדולים יותר לוקחים יותר זמן לטעינה לזיכרון. זמני הטעינה תלויים בחומרה של המכשיר שלך. לאחר הטעינה, המודל נשאר בזיכרון עד שתפרוק אותו.</string>
+    <string name="faq_q7">אילו מכשירים עובדים בצורה הטובה ביותר?</string>
+    <string name="faq_a7">מכשירים עם יותר זיכרון RAM יכולים להפעיל מודלים גדולים יותר. לביצועים הטובים ביותר, השתמש במכשיר עם לפחות 6 GB RAM למודלים קטנים ו-8+ GB למודלים גדולים יותר.</string>
+    <string name="faq_q8">האם אוכל לטעון מודל GGUF מותאם אישית?</string>
+    <string name="faq_a8">כן. מקם את קובץ ה-.gguf שלך בתיקיית האחסון שנבחרה בהגדרות \u2192 מודלים (אותה תיקייה המשמשת להורדות). האפליקציה תאתר אותו אוטומטית ותציג אותו בבורר המודלים לצד הקטלוג המובנה. הגדרות תבנית הצ\'אט והטוקנייזר נקראות ממטא-הנתונים של GGUF. אם מודל מסוים לא עובד, אנא פתח Issue ב-GitHub.</string>
+    <string name="faq_q9">האם אוכל לשנות היכן מודלים מאוחסנים?</string>
+    <string name="faq_a9">כן. עבור להגדרות, ואז למודלים, והשתמש באפשרות \u201Cשנה תיקייה\u201D כדי לבחור מיקום אחסון אחר.</string>
+    <string name="faq_q10">כיצד אני מוחק מודל?</string>
+    <string name="faq_a10">עבור להגדרות, ואז למודלים. בסעיף \u201Cהורדו\u201D, הקש על סמל המחיקה ליד המודל שברצונך להסיר.</string>
+    <string name="faq_q11">מהם פרומפטים של מערכת?</string>
+    <string name="faq_a11">פרומפט מערכת הוא הוראה לשימוש חוזר המעצבת את אופן התגובה של המודל — לדוגמה, “אתה מורה תמציתי למדעים. הסבר רעיונות בבהירות בעזרת דוגמאות מחיי היום-יום” או “אתה מבקר קוד בכיר. הצבע על באגים, מקרי קצה ובעיות אבטחה”. צור ונהל אותם בהגדרות → פרומפטים של מערכת, ואז החל אחד על השיחה שלך. הם נשמרים במכשיר שלך ונשלחים רק למודל המקומי.</string>
+    <string name="faq_q12">מהם כלים ואילו מהם זמינים?</string>
+    <string name="faq_a12">כלים מאפשרים למודלים מתאימים לבצע פעולות במהלך תגובה. שלושה כלים זמינים: הרץ JavaScript (מתמטיקה, תאריכים ועיבוד טקסט בארגז חול במכשיר), חיפוש באינטרנט (מוצא מידע עדכני באינטרנט) ושלוף דף אינטרנט (קורא דף כדי שהמודל יוכל לסכם או לצטט אותו). הפעל אותם בהגדרות → כלים. כל אחד מהם מושבת כברירת מחדל ועובד רק עם מודלים שתומכים בקריאה לכלים — חפש את תג הפטיש בבורר המודלים.</string>
+    <string name="faq_q13">האם כלי הווב שולחים את הנתונים שלי לאינטרנט?</string>
+    <string name="faq_a13">רק כשאתה מפעיל אותם. חיפוש באינטרנט שולח את שאילתת המודל ל-DuckDuckGo, ושלוף דף אינטרנט מוריד את הדפים שהמודל בוחר לפתוח — בקשות אלה הולכות לאתרים עצמם, לא למפתח. הרץ JavaScript נשאר כולו במכשיר שלך ללא גישה לאינטרנט. כשכל הכלים מושבתים (ברירת המחדל), שום דבר אינו יוצא מהמכשיר שלך. ראה את מדיניות הפרטיות לפרטים.</string>
+    <string name="faq_q14">האם האפליקציה תודיע לי כשתגובה מוכנה?</string>
+    <string name="faq_a14">כן. בזמן שהאפליקציה ברקע, התראה עוקבת אחר מצב המודל — נטען, יוצר, ואז התגובה מוכנה — ומאפשרת לך להעתיק או לשתף את התגובה. תוכל גם להפעיל צליל סיום קצר בהגדרות → צליל ורטט. הורדות מודלים מציגות התראת התקדמות משלהן עם מהירות וזמן משוער שנותר.</string>
+
+    <!-- Models Screen -->
+    <string name="models">מודלים</string>
+    <string name="change_folder">שנה תיקייה</string>
+    <string name="delete_model">מחק</string>
+    <string name="download_model">הורד</string>
+    <string name="storage_used_models">מודלים: %s</string>
+    <string name="storage_available">%s פנוי</string>
+    <string name="downloads_folder">תיקיית הורדות</string>
+    <string name="custom_folder">תיקייה מותאמת אישית</string>
+    <string name="delete_model_confirm">למחוק את %s?</string>
+    <string name="delete_model_message">פעולה זו תסיר לצמיתות את קובץ המודל.</string>
+    <string name="downloaded_models">הורדו</string>
+    <string name="available_models">זמינים להורדה</string>
+    <string name="no_downloaded_models">עדיין לא הורדו מודלים</string>
+    <string name="browse_more_models">עיין במודלים</string>
+    <string name="cancel">ביטול</string>
+    <string name="low_ram_warning_title">המודל עשוי להיות לא יציב</string>
+    <string name="low_ram_warning_message">המודל זקוק לכ-%1$s RAM, אך למכשיר זה יש בסך הכל %2$s בלבד. הטעינה עשויה להיות איטית או התגובות בלתי צפויות.</string>
+    <string name="load_anyway">טען בכל זאת</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">הורדות מודלים</string>
+    <string name="download_notification_channel_description">מציג את התקדמות הורדת קבצי המודלים</string>
+    <string name="download_complete">ההורדה הושלמה</string>
+    <string name="moving_to_storage">מעביר לאחסון\u2026</string>
+    <string name="starting_download">מתחיל הורדה\u2026</string>
+    <string name="download_failed">ההורדה נכשלה</string>
+    <string name="download_cancelled">ההורדה בוטלה</string>
+    <string name="waiting_for_network">ממתין לרשת\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">להעביר מודלים?</string>
+    <string name="migrate_models_message">נמצאו %1$d מודלים (%2$s) בתיקייה הקודמת. האם ברצונך להעתיק אותם למיקום החדש?</string>
+    <string name="migrate_models_from_downloads">נמצאו %1$d מודלים (%2$s) בתיקיית ההורדות שלך. האם ברצונך להעביר אותם למיקום האחסון שנבחר?</string>
+    <string name="models_to_migrate">מודלים:</string>
+    <string name="migrate">העבר</string>
+    <string name="skip">דלג</string>
+    <string name="migrating_models">מעביר מודלים</string>
+    <string name="migration_progress">מעתיק %1$d מתוך %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">פרומפטים של מערכת</string>
+    <string name="system_prompts_subtitle">הוראות לשימוש חוזר לכל מודל</string>
+    <string name="system_prompts_empty">אין עדיין פרומפטים של מערכת. הקש על + כדי להוסיף.</string>
+    <string name="system_prompt_new">פרומפט מערכת חדש</string>
+    <string name="system_prompt_edit">ערוך פרומפט מערכת</string>
+    <string name="system_prompt_hint">לדוגמה, אתה עוזר תמציתי. ענה תמיד בעברית.</string>
+    <string name="system_prompt_current">פרומפט מערכת נוכחי</string>
+    <string name="system_prompt_current_empty">אין פרומפט מערכת — הקש להוספה</string>
+    <string name="system_prompt_update">עדכן</string>
+    <string name="save">שמור</string>
+    <string name="add">הוסף</string>
+    <string name="clear">נקה</string>
+
+    <!-- General UI -->
+    <string name="select_model">בחר מודל</string>
+    <string name="new_conversation">שיחה חדשה</string>
+    <string name="close">סגור</string>
+    <string name="pinned_label">מוצמד</string>
+    <string name="unpin">בטל הצמדה</string>
+    <string name="pin">הצמד</string>
+    <string name="rename">שנה שם</string>
+    <string name="delete">מחק</string>
+    <string name="rename_conversation">שנה שם שיחה</string>
+    <string name="previously_used_model">שימוש אחרון: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">בחר תיקיית אחסון</string>
+    <string name="choose_storage_folder_message">אנא בחר תיקייה שבה יאוחסנו המודלים. זה נדרש כדי להשתמש באפליקציה.</string>
+    <string name="choose_folder">בחר תיקייה</string>
+
+    <!-- Session -->
+    <string name="session_info">מידע על סשן</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">פרמטרי יצירה</string>
+    <string name="reset">אפס</string>
+    <string name="context_size">גודל הקשר</string>
+    <string name="will_reset_conversation">השיחה תאופס</string>
+    <string name="thinking_budget">תקציב חשיבה</string>
+    <string name="tokens_value">%d טוקנים</string>
+    <string name="temperature">טמפרטורה</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">עונש על חזרות</string>
+    <string name="advanced">מתקדם</string>
+    <string name="collapse">כווץ</string>
+    <string name="expand">הרחב</string>
+    <string name="seed">Seed</string>
+    <string name="random">אקראי</string>
+    <string name="disabled_label">מושבת</string>
+    <string name="unload_model">פרוק מודל</string>
+
+    <!-- Thinking -->
+    <string name="thinking">חושב</string>
+    <string name="collapse_thinking">כווץ חשיבה</string>
+    <string name="expand_thinking">הרחב חשיבה</string>
+    <string name="thoughts">מחשבות</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">הפונקציה אינה זמינה \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI על</string>
+    <string name="screenshot_hero_title_emphasis">הטלפון</string>
+    <string name="screenshot_hero_title_suffix">שלך</string>
+    <string name="screenshot_hero_title_suffix_tablet">טאבלט שלך</string>
+    <string name="screenshot_hero_subtitle">פרטי. מקומי. לא מקוון.</string>
+    <string name="screenshot_hero_providers_label">25+ מודלים מ:</string>
+    <string name="screenshot_choose_model">בחר מודל</string>
+    <string name="screenshot_choose_model_sub">מספקי AI מובילים</string>
+    <string name="screenshot_chat">שוחח בפרטיות</string>
+    <string name="screenshot_chat_sub">במכשיר שלך</string>
+    <string name="screenshot_fine_tune">כוונון עדין</string>
+    <string name="screenshot_fine_tune_sub">פרמטרי יצירה</string>
+    <string name="screenshot_download_models">הורד כל מודל</string>
+    <string name="screenshot_download_models_sub">לכל תיקייה שתבחר</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">אתה מורה תמציתי למדעים. הסבר רעיונות בבהירות בעזרת דוגמאות מחיי היום-יום.</string>
+    <string name="screenshot_prompts">הנחיות לשימוש חוזר</string>
+    <string name="screenshot_prompts_sub">הגדירו את הטון פעם אחת, השתמשו בכל מקום</string>
+    <string name="screenshot_tools">תנו למודלים כלים</string>
+    <string name="screenshot_tools_sub">חיפוש באינטרנט, שליפה ו-JavaScript</string>
+    <string name="screenshot_notification">פועל ברקע</string>
+    <string name="screenshot_notification_sub">קבלו התראה כשזה מסתיים</string>
+    <string name="screenshot_prompt_sample_code">אתה מבקר קוד בכיר. הצבע על באגים, מקרי קצה ובעיות אבטחה. היה ישיר וספציפי.</string>
+    <string name="screenshot_prompt_sample_translator">אתה מתרגם. הפוך כל מה שאני שולח לצרפתית טבעית וזורמת ושמור על העיצוב.</string>
+    <string name="screenshot_prompt_sample_brainstorm">אתה שותף יצירתי לסיעור מוחות. הצע רעיונות נועזים ובלתי צפויים ופתח את אלה שלי.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">מהי למידת מכונה?</string>
+    <string name="screenshot_chat_response">למידת מכונה היא ענף של בינה מלאכותית שבו מחשבים **לומדים מנתונים** במקום להיות מתוכנתים במפורש.\n\nמושגי מפתח:\n\n\u2022 **אימון**: הזנת נתונים לאלגוריתמים\n\u2022 **מודלים**: דפוסים שנלמדו מנתונים\n\u2022 **היסק**: ביצוע תחזיות על נתונים חדשים</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">מודל צ\'אט קל משקל</string>
+    <string name="model_category_general">מודל צ\'אט לשימוש כללי</string>
+    <string name="model_category_efficient">מודל יעיל על המכשיר</string>
+    <string name="model_category_reasoning">מודל הסקה היברידי</string>
+    <string name="model_category_ultra_lightweight">מודל צ\'אט קל משקל במיוחד</string>
+    <string name="model_category_compact_reasoning">מודל הסקה קומפקטי</string>
+    <string name="model_category_thinking">מודל חשיבה</string>
+    <string name="model_category_enterprise">מודל צ\'אט לארגונים</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">מה חדש</string>
+    <string name="whats_new_item_1">מודלי Gemma 4 חדשים (E2B, E4B)</string>
+    <string name="whats_new_item_2">פרמטרי יצירה לכל מודל</string>
+    <string name="whats_new_item_3">בקרת תקציב חשיבה</string>
+
+    <string name="supports_your_language">תומך בשפה שלך</string>
+    <string name="other_models">דגמים אחרים</string>
+    <string name="language">שפה</string>
+    <string name="language_system_default">ברירת המחדל של המערכת</string>
+
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">מנוע היסק</string>
+    <string name="inference_notification_channel_description">שומר על מודל ה-AI טעון ומוכן להגיב.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">המודל נטען — מוכן לשיחה.</string>
+    <string name="inference_notification_loaded_title">המודל נטען</string>
+    <string name="inference_engine_crashed">אופס — משהו השתבש.\nטען מחדש את המודל.</string>
+    <string name="message_too_large">ההודעה היא %1$d KB, חורגת מהמגבלה של %2$d KB. נסה לשלוח הודעה קצרה יותר.</string>
+    <string name="replay_history_too_large">היסטוריית השיחה גדולה מדי לטעינה מחדש במודל זה. התחל שיחה חדשה כדי להמשיך.</string>
+    <string name="system_prompt_too_large">הנחיית המערכת היא %1$d KB, חורגת מהמגבלה של %2$d KB. נסה הנחיה קצרה יותר.</string>
+    <string name="history_message_too_large">הודעה שמורה בשיחה זו גדולה מדי לטעינה מחדש. התחל שיחה חדשה כדי להמשיך.</string>
+    <string name="model_load_failed_status">לא ניתן לטעון את המודל</string>
+    <string name="model_load_failed_title">לא ניתן לטעון את המודל</string>
+    <string name="model_load_failed_message">לא ניתן לטעון את %1$s. ייתכן שהקובץ פגום, או שהוא משתמש בארכיטקטורה שגרסה זו של האפליקציה עדיין אינה תומכת בה. נסה מודל אחר, או עדכן את האפליקציה.</string>
+    <string name="model_load_failed_dismiss">אישור</string>
+
+    <!-- Inference notifications -->
+    <string name="inference_notification_generating_title">יוצר תגובה…</string>
+    <string name="inference_notification_ready_title">התגובה מוכנה</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">טוקן %d</item>
+        <item quantity="two">%d טוקנים</item>
+        <item quantity="many">%d טוקנים</item>
+        <item quantity="other">%d טוקנים</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">מנוע ההיסק אינו זמין כעת. נסה שוב בעוד רגע.</string>
+
+    <!-- Common actions -->
+    <string name="share">שתף</string>
+    <string name="response_copied">הועתק ללוח</string>
+    <string name="folder_picker_unavailable">אין אפליקציה זמינה לבחירת תיקייה. התקן או הפעל את אפליקציית הקבצים / המסמכים של המערכת.</string>
+
+    <!-- Model capability badges -->
+    <string name="cd_supports_thinking">תומך בחשיבה</string>
+    <string name="cd_supports_tools">תומך בכלים</string>
+
+    <!-- Sound and haptic -->
+    <string name="sound_and_haptic">צליל ורטט</string>
+    <string name="sound_and_haptic_subtitle">צליל סיום ורטט בעת הקלדה</string>
+    <string name="sound_on_completion_title">השמע צליל בסיום היצירה</string>
+    <string name="sound_on_completion_desc">משמיע צליל קצר כשהמודל מסיים תגובה בזמן שהאפליקציה ברקע.</string>
+    <string name="haptic_on_generation_title">משוב מישושי בעת יצירה</string>
+    <string name="haptic_on_generation_desc">רטט עדין עם הזרמת כל חלק של התגובה.</string>
+
+    <!-- Tools -->
+    <string name="tools">כלים</string>
+    <string name="tools_subtitle">אפשר למודלים מתאימים לבצע פעולות</string>
+    <string name="set_up_tools">הגדר כלים</string>
+    <string name="tools_section_intro">כלים מאפשרים למודלים מתאימים לבצע פעולות במהלך תגובה, כמו חיפוש באינטרנט או ביצוע חישוב. כל כלי מושבת כברירת מחדל — הפעל רק את אלה שאתה רוצה. כלים פועלים רק עם מודלים שתומכים בהם (חפש את תג הפטיש).</string>
+    <string name="tools_params_sheet_subtitle">המודל יכול לקרוא לאלה במהלך תגובה</string>
+    <string name="tools_example_label">דוגמה: %1$s</string>
+    <string name="tool_call_input">קלט</string>
+    <string name="tool_call_output">פלט</string>
+    <string name="tool_web_search_title">חיפוש באינטרנט</string>
+    <string name="tool_web_search_desc">מחפש באינטרנט ומחזיר כותרות תוצאות, קישורים וקטעים כדי שהמודל יוכל למצוא מידע עדכני.</string>
+    <string name="tool_web_search_example">\"מצא ביקורות אחרונות על טלפון ה-Pixel האחרון.\"</string>
+    <string name="tool_web_fetch_title">שלוף דף אינטרנט</string>
+    <string name="tool_web_fetch_desc">פותח קישור וקורא את התוכן המרכזי שלו כטקסט כדי שהמודל יוכל לסכם או לצטט דף.</string>
+    <string name="tool_web_fetch_example">\"סכם את המאמר בקישור הזה.\"</string>
+    <string name="tool_run_javascript_title">הרץ JavaScript</string>
+    <string name="tool_run_javascript_desc">מריץ JavaScript בארגז חול מאובטח לחישובים, תאריכים ועיבוד טקסט. ללא גישה לאינטרנט או לקבצים.</string>
+    <string name="tool_run_javascript_example">\"כמה זה (2 + 3) × 4, ובאיזה יום בשבוע חל 1 בינואר 2027?\"</string>
+
+    <!-- What's New (1.7.0) -->
+    <string name="whats_new_tools">חיפוש באינטרנט, שליפת דף והרצת JavaScript</string>
+    <string name="whats_new_cache">תגובות מהירות יותר עם פרומפטים וכלים שנשמרו במטמון</string>
+</resources>

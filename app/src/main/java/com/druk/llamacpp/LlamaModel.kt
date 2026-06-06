@@ -1,25 +1,35 @@
 package com.druk.llamacpp
 
 /**
- * The `LlamaModel` class represents a loaded large language model (LLM) in the llama.cpp library.
- *
- * It provides methods for interacting with the model, such as creating generation sessions
- * and querying model properties.
+ * AIDL-proxy view of a loaded model. Holds an opaque positive [modelId]
+ * issued by the service; the native pointer never leaves the service
+ * process.
  */
-class LlamaModel {
+class LlamaModel internal constructor(
+    private val client: InferenceClient,
+    internal val modelId: Int,
+) {
+    fun getModelSize(): Long = client.withService { it.getModelSize(modelId) }
 
-    /**
-     * The native handle to the model in the llama.cpp library.
-     * This field is private and should not be modified directly.
-     */
-    private var nativeHandle: Long = 0
+    fun getModelReport(): String = client.withService { it.getModelReport(modelId) }
 
-    /**
-     * Creates a new generation session for the loaded model.
-     *
-     * @return A `LlamaGenerationSession` object for managing text generation.
-     */
-    external fun createSession(
+    fun getContextTrainSize(): Int = client.withService { it.getContextTrainSize(modelId) }
+
+    fun supportsThinking(): Boolean = client.withService { it.supportsThinking(modelId) }
+
+    fun supportsToolCalling(): Boolean = client.requireConnected().supportsToolCalling(modelId)
+
+    fun unloadModel() {
+        try {
+            client.withService { it.unloadModel(modelId) }
+        } catch (_: InferenceUnavailableException) {
+            // Service is gone anyway — the model handle is implicitly
+            // released. Don't bubble this up; callers just want the
+            // unload to be cleaned up.
+        }
+    }
+
+    fun createSession(
         contextSize: Int,
         temperature: Float,
         topP: Float,
@@ -27,44 +37,35 @@ class LlamaModel {
         topK: Int,
         minP: Float,
         seed: Int,
-        thinkingBudget: Int
-    ): LlamaGenerationSession?
-
-    external fun getContextTrainSize(): Int
-
-    /**
-     * Gets the size of the model in bytes.
-     *
-     * @return The size of the model.
-     */
-    external fun getModelSize(): Long
-
-    external fun getModelReport(): String
-
-    /**
-     * Checks if the model's chat template supports thinking/reasoning mode.
-     *
-     * @return true if the model supports thinking.
-     */
-    external fun supportsThinking(): Boolean
-
-    /**
-     * Loads a multimodal projector model for vision support.
-     *
-     * @param mmprojPath The path to the mmproj GGUF file.
-     */
-    external fun loadMmprojModel(mmprojPath: String)
+        thinkingBudget: Int,
+        systemPrompt: String,
+    ): LlamaGenerationSession? {
+        InferenceLimits.requireWithinBudget(systemPrompt, "system prompt")
+        val params = SamplerParams(
+            contextSize = contextSize,
+            temperature = temperature,
+            topP = topP,
+            repetitionPenalty = repetitionPenalty,
+            topK = topK,
+            minP = minP,
+            seed = seed,
+            thinkingBudget = thinkingBudget,
+            systemPrompt = systemPrompt,
+        )
+        val sessionId = client.withService { it.createSession(modelId, params) }
+        if (sessionId == 0) return null
+        return LlamaGenerationSession(client, sessionId)
+    }
 
     /**
-     * Checks if the model supports vision input (image analysis).
-     *
-     * @return true if a multimodal projector is loaded and supports vision.
+     * Vision: load a multimodal projector (mmproj) so this model can accept
+     * image input. [mmprojPath] is a filesystem path readable by the service
+     * process (the UI copies the projector into app storage first). Returns
+     * true if the projector loaded and the model now supports vision.
      */
-    external fun supportsVision(): Boolean
+    fun loadMmprojModel(mmprojPath: String): Boolean =
+        client.withService { it.loadMmprojModel(modelId, mmprojPath, null) }
 
-    /**
-     * Unloads the model from memory and releases associated resources.
-     */
-    external fun unloadModel()
-
+    /** Whether a vision projector is loaded and usable for this model. */
+    fun supportsVision(): Boolean = client.withService { it.supportsVision(modelId) }
 }

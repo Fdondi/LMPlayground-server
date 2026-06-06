@@ -1,11 +1,12 @@
 package com.druk.lmplayground
 
 import android.util.Log
-import com.druk.llamacpp.LlamaCpp
+import androidx.test.core.app.ApplicationProvider
 import com.druk.llamacpp.LlamaGenerationCallback
-import com.druk.llamacpp.LlamaGenerationSession
-import com.druk.llamacpp.LlamaModel
 import com.druk.llamacpp.LlamaProgressCallback
+import com.druk.llamacpp.jni.NativeLlamaCpp
+import com.druk.llamacpp.jni.NativeLlamaModel
+import com.druk.llamacpp.jni.NativeLlamaSession
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Assume.assumeTrue
@@ -42,14 +43,15 @@ class ReplayHistoryTest {
         private const val MODELS_PATH = "/data/local/tmp"
     }
 
-    private lateinit var llamaCpp: LlamaCpp
-    private var llamaModel: LlamaModel? = null
-    private var session: LlamaGenerationSession? = null
+    private lateinit var llamaCpp: NativeLlamaCpp
+    private var llamaModel: NativeLlamaModel? = null
+    private var session: NativeLlamaSession? = null
 
     @Before
     fun setUp() {
-        llamaCpp = LlamaCpp()
-        llamaCpp.init()
+        val context = ApplicationProvider.getApplicationContext<android.content.Context>()
+        llamaCpp = NativeLlamaCpp()
+        llamaCpp.init(context.applicationInfo.nativeLibraryDir)
     }
 
     @After
@@ -68,7 +70,7 @@ class ReplayHistoryTest {
         return null
     }
 
-    private fun loadModel(modelFile: File): LlamaModel {
+    private fun loadModel(modelFile: File): NativeLlamaModel {
         Log.d(TAG, "Loading model: ${modelFile.name}")
         val model = llamaCpp.loadModel(
             modelFile.absolutePath,
@@ -76,14 +78,15 @@ class ReplayHistoryTest {
                 override fun onProgress(progress: Float) {
                     Log.d(TAG, "Loading: ${(progress * 100).toInt()}%")
                 }
-            }
-        )
+            },
+            disableRepack = false,
+        ) ?: error("native loadModel returned null for ${modelFile.absolutePath}")
         llamaModel = model
         return model
     }
 
     private fun generateFullResponse(
-        session: LlamaGenerationSession,
+        session: NativeLlamaSession,
         maxTokens: Int = 512,
         timeoutMs: Long = 120_000
     ): String {
@@ -116,7 +119,7 @@ class ReplayHistoryTest {
         val model = loadModel(modelFile!!)
 
         // --- Session A: build a 2-turn conversation ---
-        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionA
 
         // Turn 1
@@ -136,7 +139,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // --- Session B: new session, replay history, continue ---
-        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionB
 
         sessionB.replayHistory(
@@ -167,7 +170,7 @@ class ReplayHistoryTest {
         assumeTrue("No model in $MODELS_PATH", modelFile != null)
 
         val model = loadModel(modelFile!!)
-        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session
 
         // Replay with empty arrays
@@ -194,7 +197,7 @@ class ReplayHistoryTest {
         val model = loadModel(modelFile!!)
 
         // Session A: one turn
-        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionA
 
         sessionA.addMessage("What is 5 + 5?", false)
@@ -206,7 +209,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // Session B: replay + continue
-        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionB
 
         sessionB.replayHistory(
@@ -236,7 +239,7 @@ class ReplayHistoryTest {
 
         // --- Load model and do one turn ---
         val model1 = loadModel(modelFile!!)
-        val session1 = model1.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session1 = model1.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session1
 
         session1.addMessage("The capital of France is Paris. Remember that.", false)
@@ -257,7 +260,7 @@ class ReplayHistoryTest {
         // --- Reload model from scratch ---
         Log.d(TAG, "Reloading model from scratch")
         val model2 = loadModel(modelFile)
-        val session2 = model2.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val session2 = model2.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = session2
 
         // Replay the saved history
@@ -289,7 +292,7 @@ class ReplayHistoryTest {
         assumeTrue("Model doesn't support thinking", model.supportsThinking())
 
         // Session A: thinking enabled
-        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionA = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionA
 
         sessionA.addMessage("What is 7 * 8?", true)
@@ -301,7 +304,7 @@ class ReplayHistoryTest {
         this.session = null
 
         // Session B: replay and continue with thinking
-        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1)!!
+        val sessionB = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
         this.session = sessionB
 
         sessionB.replayHistory(

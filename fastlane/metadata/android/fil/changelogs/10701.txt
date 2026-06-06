@@ -1,0 +1,6 @@
+- Mga Tool — kaya na ng mga modelo na maghanap sa web, kumuha ng pahina, at magpatakbo ng JavaScript. I-on ito sa Mga setting → Mga Tool
+- Mga bagong modelo: Gemma 4 12B, plus Granite 4.1 (3B at 8B)
+- Mas mabilis na mga sagot dahil sa cache ng mga prompt at tool
+- Ibahagi ang mga sagot, o kopyahin/ibahagi sa notification
+- Ipinapakita ng live na notification ang status at bilang ng token
+- Pinahusay na performance at stability

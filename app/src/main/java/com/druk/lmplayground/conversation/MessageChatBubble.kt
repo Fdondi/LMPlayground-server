@@ -1,5 +1,6 @@
 package com.druk.lmplayground.conversation
 
+import android.content.Intent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material.icons.outlined.ThumbDown
 import androidx.compose.material.icons.outlined.ThumbUp
 import androidx.compose.material3.Icon
@@ -38,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -53,61 +56,85 @@ fun ChatItemBubble(
 ) {
     var showRatingSheet by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
+    val context = LocalContext.current
 
-    val isWaitingForResponse = !showActions && message.content.isEmpty()
+    val hasToolCalls = !message.toolCalls.isNullOrEmpty()
+    val isWaitingForResponse = !showActions
+        && message.content.isEmpty()
+        && !hasToolCalls
+    val isGenerating = !showActions
 
     Column {
         if (isWaitingForResponse) {
             ThinkingIndicator()
         } else {
+            // Tool rounds: render each round's thinking immediately before its
+            // tool call(s), in chronological order.
+            if (hasToolCalls) {
+                val thinkingText = stringResource(R.string.thinking)
+                val inputLabel = stringResource(R.string.tool_call_input)
+                val outputLabel = stringResource(R.string.tool_call_output)
+                for (toolCall in message.toolCalls!!) {
+                    // This round's thinking, rendered immediately before its
+                    // tool call so multi-step turns read in chronological order.
+                    if (toolCall.precedingThinking.isNotEmpty()) {
+                        val pre = remember(toolCall.precedingThinking) {
+                            splitThinking(toolCall.precedingThinking)
+                        }
+                        if (pre.thinkingContent.isNotEmpty()) {
+                            CollapsibleSection(
+                                label = buildString {
+                                    append("$thinkingText \u00B7 ${formatDuration(toolCall.precedingThinkingDurationSeconds)}")
+                                    if (toolCall.precedingThinkingTokens > 0) {
+                                        append(" \u00B7 ${toolCall.precedingThinkingTokens} tokens")
+                                    }
+                                },
+                                content = pre.thinkingContent
+                            )
+                            Spacer(modifier = Modifier.height(6.dp))
+                        }
+                    }
+                    val durationSec = (toolCall.durationMs / 1000).toInt().coerceAtLeast(
+                        if (toolCall.durationMs > 0) 1 else 0
+                    )
+                    CollapsibleSection(
+                        label = "${toolDisplayName(toolCall.name)} \u00B7 ${formatDuration(durationSec)}",
+                        content = buildString {
+                            if (toolCall.arguments.isNotBlank()) {
+                                append(inputLabel).append('\n')
+                                append(prettyJson(toolCall.arguments))
+                                append("\n\n")
+                            }
+                            append(outputLabel).append('\n')
+                            append(prettyJson(toolCall.result))
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(6.dp))
+                }
+            }
+
+            // ③ If still generating after tool calls, show thinking indicator
+            if (isGenerating && hasToolCalls && message.content.isEmpty()) {
+                ThinkingIndicator()
+            }
+
+            // ④ Post-tool thinking + ⑤ Response (from content)
             val split = remember(message.content) { splitThinking(message.content) }
             val hasThinking = split.thinkingContent.isNotEmpty()
-            val isGenerating = !showActions
 
             if (hasThinking) {
-                var expanded by remember { mutableStateOf(false) }
-                val thinkingDuration = formatDuration(message.thinkingDurationSeconds)
-
-                Row(
-                    modifier = Modifier
-                        .clickable { expanded = !expanded }
-                        .padding(vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
-                        contentDescription = if (expanded) "Collapse thinking" else "Expand thinking",
-                        modifier = Modifier.size(16.dp),
-                        tint = MaterialTheme.colorScheme.outline
-                    )
-                    val thinkingLabel = buildString {
-                        append("Thinking \u00B7 $thinkingDuration")
+                val thinkingText = stringResource(R.string.thinking)
+                CollapsibleSection(
+                    label = buildString {
+                        append("$thinkingText \u00B7 ${formatDuration(message.thinkingDurationSeconds)}")
                         if (message.thinkingTokens > 0) {
                             append(" \u00B7 ${message.thinkingTokens} tokens")
                         }
-                    }
-                    Text(
-                        text = thinkingLabel,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
-                }
-                AnimatedVisibility(visible = expanded) {
-                    Surface {
-                        SelectionContainer {
-                            Text(
-                                text = split.thinkingContent,
-                                style = MaterialTheme.typography.bodySmall.copy(
-                                    fontStyle = FontStyle.Italic,
-                                    color = MaterialTheme.colorScheme.outline
-                                )
-                            )
-                        }
-                    }
-                }
+                    },
+                    content = split.thinkingContent
+                )
                 if (split.responseContent.isNotEmpty()) {
-                    Spacer(modifier = Modifier.height(18.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                 }
             }
 
@@ -123,7 +150,6 @@ fun ChatItemBubble(
                     )
                 }
             }
-
         }
 
         message.image?.let {
@@ -152,9 +178,30 @@ fun ChatItemBubble(
                 horizontalArrangement = Arrangement.spacedBy(0.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                IconButton(onClick = {
-                    clipboardManager.setText(AnnotatedString(stripThinkTags(message.content)))
-                }) {
+                val shareLabel = stringResource(id = R.string.share)
+                IconButton(
+                    onClick = {
+                        val sendIntent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, stripThinkTags(message.content))
+                        }
+                        context.startActivity(Intent.createChooser(sendIntent, shareLabel))
+                    },
+                    modifier = Modifier.size(38.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Share,
+                        contentDescription = shareLabel,
+                        modifier = Modifier.size(16.dp),
+                        tint = MaterialTheme.colorScheme.secondary
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        clipboardManager.setText(AnnotatedString(stripThinkTags(message.content)))
+                    },
+                    modifier = Modifier.size(38.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.ContentCopy,
                         contentDescription = stringResource(id = R.string.copy),
@@ -162,7 +209,10 @@ fun ChatItemBubble(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                IconButton(onClick = { /* upvote - no-op */ }) {
+                IconButton(
+                    onClick = { /* upvote - no-op */ },
+                    modifier = Modifier.size(38.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.ThumbUp,
                         contentDescription = stringResource(id = R.string.upvote),
@@ -170,7 +220,10 @@ fun ChatItemBubble(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                IconButton(onClick = { showRatingSheet = true }) {
+                IconButton(
+                    onClick = { showRatingSheet = true },
+                    modifier = Modifier.size(38.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.ThumbDown,
                         contentDescription = stringResource(id = R.string.downvote),
@@ -178,7 +231,7 @@ fun ChatItemBubble(
                         tint = MaterialTheme.colorScheme.secondary
                     )
                 }
-                if (message.responseTokens > 0) {
+                if (message.responseTokens + message.thinkingTokens > 0) {
                     Text(
                         text = formatResponseStats(message),
                         style = MaterialTheme.typography.labelSmall,
@@ -203,13 +256,59 @@ fun ChatItemBubble(
     }
 }
 
+/**
+ * Reusable collapsible section with arrow icon, label, and expandable content.
+ * Used for both thinking blocks and tool call results.
+ */
+@Composable
+private fun CollapsibleSection(
+    label: String,
+    content: String
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Row(
+        modifier = Modifier
+            .clickable { expanded = !expanded }
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = if (expanded) Icons.Outlined.KeyboardArrowUp else Icons.Outlined.KeyboardArrowDown,
+            contentDescription = if (expanded) stringResource(R.string.collapse_thinking) else stringResource(R.string.expand_thinking),
+            modifier = Modifier.size(16.dp),
+            tint = MaterialTheme.colorScheme.outline
+        )
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.outline,
+            modifier = Modifier.padding(start = 4.dp)
+        )
+    }
+    AnimatedVisibility(visible = expanded) {
+        Surface {
+            SelectionContainer {
+                Text(
+                    text = content,
+                    style = MaterialTheme.typography.bodySmall.copy(
+                        fontStyle = FontStyle.Italic,
+                        color = MaterialTheme.colorScheme.outline
+                    )
+                )
+            }
+        }
+    }
+}
+
 private fun formatResponseStats(message: Message): String {
+    val totalTokens = message.responseTokens + message.thinkingTokens
     return buildString {
-        append("${message.responseTokens} tokens")
+        append("$totalTokens tokens")
         val duration = message.responseDurationSeconds
         if (duration > 0f) {
             append(" \u00B7 ${formatDuration(duration.toInt())}")
-            val speed = message.responseTokens / duration
+            val speed = totalTokens / duration
             append(" \u00B7 ${"%.1f".format(speed)} tok/s")
         }
     }
@@ -222,6 +321,29 @@ private fun formatDuration(seconds: Int): String {
         val m = seconds / 60
         val s = seconds % 60
         "${m}m ${s}s"
+    }
+}
+
+/** Friendly display name for a tool (falls back to the raw name for unknowns). */
+@Composable
+private fun toolDisplayName(name: String): String = when (name) {
+    "run_javascript" -> stringResource(R.string.tool_run_javascript_title)
+    "web_search" -> stringResource(R.string.tool_web_search_title)
+    "web_fetch" -> stringResource(R.string.tool_web_fetch_title)
+    else -> name
+}
+
+/** Pretty-print a JSON object/array for the tool input/output view; raw on failure. */
+private fun prettyJson(raw: String): String {
+    val trimmed = raw.trim()
+    return try {
+        when {
+            trimmed.startsWith("{") -> org.json.JSONObject(trimmed).toString(2)
+            trimmed.startsWith("[") -> org.json.JSONArray(trimmed).toString(2)
+            else -> raw
+        }
+    } catch (_: Exception) {
+        raw
     }
 }
 
@@ -238,8 +360,9 @@ private fun ThinkingIndicator() {
         label = "dots"
     )
     val dots = ".".repeat(dotCount.toInt().coerceIn(0, 3))
+    val thinkingText = stringResource(R.string.thinking)
     Text(
-        text = "Thinking$dots",
+        text = "$thinkingText$dots",
         style = MaterialTheme.typography.bodyMedium,
         color = MaterialTheme.colorScheme.outline,
         fontStyle = FontStyle.Italic

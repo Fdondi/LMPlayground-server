@@ -13,10 +13,12 @@ import com.druk.lmplayground.download.DownloadRepository
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
+import com.druk.lmplayground.models.resolveCapabilities
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.util.Locale
 
 /**
  * Represents download progress for a model
@@ -78,6 +80,8 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
     val isStorageConfigured: LiveData<Boolean> = _isStorageConfigured
 
     val downloadingModels: LiveData<Map<String, DownloadProgress>> = downloadRepo.observeDownloads()
+
+    val deviceLanguage: String = Locale.getDefault().language
     
     private val _snackbarMessage = MutableLiveData<String?>()
     val snackbarMessage: LiveData<String?> = _snackbarMessage
@@ -109,7 +113,10 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
                 _downloadedModels.postValue(modelFiles)
                 val downloadedFilenames = modelFiles.map { it.name }.toSet()
                 val customModels = discoverCustomModels(modelFiles)
-                _allModels.postValue(ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels))
+                _allModels.postValue(
+                    ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels)
+                        .map { it.copy(model = it.model.resolveCapabilities(prefs)) }
+                )
             }
         }
     }
@@ -124,7 +131,15 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
             } else {
                 val handle = repository.openModelFile(file.name) ?: return@mapNotNull null
                 try {
-                    val result = llamaCpp.probeModelMetadata(handle.path) ?: return@mapNotNull null
+                    // probeModelMetadata can throw InferenceUnavailableException
+                    // if the :llama service hasn't connected yet (or just
+                    // crashed). Skip discovery for this pass — the next
+                    // loadStorageInfo (post bind) picks the model up.
+                    val result = try {
+                        llamaCpp.probeModelMetadata(handle.pfd) ?: return@mapNotNull null
+                    } catch (_: com.druk.llamacpp.InferenceUnavailableException) {
+                        return@mapNotNull null
+                    }
                     val probedName = result[0]
                     val probedHasTemplate = result[1].toBoolean()
                     prefs.setCustomModelMetadata(file.name, probedName, probedHasTemplate)

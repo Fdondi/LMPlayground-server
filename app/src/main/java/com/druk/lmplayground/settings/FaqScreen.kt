@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -30,7 +32,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -66,6 +70,10 @@ private val faqItems = listOf(
     FaqItem(R.string.faq_q8, R.string.faq_a8, hasGithubLink = true),
     FaqItem(R.string.faq_q9, R.string.faq_a9),
     FaqItem(R.string.faq_q10, R.string.faq_a10),
+    FaqItem(R.string.faq_q11, R.string.faq_a11),
+    FaqItem(R.string.faq_q12, R.string.faq_a12),
+    FaqItem(R.string.faq_q13, R.string.faq_a13),
+    FaqItem(R.string.faq_q14, R.string.faq_a14),
 )
 
 @Composable
@@ -87,10 +95,31 @@ fun FaqScreen(
             )
         }
     ) { padding ->
-        LazyColumn(
+        FaqContent(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
+        )
+    }
+}
+
+@Composable
+fun FaqContent(modifier: Modifier = Modifier) {
+    val listState = rememberLazyListState()
+    val isScrolled by remember {
+        derivedStateOf {
+            listState.firstVisibleItemIndex > 0 ||
+                listState.firstVisibleItemScrollOffset > 0
+        }
+    }
+    Column(modifier = modifier) {
+        if (isScrolled) {
+            // Scroll-edge divider matching Models / Prompts / Language.
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp))
+        }
+        LazyColumn(
+            state = listState,
+            modifier = Modifier.fillMaxHeight()
         ) {
             items(faqItems) { item ->
                 FaqExpandableItem(item)

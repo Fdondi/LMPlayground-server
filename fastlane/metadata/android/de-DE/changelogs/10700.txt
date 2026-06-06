@@ -1,0 +1,6 @@
+- Tools — Modelle können jetzt im Web suchen, Seiten abrufen und JavaScript ausführen. Pro Modell unter Einstellungen → Tools
+- Schnellere Antworten dank Prompt-/Tool-Cache
+- Antworten teilen oder direkt aus der Mitteilung kopieren/teilen
+- Live-Benachrichtigung zeigt Generierungsstatus und Token-Anzahl
+- Ton & Haptik — ein Klang, wenn eine Antwort im Hintergrund fertig ist, plus Tippgeräusch beim Streamen (Einstellungen → Ton und Haptik)
+- Milchglas-Auffrischung in der gesamten App

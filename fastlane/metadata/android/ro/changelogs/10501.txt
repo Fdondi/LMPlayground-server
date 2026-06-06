@@ -1,0 +1,3 @@
+- Prompturi de sistem — salvează instrucțiuni reutilizabile și alege-o pe cea potrivită pentru fiecare model, astfel încât tonul, rolul sau formatul de ieșire să rămână constante între sesiuni
+- 28 de limbi — aplicația este acum localizată în 28 de limbi, inclusiv arabă, bengaleză, ebraică, hindi, japoneză, coreeană, poloneză, thailandeză, ucraineană, vietnameză și altele
+- Inferență mai rapidă prin cea mai recentă versiune llama.cpp plus corecții la selectorul de modele

@@ -1,0 +1,6 @@
+- Tools — capable models can now search the web, fetch a page, and run JavaScript during a reply. Turn them on per model in Settings → Tools
+- New models: Gemma 4 12B, plus Granite 4.1 (3B and 8B)
+- Faster replies with cached prompts and tools
+- Share responses, or copy/share straight from the notification
+- Live notification shows generation status and token count
+- Improved performance and stability

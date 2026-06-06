@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">Otevřít navigační panel</string>
+    <string name="navigation_drawer_close">Zavřít navigační panel</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">Záhlaví navigace</string>
+    <string name="action_settings">Nastavení</string>
+
+    <string name="menu_home">Domů</string>
+    <string name="menu_gallery">Galerie</string>
+    <string name="menu_slideshow">Prezentace</string>
+    <string name="conversations">Konverzace</string>
+    <string name="profile">Profil</string>
+    <string name="jumpBottom">Přejít dolů</string>
+    <string name="send">Odeslat</string>
+    <string name="author_me">já</string>
+    <string name="members">%d členů</string>
+    <string name="textfield_hint">Zpráva</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; Přejetím zrušíte</string>
+    <string name="emojis_label">Emoji</string>
+    <string name="stickers_label">Nálepky</string>
+
+    <string name="message">Zpráva</string>
+    <string name="edit_profile">Upravit profil</string>
+    <string name="profile_error">Při načítání profilu došlo k chybě</string>
+    <string name="bio">Životopis</string>
+    <string name="display_name">Zobrazované jméno</string>
+    <string name="status">Status</string>
+    <string name="timezone">Časové pásmo</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">Společné kanály</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">Výběr emoji</string>
+    <string name="emoji_selector_bt_desc">Zobrazit výběr emoji</string>
+    <string name="dm_desc">Přímá zpráva</string>
+    <string name="attach_photo_desc">Připojit fotografii</string>
+    <string name="map_selector_desc">Výběr polohy</string>
+    <string name="videochat_desc">Zahájit videohovor</string>
+    <string name="textfield_desc">Textový vstup</string>
+    <string name="not_available">Funkce není momentálně dostupná</string>
+    <string name="not_available_subtitle">Dejte si něco k pití a zkuste to znovu později!</string>
+    <string name="attached_image">Přiložený obrázek</string>
+    <string name="search">Hledat</string>
+    <string name="info">Informace</string>
+    <string name="more_options">Další možnosti</string>
+    <string name="touch_and_hold_to_record">Stisknutím a přidržením nahrávejte</string>
+    <string name="record_message">Nahrát hlasovou zprávu</string>
+    <string name="stop">Zastavit</string>
+
+    <string name="share">Sdílet</string>
+    <string name="copy">Kopírovat</string>
+    <string name="upvote">Hlasovat pro</string>
+    <string name="downvote">Hlasovat proti</string>
+    <string name="rating_question">Proč jste zvolili toto hodnocení?</string>
+    <string name="offensive_unsafe">Urážlivé/Nebezpečné</string>
+    <string name="not_correct">Není správné</string>
+    <string name="didnt_follow_instructions">Nedodrželo pokyny</string>
+    <string name="wrong_language">Špatný jazyk</string>
+    <string name="other">Jiné</string>
+
+    <!-- Settings -->
+    <string name="settings">Nastavení</string>
+    <string name="back">Zpět</string>
+    <string name="version">Verze %s</string>
+    <string name="models_subtitle">Stáhnout a spravovat modely</string>
+    <string name="privacy_policy">Zásady ochrany osobních údajů</string>
+    <string name="privacy_policy_effective_date">Datum účinnosti: 2. června 2026</string>
+    <string name="privacy_policy_intro">Vítejte v LM Playground! Záleží mi na zachování důvěry všech, kdo mou aplikaci používají. Tyto zásady ochrany osobních údajů vysvětlují, co aplikace shromažďuje a co ne, jak vaše konverzace zůstávají ve vašem zařízení a v jakých několika případech — například u volitelných webových nástrojů — informace vaše zařízení opouštějí, abyste vždy věděli, co očekávat.</string>
+    <string name="privacy_policy_s1_title">1. Žádný sběr osobních údajů</string>
+    <string name="privacy_policy_s1_body">Já, Andriy Druk, vývojář LM Playground, neshromažďuji, neukládám, nepoužívám ani nesdílím žádné osobní údaje uživatelů mé aplikace. Nejsou zde žádné účty, žádná reklama ani žádná analytika používání nebo sledování. Aplikace je navržena s prioritou vašeho soukromí, abyste ji mohli používat bez ohrožení svých osobních údajů.</string>
+    <string name="privacy_policy_s2_title">2. Zpracování v zařízení</string>
+    <string name="privacy_policy_s2_body">Vaše konverzace, systémové pokyny a odpovědi modelu jsou zpracovávány lokálně ve vašem zařízení modelem běžícím v zařízení. Tento obsah není nikdy odesílán mně ani na žádný server pro inferenci. Zůstává ve vašem zařízení, pokud se nerozhodnete použít funkci, která se připojuje k internetu, jak je popsáno níže.</string>
+    <string name="privacy_policy_s3_title">3. Přístup k internetu</string>
+    <string name="privacy_policy_s3_body">LM Playground žádá o oprávnění k internetu ze dvou důvodů: ke stažení souborů modelů, které si vyberete, a — pouze pokud je zapnete — k provozu volitelných webových nástrojů. Aplikace neobsahuje žádnou reklamu, telemetrii ani analytiku používání a nehlásí mi vaši aktivitu.</string>
+    <string name="privacy_policy_s4_title">4. Nástroje a přístup k webu</string>
+    <string name="privacy_policy_s4_body">Schopné modely mohou používat volitelné nástroje, které jsou ve výchozím nastavení vypnuté. Když zapnete webové nástroje, část informací opustí vaše zařízení: nástroj Vyhledávání na webu odešle vyhledávací dotaz modelu do DuckDuckGo a nástroj Načíst webovou stránku stáhne stránky, které se model rozhodne otevřít na těchto webech. Tyto požadavky zpracovávají weby třetích stran podle svých vlastních zásad ochrany osobních údajů — já je ani nepřijímám, ani neukládám. Nástroj Spustit JavaScript běží zcela ve vašem zařízení v sandboxu bez přístupu k internetu. Chcete-li, aby vše zůstalo offline, jednoduše nástroje nezapínejte.</string>
+    <string name="privacy_policy_s5_title">5. Aktualizace zásad ochrany osobních údajů</string>
+    <string name="privacy_policy_s5_body">Jako vývojář LM Playground si vyhrazuji právo kdykoli tyto zásady ochrany osobních údajů aktualizovat. Jakékoli změny jsou účinné okamžitě po zveřejnění aktualizovaných zásad. Uživatelé jsou vybízeni, aby tuto stránku pravidelně kontrolovali a zůstali informováni o tom, jak je chráněno jejich soukromí.</string>
+    <string name="privacy_policy_s6_title">6. Přijetí těchto zásad</string>
+    <string name="privacy_policy_s6_body">Používáním LM Playground berete na vědomí a souhlasíte s těmito zásadami ochrany osobních údajů. Pokud s nimi nesouhlasíte, aplikaci prosím nepoužívejte. Pokračující používání aplikace po zveřejnění jakýchkoli aktualizací nebo změn těchto zásad bude považováno za vaše přijetí těchto změn.</string>
+    <string name="privacy_policy_s7_title">7. Kontakt</string>
+    <string name="privacy_policy_s7_body">Pokud máte jakékoli dotazy nebo návrhy ohledně mých zásad ochrany osobních údajů, neváhejte mě kontaktovat.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">Odeslat zpětnou vazbu</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_subtitle">Často kladené otázky</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">Co je LM Playground?</string>
+    <string name="faq_a1">LM Playground vám umožňuje spouštět velké jazykové modely přímo na vašem zařízení s Androidem. Veškeré zpracování probíhá lokálně \u2013 bez potřeby cloudových serverů.</string>
+    <string name="faq_q2">Jaké modely jsou podporovány?</string>
+    <string name="faq_a2">Aplikace podporuje modely ve formátu GGUF s kvantizací Q4_K_M, včetně Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini a DeepSeek R1 Distill v různých velikostech.</string>
+    <string name="faq_q3">Kolik úložného prostoru potřebuji?</string>
+    <string name="faq_a3">Velikosti modelů se pohybují od přibližně 500 MB (malé modely jako Qwen 3 0.6B) až po několik GB (větší modely jako DeepSeek R1 7B). Před stažením se ujistěte, že máte dostatek volného místa.</string>
+    <string name="faq_q4">Vyžaduje aplikace připojení k internetu?</string>
+    <string name="faq_a4">Internet je potřeba ke stažení modelů a — pokud je zapnete — pro volitelné webové nástroje (vyhledávání na webu a načtení stránky). Kromě toho po stažení běží model kompletně offline na vašem zařízení.</string>
+    <string name="faq_q5">Jsou moje data soukromá?</string>
+    <string name="faq_a5">Vaše konverzace jsou zpracovávány lokálně na vašem zařízení a aplikace je nikdy neodesílá na server. Jedinou výjimkou jsou volitelné webové nástroje: pokud zapnete vyhledávání na webu nebo načtení stránky, vyhledávací dotazy modelu a stránky, které otevírá, jsou odeslány na tyto weby (vyhledávání používá DuckDuckGo). Nástroje jsou ve výchozím nastavení vypnuté, takže nic neopustí vaše zařízení, dokud je nezapnete. Podrobnosti naleznete v zásadách ochrany osobních údajů.</string>
+    <string name="faq_q6">Proč je načítání modelu pomalé?</string>
+    <string name="faq_a6">Větší modely potřebují více času k načtení do paměti. Doby načítání závisí na hardwaru vašeho zařízení. Po načtení zůstává model v paměti, dokud jej nevyložíte.</string>
+    <string name="faq_q7">Která zařízení fungují nejlépe?</string>
+    <string name="faq_a7">Zařízení s více RAM mohou spouštět větší modely. Pro nejlepší výkon použijte zařízení s minimálně 6 GB RAM pro malé modely a 8+ GB pro větší.</string>
+    <string name="faq_q8">Mohu načíst vlastní model GGUF?</string>
+    <string name="faq_a8">Ano. Umístěte soubor .gguf do složky úložiště vybrané v Nastavení → Modely (stejná složka, která se používá pro stahování). Aplikace jej automaticky najde a zobrazí ve výběru modelů vedle vestavěného katalogu. Šablona chatu a nastavení tokenizéru se načítají z metadat GGUF. Pokud konkrétní model nefunguje, založte prosím issue na GitHubu.</string>
+    <string name="faq_q9">Mohu změnit, kde jsou modely uloženy?</string>
+    <string name="faq_a9">Ano. Přejděte do Nastavení, poté Modely, a pomocí možnosti \u201CZměnit složku\u201D vyberte jiné umístění úložiště.</string>
+    <string name="faq_q10">Jak smazat model?</string>
+    <string name="faq_a10">Přejděte do Nastavení, poté Modely. V sekci \u201CStažené\u201D klepněte na ikonu smazání vedle modelu, který chcete odstranit.</string>
+    <string name="faq_q11">Co jsou systémové pokyny?</string>
+    <string name="faq_a11">Systémový pokyn je opakovaně použitelná instrukce, která utváří způsob, jakým model odpovídá — například „Jste stručný učitel přírodních věd. Vysvětlujte myšlenky jasně pomocí každodenních příkladů\u201C nebo „Jste zkušený recenzent kódu. Upozorňujte na chyby, hraniční případy a bezpečnostní problémy\u201C. Vytvářejte je a spravujte v Nastavení \u2192 Systémové pokyny a poté jeden použijte ve svém chatu. Ukládají se ve vašem zařízení a odesílají se pouze místnímu modelu.</string>
+    <string name="faq_q12">Co jsou nástroje a které jsou k dispozici?</string>
+    <string name="faq_a12">Nástroje umožňují schopným modelům provádět během odpovědi akce. K dispozici jsou tři: Spustit JavaScript (matematika, data a zpracování textu v sandboxu v zařízení), Vyhledávání na webu (najde aktuální informace na webu) a Načíst webovou stránku (přečte stránku, aby ji model mohl shrnout nebo citovat). Zapněte je v Nastavení \u2192 Nástroje. Každý je ve výchozím nastavení vypnutý a funguje pouze s modely, které podporují volání nástrojů — hledejte odznak s kladivem ve výběru modelů.</string>
+    <string name="faq_q13">Odesílají webové nástroje moje data online?</string>
+    <string name="faq_a13">Pouze když je zapnete. Vyhledávání na webu odešle dotaz modelu do DuckDuckGo a Načíst webovou stránku stáhne stránky, které se model rozhodne otevřít — tyto požadavky jdou na samotné weby, nikoli vývojáři. Spustit JavaScript zůstává zcela ve vašem zařízení bez přístupu k internetu. Když jsou všechny nástroje vypnuté (výchozí stav), nic neopustí vaše zařízení. Podrobnosti naleznete v zásadách ochrany osobních údajů.</string>
+    <string name="faq_q14">Upozorní mě aplikace, až bude odpověď připravena?</string>
+    <string name="faq_a14">Ano. Když je aplikace na pozadí, oznámení sleduje stav modelu — načteno, generování, poté odpověď připravena — a umožňuje vám odpověď zkopírovat nebo sdílet. V Nastavení \u2192 Zvuk a haptika můžete také zapnout krátký tón dokončení. Stahování modelů zobrazuje vlastní oznámení o průběhu s rychlostí a odhadovaným časem.</string>
+
+    <!-- Models Screen -->
+    <string name="models">Modely</string>
+    <string name="change_folder">Změnit složku</string>
+    <string name="delete_model">Smazat</string>
+    <string name="download_model">Stáhnout</string>
+    <string name="storage_used_models">Modely: %s</string>
+    <string name="storage_available">%s dostupné</string>
+    <string name="downloads_folder">Složka stažených souborů</string>
+    <string name="custom_folder">Vlastní složka</string>
+    <string name="delete_model_confirm">Smazat %s?</string>
+    <string name="delete_model_message">Tímto bude soubor modelu trvale odstraněn.</string>
+    <string name="downloaded_models">Stažené</string>
+    <string name="available_models">Dostupné ke stažení</string>
+    <string name="no_downloaded_models">Zatím žádné stažené modely</string>
+    <string name="browse_more_models">Procházet modely</string>
+    <string name="cancel">Zrušit</string>
+    <string name="low_ram_warning_title">Model může být nestabilní</string>
+    <string name="low_ram_warning_message">Model potřebuje ~%1$s RAM, ale toto zařízení má celkem pouze %2$s. Načítání může být pomalé nebo se chovat nepředvídatelně.</string>
+    <string name="load_anyway">Přesto načíst</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Stahování modelů</string>
+    <string name="download_notification_channel_description">Zobrazuje průběh stahování souborů modelů</string>
+    <string name="download_complete">Stahování dokončeno</string>
+    <string name="moving_to_storage">Přesouvám do úložiště\u2026</string>
+    <string name="starting_download">Spouštím stahování\u2026</string>
+    <string name="download_failed">Stahování selhalo</string>
+    <string name="download_cancelled">Stahování zrušeno</string>
+    <string name="waiting_for_network">Čekání na síť\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">Migrovat modely?</string>
+    <string name="migrate_models_message">V předchozí složce byl nalezen %1$d model(ů) (%2$s). Chcete je zkopírovat do nového umístění?</string>
+    <string name="migrate_models_from_downloads">Ve vaší složce stažených souborů byl nalezen %1$d model(ů) (%2$s). Chcete je přesunout do zvoleného umístění úložiště?</string>
+    <string name="models_to_migrate">Modely:</string>
+    <string name="migrate">Migrovat</string>
+    <string name="skip">Přeskočit</string>
+    <string name="migrating_models">Migrace modelů</string>
+    <string name="migration_progress">Kopírování %1$d z %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">Systémové pokyny</string>
+    <string name="system_prompts_subtitle">Opakovaně použitelné pokyny pro jakýkoli model</string>
+    <string name="system_prompts_empty">Zatím žádné systémové pokyny. Klepnutím na + přidejte.</string>
+    <string name="system_prompt_new">Nový systémový pokyn</string>
+    <string name="system_prompt_edit">Upravit systémový pokyn</string>
+    <string name="system_prompt_hint">např. Jste stručný asistent. Vždy odpovídejte česky.</string>
+    <string name="system_prompt_current">Aktuální systémový pokyn</string>
+    <string name="system_prompt_current_empty">Žádný systémový pokyn — klepnutím přidáte</string>
+    <string name="system_prompt_update">Aktualizovat</string>
+    <string name="save">Uložit</string>
+    <string name="add">Přidat</string>
+    <string name="clear">Vymazat</string>
+
+    <!-- General UI -->
+    <string name="select_model">Vybrat model</string>
+    <string name="new_conversation">Nová konverzace</string>
+    <string name="close">Zavřít</string>
+    <string name="pinned_label">Připnuto</string>
+    <string name="unpin">Odepnout</string>
+    <string name="pin">Připnout</string>
+    <string name="rename">Přejmenovat</string>
+    <string name="delete">Smazat</string>
+    <string name="rename_conversation">Přejmenovat konverzaci</string>
+    <string name="previously_used_model">Naposledy použito: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Vyberte složku úložiště</string>
+    <string name="choose_storage_folder_message">Vyberte složku, do které budou modely ukládány. Je to nezbytné pro používání aplikace.</string>
+    <string name="choose_folder">Vybrat složku</string>
+
+    <!-- Session -->
+    <string name="session_info">Informace o relaci</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Parametry generování</string>
+    <string name="reset">Resetovat</string>
+    <string name="context_size">Velikost kontextu</string>
+    <string name="will_reset_conversation">Konverzace bude resetována</string>
+    <string name="thinking_budget">Rozpočet přemýšlení</string>
+    <string name="tokens_value">%d tokenů</string>
+    <string name="temperature">Teplota</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Penalizace opakování</string>
+    <string name="advanced">Pokročilé</string>
+    <string name="collapse">Sbalit</string>
+    <string name="expand">Rozbalit</string>
+    <string name="seed">Seed</string>
+    <string name="random">Náhodné</string>
+    <string name="disabled_label">vypnuto</string>
+    <string name="unload_model">Uvolnit model</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Přemýšlí</string>
+    <string name="collapse_thinking">Sbalit přemýšlení</string>
+    <string name="expand_thinking">Rozbalit přemýšlení</string>
+    <string name="thoughts">Myšlenky</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Funkce není dostupná \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI ve</string>
+    <string name="screenshot_hero_title_emphasis">vašem</string>
+    <string name="screenshot_hero_title_suffix">telefonu</string>
+    <string name="screenshot_hero_title_suffix_tablet">tabletu</string>
+    <string name="screenshot_hero_subtitle">Soukromé. Lokální. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ modelů od:</string>
+    <string name="screenshot_choose_model">Vyberte model</string>
+    <string name="screenshot_choose_model_sub">od předních poskytovatelů AI</string>
+    <string name="screenshot_chat">Chatujte soukromě</string>
+    <string name="screenshot_chat_sub">na vašem zařízení</string>
+    <string name="screenshot_fine_tune">Doladění</string>
+    <string name="screenshot_fine_tune_sub">parametrů generování</string>
+    <string name="screenshot_download_models">Stáhněte jakýkoli model</string>
+    <string name="screenshot_download_models_sub">do libovolné složky</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">Jste stručný učitel přírodních věd. Vysvětlujte myšlenky jasně pomocí každodenních příkladů.</string>
+    <string name="screenshot_prompts">Opakovaně použitelné prompty</string>
+    <string name="screenshot_prompts_sub">nastavte tón jednou, používejte kdekoli</string>
+    <string name="screenshot_tools">Dejte modelům nástroje</string>
+    <string name="screenshot_tools_sub">vyhledávání na webu, načtení &amp; JavaScript</string>
+    <string name="screenshot_notification">Běží na pozadí</string>
+    <string name="screenshot_notification_sub">dostanete upozornění, až bude hotovo</string>
+    <string name="screenshot_prompt_sample_code">Jste zkušený recenzent kódu. Upozorňujte na chyby, hraniční případy a bezpečnostní problémy. Buďte přímí a konkrétní.</string>
+    <string name="screenshot_prompt_sample_translator">Jste překladatel. Vše, co pošlu, převeďte do přirozené, plynulé francouzštiny a zachovejte formátování.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Jste kreativní partner pro brainstorming. Nabízejte odvážné, nečekané nápady a rozvíjejte ty moje.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">Co je strojové učení?</string>
+    <string name="screenshot_chat_response">Strojové učení je odvětví umělé inteligence, kde se počítače **učí z dat** místo toho, aby byly explicitně programovány.\n\nKlíčové pojmy:\n\n\u2022 **Trénování**: předávání dat algoritmům\n\u2022 **Modely**: vzory naučené z dat\n\u2022 **Inference**: vytváření predikcí z nových dat</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Odlehčený chatovací model</string>
+    <string name="model_category_general">Univerzální chatovací model</string>
+    <string name="model_category_efficient">Efektivní model na zařízení</string>
+    <string name="model_category_reasoning">Hybridní model uvažování</string>
+    <string name="model_category_ultra_lightweight">Ultraodlehčený chatovací model</string>
+    <string name="model_category_compact_reasoning">Kompaktní model uvažování</string>
+    <string name="model_category_thinking">Přemýšlející model</string>
+    <string name="model_category_enterprise">Podnikový chatovací model</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">Co je nového</string>
+    <string name="whats_new_item_1">Nové modely Gemma 4 (E2B, E4B)</string>
+    <string name="whats_new_item_2">Parametry generování pro jednotlivé modely</string>
+    <string name="whats_new_item_3">Ovládání rozpočtu přemýšlení</string>
+
+    <string name="supports_your_language">Podporuje váš jazyk</string>
+    <string name="other_models">Ostatní modely</string>
+    <string name="language">Jazyk</string>
+    <string name="language_system_default">Výchozí nastavení systému</string>
+    <!-- Inference engine service notification (foreground service while a
+         model is loaded so the OS does not evict the :llama process). -->
+    <string name="inference_notification_channel_name">Inferenční engine</string>
+    <string name="inference_notification_channel_description">Udržuje model AI načtený a připravený odpovídat.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Model načten — připraven k chatu.</string>
+    <string name="inference_notification_loaded_title">Model načten</string>
+    <string name="inference_engine_crashed">Jejda — něco se pokazilo.\nProsím načtěte model znovu.</string>
+    <string name="message_too_large">Zpráva má %1$d KB, což překračuje limit %2$d KB. Zkuste poslat kratší zprávu.</string>
+    <string name="replay_history_too_large">Historie konverzace je příliš velká pro načtení do tohoto modelu. Pokračujte zahájením nového chatu.</string>
+    <string name="system_prompt_too_large">Systémový prompt má %1$d KB, což překračuje limit %2$d KB. Zkuste kratší prompt.</string>
+    <string name="history_message_too_large">Uložená zpráva v této konverzaci je příliš velká pro opětovné načtení. Pokračujte zahájením nového chatu.</string>
+    <string name="model_load_failed_status">Nepodařilo se načíst model</string>
+    <string name="model_load_failed_title">Nepodařilo se načíst model</string>
+    <string name="model_load_failed_message">Nepodařilo se načíst %1$s. Soubor může být poškozený nebo používá architekturu, kterou tato verze aplikace zatím nepodporuje. Zkuste jiný model nebo aktualizujte aplikaci.</string>
+    <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- 1.7.0 -->
+    <string name="cd_supports_thinking">Podporuje přemýšlení</string>
+    <string name="cd_supports_tools">Podporuje nástroje</string>
+    <string name="folder_picker_unavailable">Žádná aplikace pro výběr složky. Nainstalujte nebo povolte systémovou aplikaci Soubory / Dokumenty.</string>
+    <string name="haptic_on_generation_desc">Jemné cuknutí při příchodu každé části odpovědi.</string>
+    <string name="haptic_on_generation_title">Haptická odezva při generování</string>
+    <string name="inference_engine_unavailable">Inferenční engine není právě teď dostupný. Zkuste to za okamžik znovu.</string>
+    <string name="inference_notification_generating_title">Generuji odpověď…</string>
+    <string name="inference_notification_ready_title">Odpověď připravena</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="few">%d tokeny</item>
+        <item quantity="many">%d tokenu</item>
+        <item quantity="other">%d tokenů</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="response_copied">Zkopírováno do schránky</string>
+    <string name="set_up_tools">Nastavit nástroje</string>
+    <string name="sound_and_haptic">Zvuk a haptika</string>
+    <string name="sound_and_haptic_subtitle">Zvuk dokončení a haptika při psaní</string>
+    <string name="sound_on_completion_desc">Přehraje krátký tón, když model dokončí odpověď a aplikace je na pozadí.</string>
+    <string name="sound_on_completion_title">Přehrát zvuk po dokončení generování</string>
+    <string name="tool_call_input">Vstup</string>
+    <string name="tool_call_output">Výstup</string>
+    <string name="tool_run_javascript_desc">Spouští JavaScript v zabezpečeném sandboxu pro výpočty, data a zpracování textu. Bez přístupu k internetu nebo souborům.</string>
+    <string name="tool_run_javascript_example">\"Kolik je (2 + 3) × 4 a jaký den v týdnu připadá na 1. ledna 2027?\"</string>
+    <string name="tool_run_javascript_title">Spustit JavaScript</string>
+    <string name="tool_web_fetch_desc">Otevře odkaz a načte jeho hlavní obsah jako text, aby model mohl stránku shrnout nebo citovat.</string>
+    <string name="tool_web_fetch_example">\"Shrň článek na tomto odkazu.\"</string>
+    <string name="tool_web_fetch_title">Načíst webovou stránku</string>
+    <string name="tool_web_search_desc">Prohledá web a vrátí názvy výsledků, odkazy a úryvky, aby model mohl najít aktuální informace.</string>
+    <string name="tool_web_search_example">\"Najdi nedávné recenze nejnovějšího telefonu Pixel.\"</string>
+    <string name="tool_web_search_title">Vyhledávání na webu</string>
+    <string name="tools">Nástroje</string>
+    <string name="tools_example_label">Příklad: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Model je může během odpovědi vyvolat</string>
+    <string name="tools_section_intro">Nástroje umožňují schopným modelům provádět akce během odpovědi, jako je vyhledávání na webu nebo provedení výpočtu. Každý nástroj je ve výchozím nastavení vypnutý — zapněte jen ty, které chcete. Nástroje fungují pouze s modely, které je podporují (hledejte odznak s kladivem).</string>
+    <string name="tools_subtitle">Umožněte schopným modelům provádět akce</string>
+    <string name="whats_new_cache">Rychlejší odpovědi díky cache promptů &amp; nástrojů</string>
+    <string name="whats_new_tools">Vyhledávání na webu, načtení stránky a spuštění JavaScriptu</string>
+</resources>

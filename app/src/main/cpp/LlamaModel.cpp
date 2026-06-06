@@ -39,7 +39,8 @@
 void LlamaModel::loadModel(const std::string &modelPath,
                            int32_t n_gpu_layers,
                            llama_progress_callback progress_callback,
-                           void * progress_callback_user_data) {
+                           void * progress_callback_user_data,
+                           bool disableRepack) {
 
     // initialize the model
     llama_model_params model_params = llama_model_default_params();
@@ -47,6 +48,12 @@ void LlamaModel::loadModel(const std::string &modelPath,
     model_params.n_gpu_layers = 0;
     model_params.progress_callback = progress_callback;
     model_params.progress_callback_user_data = progress_callback_user_data;
+    // Weight repacking (the CPU "extra" buffer types) copies quantized
+    // weights into a freshly-allocated RAM buffer, which defeats mmap and
+    // forces the whole model resident. For models that don't fit in RAM the
+    // caller disables it so weights stay memory-mapped and load successfully
+    // (slower matmuls, but they fit).
+    model_params.use_extra_bufts = !disableRepack;
     model = llama_model_load_from_file(modelPath.c_str(), model_params);
     if (model == nullptr) {
         LOG_ERR("%s: failed to load model '%s'\n", __func__, modelPath.c_str());

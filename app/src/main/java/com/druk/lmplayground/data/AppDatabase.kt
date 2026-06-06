@@ -8,13 +8,20 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [ChatSessionEntity::class, ChatMessageEntity::class],
-    version = 4,
+    entities = [
+        ChatSessionEntity::class,
+        ChatMessageEntity::class,
+        SystemPromptEntity::class,
+        PromptUsage::class
+    ],
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun chatDao(): ChatDao
+
+    abstract fun systemPromptDao(): SystemPromptDao
 
     companion object {
         @Volatile
@@ -44,6 +51,59 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * System-prompt feature in one shot. The intermediate schemas 5/6
+         * never shipped to real users, so we collapse the three dev-only
+         * migration steps into a single 4 → 5 migration.
+         */
+        private val MIGRATION_4_5 = object : Migration(4, 5) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                // Denormalized system-prompt text stored alongside each chat
+                // session so reopening a conversation replays with the same
+                // prompt it was started with.
+                db.execSQL(
+                    "ALTER TABLE chat_sessions ADD COLUMN systemPrompt TEXT NOT NULL DEFAULT ''"
+                )
+
+                // Library of reusable system prompts.
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS system_prompts (" +
+                        "id TEXT NOT NULL PRIMARY KEY, " +
+                        "text TEXT NOT NULL, " +
+                        "createdAt INTEGER NOT NULL, " +
+                        "updatedAt INTEGER NOT NULL DEFAULT 0" +
+                        ")"
+                )
+
+                // Per-model MRU markers.
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS prompt_usage (" +
+                        "promptId TEXT NOT NULL, " +
+                        "modelFilename TEXT NOT NULL, " +
+                        "lastUsedAt INTEGER NOT NULL, " +
+                        "PRIMARY KEY (promptId, modelFilename), " +
+                        "FOREIGN KEY (promptId) REFERENCES system_prompts(id) ON DELETE CASCADE" +
+                        ")"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS index_prompt_usage_modelFilename " +
+                        "ON prompt_usage (modelFilename)"
+                )
+            }
+        }
+
+        /**
+         * Generic per-conversation metadata blob (JSON). Backs
+         * [ConversationMetadata]; first use is the web_search link map.
+         */
+        private val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE chat_sessions ADD COLUMN metadata TEXT NOT NULL DEFAULT '{}'"
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -51,7 +111,13 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "lmplayground.db"
                 )
-                    .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4)
+                    .addMigrations(
+                        MIGRATION_1_2,
+                        MIGRATION_2_3,
+                        MIGRATION_3_4,
+                        MIGRATION_4_5,
+                        MIGRATION_5_6
+                    )
                     .build().also { INSTANCE = it }
             }
         }

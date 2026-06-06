@@ -1,0 +1,344 @@
+<resources>
+    <string name="app_name" translatable="false">LM Playground</string>
+
+    <string name="navigation_drawer_open">Öppna navigeringspanelen</string>
+    <string name="navigation_drawer_close">Stäng navigeringspanelen</string>
+    <string name="nav_header_title" translatable="false">Composer</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigeringsrubrik</string>
+    <string name="action_settings">Inställningar</string>
+
+    <string name="menu_home">Hem</string>
+    <string name="menu_gallery">Galleri</string>
+    <string name="menu_slideshow">Bildspel</string>
+    <string name="conversations">Konversationer</string>
+    <string name="profile">Profil</string>
+    <string name="jumpBottom">Hoppa till botten</string>
+    <string name="send">Skicka</string>
+    <string name="author_me">jag</string>
+    <string name="members">%d medlemmar</string>
+    <string name="textfield_hint">Meddelande</string>
+    <string name="swipe_to_cancel_recording">&#x25C0; Svep för att avbryta</string>
+    <string name="emojis_label">Emojis</string>
+    <string name="stickers_label">Klistermärken</string>
+
+    <string name="message">Meddelande</string>
+    <string name="edit_profile">Redigera profil</string>
+    <string name="profile_error">Det gick inte att läsa in profilen</string>
+    <string name="bio">Bio</string>
+    <string name="display_name">Visningsnamn</string>
+    <string name="status">Status</string>
+    <string name="timezone">Tidszon</string>
+    <string name="twitter">Twitter</string>
+    <string name="common_channels">Gemensamma kanaler</string>
+    <string name="lorem" translatable="false">Lorem or Ipsum</string>
+
+    <!-- Accessibility descriptions -->
+
+    <string name="emoji_selector_desc">Emoji-väljare</string>
+    <string name="emoji_selector_bt_desc">Visa emoji-väljare</string>
+    <string name="dm_desc">Direktmeddelande</string>
+    <string name="attach_photo_desc">Bifoga foto</string>
+    <string name="map_selector_desc">Platsväljare</string>
+    <string name="videochat_desc">Starta videochatt</string>
+    <string name="textfield_desc">Textinmatning</string>
+    <string name="not_available">Funktionen är inte tillgänglig för tillfället</string>
+    <string name="not_available_subtitle">Ta en fika och kom tillbaka senare!</string>
+    <string name="attached_image">Bifogad bild</string>
+    <string name="search">Sök</string>
+    <string name="info">Information</string>
+    <string name="more_options">Fler alternativ</string>
+    <string name="touch_and_hold_to_record">Tryck och håll för att spela in</string>
+    <string name="record_message">Spela in röstmeddelande</string>
+    <string name="stop">Stoppa</string>
+
+    <string name="copy">Kopiera</string>
+    <string name="upvote">Rösta upp</string>
+    <string name="downvote">Rösta ned</string>
+    <string name="rating_question">Varför valde du detta betyg?</string>
+    <string name="offensive_unsafe">Stötande/Osäkert</string>
+    <string name="not_correct">Inte korrekt</string>
+    <string name="didnt_follow_instructions">Följde inte instruktionerna</string>
+    <string name="wrong_language">Fel språk</string>
+    <string name="other">Övrigt</string>
+
+    <!-- Settings -->
+    <string name="settings">Inställningar</string>
+    <string name="back">Tillbaka</string>
+    <string name="version">Version %s</string>
+    <string name="models_subtitle">Ladda ned och hantera modeller</string>
+    <string name="privacy_policy">Integritetspolicy</string>
+    <string name="privacy_policy_effective_date">Träder i kraft: 2 juni 2026</string>
+    <string name="privacy_policy_intro">Välkommen till LM Playground! Jag är dedikerad till att upprätthålla förtroendet hos alla användare av min app. Denna integritetspolicy förklarar vad appen samlar in och inte samlar in, hur dina konversationer stannar på din enhet och de få fall — som de valfria webbverktygen — då information lämnar din enhet, så att du alltid vet vad du kan förvänta dig.</string>
+    <string name="privacy_policy_s1_title">1. Ingen insamling av personuppgifter</string>
+    <string name="privacy_policy_s1_body">Jag, Andriy Druk, utvecklaren av LM Playground, samlar inte in, lagrar, använder eller delar någon personlig information från användarna av min app. Det finns inga konton, ingen reklam och ingen användningsanalys eller spårning. Appen är utformad med din integritet som prioritet, så att du kan använda den utan att kompromissa med dina personuppgifter.</string>
+    <string name="privacy_policy_s2_title">2. Bearbetning på enheten</string>
+    <string name="privacy_policy_s2_body">Dina konversationer, systemprompter och modellens svar bearbetas lokalt på din enhet av modellen på enheten. Detta innehåll skickas aldrig till mig eller till någon server för inferens. Det stannar på din enhet om du inte väljer att använda en funktion som ansluter till internet, enligt beskrivningen nedan.</string>
+    <string name="privacy_policy_s3_title">3. Internetåtkomst</string>
+    <string name="privacy_policy_s3_body">LM Playground begär internetbehörighet för två syften: att ladda ned de modellfiler du väljer, och — endast om du slår på dem — för att driva de valfria webbverktygen. Appen innehåller ingen reklam, telemetri eller användningsanalys, och den rapporterar inte din aktivitet tillbaka till mig.</string>
+    <string name="privacy_policy_s4_title">4. Verktyg och webbåtkomst</string>
+    <string name="privacy_policy_s4_body">Kapabla modeller kan använda valfria verktyg, som är avstängda som standard. När du aktiverar webbverktygen lämnar viss information din enhet: verktyget Webbsökning skickar modellens sökfråga till DuckDuckGo, och verktyget Hämta webbsida laddar ned de sidor modellen beslutar att öppna från dessa webbplatser. Dessa förfrågningar hanteras av tredjepartswebbplatserna under deras egna integritetspolicyer — jag varken tar emot eller lagrar dem. Verktyget Kör JavaScript körs helt på din enhet i en sandlåda utan internetåtkomst. För att hålla allt offline lämnar du helt enkelt verktygen avstängda.</string>
+    <string name="privacy_policy_s5_title">5. Uppdateringar av integritetspolicyn</string>
+    <string name="privacy_policy_s5_body">Som utvecklare av LM Playground förbehåller jag mig rätten att uppdatera denna integritetspolicy när som helst. Eventuella ändringar träder i kraft omedelbart när den uppdaterade policyn publiceras. Användare uppmanas att regelbundet granska denna sida och hålla sig informerade om hur deras integritet skyddas.</string>
+    <string name="privacy_policy_s6_title">6. Godkännande av denna policy</string>
+    <string name="privacy_policy_s6_body">Genom att använda LM Playground bekräftar du och samtycker till denna integritetspolicy. Om du inte godkänner policyn, vänligen avstå från att använda appen. Din fortsatta användning av appen efter publicering av eventuella uppdateringar eller ändringar av denna policy kommer att anses vara ditt godkännande av dessa ändringar.</string>
+    <string name="privacy_policy_s7_title">7. Kontakta mig</string>
+    <string name="privacy_policy_s7_body">Om du har några frågor eller förslag om min integritetspolicy, tveka inte att kontakta mig.</string>
+    <string name="privacy_policy_contact_email" translatable="false">andriydruk@gmail.com</string>
+    <string name="send_feedback">Skicka feedback</string>
+    <string name="faq">FAQ</string>
+    <string name="faq_subtitle">Vanliga frågor</string>
+
+    <!-- FAQ -->
+    <string name="faq_q1">Vad är LM Playground?</string>
+    <string name="faq_a1">LM Playground låter dig köra stora språkmodeller direkt på din Android-enhet. All bearbetning sker lokalt \u2013 inga molnservrar behövs.</string>
+    <string name="faq_q2">Vilka modeller stöds?</string>
+    <string name="faq_a2">Appen stöder modeller i GGUF-format med Q4_K_M-kvantisering, inklusive Qwen 3, Gemma 3, Llama 3.2, Phi\u20114 mini och DeepSeek R1 Distill i olika storlekar.</string>
+    <string name="faq_q3">Hur mycket lagringsutrymme behöver jag?</string>
+    <string name="faq_a3">Modellstorlekarna varierar från cirka 500 MB (små modeller som Qwen 3 0.6B) till flera GB (större modeller som DeepSeek R1 7B). Se till att du har tillräckligt med ledigt utrymme innan du laddar ned.</string>
+    <string name="faq_q4">Kräver appen en internetanslutning?</string>
+    <string name="faq_a4">Internet behövs för att ladda ned modeller och — om du slår på dem — för de valfria webbverktygen (webbsökning och hämta sida). Bortsett från det körs en modell helt offline på din enhet när den väl har laddats ned.</string>
+    <string name="faq_q5">Är mina data privata?</string>
+    <string name="faq_a5">Dina konversationer bearbetas lokalt på din enhet och skickas aldrig till en server av appen. Det enda undantaget är de valfria webbverktygen: om du aktiverar webbsökning eller hämta sida skickas modellens sökfrågor och de sidor den öppnar till dessa webbplatser (sökning använder DuckDuckGo). Verktyg är avstängda som standard, så ingenting lämnar din enhet om du inte slår på dem. Se integritetspolicyn för mer information.</string>
+    <string name="faq_q6">Varför är modellinläsningen långsam?</string>
+    <string name="faq_a6">Större modeller tar längre tid att läsa in i minnet. Inläsningstiderna beror på din enhets hårdvara. När modellen är inläst stannar den i minnet tills du laddar ur den.</string>
+    <string name="faq_q7">Vilka enheter fungerar bäst?</string>
+    <string name="faq_a7">Enheter med mer RAM kan köra större modeller. För bästa prestanda, använd en enhet med minst 6 GB RAM för små modeller och 8+ GB för större.</string>
+    <string name="faq_q8">Kan jag läsa in en anpassad GGUF-modell?</string>
+    <string name="faq_a8">Ja. Lägg din .gguf-fil i lagringsmappen som är vald i Inställningar → Modeller (samma mapp som används för nedladdningar). Appen hittar den automatiskt och visar den i modellväljaren tillsammans med den inbyggda katalogen. Chattmallen och tokenizer-inställningarna läses från GGUF-metadata. Om en specifik modell inte fungerar, öppna gärna ett issue på GitHub.</string>
+    <string name="faq_q9">Kan jag ändra var modeller lagras?</string>
+    <string name="faq_a9">Ja. Gå till Inställningar, sedan Modeller, och använd alternativet \u201CÄndra mapp\u201D för att välja en annan lagringsplats.</string>
+    <string name="faq_q10">Hur tar jag bort en modell?</string>
+    <string name="faq_a10">Gå till Inställningar, sedan Modeller. I avsnittet \u201CNedladdade\u201D trycker du på papperskorgsikonen bredvid modellen du vill ta bort.</string>
+
+    <string name="faq_q11">Vad är systemprompter?</string>
+    <string name="faq_a11">En systemprompt är en återanvändbar instruktion som formar hur modellen svarar — till exempel ”Du är en koncis vetenskapslärare. Förklara idéer tydligt med vardagliga exempel.” eller ”Du är en senior kodgranskare. Peka ut buggar, gränsfall och säkerhetsproblem.” Skapa och hantera dem i Inställningar → Systemprompter och tillämpa sedan en på din chatt. De lagras på din enhet och skickas endast till den lokala modellen.</string>
+    <string name="faq_q12">Vad är verktyg och vilka finns tillgängliga?</string>
+    <string name="faq_a12">Verktyg låter kapabla modeller utföra åtgärder under ett svar. Tre finns tillgängliga: Kör JavaScript (matematik, datum och textbearbetning i en sandlåda på enheten), Webbsökning (hittar aktuell information på webben) och Hämta webbsida (läser en sida så att modellen kan sammanfatta eller citera den). Slå på dem i Inställningar → Verktyg. Varje är avstängt som standard och fungerar endast med modeller som stöder verktygsanrop — leta efter hammarsymbolen i modellväljaren.</string>
+    <string name="faq_q13">Skickar webbverktygen mina data online?</string>
+    <string name="faq_a13">Endast när du aktiverar dem. Webbsökning skickar modellens sökfråga till DuckDuckGo, och Hämta webbsida laddar ned de sidor modellen väljer att öppna — dessa förfrågningar går till webbplatserna själva, inte till utvecklaren. Kör JavaScript stannar helt på din enhet utan internetåtkomst. Med alla verktyg avstängda (standarden) lämnar ingenting din enhet. Se integritetspolicyn för mer information.</string>
+    <string name="faq_q14">Meddelar appen mig när ett svar är klart?</string>
+    <string name="faq_a14">Ja. Medan appen är i bakgrunden följer en avisering modellens status — inläst, genererar, sedan svar klart — och låter dig kopiera eller dela svaret. Du kan även aktivera en kort slutförandeton i Inställningar → Ljud och haptik. Modellnedladdningar visar sin egen förloppsavisering med hastighet och beräknad återstående tid.</string>
+
+    <!-- Models Screen -->
+    <string name="models">Modeller</string>
+    <string name="change_folder">Ändra mapp</string>
+    <string name="delete_model">Ta bort</string>
+    <string name="download_model">Ladda ned</string>
+    <string name="storage_used_models">Modeller: %s</string>
+    <string name="storage_available">%s tillgängligt</string>
+    <string name="downloads_folder">Nedladdningsmapp</string>
+    <string name="custom_folder">Anpassad mapp</string>
+    <string name="delete_model_confirm">Ta bort %s?</string>
+    <string name="delete_model_message">Detta tar permanent bort modellfilen.</string>
+    <string name="downloaded_models">Nedladdade</string>
+    <string name="available_models">Tillgängliga för nedladdning</string>
+    <string name="no_downloaded_models">Inga modeller nedladdade än</string>
+    <string name="browse_more_models">Bläddra bland modeller</string>
+    <string name="cancel">Avbryt</string>
+    <string name="low_ram_warning_title">Modellen kan vara instabil</string>
+    <string name="low_ram_warning_message">Modellen behöver ~%1$s RAM, men den här enheten har bara %2$s totalt. Den kan laddas långsamt eller svara oförutsägbart.</string>
+    <string name="load_anyway">Läs in ändå</string>
+
+    <!-- Download notifications -->
+    <string name="download_notification_channel">Modellnedladdningar</string>
+    <string name="download_notification_channel_description">Visar förlopp för nedladdning av modellfiler</string>
+    <string name="download_complete">Nedladdning klar</string>
+    <string name="moving_to_storage">Flyttar till lagring\u2026</string>
+    <string name="starting_download">Startar nedladdning\u2026</string>
+    <string name="download_failed">Nedladdning misslyckades</string>
+    <string name="download_cancelled">Nedladdning avbruten</string>
+    <string name="waiting_for_network">Väntar på nätverk\u2026</string>
+
+    <!-- Migration -->
+    <string name="migrate_models_title">Migrera modeller?</string>
+    <string name="migrate_models_message">Hittade %1$d modell(er) (%2$s) i den tidigare mappen. Vill du kopiera dem till den nya platsen?</string>
+    <string name="migrate_models_from_downloads">Hittade %1$d modell(er) (%2$s) i din nedladdningsmapp. Vill du flytta dem till den valda lagringsplatsen?</string>
+    <string name="models_to_migrate">Modeller:</string>
+    <string name="migrate">Migrera</string>
+    <string name="skip">Hoppa över</string>
+    <string name="migrating_models">Migrerar modeller</string>
+    <string name="migration_progress">Kopierar %1$d av %2$d</string>
+
+    <!-- System prompts -->
+    <string name="system_prompts">Systemprompter</string>
+    <string name="system_prompts_subtitle">Återanvändbara instruktioner för valfri modell</string>
+    <string name="system_prompts_empty">Inga systemprompter än. Tryck på + för att lägga till en.</string>
+    <string name="system_prompt_new">Ny systemprompt</string>
+    <string name="system_prompt_edit">Redigera systemprompt</string>
+    <string name="system_prompt_hint">t.ex. Du är en koncis assistent. Svara alltid på franska.</string>
+    <string name="system_prompt_current">Nuvarande systemprompt</string>
+    <string name="system_prompt_current_empty">Ingen systemprompt — tryck för att lägga till</string>
+    <string name="system_prompt_update">Uppdatera</string>
+    <string name="save">Spara</string>
+    <string name="add">Lägg till</string>
+    <string name="clear">Rensa</string>
+
+    <!-- General UI -->
+    <string name="select_model">Välj modell</string>
+    <string name="new_conversation">Ny konversation</string>
+    <string name="close">Stäng</string>
+    <string name="pinned_label">Fäst</string>
+    <string name="unpin">Lossa</string>
+    <string name="pin">Fäst</string>
+    <string name="rename">Byt namn</string>
+    <string name="delete">Ta bort</string>
+    <string name="rename_conversation">Byt namn på konversation</string>
+    <string name="previously_used_model">Tidigare använd: %s</string>
+
+    <!-- Storage -->
+    <string name="choose_storage_folder">Välj lagringsmapp</string>
+    <string name="choose_storage_folder_message">Välj en mapp där modeller kommer att lagras. Detta krävs för att använda appen.</string>
+    <string name="choose_folder">Välj mapp</string>
+
+    <!-- Session -->
+    <string name="session_info">Sessionsinfo</string>
+
+    <!-- Generation Parameters -->
+    <string name="generation_parameters">Genereringsparametrar</string>
+    <string name="reset">Återställ</string>
+    <string name="context_size">Kontextstorlek</string>
+    <string name="will_reset_conversation">Kommer att återställa konversationen</string>
+    <string name="thinking_budget">Tänkbudget</string>
+    <string name="tokens_value">%d tokens</string>
+    <string name="temperature">Temperatur</string>
+    <string name="top_p" translatable="false">Top-P</string>
+    <string name="top_k" translatable="false">Top-K</string>
+    <string name="min_p" translatable="false">Min-P</string>
+    <string name="repetition_penalty">Upprepningsstraff</string>
+    <string name="advanced">Avancerat</string>
+    <string name="collapse">Fäll ihop</string>
+    <string name="expand">Expandera</string>
+    <string name="seed">Frö</string>
+    <string name="random">Slumpmässigt</string>
+    <string name="disabled_label">inaktiverad</string>
+    <string name="unload_model">Ladda ur modell</string>
+
+    <!-- Thinking -->
+    <string name="thinking">Tänker</string>
+    <string name="collapse_thinking">Fäll ihop tänkande</string>
+    <string name="expand_thinking">Expandera tänkande</string>
+    <string name="thoughts">Tankar</string>
+
+    <!-- Functionality -->
+    <string name="functionality_not_available">Funktionen är inte tillgänglig \uD83D\uDE48</string>
+
+    <!-- Screenshot titles -->
+    <string name="screenshot_hero_title_prefix">AI på</string>
+    <string name="screenshot_hero_title_emphasis">din</string>
+    <string name="screenshot_hero_title_suffix">telefon</string>
+    <string name="screenshot_hero_title_suffix_tablet">surfplatta</string>
+    <string name="screenshot_hero_subtitle">Privat. Lokalt. Offline.</string>
+    <string name="screenshot_hero_providers_label">25+ modeller från:</string>
+    <string name="screenshot_choose_model">Välj modell</string>
+    <string name="screenshot_choose_model_sub">från ledande AI-leverantörer</string>
+    <string name="screenshot_chat">Chatta privat</string>
+    <string name="screenshot_chat_sub">på din enhet</string>
+    <string name="screenshot_fine_tune">Finjustera</string>
+    <string name="screenshot_fine_tune_sub">genereringsparametrar</string>
+    <string name="screenshot_download_models">Ladda ned valfri modell</string>
+    <string name="screenshot_download_models_sub">till valfri mapp</string>
+
+    <!-- Screenshot sample system prompt -->
+    <string name="screenshot_system_prompt_sample">Du är en koncis vetenskapslärare. Förklara idéer tydligt med vardagliga exempel.</string>
+    <string name="screenshot_prompts">Återanvändbara prompter</string>
+    <string name="screenshot_prompts_sub">ställ in tonen en gång, använd den överallt</string>
+    <string name="screenshot_tools">Ge modeller verktyg</string>
+    <string name="screenshot_tools_sub">webbsökning, hämtning &amp; JavaScript</string>
+    <string name="screenshot_notification">Körs i bakgrunden</string>
+    <string name="screenshot_notification_sub">få en avisering när det är klart</string>
+    <string name="screenshot_prompt_sample_code">Du är en senior kodgranskare. Peka ut buggar, gränsfall och säkerhetsproblem. Var direkt och specifik.</string>
+    <string name="screenshot_prompt_sample_translator">Du är en översättare. Förvandla allt jag skickar till naturlig, flytande franska och behåll formateringen.</string>
+    <string name="screenshot_prompt_sample_brainstorm">Du är en kreativ brainstormingpartner. Bjud på djärva, oväntade idéer och bygg vidare på mina.</string>
+
+    <!-- Screenshot sample chat -->
+    <string name="screenshot_chat_question">Vad är maskininlärning?</string>
+    <string name="screenshot_chat_response">Maskininlärning är en gren av artificiell intelligens där datorer **lär sig från data** istället för att programmeras explicit.\n\nNyckelbegrepp:\n\n\u2022 **Träning**: mata data till algoritmer\n\u2022 **Modeller**: inlärda mönster från data\n\u2022 **Inferens**: göra förutsägelser på nya data</string>
+
+    <!-- Model categories -->
+    <string name="model_category_lightweight">Lättviktig chattmodell</string>
+    <string name="model_category_general">Allmän chattmodell</string>
+    <string name="model_category_efficient">Effektiv modell på enheten</string>
+    <string name="model_category_reasoning">Hybrid resonemangsmodell</string>
+    <string name="model_category_ultra_lightweight">Ultralätt chattmodell</string>
+    <string name="model_category_compact_reasoning">Kompakt resonemangsmodell</string>
+    <string name="model_category_thinking">Tänkande modell</string>
+    <string name="model_category_enterprise">Företagschattmodell</string>
+
+    <!-- What\'s New -->
+    <string name="whats_new">Nyheter</string>
+    <string name="whats_new_item_1">Nya Gemma 4-modeller (E2B, E4B)</string>
+    <string name="whats_new_item_2">Genereringsparametrar per modell</string>
+    <string name="whats_new_item_3">Kontroll av tänkbudget</string>
+
+    <string name="supports_your_language">Stöder ditt språk</string>
+    <string name="other_models">Andra modeller</string>
+    <string name="language">Språk</string>
+    <string name="language_system_default">Systemstandard</string>
+
+    <!-- Avisering för inferensmotorns tjänst (förgrundstjänst medan
+         en modell är inläst, så att systemet inte avslutar
+         :llama-processen). -->
+    <string name="inference_notification_channel_name">Inferensmotor</string>
+    <string name="inference_notification_channel_description">Håller AI-modellen inläst och redo att svara.</string>
+    <string name="inference_notification_title">LM Playground</string>
+    <string name="inference_notification_text">Modell inläst — redo att chatta.</string>
+    <string name="inference_notification_loaded_title">Modell inläst</string>
+    <string name="inference_engine_crashed">Hoppsan, något gick fel.\nLäs in modellen igen.</string>
+    <string name="message_too_large">Meddelandet är %1$d KB och överskrider gränsen på %2$d KB. Prova att skicka ett kortare meddelande.</string>
+    <string name="replay_history_too_large">Konversationshistoriken är för stor för att läsas in i den här modellen. Starta en ny chatt för att fortsätta.</string>
+    <string name="system_prompt_too_large">Systemprompten är %1$d KB och överskrider gränsen på %2$d KB. Prova en kortare prompt.</string>
+    <string name="history_message_too_large">Ett sparat meddelande i den här konversationen är för stort för att läsas in igen. Starta en ny chatt för att fortsätta.</string>
+    <string name="model_load_failed_status">Det gick inte att läsa in modellen</string>
+    <string name="model_load_failed_title">Det gick inte att läsa in modellen</string>
+    <string name="model_load_failed_message">Det gick inte att läsa in %1$s. Filen kan vara skadad, eller så använder den en arkitektur som den här versionen av appen ännu inte stöder. Prova en annan modell eller uppdatera appen.</string>
+    <string name="model_load_failed_dismiss">OK</string>
+
+    <!-- What's new (1.7.0) -->
+    <string name="whats_new_tools">Webbsökning, hämta sida och kör JavaScript</string>
+    <string name="whats_new_cache">Snabbare svar med cachade prompter &amp; verktyg</string>
+
+    <!-- Tools -->
+    <string name="set_up_tools">Konfigurera verktyg</string>
+    <string name="tools">Verktyg</string>
+    <string name="tools_subtitle">Låt kapabla modeller utföra åtgärder</string>
+    <string name="tools_section_intro">Med verktyg kan kapabla modeller utföra åtgärder under ett svar, som att söka på webben eller göra en beräkning. Varje verktyg är avstängt som standard – slå bara på dem du vill använda. Verktyg fungerar bara med modeller som stöder dem (leta efter hammarsymbolen).</string>
+    <string name="tools_example_label">Exempel: %1$s</string>
+    <string name="tools_params_sheet_subtitle">Modellen kan anropa dessa under ett svar</string>
+    <string name="tool_call_input">Indata</string>
+    <string name="tool_call_output">Utdata</string>
+    <string name="tool_run_javascript_title">Kör JavaScript</string>
+    <string name="tool_run_javascript_desc">Kör JavaScript i en säker sandlåda för matematik, datum och textbearbetning. Ingen internet- eller filåtkomst.</string>
+    <string name="tool_run_javascript_example">“Vad är (2 + 3) × 4, och vilken veckodag är 1 januari 2027?”</string>
+    <string name="tool_web_search_title">Webbsökning</string>
+    <string name="tool_web_search_desc">Söker på webben och returnerar resultatens titlar, länkar och utdrag så att modellen kan hitta aktuell information.</string>
+    <string name="tool_web_search_example">“Hitta färska recensioner av den senaste Pixel-telefonen.”</string>
+    <string name="tool_web_fetch_title">Hämta webbsida</string>
+    <string name="tool_web_fetch_desc">Öppnar en länk och läser dess huvudinnehåll som text så att modellen kan sammanfatta eller citera en sida.</string>
+    <string name="tool_web_fetch_example">“Sammanfatta artikeln på den här länken.”</string>
+    <string name="cd_supports_tools">Stöder verktyg</string>
+    <string name="cd_supports_thinking">Stöder tänkande</string>
+
+    <!-- Sound and Haptic -->
+    <string name="sound_and_haptic">Ljud och haptik</string>
+    <string name="sound_and_haptic_subtitle">Slutförandeljud och haptik vid skrivning</string>
+    <string name="sound_on_completion_title">Spela upp ljud när genereringen är klar</string>
+    <string name="sound_on_completion_desc">Spelar upp en kort ton när modellen slutför ett svar medan appen körs i bakgrunden.</string>
+    <string name="haptic_on_generation_title">Haptisk återkoppling vid generering</string>
+    <string name="haptic_on_generation_desc">En mjuk vibration när varje del av svaret kommer in.</string>
+
+    <!-- Inference notification -->
+    <string name="inference_notification_generating_title">Genererar svar…</string>
+    <string name="inference_notification_ready_title">Svar klart</string>
+    <plurals name="inference_notification_tokens">
+        <item quantity="one">%d token</item>
+        <item quantity="other">%d tokens</item>
+    </plurals>
+    <string name="inference_notification_tokens_line">%1$s · %2$s</string>
+    <string name="inference_engine_unavailable">Inferensmotorn är inte tillgänglig just nu. Försök igen om en stund.</string>
+
+    <!-- Misc -->
+    <string name="share">Dela</string>
+    <string name="response_copied">Kopierat till urklipp</string>
+    <string name="folder_picker_unavailable">Ingen app tillgänglig för att välja en mapp. Installera eller aktivera systemappen Filer / Dokument.</string>
+</resources>

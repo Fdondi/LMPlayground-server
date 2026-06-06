@@ -1,0 +1,3 @@
+- Unterstützung für Tablet und Chromebook — adaptive Layouts für große Bildschirme und Foldables
+- Bis zu 2× schnellere Generierung auf dem Gerät dank neuer CPU-Optimierungen
+- Seltenes Einfrieren beim Öffnen der Modellauswahl behoben

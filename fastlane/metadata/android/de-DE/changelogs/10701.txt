@@ -1,0 +1,6 @@
+- Tools — Modelle können jetzt im Web suchen, Seiten abrufen und JavaScript ausführen. Pro Modell unter Einstellungen → Tools
+- Neue Modelle: Gemma 4 12B sowie Granite 4.1 (3B und 8B)
+- Schnellere Antworten dank Prompt-/Tool-Cache
+- Antworten teilen oder direkt aus der Mitteilung kopieren/teilen
+- Live-Benachrichtigung zeigt Generierungsstatus und Token-Anzahl
+- Verbesserte Leistung und Stabilität

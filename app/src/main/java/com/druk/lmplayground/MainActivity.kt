@@ -1,16 +1,14 @@
 package com.druk.lmplayground
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.layout.consumeWindowInsets
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.viewinterop.AndroidViewBinding
-import com.druk.lmplayground.databinding.ContentMainBinding
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,20 +30,27 @@ class MainActivity : AppCompatActivity() {
 
     fun launchFolderPicker(callback: (Uri?) -> Unit) {
         folderPickerCallback = callback
-        folderPickerLauncher.launch(null)
+        try {
+            folderPickerLauncher.launch(null)
+        } catch (_: ActivityNotFoundException) {
+            // Some devices ship without (or with disabled) DocumentsUI —
+            // OPEN_DOCUMENT_TREE has no handler and ActivityResultLauncher
+            // throws synchronously. Surface a message and clear the callback
+            // so the caller's UI doesn't stay wedged waiting for a result.
+            folderPickerCallback = null
+            Toast.makeText(
+                this,
+                R.string.folder_picker_unavailable,
+                Toast.LENGTH_LONG,
+            ).show()
+            callback(null)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
 
-        setContentView(
-            ComposeView(this).apply {
-                consumeWindowInsets = false
-                setContent {
-                    AndroidViewBinding(ContentMainBinding::inflate)
-                }
-            }
-        )
+        setContentView(R.layout.content_main)
     }
 }

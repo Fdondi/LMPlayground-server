@@ -1,0 +1,6 @@
+- Værktøjer — modeller kan nu søge på nettet, hente en side og køre JavaScript. Slå dem til pr. model under Indstillinger → Værktøjer
+- Nye modeller: Gemma 4 12B samt Granite 4.1 (3B og 8B)
+- Hurtigere svar med cachen til prompts og værktøjer
+- Del svar, eller kopiér/del direkte fra notifikationen
+- Live-notifikation viser genereringsstatus og antal tokens
+- Forbedret ydeevne og stabilitet

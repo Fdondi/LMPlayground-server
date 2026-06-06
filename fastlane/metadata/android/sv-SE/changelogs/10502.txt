@@ -1,0 +1,2 @@
+- Förbättringar av prestanda och stabilitet
+- Varning för modeller som är för stora för din enhet

@@ -1,0 +1,6 @@
+- Alat — model yang mampu kini bisa menelusuri web, membuka halaman, dan menjalankan JavaScript saat membalas. Aktifkan per model di Pengaturan → Alat
+- Model baru: Gemma 4 12B, plus Granite 4.1 (3B dan 8B)
+- Balasan lebih cepat dengan prompt dan alat ter-cache
+- Bagikan balasan, atau salin/bagikan dari notifikasi
+- Notifikasi langsung menampilkan status pembuatan dan jumlah token
+- Performa dan stabilitas yang ditingkatkan

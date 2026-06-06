@@ -1,0 +1,2 @@
+- Peningkatan performa dan stabilitas
+- Menambahkan peringatan untuk model yang terlalu besar untuk perangkat Anda
