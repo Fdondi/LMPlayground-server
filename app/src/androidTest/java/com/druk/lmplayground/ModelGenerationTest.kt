@@ -433,4 +433,100 @@ class ModelGenerationTest {
         }
     }
 
+    /** Resident set size of this test process in kB (rough RAM proxy incl. loaded model). */
+    private fun readVmRssKb(): Long {
+        return try {
+            File("/proc/self/status").readLines()
+                .firstOrNull { it.startsWith("VmRSS:") }
+                ?.replace(Regex("[^0-9]"), "")
+                ?.toLongOrNull() ?: -1L
+        } catch (e: Exception) {
+            -1L
+        }
+    }
+
+    /**
+     * Head-to-head performance benchmark: Gemma 4 E2B official QAT Q4_0 vs community Q4_K_M.
+     * Push both GGUFs to /data/local/tmp first:
+     *   adb shell "cp /sdcard/Models/gemma-4-E2B_q4_0-it.gguf /data/local/tmp/ && chmod 666 ..."
+     *   adb shell "cp /sdcard/Models/gemma-4-E2B-it-Q4_K_M.gguf /data/local/tmp/ && chmod 666 ..."
+     * Reads native llama.cpp perf counters (load time, prompt-eval t/s, generation t/s) via getReport().
+     */
+    @Test(timeout = 1_200_000)
+    fun testBenchmarkGemma4E2BQATvsQ4KM() {
+        val candidates = listOf(
+            "gemma-4-E2B_q4_0-it.gguf",    // official Google QAT Q4_0
+            "gemma-4-E2B-it-Q4_K_M.gguf"   // community PTQ Q4_K_M
+        )
+        val present = candidates
+            .map { File(MODELS_PATH, it) }
+            .filter { it.exists() && it.canRead() }
+        assumeTrue(
+            "No Gemma 4 E2B benchmark models found in $MODELS_PATH (need QAT and/or Q4_K_M)",
+            present.isNotEmpty()
+        )
+
+        // A non-trivial prompt so prompt-eval (prefill) t/s is measurable, with thinking
+        // disabled so the decode-speed comparison is clean and bounded.
+        val prompt = "Write a detailed, well-structured explanation of how photosynthesis works, " +
+            "covering the light-dependent reactions, the Calvin cycle, and why this process " +
+            "matters for life on Earth. Use a clear, encyclopedic tone."
+
+        val genTokenTarget = 128
+        for (modelFile in present) {
+            val sizeMb = modelFile.length() / 1024 / 1024
+            Log.d(TAG, "===== BENCHMARK START: ${modelFile.name} ($sizeMb MB) =====")
+
+            val rssBefore = readVmRssKb()
+            val loadStart = System.currentTimeMillis()
+            val model = loadModel(modelFile)
+            val loadWallMs = System.currentTimeMillis() - loadStart
+
+            val session = model.createSession(4096, 0.8f, 0.95f, 1.0f, 40, 0.05f, -1, -1, "")!!
+            this.session = session
+
+            // Timed generation loop: measure time-to-first-token (prefill of the prompt +
+            // first decoded token) and steady-state decode throughput separately.
+            session.addMessage(prompt, false)
+            var lastResponse = ""
+            val callback = object : LlamaGenerationCallback {
+                override fun onFullResponse(response: String) { lastResponse = response }
+            }
+            var tokenCount = 0
+            var ttftMs = 0L
+            val genStart = System.currentTimeMillis()
+            val deadline = genStart + 120_000
+            while (session.generate(callback) == 0) {
+                tokenCount++
+                if (tokenCount == 1) ttftMs = System.currentTimeMillis() - genStart
+                if (tokenCount >= genTokenTarget) break
+                if (System.currentTimeMillis() > deadline) break
+            }
+            val genEnd = System.currentTimeMillis()
+            val rssAfter = readVmRssKb()
+
+            // Decode throughput = tokens after the first / time after the first token.
+            val decodeMs = genEnd - genStart - ttftMs
+            val decodeTps = if (tokenCount > 1 && decodeMs > 0)
+                (tokenCount - 1) * 1000.0 / decodeMs else 0.0
+            val totalGenMs = genEnd - genStart
+
+            Log.d(TAG, "===== BENCHMARK RESULT: ${modelFile.name} =====")
+            Log.d(TAG, "BENCH file_size_mb=$sizeMb")
+            Log.d(TAG, "BENCH load_wall_ms=$loadWallMs")
+            Log.d(TAG, "BENCH ttft_ms=$ttftMs (prompt prefill + first token)")
+            Log.d(TAG, "BENCH gen_tokens=$tokenCount total_gen_ms=$totalGenMs decode_tps=%.2f".format(decodeTps))
+            Log.d(TAG, "BENCH vmrss_after_kb=$rssAfter (delta ${rssAfter - rssBefore})")
+            Log.d(TAG, "BENCH native_report:\n${session.getReport()}")
+            Log.d(TAG, "BENCH sample_output: ${lastResponse.replace("\n", " ").take(180)}")
+            Log.d(TAG, "===== BENCHMARK END: ${modelFile.name} =====")
+
+            // Free memory before loading the next model.
+            session.destroy()
+            this.session = null
+            model.unloadModel()
+            this.llamaModel = null
+        }
+    }
+
 }

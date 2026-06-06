@@ -27,6 +27,11 @@ data class ModelInfo(
     // [resolveCapabilities].
     val supportsTools: Boolean = false,
     val supportsThinking: Boolean = false,
+    // Legacy catalog entry kept only so an already-downloaded file is still
+    // recognized (name/logo/description) instead of falling back to a nameless
+    // custom model. Never offered for download: hidden from the list unless the
+    // file is present on disk.
+    val deprecated: Boolean = false,
 ) {
     val isCustom: Boolean get() = remoteUri == null
 }
