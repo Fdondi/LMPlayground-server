@@ -312,4 +312,87 @@ class LlamaProxyTest {
             model.unloadModel()
         }
     }
+
+    private fun findVisionPair(modelName: String, mmprojName: String): Pair<File, File>? {
+        val m = File(MODELS_PATH, modelName)
+        val p = File(MODELS_PATH, mmprojName)
+        return if (m.exists() && m.canRead() && p.exists() && p.canRead()) m to p else null
+    }
+
+    private fun loadAssetBytes(name: String): ByteArray =
+        InstrumentationRegistry.getInstrumentation().context.assets.open(name).use { it.readBytes() }
+
+    /**
+     * Service-path vision regression: Qwen 3.5 (M-RoPE / Qwen3VL) image input
+     * through proxy → AIDL → LlamaService → GenerationWorker → native mtmd —
+     * the exact path ConversationViewModel uses (minus the photo picker).
+     *
+     * Guards the bug where the image-conditioned LLM decode bled onto Vulkan0
+     * and the Mali Vulkan backend failed the graph (compute status 1 → garbage
+     * tokens). The LLM must run CPU-only; Vulkan is reserved for the CLIP
+     * encoder. Pre-fix this produced symbol/digit garbage; post-fix it produces
+     * coherent text describing the image.
+     */
+    @Test(timeout = 300_000)
+    fun proxyVisionGenerate_qwen_endToEnd() {
+        val pair = findVisionPair(
+            "Qwen_Qwen3.5-0.8B-Q3_K_M.gguf",
+            "mmproj-Qwen_Qwen3.5-0.8B-f16.gguf",
+        )
+        assumeNotNull("No Qwen 3.5 vision model + mmproj in $MODELS_PATH", pair)
+        val (modelFile, mmprojFile) = pair!!
+
+        val pfd = ParcelFileDescriptor.open(modelFile, ParcelFileDescriptor.MODE_READ_ONLY)
+        val model = llamaCpp.loadModel(pfd, object : LlamaProgressCallback {
+            override fun onProgress(progress: Float) {}
+        })
+        try {
+            val visionOk = model.loadMmprojModel(mmprojFile.absolutePath)
+            assertTrue("loadMmprojModel should report vision support", visionOk)
+            assertTrue("supportsVision() should be true", model.supportsVision())
+
+            // Greedy for determinism so the coherence check is stable.
+            val session = model.createSession(
+                contextSize = 4096,
+                temperature = 0.0f,
+                topP = 1.0f,
+                repetitionPenalty = 1.0f,
+                topK = 0,
+                minP = 0.0f,
+                seed = 0,
+                thinkingBudget = -1,
+                systemPrompt = "",
+            )
+            assertNotNull("createSession returned null", session)
+            try {
+                session!!.setImageData(loadAssetBytes("test_cat.jpg"))
+                session.addMessage("What animal is in this image? Answer in one word.", false)
+
+                var lastFull = ""
+                val rc = runBlocking {
+                    session.generateAll(object : LlamaGenerationCallback {
+                        override fun onFullResponse(response: String) { lastFull = response }
+                    })
+                }
+                android.util.Log.d(
+                    "LlamaProxyTest",
+                    "Qwen vision response (rc=$rc, ${lastFull.length} chars): $lastFull",
+                )
+
+                assertTrue("Vision response should be non-empty (rc=$rc)", lastFull.isNotBlank())
+                // Pre-fix the failed Vulkan decode produced symbol/digit garbage
+                // with almost no letters/spaces; coherent text is mostly both.
+                val coherent =
+                    lastFull.count { it.isLetter() || it.isWhitespace() }.toFloat() / lastFull.length
+                assertTrue(
+                    "Vision response looks like garbage (letter+space ratio=$coherent): \"$lastFull\"",
+                    coherent > 0.6f,
+                )
+            } finally {
+                session?.destroy()
+            }
+        } finally {
+            model.unloadModel()
+        }
+    }
 }

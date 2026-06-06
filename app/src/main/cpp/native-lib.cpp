@@ -104,6 +104,10 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstr
 
     llama_log_set(log_callback, NULL);
     ggml_log_set(log_callback, NULL);
+    // mtmd/clip use their own logger (default writes to C stderr -> /dev/null
+    // on Android, so vision-encoder diagnostics like "CLIP using <backend>"
+    // are otherwise lost). Route them to logcat too.
+    mtmd_log_set(log_callback, NULL);
 
     // With GGML_BACKEND_DL=ON the CPU and Vulkan backends live in separate
     // libggml-*.so files alongside libllamacpp.so. dlopen them so
