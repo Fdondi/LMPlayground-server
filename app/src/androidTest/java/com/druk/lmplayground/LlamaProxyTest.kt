@@ -395,4 +395,68 @@ class LlamaProxyTest {
             model.unloadModel()
         }
     }
+
+    /**
+     * Proves vision is independent of the text-model quantization: the QAT
+     * Q4_0 Gemma 4 E2B uses the SAME (quant-independent) BF16 mmproj as the
+     * Q4_K_M build. Confirms q4_0 supports vision — the catalog default just
+     * lacks the mmproj wiring, not a quantization limitation.
+     */
+    @Test(timeout = 300_000)
+    fun proxyVisionGenerate_gemma4Qat_endToEnd() {
+        val pair = findVisionPair(
+            "gemma-4-E2B_q4_0-it.gguf",
+            "mmproj-gemma-4-E2B-it-BF16.gguf",
+        )
+        assumeNotNull("No Gemma 4 E2B q4_0 model + BF16 mmproj in $MODELS_PATH", pair)
+        val (modelFile, mmprojFile) = pair!!
+
+        val pfd = ParcelFileDescriptor.open(modelFile, ParcelFileDescriptor.MODE_READ_ONLY)
+        val model = llamaCpp.loadModel(pfd, object : LlamaProgressCallback {
+            override fun onProgress(progress: Float) {}
+        })
+        try {
+            val visionOk = model.loadMmprojModel(mmprojFile.absolutePath)
+            assertTrue("q4_0 Gemma 4 should support vision with the BF16 mmproj", visionOk)
+            assertTrue("supportsVision() should be true", model.supportsVision())
+
+            val session = model.createSession(
+                contextSize = 4096,
+                temperature = 0.0f,
+                topP = 1.0f,
+                repetitionPenalty = 1.0f,
+                topK = 0,
+                minP = 0.0f,
+                seed = 0,
+                thinkingBudget = -1,
+                systemPrompt = "",
+            )
+            assertNotNull("createSession returned null", session)
+            try {
+                session!!.setImageData(loadAssetBytes("test_cat.jpg"))
+                session.addMessage("What animal is in this image? Answer in one word.", false)
+                var lastFull = ""
+                val rc = runBlocking {
+                    session.generateAll(object : LlamaGenerationCallback {
+                        override fun onFullResponse(response: String) { lastFull = response }
+                    })
+                }
+                android.util.Log.d(
+                    "LlamaProxyTest",
+                    "Gemma4-q4_0 vision response (rc=$rc, ${lastFull.length} chars): $lastFull",
+                )
+                assertTrue("Vision response should be non-empty (rc=$rc)", lastFull.isNotBlank())
+                val coherent =
+                    lastFull.count { it.isLetter() || it.isWhitespace() }.toFloat() / lastFull.length
+                assertTrue(
+                    "Vision response looks like garbage (ratio=$coherent): \"$lastFull\"",
+                    coherent > 0.6f,
+                )
+            } finally {
+                session?.destroy()
+            }
+        } finally {
+            model.unloadModel()
+        }
+    }
 }

@@ -292,18 +292,24 @@ object ModelInfoProvider {
             filename = "gemma-4-E2B_q4_0-it.gguf",
             remoteUri = Uri.parse("https://huggingface.co/google/gemma-4-E2B-it-qat-q4_0-gguf/resolve/main/gemma-4-E2B_q4_0-it.gguf"),
             releaseDate = LocalDate.parse("2026-03-25"),
-            description = "Google \u00B7 QAT on-device model \u00B7 3.35Gb",
+            description = "Google \u00B7 QAT on-device vision model \u00B7 3.35Gb + 987Mb mmproj",
             logoRes = R.drawable.logo_google,
-            supportedLanguages = MULTILINGUAL_BROAD
+            supportedLanguages = MULTILINGUAL_BROAD,
+            // Vision is quant-independent: the QAT q4_0 text model uses the same
+            // BF16 mmproj as the Q4_K_M build (validated on-device).
+            mmprojFilename = "mmproj-gemma-4-E2B-it-BF16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-4-E2B-it-GGUF/resolve/main/mmproj-gemma-4-E2B-it-BF16.gguf")
         ),
         ModelInfo(
             name = "Gemma 4 E4B",
             filename = "gemma-4-E4B_q4_0-it.gguf",
             remoteUri = Uri.parse("https://huggingface.co/google/gemma-4-E4B-it-qat-q4_0-gguf/resolve/main/gemma-4-E4B_q4_0-it.gguf"),
             releaseDate = LocalDate.parse("2026-03-25"),
-            description = "Google \u00B7 QAT on-device model \u00B7 5.15Gb",
+            description = "Google \u00B7 QAT on-device vision model \u00B7 5.15Gb + 992Mb mmproj",
             logoRes = R.drawable.logo_google,
-            supportedLanguages = MULTILINGUAL_BROAD
+            supportedLanguages = MULTILINGUAL_BROAD,
+            mmprojFilename = "mmproj-gemma-4-E4B-it-BF16.gguf",
+            mmprojUri = Uri.parse("https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/resolve/main/mmproj-gemma-4-E4B-it-BF16.gguf")
         ),
         ModelInfo(
             name = "Gemma 4 12B",
