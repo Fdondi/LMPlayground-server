@@ -36,7 +36,6 @@ import com.druk.llamacpp.InferenceState
 import com.druk.lmplayground.App
 import com.druk.lmplayground.BuildConfig
 import com.druk.lmplayground.R
-import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.storage.ModelsContent
 import com.druk.lmplayground.storage.StorageViewModel
 import com.druk.lmplayground.util.rememberHingeWidthDp
@@ -55,9 +54,9 @@ class SettingsFragment : Fragment() {
     private val toolsViewModel: ToolsViewModel by viewModels()
     private val soundHapticViewModel: SoundHapticViewModel by viewModels()
 
-    // Pending download model held across the notification-permission
-    // request, mirroring the original ModelsFragment behaviour.
-    private var pendingDownloadModel: ModelInfo? = null
+    // Action deferred across the notification-permission request (a download
+    // started only after the user answers the permission dialog).
+    private var pendingDownload: (() -> Unit)? = null
 
     private val folderPickerLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree()
@@ -75,15 +74,14 @@ class SettingsFragment : Fragment() {
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { _ ->
-        pendingDownloadModel?.let { model ->
-            storageViewModel.downloadModel(model)
-            pendingDownloadModel = null
-        }
+        pendingDownload?.invoke()
+        pendingDownload = null
     }
 
-    private fun startDownloadWithPermissionCheck(model: ModelInfo) {
+    /** Run [action] (a download) after ensuring the notification permission has been asked for. */
+    private fun withNotificationPermission(action: () -> Unit) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            storageViewModel.downloadModel(model)
+            action()
             return
         }
 
@@ -94,9 +92,9 @@ class SettingsFragment : Fragment() {
         if (granted || shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS).not()
             && hasAskedNotificationPermission()
         ) {
-            storageViewModel.downloadModel(model)
+            action()
         } else {
-            pendingDownloadModel = model
+            pendingDownload = action
             setAskedNotificationPermission()
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -318,7 +316,12 @@ class SettingsFragment : Fragment() {
                 }
             },
             onDeleteModel = { model -> storageViewModel.deleteModel(model) },
-            onDownloadModel = { model -> startDownloadWithPermissionCheck(model) },
+            onDownloadModel = { model, includeMmproj ->
+                withNotificationPermission { storageViewModel.downloadModel(model, includeMmproj) }
+            },
+            onDownloadMmproj = { model ->
+                withNotificationPermission { storageViewModel.downloadMmprojOnly(model) }
+            },
             onCancelDownload = { model -> storageViewModel.cancelDownload(model) },
             onSnackbarDismiss = { storageViewModel.clearSnackbar() },
             onConfirmMigration = { storageViewModel.confirmMigration() },

@@ -26,5 +26,8 @@ data class ChatMessageEntity(
     val thinkingTokens: Int = 0,
     val responseTokens: Int = 0,
     val responseDurationSeconds: Float = 0f,
-    val timestamp: Long
+    val timestamp: Long,
+    // Absolute path of the attached image persisted under filesDir/chat_images,
+    // null for text-only messages. Restored to a FileProvider URI on load.
+    val imagePath: String? = null
 )

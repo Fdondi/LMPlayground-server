@@ -386,14 +386,25 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
 
     fun getRepository(): StorageRepository = repository
 
-    fun downloadModel(model: ModelInfo) {
+    fun downloadModel(model: ModelInfo, includeMmproj: Boolean = true) {
         if (model.remoteUri == null) return
         val storageUri = repository.getStorageUri()
         if (storageUri == null) {
             showSnackbar("${model.name}: Storage not configured")
             return
         }
-        downloadRepo.startDownload(model, storageUri)
+        downloadRepo.startDownload(model, storageUri, includeMmproj)
+    }
+
+    /** Download only the image module (mmproj) for an already-installed vision model. */
+    fun downloadMmprojOnly(model: ModelInfo) {
+        if (model.mmprojUri == null) return
+        val storageUri = repository.getStorageUri()
+        if (storageUri == null) {
+            showSnackbar("${model.name}: Storage not configured")
+            return
+        }
+        downloadRepo.startMmprojDownload(model, storageUri)
     }
 
     fun cancelDownload(model: ModelInfo) {

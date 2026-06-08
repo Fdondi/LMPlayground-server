@@ -129,7 +129,13 @@ fun SelectModelDialog(
                         items = downloadedModels,
                         key = { it.model.filename }
                     ) { modelWithStatus ->
-                        Model(model = modelWithStatus.model) {
+                        Model(
+                            model = modelWithStatus.model,
+                            // Only show the vision icon when the image module is
+                            // actually present, so the picker reflects whether
+                            // vision will really work once this model is loaded.
+                            vision = modelWithStatus.isMmprojDownloaded,
+                        ) {
                             onDismissRequest()
                             onLoadModel(modelWithStatus.model)
                         }
@@ -200,6 +206,7 @@ fun SelectModelDialog(
 @Composable
 fun Model(
     model: ModelInfo,
+    vision: Boolean = model.isVision,
     onClick: () -> Unit
 ) {
     Button(
@@ -251,6 +258,7 @@ fun Model(
         }
         ModelCapabilityIcons(
             model = model,
+            vision = vision,
             modifier = Modifier.padding(end = 4.dp)
         )
         Icon(

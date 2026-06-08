@@ -126,6 +126,7 @@ class ConversationFragment : Fragment() {
             val generationParams by viewModel.generationParams.observeAsState(GenerationParams())
             val maxContextSize by viewModel.maxContextSize.observeAsState(4096)
             val sessionModelHint by viewModel.sessionModelHint.observeAsState()
+            val visionModuleHint by viewModel.visionModuleHint.observeAsState()
             val systemPrompt by viewModel.systemPrompt.observeAsState("")
             val systemPromptId by viewModel.systemPromptId.observeAsState()
             val recentSystemPrompts by viewModel.recentSystemPrompts.observeAsState(emptyList())
@@ -487,6 +488,15 @@ class ConversationFragment : Fragment() {
                                 },
                                 onSessionModelHintDismiss = {
                                     viewModel.dismissSessionModelHint()
+                                },
+                                visionModuleHint = visionModuleHint?.name,
+                                onVisionModuleHintClick = {
+                                    viewModel.downloadVisionModule()
+                                    Toast.makeText(
+                                        requireContext(),
+                                        R.string.vision_module_downloading,
+                                        Toast.LENGTH_LONG,
+                                    ).show()
                                 },
                                 onTokenCountClicked = {
                                     modelReport = viewModel.getReport()

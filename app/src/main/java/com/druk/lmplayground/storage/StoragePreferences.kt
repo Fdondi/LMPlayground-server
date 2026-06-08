@@ -114,6 +114,19 @@ class StoragePreferences(context: Context) {
         }
     }
 
+    // --- One-time "image support available" chat nudge ---
+    //
+    // Tracks, per model filename, whether the offer to download a missing image
+    // module has already been shown so it's surfaced at most once per model.
+
+    fun wasVisionModuleHintShown(filename: String): Boolean {
+        return prefs.getBoolean("vision_hint_$filename", false)
+    }
+
+    fun setVisionModuleHintShown(filename: String) {
+        prefs.edit { putBoolean("vision_hint_$filename", true) }
+    }
+
     fun clear() {
         prefs.edit { clear() }
     }

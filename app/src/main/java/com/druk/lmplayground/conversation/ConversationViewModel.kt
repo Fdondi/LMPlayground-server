@@ -88,6 +88,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     private val _generationParams = MutableLiveData(GenerationParams())
     private val _maxContextSize = MutableLiveData(4096)
     private val _sessionModelHint = MutableLiveData<Pair<String, String>?>(null) // (modelName, modelFilename)
+    // Set when a vision-capable model loads without its image module (mmproj),
+    // offering a one-time download. Carries the model so the tap can fetch it.
+    private val _visionModuleHint = MutableLiveData<ModelInfo?>(null)
     private val _supportsVision = MutableLiveData(false)
     private val _supportsToolCalling = MutableLiveData(false)
     private val _toolEnabledStates = MutableLiveData<Map<String, Boolean>>(emptyMap())
@@ -143,6 +146,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     val generationParams: LiveData<GenerationParams> = _generationParams
     val maxContextSize: LiveData<Int> = _maxContextSize
     val sessionModelHint: LiveData<Pair<String, String>?> = _sessionModelHint
+    val visionModuleHint: LiveData<ModelInfo?> = _visionModuleHint
     val supportsVision: LiveData<Boolean> = _supportsVision
     val supportsToolCalling: LiveData<Boolean> = _supportsToolCalling
     val systemPrompt: LiveData<String> = _systemPrompt
@@ -358,6 +362,10 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun loadModel(modelInfo: ModelInfo, forceLoad: Boolean = false) {
         val llamaCpp = llamaCpp ?: return
 
+        // Clear any prior vision-module offer; the mmproj block below re-posts
+        // it if this model loads vision-capable but without its image module.
+        _visionModuleHint.value = null
+
         viewModelScope.launch {
             // RAM-fit check. Run BEFORE we tear down the currently-loaded
             // model so the user can cancel the warning and keep their
@@ -515,11 +523,20 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                                 "ConversationVM",
                                 "mmproj loaded, supportsVision=${llamaModel.supportsVision()}"
                             )
+                            _visionModuleHint.postValue(null)
                         } else {
                             android.util.Log.d(
                                 "ConversationVM",
                                 "mmproj file not found: ${modelInfo.mmprojFilename}"
                             )
+                            // Vision-capable model loaded without its image
+                            // module: offer to download it, once per model.
+                            if (modelInfo.mmprojUri != null &&
+                                !storagePreferences.wasVisionModuleHintShown(modelInfo.filename)
+                            ) {
+                                storagePreferences.setVisionModuleHintShown(modelInfo.filename)
+                                _visionModuleHint.postValue(modelInfo)
+                            }
                         }
                     }
 
@@ -794,26 +811,36 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Copy the picked image to app cache so it persists after the picker URI expires.
-     * Returns a content URI via FileProvider so external apps can also access it.
+     * Copy the picked image into app-private *persistent* storage
+     * (filesDir/chat_images) so it survives the picker URI's lifetime, process
+     * death and cache eviction. The absolute path is saved on the message row
+     * (see [persistMessage]) so reopened conversations keep their images.
+     * Returns the persisted file, or null on failure.
      */
-    private fun cacheImage(sourceUri: Uri): Uri? {
+    private fun persistImageFile(sourceUri: Uri): java.io.File? {
         return try {
-            val cacheDir = java.io.File(app.cacheDir, "chat_images")
-            cacheDir.mkdirs()
-            val destFile = java.io.File(cacheDir, "img_${System.currentTimeMillis()}.jpg")
+            val imagesDir = java.io.File(app.filesDir, "chat_images")
+            imagesDir.mkdirs()
+            val destFile = java.io.File(imagesDir, "img_${System.currentTimeMillis()}.jpg")
             app.contentResolver.openInputStream(sourceUri)?.use { input ->
                 destFile.outputStream().use { output ->
                     input.copyTo(output)
                 }
             }
-            androidx.core.content.FileProvider.getUriForFile(
-                app, "${app.packageName}.fileprovider", destFile
-            )
+            destFile
         } catch (e: Exception) {
             null
         }
     }
+
+    /**
+     * Content URI (via FileProvider) for a persisted chat image, used both for
+     * in-app display (Coil) and for handing off to an external viewer.
+     */
+    private fun imageContentUri(file: java.io.File): Uri =
+        androidx.core.content.FileProvider.getUriForFile(
+            app, "${app.packageName}.fileprovider", file
+        )
 
     @MainThread
     fun updateGenerationParams(params: GenerationParams) {
@@ -906,9 +933,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     @MainThread
     fun addMessage(message: Message, imageUri: Uri? = null) {
-        // Cache the image so it persists beyond the picker URI lifetime
-        val cachedImageUri = imageUri?.let { cacheImage(it) }
-        val userMessage = if (cachedImageUri != null) message.copy(imageUri = cachedImageUri) else message
+        // Persist the image so it survives the picker URI lifetime and is kept
+        // with the saved conversation (path stored on the message row below).
+        val persistedImageFile = imageUri?.let { persistImageFile(it) }
+        val userMessage = if (persistedImageFile != null) {
+            message.copy(imageUri = imageContentUri(persistedImageFile))
+        } else {
+            message
+        }
 
         val enableThinking = _thinkingEnabled.value == true
 
@@ -958,9 +990,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         generatingJob = viewModelScope.launch {
             val ourJob = coroutineContext[Job]
 
-            // Persist user message
+            // Persist user message (with the attached image path, if any)
             val sessionId = ensureSession(message)
-            persistMessage(sessionId, message)
+            persistMessage(sessionId, userMessage, persistedImageFile?.absolutePath)
 
             withContext(Dispatchers.Default) {
                 val llamaSession = llamaSession ?: return@withContext
@@ -1348,7 +1380,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         repo.updateSessionMetadata(sessionId, updated)
     }
 
-    private suspend fun persistMessage(sessionId: String, message: Message) {
+    private suspend fun persistMessage(
+        sessionId: String,
+        message: Message,
+        imagePath: String? = null,
+    ) {
         chatRepository?.insertMessage(
             ChatMessageEntity(
                 sessionId = sessionId,
@@ -1358,7 +1394,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 thinkingTokens = message.thinkingTokens,
                 responseTokens = message.responseTokens,
                 responseDurationSeconds = message.responseDurationSeconds,
-                timestamp = message.timestamp
+                timestamp = message.timestamp,
+                imagePath = imagePath
             )
         )
     }
@@ -1369,6 +1406,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             val messages = chatRepository?.getMessages(sessionId) ?: return@launch
             val sessionEntity = chatRepository.getSession(sessionId)
             val uiMessages = messages.map { entity ->
+                // Re-derive the display URI from the persisted image file; drop
+                // it if the file is gone so the bubble just shows text.
+                val imageUri = entity.imagePath?.let { path ->
+                    val file = java.io.File(path)
+                    if (file.exists()) imageContentUri(file) else null
+                }
                 Message(
                     author = entity.author,
                     content = entity.content,
@@ -1376,7 +1419,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     thinkingTokens = entity.thinkingTokens,
                     responseTokens = entity.responseTokens,
                     responseDurationSeconds = entity.responseDurationSeconds,
-                    timestamp = entity.timestamp
+                    timestamp = entity.timestamp,
+                    imageUri = imageUri
                 )
             }
 
@@ -1632,6 +1676,13 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     @MainThread
     fun deleteSession(sessionId: String) {
         viewModelScope.launch {
+            // Delete on-disk image copies first: the DB CASCADE removes the
+            // message rows but not the files they point at.
+            chatRepository?.getMessages(sessionId)?.forEach { entity ->
+                entity.imagePath?.let { path ->
+                    try { java.io.File(path).delete() } catch (_: Exception) {}
+                }
+            }
             chatRepository?.deleteSession(sessionId)
             if (_currentSessionId.value == sessionId) {
                 _currentSessionId.value = null
@@ -1647,6 +1698,28 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     fun dismissSessionModelHint() {
         _sessionModelHint.value = null
+    }
+
+    fun dismissVisionModuleHint() {
+        _visionModuleHint.value = null
+    }
+
+    /**
+     * Start downloading the image module (mmproj) for the currently-hinted
+     * vision model. Vision activates the next time this model is loaded (the
+     * projector binds at load). No-op if storage isn't configured.
+     */
+    @MainThread
+    fun downloadVisionModule() {
+        val model = _visionModuleHint.value ?: return
+        _visionModuleHint.value = null
+        val storageUri = storageRepository.getStorageUri()
+        if (storageUri == null) {
+            android.util.Log.w("ConversationViewModel", "downloadVisionModule: storage not configured")
+            return
+        }
+        com.druk.lmplayground.download.DownloadRepository(app)
+            .startMmprojDownload(model, storageUri)
     }
 
     @MainThread

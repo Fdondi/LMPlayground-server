@@ -544,6 +544,8 @@ object ModelInfoProvider {
                 ModelWithStatus(
                     model = model,
                     isDownloaded = model.filename in downloadedFilenames,
+                    isMmprojDownloaded = model.mmprojFilename != null &&
+                        model.mmprojFilename in downloadedFilenames,
                 )
             }
         val customWithStatus = customModels.map { model ->

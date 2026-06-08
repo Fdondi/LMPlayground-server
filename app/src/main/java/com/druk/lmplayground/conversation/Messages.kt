@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.Download
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -60,6 +61,10 @@ fun Messages(
     onSessionModelHintClick: ((String) -> Unit)? = null,
     onSessionModelHintDismiss: (() -> Unit)? = null,
     onTokenCountClicked: (() -> Unit)? = null,
+    // Non-null (the model name) when a vision model is loaded without its image
+    // module — surfaces a one-time "Add image support" download pill.
+    visionModuleHint: String? = null,
+    onVisionModuleHintClick: (() -> Unit)? = null,
     onImageClick: (Uri) -> Unit = {}
 ) {
     val scope = rememberCoroutineScope()
@@ -131,6 +136,44 @@ fun Messages(
                     Text(text = stringResource(R.string.previously_used_model, sessionModelHint.first))
                 },
                 onClick = { onSessionModelHintClick?.invoke(sessionModelHint.second) },
+                shape = CircleShape,
+                containerColor = if (frosted) Color.Transparent else MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.primary,
+                elevation = if (frosted) {
+                    FloatingActionButtonDefaults.elevation(0.dp, 0.dp, 0.dp, 0.dp)
+                } else {
+                    FloatingActionButtonDefaults.elevation()
+                },
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = bottomInset)
+                    .offset(x = 0.dp, y = (-32).dp)
+                    .height(36.dp)
+                    .then(
+                        if (hazeState != null) {
+                            Modifier.clip(CircleShape).hazeEffect(hazeState, hazeStyle)
+                        } else Modifier
+                    )
+            )
+        }
+
+        // One-time offer to download a vision model's missing image module.
+        // Mirrors the model-hint pill above, but is a CTA (no auto-dismiss) and
+        // only shows when the model-hint pill isn't occupying the same slot.
+        if (visionModuleHint != null && sessionModelHint == null) {
+            val frosted = hazeState != null
+            ExtendedFloatingActionButton(
+                icon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Download,
+                        modifier = Modifier.height(18.dp),
+                        contentDescription = null
+                    )
+                },
+                text = {
+                    Text(text = stringResource(R.string.vision_module_available))
+                },
+                onClick = { onVisionModuleHintClick?.invoke() },
                 shape = CircleShape,
                 containerColor = if (frosted) Color.Transparent else MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.primary,

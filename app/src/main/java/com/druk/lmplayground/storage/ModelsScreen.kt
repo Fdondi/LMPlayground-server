@@ -60,8 +60,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -94,7 +92,8 @@ fun ModelsScreen(
     onBackClick: () -> Unit,
     onChangeFolderClick: () -> Unit,
     onDeleteModel: (ModelInfo) -> Unit,
-    onDownloadModel: (ModelInfo) -> Unit,
+    onDownloadModel: (ModelInfo, Boolean) -> Unit,
+    onDownloadMmproj: (ModelInfo) -> Unit,
     onCancelDownload: (ModelInfo) -> Unit,
     onSnackbarDismiss: () -> Unit,
     onConfirmMigration: () -> Unit,
@@ -131,6 +130,7 @@ fun ModelsScreen(
             onChangeFolderClick = onChangeFolderClick,
             onDeleteModel = onDeleteModel,
             onDownloadModel = onDownloadModel,
+            onDownloadMmproj = onDownloadMmproj,
             onCancelDownload = onCancelDownload,
             onSnackbarDismiss = onSnackbarDismiss,
             onConfirmMigration = onConfirmMigration,
@@ -161,7 +161,8 @@ fun ModelsContent(
     snackbarHostState: SnackbarHostState,
     onChangeFolderClick: () -> Unit,
     onDeleteModel: (ModelInfo) -> Unit,
-    onDownloadModel: (ModelInfo) -> Unit,
+    onDownloadModel: (ModelInfo, Boolean) -> Unit,
+    onDownloadMmproj: (ModelInfo) -> Unit,
     onCancelDownload: (ModelInfo) -> Unit,
     onSnackbarDismiss: () -> Unit,
     onConfirmMigration: () -> Unit,
@@ -175,6 +176,8 @@ fun ModelsContent(
     maxContentWidth: Dp = 960.dp,
 ) {
     var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
+    // Vision model awaiting the "with images / text only" download choice.
+    var downloadChoiceModel by remember { mutableStateOf<ModelInfo?>(null) }
 
     // Show snackbar when message changes
     LaunchedEffect(snackbarMessage) {
@@ -184,9 +187,12 @@ fun ModelsContent(
         }
     }
 
-    // Split models into downloaded and available
+    // Split models into downloaded and available. A vision model whose main
+    // file is present but whose image module (mmproj) is missing appears in
+    // BOTH: under Downloaded as a (text-only) model, and under Available as a
+    // downloadable image module.
     val downloadedModels = allModels.filter { it.isDownloaded }
-    val availableModels = allModels.filter { !it.isDownloaded }
+    val availableModels = allModels.filter { !it.isDownloaded || it.needsVisionModule }
 
     // When the device language is non-English, separate models that support the user's
     // language from those that don't so users see relevant models first.
@@ -200,6 +206,19 @@ fun ModelsContent(
         availableModels.filterNot { it.model.supportsLanguage(deviceLanguage) }
     } else {
         emptyList()
+    }
+
+    // Routing for an Available-row download tap:
+    //  - a full vision model not yet downloaded → ask (with images / text only)
+    //  - main present but module missing → fetch just the module, no dialog
+    //  - everything else → plain download (mmproj bundled if the model has one)
+    val onAvailableDownload: (ModelWithStatus) -> Unit = { mws ->
+        val model = mws.model
+        when {
+            model.isVision && !mws.isDownloaded -> downloadChoiceModel = model
+            mws.needsVisionModule -> onDownloadMmproj(model)
+            else -> onDownloadModel(model, true)
+        }
     }
 
     // Adaptive grid: GridCells.Adaptive lays out as many ~340dp columns as
@@ -276,6 +295,10 @@ fun ModelsContent(
                     items(downloadedModels, key = { it.model.filename }) { modelWithStatus ->
                         DownloadedModelItem(
                             model = modelWithStatus.model,
+                            // Only show the vision icon once the image module is
+                            // actually present; a text-only-present vision model
+                            // shows no icon here and offers the module below.
+                            vision = modelWithStatus.isMmprojDownloaded,
                             onDeleteClick = { modelToDelete = modelWithStatus.model }
                         )
                     }
@@ -296,11 +319,17 @@ fun ModelsContent(
                         )
                     }
 
-                    items(supportedModels, key = { it.model.filename }) { modelWithStatus ->
+                    items(supportedModels, key = { "avail_" + it.model.filename }) { modelWithStatus ->
+                        val moduleOnly = modelWithStatus.needsVisionModule
+                        val progressKey = if (moduleOnly)
+                            modelWithStatus.model.name + " (vision)"
+                        else
+                            modelWithStatus.model.name
                         AvailableModelItem(
                             modelWithStatus = modelWithStatus,
-                            downloadProgress = downloadingModels[modelWithStatus.model.name],
-                            onDownloadClick = { onDownloadModel(modelWithStatus.model) },
+                            moduleOnly = moduleOnly,
+                            downloadProgress = downloadingModels[progressKey],
+                            onDownloadClick = { onAvailableDownload(modelWithStatus) },
                             onCancelClick = { onCancelDownload(modelWithStatus.model) }
                         )
                     }
@@ -316,11 +345,17 @@ fun ModelsContent(
                         )
                     }
 
-                    items(otherModels, key = { it.model.filename }) { modelWithStatus ->
+                    items(otherModels, key = { "avail_" + it.model.filename }) { modelWithStatus ->
+                        val moduleOnly = modelWithStatus.needsVisionModule
+                        val progressKey = if (moduleOnly)
+                            modelWithStatus.model.name + " (vision)"
+                        else
+                            modelWithStatus.model.name
                         AvailableModelItem(
                             modelWithStatus = modelWithStatus,
-                            downloadProgress = downloadingModels[modelWithStatus.model.name],
-                            onDownloadClick = { onDownloadModel(modelWithStatus.model) },
+                            moduleOnly = moduleOnly,
+                            downloadProgress = downloadingModels[progressKey],
+                            onDownloadClick = { onAvailableDownload(modelWithStatus) },
                             onCancelClick = { onCancelDownload(modelWithStatus.model) }
                         )
                     }
@@ -354,7 +389,41 @@ fun ModelsContent(
             }
         )
     }
-    
+
+    // Vision download choice: bundle the image module or get the text-only model.
+    downloadChoiceModel?.let { model ->
+        AlertDialog(
+            onDismissRequest = { downloadChoiceModel = null },
+            title = { Text(stringResource(R.string.download_with_vision_title)) },
+            text = { Text(stringResource(R.string.download_with_vision_message, model.name)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        onDownloadModel(model, true)
+                        downloadChoiceModel = null
+                    }
+                ) {
+                    Text(stringResource(R.string.download_with_images))
+                }
+            },
+            dismissButton = {
+                Row {
+                    TextButton(
+                        onClick = {
+                            onDownloadModel(model, false)
+                            downloadChoiceModel = null
+                        }
+                    ) {
+                        Text(stringResource(R.string.download_text_only))
+                    }
+                    TextButton(onClick = { downloadChoiceModel = null }) {
+                        Text(stringResource(R.string.cancel))
+                    }
+                }
+            }
+        )
+    }
+
     // Migration confirmation dialog
     pendingMigration?.let { migration ->
         val context = LocalContext.current
@@ -529,6 +598,7 @@ private fun StorageInfoCard(
 @Composable
 private fun DownloadedModelItem(
     model: ModelInfo,
+    vision: Boolean,
     onDeleteClick: () -> Unit
 ) {
     Row(
@@ -549,19 +619,12 @@ private fun DownloadedModelItem(
             Spacer(modifier = Modifier.width(12.dp))
         }
         Column(modifier = Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = model.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = if (model.isVision) Modifier.weight(1f, fill = false) else Modifier
-                )
-                if (model.isVision) {
-                    Spacer(modifier = Modifier.width(6.dp))
-                    VisionBadge()
-                }
-            }
+            Text(
+                text = model.name,
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             Text(
                 text = model.description,
                 style = MaterialTheme.typography.bodySmall,
@@ -575,7 +638,11 @@ private fun DownloadedModelItem(
                 )
             }
         }
-        ModelCapabilityIcons(model = model, modifier = Modifier.padding(end = 4.dp))
+        ModelCapabilityIcons(
+            model = model,
+            vision = vision,
+            modifier = Modifier.padding(end = 4.dp)
+        )
         IconButton(onClick = onDeleteClick) {
             Icon(
                 imageVector = Icons.Outlined.Delete,
@@ -589,6 +656,7 @@ private fun DownloadedModelItem(
 @Composable
 private fun AvailableModelItem(
     modelWithStatus: ModelWithStatus,
+    moduleOnly: Boolean,
     downloadProgress: DownloadProgress?,
     onDownloadClick: () -> Unit,
     onCancelClick: () -> Unit
@@ -614,19 +682,12 @@ private fun AvailableModelItem(
             Spacer(modifier = Modifier.width(12.dp))
         }
         Column(modifier = Modifier.weight(1f)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = model.name,
-                    style = MaterialTheme.typography.bodyLarge,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = if (model.isVision) Modifier.weight(1f, fill = false) else Modifier
-                )
-                if (model.isVision) {
-                    Spacer(modifier = Modifier.width(6.dp))
-                    VisionBadge()
-                }
-            }
+            Text(
+                text = model.name,
+                style = MaterialTheme.typography.bodyLarge,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
             if (downloadProgress != null) {
                 Text(
                     text = formatDownloadStats(context, downloadProgress),
@@ -634,13 +695,18 @@ private fun AvailableModelItem(
                     color = MaterialTheme.colorScheme.primary
                 )
             } else {
+                // For a module-only offer the main model is already installed,
+                // so describe just the image module rather than the full model.
                 Text(
-                    text = model.description,
+                    text = if (moduleOnly)
+                        stringResource(R.string.image_module_description)
+                    else
+                        model.description,
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
-            if (downloadProgress == null && model.releaseDate != null) {
+            if (downloadProgress == null && !moduleOnly && model.releaseDate != null) {
                 Text(
                     text = model.releaseDateLabel(),
                     style = MaterialTheme.typography.bodySmall,
@@ -650,7 +716,11 @@ private fun AvailableModelItem(
         }
 
         if (downloadProgress == null) {
-            ModelCapabilityIcons(model = model, modifier = Modifier.padding(end = 4.dp))
+            ModelCapabilityIcons(
+                model = model,
+                vision = model.isVision,
+                modifier = Modifier.padding(end = 4.dp)
+            )
         }
 
         if (downloadProgress != null) {
@@ -686,7 +756,10 @@ private fun AvailableModelItem(
             IconButton(onClick = onDownloadClick) {
                 Icon(
                     imageVector = Icons.Outlined.Download,
-                    contentDescription = stringResource(R.string.download_model),
+                    contentDescription = stringResource(
+                        if (moduleOnly) R.string.cd_download_image_module
+                        else R.string.download_model
+                    ),
                     tint = MaterialTheme.colorScheme.primary
                 )
             }
@@ -732,21 +805,6 @@ private fun formatEta(seconds: Long): String {
     }
 }
 
-@Composable
-private fun VisionBadge() {
-    Text(
-        text = "Vision",
-        style = MaterialTheme.typography.labelSmall,
-        color = MaterialTheme.colorScheme.onTertiaryContainer,
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.tertiaryContainer,
-                shape = RoundedCornerShape(4.dp)
-            )
-            .padding(horizontal = 6.dp, vertical = 2.dp)
-    )
-}
-
 @Preview
 @Composable
 private fun ModelsScreenPreview() {
@@ -780,7 +838,8 @@ private fun ModelsScreenPreview() {
             onBackClick = {},
             onChangeFolderClick = {},
             onDeleteModel = {},
-            onDownloadModel = {},
+            onDownloadModel = { _, _ -> },
+            onDownloadMmproj = {},
             onCancelDownload = {},
             onSnackbarDismiss = {},
             onConfirmMigration = {},

@@ -60,7 +60,17 @@ fun ModelInfo.resolveCapabilities(prefs: StoragePreferences): ModelInfo {
 data class ModelWithStatus(
     val model: ModelInfo,
     val isDownloaded: Boolean,
-)
+    // Whether the vision projector (mmproj) is present on disk. Only meaningful
+    // for vision models; always false for non-vision and custom models.
+    val isMmprojDownloaded: Boolean = false,
+) {
+    /**
+     * A vision model whose main file is installed but whose image module is
+     * missing — usable as text-only now, with the module available to add.
+     */
+    val needsVisionModule: Boolean
+        get() = model.isVision && isDownloaded && !isMmprojDownloaded
+}
 
 private val RELEASE_DATE_FORMATTER = DateTimeFormatter.ofPattern("MMM d, yyyy", Locale.US)
 

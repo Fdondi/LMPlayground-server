@@ -23,14 +23,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.druk.lmplayground.R
-import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
 
 class ModelsFragment : Fragment() {
 
     private val viewModel: StorageViewModel by viewModels()
 
-    private var pendingDownloadModel: ModelInfo? = null
+    // Action deferred across the notification-permission prompt (a download
+    // kicked off only after the user answers the permission dialog).
+    private var pendingDownload: (() -> Unit)? = null
 
     private val folderPickerLauncher = registerForActivityResult(
         ActivityResultContracts.OpenDocumentTree()
@@ -48,15 +49,14 @@ class ModelsFragment : Fragment() {
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { _ ->
-        pendingDownloadModel?.let { model ->
-            viewModel.downloadModel(model)
-            pendingDownloadModel = null
-        }
+        pendingDownload?.invoke()
+        pendingDownload = null
     }
 
-    private fun startDownloadWithPermissionCheck(model: ModelInfo) {
+    /** Run [action] (a download) after ensuring the notification permission has been asked for. */
+    private fun withNotificationPermission(action: () -> Unit) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
-            viewModel.downloadModel(model)
+            action()
             return
         }
 
@@ -67,9 +67,9 @@ class ModelsFragment : Fragment() {
         if (granted || shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS).not()
             && hasAskedNotificationPermission()
         ) {
-            viewModel.downloadModel(model)
+            action()
         } else {
-            pendingDownloadModel = model
+            pendingDownload = action
             setAskedNotificationPermission()
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
@@ -136,8 +136,11 @@ class ModelsFragment : Fragment() {
                     onDeleteModel = { model ->
                         viewModel.deleteModel(model)
                     },
-                    onDownloadModel = { model ->
-                        startDownloadWithPermissionCheck(model)
+                    onDownloadModel = { model, includeMmproj ->
+                        withNotificationPermission { viewModel.downloadModel(model, includeMmproj) }
+                    },
+                    onDownloadMmproj = { model ->
+                        withNotificationPermission { viewModel.downloadMmprojOnly(model) }
                     },
                     onCancelDownload = { model ->
                         viewModel.cancelDownload(model)

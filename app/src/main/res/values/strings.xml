@@ -300,6 +300,17 @@
     <!-- Model capability badges (content descriptions) -->
     <string name="cd_supports_tools">Supports tools</string>
     <string name="cd_supports_thinking">Supports thinking</string>
+    <string name="cd_supports_vision">Supports image input</string>
+    <!-- Vision (image input) download flow -->
+    <string name="download_with_vision_title">Download image support?</string>
+    <string name="download_with_vision_message">%1$s can also understand images. Download the image module too, or get the text-only model? You can add image support later.</string>
+    <string name="download_with_images">With images</string>
+    <string name="download_text_only">Text only</string>
+    <string name="image_module_description">Image module — adds image input</string>
+    <string name="cd_download_image_module">Download image support</string>
+    <!-- One-time chat nudge offering to download a vision model\'s image module -->
+    <string name="vision_module_available">Add image support · Download</string>
+    <string name="vision_module_downloading">Downloading image support — ready next time you load this model</string>
     <!-- Per-tool copy -->
     <string name="tool_run_javascript_title">Run JavaScript</string>
     <string name="tool_run_javascript_desc">Runs JavaScript in a secure sandbox for math, dates, and text processing. No internet or file access.</string>

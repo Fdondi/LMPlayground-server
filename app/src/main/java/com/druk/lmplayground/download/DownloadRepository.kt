@@ -17,7 +17,6 @@ import androidx.work.WorkManager
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.storage.DownloadProgress
 import com.druk.lmplayground.storage.StoragePreferences
-import java.io.File
 import java.util.concurrent.TimeUnit
 
 class DownloadRepository(private val context: Context) {
@@ -28,7 +27,12 @@ class DownloadRepository(private val context: Context) {
 
     private val workManager = WorkManager.getInstance(context)
 
-    fun startDownload(model: ModelInfo, storageUri: Uri) {
+    /**
+     * Download a model. The image module (mmproj) for vision models is enqueued
+     * as a separate job; pass [includeMmproj] = false to fetch the text model
+     * only (the module can be added later via [startMmprojDownload]).
+     */
+    fun startDownload(model: ModelInfo, storageUri: Uri, includeMmproj: Boolean = true) {
         val remoteUri = model.remoteUri ?: return
         val workName = workNameFor(model)
 
@@ -54,56 +58,70 @@ class DownloadRepository(private val context: Context) {
 
         workManager.enqueueUniqueWork(workName, ExistingWorkPolicy.KEEP, textRequest)
 
-        // Vision model: enqueue mmproj as a separate download
-        if (model.mmprojFilename != null && model.mmprojUri != null) {
-            val mmprojWorkName = workNameFor(model) + "_mmproj"
-
-            val mmprojInputData = Data.Builder()
-                .putString(DownloadWorker.KEY_URL, model.mmprojUri.toString())
-                .putString(DownloadWorker.KEY_FILENAME, model.mmprojFilename)
-                .putString(DownloadWorker.KEY_MODEL_NAME, model.name + " (vision)")
-                .putString(DownloadWorker.KEY_STORAGE_URI, storageUri.toString())
-                .putString(DownloadWorker.KEY_WORK_NAME, mmprojWorkName)
-                .build()
-
-            val mmprojRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
-                .setInputData(mmprojInputData)
-                .setConstraints(constraints)
-                .addTag(DownloadWorker.TAG_MODEL_DOWNLOAD)
-                .addTag(model.name)
-                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
-                .build()
-
-            workManager.enqueueUniqueWork(mmprojWorkName, ExistingWorkPolicy.KEEP, mmprojRequest)
+        if (includeMmproj) {
+            enqueueMmproj(model, storageUri, constraints)
         }
+    }
+
+    /**
+     * Download only the image module (mmproj) for an already-installed vision
+     * model. No-op if the model isn't a vision model.
+     */
+    fun startMmprojDownload(model: ModelInfo, storageUri: Uri) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+        enqueueMmproj(model, storageUri, constraints)
+    }
+
+    /** Enqueue the mmproj projector download as a separate, uniquely-named job. */
+    private fun enqueueMmproj(model: ModelInfo, storageUri: Uri, constraints: Constraints) {
+        if (model.mmprojFilename == null || model.mmprojUri == null) return
+        val mmprojWorkName = workNameFor(model) + "_mmproj"
+
+        val mmprojInputData = Data.Builder()
+            .putString(DownloadWorker.KEY_URL, model.mmprojUri.toString())
+            .putString(DownloadWorker.KEY_FILENAME, model.mmprojFilename)
+            .putString(DownloadWorker.KEY_MODEL_NAME, model.name + " (vision)")
+            .putString(DownloadWorker.KEY_STORAGE_URI, storageUri.toString())
+            .putString(DownloadWorker.KEY_WORK_NAME, mmprojWorkName)
+            .build()
+
+        val mmprojRequest = OneTimeWorkRequestBuilder<DownloadWorker>()
+            .setInputData(mmprojInputData)
+            .setConstraints(constraints)
+            .addTag(DownloadWorker.TAG_MODEL_DOWNLOAD)
+            .addTag(model.name)
+            .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+            .build()
+
+        workManager.enqueueUniqueWork(mmprojWorkName, ExistingWorkPolicy.KEEP, mmprojRequest)
     }
 
     fun cancelDownload(model: ModelInfo) {
         workManager.cancelUniqueWork(workNameFor(model))
+        if (model.mmprojFilename != null) {
+            workManager.cancelUniqueWork(workNameFor(model) + "_mmproj")
+        }
 
         // Downloads now stream straight into "<filename>.part" inside the SAF
-        // model folder (not app temp storage), so drop that partial here.
+        // model folder (not app temp storage), so drop those partials here.
         // Prefix-match because createFile may have appended an extension.
         try {
             val storageUri = StoragePreferences(context).modelStorageUri
             if (storageUri != null) {
-                val partPrefix = "${model.filename}.part"
-                DocumentFile.fromTreeUri(context, storageUri)
-                    ?.listFiles()
-                    ?.firstOrNull { it.name?.startsWith(partPrefix) == true }
-                    ?.delete()
+                val tree = DocumentFile.fromTreeUri(context, storageUri)
+                val files = tree?.listFiles()
+                val partPrefixes = listOfNotNull(
+                    "${model.filename}.part",
+                    model.mmprojFilename?.let { "$it.part" },
+                )
+                partPrefixes.forEach { prefix ->
+                    files?.firstOrNull { it.name?.startsWith(prefix) == true }?.delete()
+                }
             }
         } catch (e: Exception) {
             Log.w(TAG, "Failed to delete partial on cancel: ${e.message}")
-        }
-
-        // Also cancel and clean up mmproj for vision models
-        if (model.mmprojFilename != null) {
-            workManager.cancelUniqueWork(workNameFor(model) + "_mmproj")
-            val mmprojTempFile = File(context.getExternalFilesDir(null), model.mmprojFilename)
-            if (mmprojTempFile.exists()) {
-                mmprojTempFile.delete()
-            }
         }
 
         val notificationManager = DownloadNotificationManager(context)
