@@ -346,9 +346,13 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         llama_memory_clear(llama_get_memory(ctx), true);
         prev_len = 0;
 
-        // Create bitmap from image data
+        // Create bitmap from image data.
+        // b9621: the helper now returns a mtmd_helper_bitmap_wrapper and takes a
+        // `placeholder` flag; pass false for real image data (not a token-counting
+        // placeholder), and unwrap .bitmap (video_ctx is unused for still images).
         mtmd_bitmap *bitmap = mtmd_helper_bitmap_init_from_buf(
-            mtmd_ctx, pending_image_data.data(), pending_image_data.size());
+            mtmd_ctx, pending_image_data.data(), pending_image_data.size(),
+            /*placeholder=*/false).bitmap;
         if (bitmap == nullptr) {
             LOGe("Failed to create bitmap from image data");
             pending_image_data.clear();
