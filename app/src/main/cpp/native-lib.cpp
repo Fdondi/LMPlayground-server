@@ -16,6 +16,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <sys/system_properties.h>
 #include <ctime>
 #include <fstream>
 #include <iostream>
@@ -95,12 +96,31 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstr
     AndroidLogBuf androidLogBuf;
     std::cerr.rdbuf(&androidLogBuf);
 
-    // Force the CLIP vision encoder to select the Vulkan GPU by device name.
-    // ggml_backend_init_by_type(GPU) fails inside libmtmd on Android, but
-    // selecting "Vulkan0" works. Read by clip.cpp's backend selection; a no-op
-    // when Vulkan isn't loaded (e.g. x86_64 emulator), where vision falls back
-    // to CPU. Harmless to set unconditionally.
-    setenv("MTMD_BACKEND_DEVICE", "Vulkan0", 0);
+    // Backend for the CLIP vision encoder. Default: the Vulkan GPU by device
+    // name ("Vulkan0") — ggml_backend_init_by_type(GPU) fails inside libmtmd on
+    // Android, but selecting it by name works. Read by clip.cpp's backend
+    // selection; a no-op when Vulkan isn't loaded (e.g. x86_64 emulator), where
+    // vision falls back to CPU.
+    //
+    // Exception: some GPUs' Vulkan drivers mishandle the CLIP graph. On the
+    // Tensor G5 (Pixel 10) PowerVR GPU the encode is both far slower AND
+    // numerically wrong, so prefer CPU there (the G5 CPU has i8mm/bf16). Detect
+    // via ro.hardware.vulkan / ro.hardware.egl ("powervr"). Override with
+    // `setprop debug.lmp.mtmd_backend <name>`.
+    const char *mtmd_backend = "Vulkan0";
+    char gpu_hw[PROP_VALUE_MAX] = {0};
+    if (__system_property_get("ro.hardware.vulkan", gpu_hw) <= 0) {
+        __system_property_get("ro.hardware.egl", gpu_hw);
+    }
+    if (strstr(gpu_hw, "powervr") != nullptr) {
+        mtmd_backend = "CPU";
+    }
+    char backend_override[PROP_VALUE_MAX] = {0};
+    if (__system_property_get("debug.lmp.mtmd_backend", backend_override) > 0) {
+        mtmd_backend = backend_override;
+    }
+    setenv("MTMD_BACKEND_DEVICE", mtmd_backend, 1);
+    __android_log_print(ANDROID_LOG_INFO, TAG, "vision backend: %s (gpu=%s)", mtmd_backend, gpu_hw);
 
     llama_log_set(log_callback, NULL);
     ggml_log_set(log_callback, NULL);
