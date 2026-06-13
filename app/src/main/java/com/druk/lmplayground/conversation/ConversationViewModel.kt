@@ -1001,14 +1001,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 // setImageData (below) can hand the encoded bytes to the
                 // native layer before addMessage. Failures degrade to a
                 // text-only turn rather than aborting the message.
-                val imageBytes: ByteArray? = if (imageUri != null) {
+                val imageBytes: ByteArray? = if (persistedImageFile != null) {
                     try {
                         withContext(Dispatchers.IO) {
-                            resizeImageForVision(imageUri)
+                            resizeImageForVision(persistedImageFile)
                         }?.also {
                             android.util.Log.d("ConversationVM", "Image loaded: ${it.size} bytes")
                         } ?: run {
-                            android.util.Log.e("ConversationVM", "Failed to read image from $imageUri")
+                            android.util.Log.e("ConversationVM", "Failed to decode image ${persistedImageFile.absolutePath}")
                             null
                         }
                     } catch (e: Exception) {
@@ -1904,18 +1904,22 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private fun resizeImageForVision(uri: Uri): ByteArray? {
-        val inputStream = app.contentResolver.openInputStream(uri) ?: return null
+    // Reads from the already-persisted local file rather than the original
+    // picker (content://media/picker/...) URI: those URIs are unreliable to
+    // reopen — a second openInputStream can fail even after the first one
+    // succeeded, silently dropping the image and producing a text-only turn.
+    // The copy made by persistImageFile is always readable.
+    private fun resizeImageForVision(file: java.io.File): ByteArray? {
+        val path = file.absolutePath
 
         // Decode bounds first
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        val boundsStream = app.contentResolver.openInputStream(uri) ?: return null
-        BitmapFactory.decodeStream(boundsStream, null, options)
-        boundsStream.close()
+        BitmapFactory.decodeFile(path, options)
 
         val maxDimension = 768
         val origWidth = options.outWidth
         val origHeight = options.outHeight
+        if (origWidth <= 0 || origHeight <= 0) return null
         val scaleFactor = if (max(origWidth, origHeight) > maxDimension) {
             maxDimension.toFloat() / max(origWidth, origHeight)
         } else {
@@ -1926,9 +1930,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         options.inJustDecodeBounds = false
         options.inSampleSize = (1f / scaleFactor).toInt().coerceAtLeast(1)
 
-        val bitmap = BitmapFactory.decodeStream(inputStream, null, options)
-        inputStream.close()
-        if (bitmap == null) return null
+        val bitmap = BitmapFactory.decodeFile(path, options) ?: return null
 
         // Scale to exact target if needed
         val targetW = (origWidth * scaleFactor).toInt().coerceAtLeast(1)
