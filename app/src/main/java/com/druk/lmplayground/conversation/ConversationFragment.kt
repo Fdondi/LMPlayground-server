@@ -492,11 +492,14 @@ class ConversationFragment : Fragment() {
                         toolEnabledStates = toolEnabledStates,
                         onToolEnabledChanged = { name, enabled -> viewModel.setToolEnabled(name, enabled) },
                         systemPrompt = systemPrompt,
+                        systemPromptId = systemPromptId,
+                        recentSystemPrompts = recentSystemPrompts,
                         canUpdateLinkedPrompt = systemPromptId != null,
                         onParamsChanged = { viewModel.updateGenerationParams(it) },
                         onUpdateLinkedPrompt = { viewModel.updateLinkedSystemPrompt(it) },
                         onSaveAsNewPrompt = { viewModel.createAndApplySystemPrompt(it) },
                         onClearSystemPrompt = { viewModel.clearSystemPrompt() },
+                        onApplyPrompt = { viewModel.applySystemPrompt(it.id, it.text) },
                         onDismiss = { showParamsSheet = false }
                     )
                 }
