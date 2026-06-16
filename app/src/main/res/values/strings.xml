@@ -18,6 +18,9 @@
     <string name="author_me">me</string>
     <string name="members">%d members</string>
     <string name="textfield_hint">Message</string>
+    <string name="take_photo">Take photo</string>
+    <string name="choose_from_library">Choose from library</string>
+    <string name="camera_unavailable">No camera available</string>
     <string name="swipe_to_cancel_recording">&#x25C0; Swipe to cancel</string>
     <string name="emojis_label">Emojis</string>
     <string name="stickers_label">Stickers</string>

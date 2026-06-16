@@ -1,5 +1,7 @@
 package com.druk.lmplayground.conversation
 
+import android.content.ActivityNotFoundException
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +12,8 @@ import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
+import java.io.File
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -83,10 +87,83 @@ class ConversationFragment : Fragment() {
 
     private var attachedImageUri = mutableStateOf<Uri?>(null)
 
+    // Destination of an in-flight camera capture. Kept as both a Uri (handed to
+    // the camera app / set as the attachment) and a File (so we can check
+    // length() / delete() the temp without re-parsing the FileProvider Uri).
+    private var pendingCaptureUri: Uri? = null
+    private var pendingCaptureFile: File? = null
+
+    private val cameraAvailable by lazy {
+        requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+    }
+
     private val pickMediaLauncher = registerForActivityResult(
         ActivityResultContracts.PickVisualMedia()
     ) { uri ->
+        // Picking a library image supersedes any unsent camera capture — drop its
+        // temp so the cache never holds more than the current attachment's file.
+        if (uri != null) clearPendingCapture()
         attachedImageUri.value = uri
+    }
+
+    private val takePictureLauncher = registerForActivityResult(
+        ActivityResultContracts.TakePicture()
+    ) { success ->
+        val file = pendingCaptureFile
+        // Gate on a non-empty file: some OEM camera apps report success but write
+        // nothing, and a 0-byte JPEG would silently degrade the turn to text-only.
+        if (success && file != null && file.length() > 0L) {
+            // Keep pendingCaptureFile referenced so it can be pruned after the
+            // turn is sent / cleared / superseded (see clearPendingCapture).
+            attachedImageUri.value = pendingCaptureUri
+        } else {
+            clearPendingCapture()
+        }
+    }
+
+    /** Delete the in-flight/last camera temp (if any) and forget it. */
+    private fun clearPendingCapture() {
+        runCatching { pendingCaptureFile?.delete() }
+        pendingCaptureFile = null
+        pendingCaptureUri = null
+    }
+
+    /**
+     * Capture a photo via the system camera app into a temp file under
+     * cacheDir/chat_images, then route the result through the same attachment
+     * path as the photo picker. No CAMERA permission is needed — the camera app
+     * does the capture and we only receive the written image.
+     */
+    private fun launchCamera() {
+        // Drop any temp from a prior capture that was never sent.
+        clearPendingCapture()
+        val uri = try {
+            val dir = File(requireContext().cacheDir, "chat_images").apply { mkdirs() }
+            val file = File(dir, "capture_${System.currentTimeMillis()}.jpg")
+            val uri = FileProvider.getUriForFile(
+                requireContext(), "${requireContext().packageName}.fileprovider", file
+            )
+            pendingCaptureFile = file
+            pendingCaptureUri = uri
+            uri
+        } catch (e: Exception) {
+            Toast.makeText(requireContext(), R.string.camera_unavailable, Toast.LENGTH_SHORT).show()
+            return
+        }
+        try {
+            takePictureLauncher.launch(uri)
+        } catch (e: ActivityNotFoundException) {
+            clearPendingCapture()
+            Toast.makeText(requireContext(), R.string.camera_unavailable, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // The camera app is memory-heavy and frequently triggers our process
+        // death while it is foregrounded. Persist the pending capture destination
+        // so the result callback can still map back to the temp file on return.
+        pendingCaptureFile?.let { outState.putString(KEY_PENDING_CAPTURE_FILE, it.absolutePath) }
     }
 
     override fun onResume() {
@@ -104,6 +181,17 @@ class ConversationFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View = ComposeView(inflater.context).apply {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
+
+        // Recover a capture that was in flight when the process was killed.
+        savedInstanceState?.getString(KEY_PENDING_CAPTURE_FILE)?.let { path ->
+            val file = File(path)
+            pendingCaptureFile = file
+            pendingCaptureUri = runCatching {
+                FileProvider.getUriForFile(
+                    requireContext(), "${requireContext().packageName}.fileprovider", file
+                )
+            }.getOrNull()
+        }
 
         setContent {
 
@@ -596,13 +684,18 @@ class ConversationFragment : Fragment() {
                                 thinkingEnabled = thinkingEnabled,
                                 onThinkingToggle = { viewModel.toggleThinking() },
                                 supportsVision = supportsVision,
+                                cameraAvailable = cameraAvailable,
                                 attachedImageUri = currentImageUri,
                                 onAttachImage = {
                                     pickMediaLauncher.launch(
                                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                                     )
                                 },
-                                onClearImage = { attachedImageUri.value = null },
+                                onTakePhoto = { launchCamera() },
+                                onClearImage = {
+                                    attachedImageUri.value = null
+                                    clearPendingCapture()
+                                },
                                 onSwipeUp = {
                                     if (isModelReady) showParamsSheet = true
                                 },
@@ -613,6 +706,9 @@ class ConversationFragment : Fragment() {
                                         Message("User", content),
                                         imageUri = imageUri
                                     )
+                                    // addMessage has already copied the capture into
+                                    // filesDir (synchronous persist); drop the cache temp.
+                                    clearPendingCapture()
                                 },
                                 onCancelClicked = {
                                     viewModel.cancelGeneration()
@@ -787,5 +883,9 @@ class ConversationFragment : Fragment() {
 
             }
         }
+    }
+
+    companion object {
+        private const val KEY_PENDING_CAPTURE_FILE = "pending_capture_file"
     }
 }

@@ -15,6 +15,12 @@
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
     <uses-feature android:name="android.software.freeform_window_management" android:required="false" />
 
+    <!-- Optional camera: vision models can attach a captured photo via the system
+         camera app (ACTION_IMAGE_CAPTURE). No CAMERA permission is declared on
+         purpose — capture is delegated to the camera app, so none is needed.
+         required="false" keeps the app available to camera-less devices. -->
+    <uses-feature android:name="android.hardware.camera.any" android:required="false" />
+
     <application
         android:name=".App"
         android:allowBackup="true"

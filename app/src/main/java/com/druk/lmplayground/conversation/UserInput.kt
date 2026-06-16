@@ -3,6 +3,9 @@ package com.druk.lmplayground.conversation
 import android.net.Uri
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -13,20 +16,22 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -45,17 +50,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lightbulb
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Lightbulb
+import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.layout.ContentScale
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.hazeEffect
@@ -67,10 +76,18 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupPositionProvider
+import androidx.compose.ui.window.PopupProperties
 import coil.compose.AsyncImage
 import com.druk.lmplayground.R
 
@@ -119,8 +136,10 @@ fun UserInput(
     thinkingEnabled: Boolean = true,
     onThinkingToggle: () -> Unit = {},
     supportsVision: Boolean = false,
+    cameraAvailable: Boolean = false,
     attachedImageUri: Uri? = null,
     onAttachImage: () -> Unit = {},
+    onTakePhoto: () -> Unit = {},
     onClearImage: () -> Unit = {},
     onSwipeUp: () -> Unit = {},
     onMessageSent: (String) -> Unit,
@@ -177,30 +196,41 @@ fun UserInput(
                     modifier = Modifier.padding(horizontal = 12.dp)
                 )
             }
-            // Image preview row
+            // Staged image preview (shown until the message is sent): a rounded
+            // thumbnail with a circular remove button overlapping its top-right
+            // corner, mirroring the Google AI Edge attachment style.
             if (attachedImageUri != null) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp, vertical = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Box(
+                    modifier = Modifier.padding(start = 12.dp, top = 8.dp, bottom = 4.dp)
                 ) {
-                    Surface(
-                        shape = RoundedCornerShape(8.dp),
-                        tonalElevation = 4.dp,
-                        modifier = Modifier.size(64.dp)
+                    AsyncImage(
+                        model = attachedImageUri,
+                        contentDescription = "Attached image",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            // inset from the Box top/end so the button can overlap the corner
+                            .padding(top = 6.dp, end = 6.dp)
+                            .size(80.dp)
+                            .clip(RoundedCornerShape(12.dp))
+                            .border(
+                                width = 2.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(12.dp)
+                            )
+                    )
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.TopEnd)
+                            .size(24.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.inverseSurface)
+                            .clickable(onClick = onClearImage),
+                        contentAlignment = Alignment.Center
                     ) {
-                        AsyncImage(
-                            model = attachedImageUri,
-                            contentDescription = "Attached image",
-                            modifier = Modifier.size(64.dp)
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    IconButton(onClick = onClearImage, modifier = Modifier.size(24.dp)) {
                         Icon(
                             imageVector = Icons.Filled.Close,
                             contentDescription = "Remove image",
+                            tint = MaterialTheme.colorScheme.inverseOnSurface,
                             modifier = Modifier.size(16.dp)
                         )
                     }
@@ -214,7 +244,9 @@ fun UserInput(
                 thinkingEnabled = thinkingEnabled,
                 onThinkingToggle = onThinkingToggle,
                 supportsVision = supportsVision,
+                cameraAvailable = cameraAvailable,
                 onAttachImage = onAttachImage,
+                onTakePhoto = onTakePhoto,
                 textFieldValue = textState,
                 onTextChanged = { textState = it },
                 // Only show the keyboard if there's no input selector and text field has focus
@@ -282,7 +314,9 @@ private fun UserInputText(
     thinkingEnabled: Boolean = true,
     onThinkingToggle: () -> Unit = {},
     supportsVision: Boolean = false,
+    cameraAvailable: Boolean = false,
     onAttachImage: () -> Unit = {},
+    onTakePhoto: () -> Unit = {},
     keyboardType: KeyboardType = KeyboardType.Text,
     onTextChanged: (TextFieldValue) -> Unit,
     textFieldValue: TextFieldValue,
@@ -306,17 +340,82 @@ private fun UserInputText(
     ) {
         if (supportsVision) {
             val isDisabled = status == UserInputStatus.GENERATING
-            IconButton(
-                onClick = onAttachImage,
-                enabled = !isDisabled,
-                modifier = Modifier.padding(start = 4.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Image,
-                    contentDescription = "Attach image",
-                    modifier = if (isDisabled) Modifier.alpha(0.8f) else Modifier,
-                    tint = LocalContentColor.current
-                )
+            var menuExpanded by remember { mutableStateOf(false) }
+            val density = LocalDensity.current
+            Box {
+                IconButton(
+                    onClick = {
+                        // With a camera available, offer a choice; otherwise go
+                        // straight to the picker (no point showing a 1-item menu).
+                        if (cameraAvailable) menuExpanded = true else onAttachImage()
+                    },
+                    enabled = !isDisabled,
+                    modifier = Modifier.padding(start = 4.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Filled.Add,
+                        contentDescription = "Attach image",
+                        modifier = if (isDisabled) Modifier.alpha(0.8f) else Modifier,
+                        tint = LocalContentColor.current
+                    )
+                }
+                if (menuExpanded) {
+                    // Material3 DropdownMenu's `offset` is ignored for the
+                    // upward-opening case, so we drive a Popup with an explicit
+                    // position: the menu's bottom sits a fixed gap above the top
+                    // of the anchor row (the input block).
+                    val gapPx = with(density) { 16.dp.roundToPx() }
+                    val positionProvider = remember(gapPx) {
+                        object : PopupPositionProvider {
+                            override fun calculatePosition(
+                                anchorBounds: IntRect,
+                                windowSize: IntSize,
+                                layoutDirection: LayoutDirection,
+                                popupContentSize: IntSize
+                            ): IntOffset {
+                                val x = anchorBounds.left
+                                    .coerceIn(0, (windowSize.width - popupContentSize.width).coerceAtLeast(0))
+                                val y = (anchorBounds.top - gapPx - popupContentSize.height)
+                                    .coerceAtLeast(0)
+                                return IntOffset(x, y)
+                            }
+                        }
+                    }
+                    Popup(
+                        popupPositionProvider = positionProvider,
+                        onDismissRequest = { menuExpanded = false },
+                        properties = PopupProperties(focusable = true)
+                    ) {
+                        Surface(
+                            shape = MaterialTheme.shapes.extraSmall,
+                            color = MaterialTheme.colorScheme.surfaceContainer,
+                            shadowElevation = 3.dp
+                        ) {
+                            Column(modifier = Modifier.width(IntrinsicSize.Max).padding(vertical = 8.dp)) {
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.take_photo)) },
+                                    leadingIcon = {
+                                        Icon(imageVector = Icons.Outlined.PhotoCamera, contentDescription = null)
+                                    },
+                                    onClick = {
+                                        menuExpanded = false
+                                        onTakePhoto()
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.choose_from_library)) },
+                                    leadingIcon = {
+                                        Icon(imageVector = Icons.Outlined.Image, contentDescription = null)
+                                    },
+                                    onClick = {
+                                        menuExpanded = false
+                                        onAttachImage()
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
             }
         }
         if (supportsThinking) {
@@ -324,7 +423,13 @@ private fun UserInputText(
             IconButton(
                 onClick = onThinkingToggle,
                 enabled = !isDisabled,
-                modifier = Modifier.padding(start = if (supportsVision) 0.dp else 4.dp)
+                // When the attach (+) button precedes it, pull the bulb left so the
+                // two sit as a tight pair rather than a full icon-button gap apart.
+                modifier = if (supportsVision) {
+                    Modifier.offset(x = (-12).dp)
+                } else {
+                    Modifier.padding(start = 4.dp)
+                }
             ) {
                 Icon(
                     imageVector = if (thinkingEnabled) Icons.Filled.Lightbulb else Icons.Outlined.Lightbulb,
