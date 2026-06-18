@@ -1,0 +1,4 @@
+- Vision — envoyez une photo et discutez-en. Choisissez une image dans votre galerie ou prenez-en une avec l'appareil photo, puis demandez à votre modèle ce qu'il voit
+- Compatible avec les modèles de vision Gemma, Qwen et Ministral — le module d'image se télécharge automatiquement avec le modèle
+- Paramètres de génération réorganisés en onglets pour un réglage plus facile
+- Moteur d'inférence mis à jour, plus des améliorations de performances et de stabilité

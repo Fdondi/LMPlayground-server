@@ -1,0 +1,4 @@
+- Vision — skicka ett foto och chatta om det. Välj en bild från ditt galleri eller ta en med kameran, och fråga sedan din modell vad den ser
+- Fungerar med vision-modellerna Gemma, Qwen och Ministral — bildtillägget laddas ned automatiskt tillsammans med modellen
+- Genereringsinställningarna omorganiserade i flikar för enklare finjustering
+- Uppdaterad inferensmotor, plus prestanda- och stabilitetsförbättringar

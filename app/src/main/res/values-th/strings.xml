@@ -234,6 +234,8 @@
     <string name="screenshot_choose_model_sub">จากผู้ให้บริการ AI ชั้นนำ</string>
     <string name="screenshot_chat">แชทอย่างเป็นส่วนตัว</string>
     <string name="screenshot_chat_sub">บนอุปกรณ์ของคุณ</string>
+    <string name="screenshot_vision">แชทเกี่ยวกับรูปภาพ</string>
+    <string name="screenshot_vision_sub">โมเดลของคุณก็มองเห็นได้เช่นกัน</string>
     <string name="screenshot_fine_tune">ปรับแต่ง</string>
     <string name="screenshot_fine_tune_sub">พารามิเตอร์การสร้าง</string>
     <string name="screenshot_download_models">ดาวน์โหลดโมเดลใดก็ได้</string>
@@ -252,6 +254,8 @@
     <string name="screenshot_prompt_sample_brainstorm">คุณเป็นคู่หูระดมความคิดที่สร้างสรรค์ เสนอไอเดียที่กล้าและเหนือความคาดหมาย และต่อยอดจากไอเดียของฉัน</string>
 
     <!-- Screenshot sample chat -->
+    <string name="screenshot_vision_question">ในรูปนี้มีสัตว์อะไร?</string>
+    <string name="screenshot_vision_response">**แกะ** ที่มีขนหนาหยิกสีขาวครีม กำลังก้มหัวเล็มหญ้าบนเนินเขาเขียวชอุ่ม ท้องฟ้าครึ้มและทุ่งหญ้าหินบ่งบอกถึงพื้นที่สูงที่อากาศเย็น</string>
     <string name="screenshot_chat_question">แมชชีนเลิร์นนิงคืออะไร?</string>
     <string name="screenshot_chat_response">แมชชีนเลิร์นนิงเป็นสาขาหนึ่งของปัญญาประดิษฐ์ที่คอมพิวเตอร์ **เรียนรู้จากข้อมูล** แทนที่จะถูกโปรแกรมไว้อย่างชัดเจน\n\nแนวคิดหลัก:\n\n\u2022 **การฝึก**: ป้อนข้อมูลให้อัลกอริทึม\n\u2022 **โมเดล**: รูปแบบที่เรียนรู้จากข้อมูล\n\u2022 **การอนุมาน**: การทำนายจากข้อมูลใหม่</string>
 
@@ -267,6 +271,9 @@
 
     <!-- What\'s New -->
     <string name="whats_new">มีอะไรใหม่</string>
+    <string name="whats_new_vision">วิทัศน์ — ส่งรูปภาพและแชทเกี่ยวกับมัน</string>
+    <string name="whats_new_vision_detail">เลือกรูปจากแกลเลอรีหรือถ่ายด้วยกล้อง</string>
+    <string name="whats_new_vision_models">ใช้ได้กับโมเดลวิทัศน์ Gemma, Qwen และ Ministral</string>
     <string name="whats_new_item_1">โมเดล Gemma 4 ใหม่ (E2B, E4B)</string>
     <string name="whats_new_item_2">พารามิเตอร์การสร้างเฉพาะโมเดล</string>
     <string name="whats_new_item_3">การควบคุมงบประมาณการคิด</string>

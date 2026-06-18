@@ -8,6 +8,8 @@ Chat history — all your conversations are saved and organized. Pin, rename, or
 
 Rich chat experience — responses are rendered with full markdown support including headers, code blocks, lists, bold, italic, and more.
 
+Vision — send a photo and chat about it. Attach an image from your gallery or take one with the camera, then ask your model what it sees: describe a scene, identify objects, or read text. Works with Gemma, Qwen, and Ministral vision models, and the image is understood right on your device.
+
 Reasoning models — see the thinking process of models like DeepSeek R1, Nemotron, and LFM2.5 Thinking displayed in a styled, collapsible section with adjustable thinking budget.
 
 Tools — capable models can search the web, fetch a page, and run JavaScript right inside a reply. Each tool is off by default; turn on only the ones you want, per model, in Settings → Tools. Web search and fetch reach the internet only when you switch them on — everything else stays on your device.

@@ -4,12 +4,15 @@ package com.druk.lmplayground.screenshots
 
 import android.net.Uri
 import androidx.annotation.DrawableRes
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -17,6 +20,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
@@ -29,6 +33,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExpandMore
+import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.BatteryFull
 import androidx.compose.material.icons.outlined.Build
@@ -47,12 +52,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.PermanentNavigationDrawer
+import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -75,6 +84,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
@@ -90,11 +100,9 @@ import com.druk.lmplayground.conversation.Message
 import com.druk.lmplayground.conversation.PermanentSessionList
 import com.druk.lmplayground.conversation.UserInput
 import com.druk.lmplayground.data.ChatSessionEntity
-import com.druk.lmplayground.data.SystemPromptEntity
 import com.druk.lmplayground.models.Model
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelWithStatus
-import com.druk.lmplayground.settings.SystemPromptsContent
 import com.druk.lmplayground.settings.ToolsContent
 import com.druk.lmplayground.storage.ModelsContent
 import com.druk.lmplayground.storage.StorageInfo
@@ -324,21 +332,19 @@ class TabletStoreScreenshots(
         }
     }
 
-    // ── Fake generation-params bottom sheet ─────────────────────────
+    // ── Tabbed generation/prompt/tools sheet (marketing stand-in) ────
     // Static visual stand-in for production's [GenerationParamsSheet]
-    // (a ModalBottomSheet). We can't render the real sheet inside
-    // Paparazzi because it relies on sheet state being expanded in a
-    // coroutine; instead we mirror its content layout in a Surface
-    // pinned to the bottom of the display, with rounded top corners
-    // and a drag handle. Order and labels match the prod sheet so the
-    // marketing shot reads as the real UI.
+    // (a ModalBottomSheet, which Paparazzi can't drive into its expanded
+    // state). Mirrors the sheet chrome — rounded top corners, drag
+    // handle, the three-tab PrimaryTabRow with [selectedTab] active —
+    // then renders [body] for that tab. Pinned to the top of the display
+    // (a fully-expanded sheet reaches the top inset), capped at 640dp
+    // wide and centered, per BottomSheetDefaults.
     @Composable
-    private fun FakeGenerationParamsSheet() {
-        // Mirrors Material 3 ModalBottomSheet on tablet:
-        // ‑ Max width 640dp, centered horizontally (per
-        //   BottomSheetDefaults.SheetMaxWidth).
-        // ‑ Full height — same as a fully-expanded sheet with
-        //   skipPartiallyExpanded=true reaching the top inset.
+    private fun TabletSheet(
+        selectedTab: Int,
+        body: @Composable ColumnScope.() -> Unit,
+    ) {
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.TopCenter,
@@ -351,131 +357,122 @@ class TabletStoreScreenshots(
                 shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
                 color = MaterialTheme.colorScheme.surfaceContainerLow,
             ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-            ) {
-                Spacer(modifier = Modifier.height(12.dp))
-                // Drag handle pill — matches Material 3's default
-                // BottomSheetDefaults.DragHandle (32dp × 4dp, outline).
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.CenterHorizontally)
-                        .size(width = 32.dp, height = 4.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f),
-                            shape = RoundedCornerShape(2.dp),
-                        )
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Header: title + Reset (mirrors prod row layout)
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(R.string.generation_parameters),
-                        style = MaterialTheme.typography.titleMedium,
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    // Drag handle pill — Material 3 default (32dp × 4dp).
+                    Box(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .size(width = 32.dp, height = 4.dp)
+                            .clip(RoundedCornerShape(2.dp))
+                            .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.4f))
                     )
-                    Text(
-                        text = stringResource(R.string.reset),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.labelLarge,
-                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    PrimaryTabRow(
+                        selectedTabIndex = selectedTab,
+                        containerColor = Color.Transparent,
+                    ) {
+                        Tab(selected = selectedTab == TAB_PARAMS, onClick = { }, text = { Text(stringResource(R.string.tab_params)) })
+                        Tab(selected = selectedTab == TAB_PROMPT, onClick = { }, text = { Text(stringResource(R.string.tab_prompt)) })
+                        Tab(selected = selectedTab == TAB_TOOLS, onClick = { }, text = { Text(stringResource(R.string.tools)) })
+                    }
+                    body()
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Current system prompt label + Clear
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(R.string.system_prompt_current),
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
-                    Text(
-                        text = stringResource(R.string.clear),
-                        color = MaterialTheme.colorScheme.primary,
-                        style = MaterialTheme.typography.labelLarge,
-                        modifier = Modifier.padding(horizontal = 8.dp),
-                    )
-                }
-                Spacer(modifier = Modifier.height(4.dp))
-                OutlinedCard(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                ) {
-                    Text(
-                        text = stringResource(R.string.screenshot_system_prompt_sample),
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp),
-                        style = MaterialTheme.typography.bodySmall,
-                        minLines = 3,
-                        maxLines = 3,
-                    )
-                }
-                Spacer(modifier = Modifier.height(12.dp))
-
-                InlineParamSlider(
-                    label = stringResource(R.string.context_size),
-                    value = 4096f,
-                    valueRange = 512f..8192f,
-                    valueDisplay = "4096",
-                )
-                InlineParamSlider(
-                    label = stringResource(R.string.thinking_budget),
-                    value = 1024f,
-                    valueRange = 64f..4096f,
-                    valueDisplay = stringResource(R.string.tokens_value, 1024),
-                )
-                InlineParamSlider(
-                    label = stringResource(R.string.temperature),
-                    value = 0.7f,
-                    valueRange = 0f..2f,
-                    valueDisplay = "0.70",
-                )
-                InlineParamSlider(
-                    label = stringResource(R.string.top_p),
-                    value = 0.9f,
-                    valueRange = 0f..1f,
-                    valueDisplay = "0.90",
-                )
-                InlineParamSlider(
-                    label = stringResource(R.string.repetition_penalty),
-                    value = 1.1f,
-                    valueRange = 1f..2f,
-                    valueDisplay = "1.10",
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-                // Advanced section header (collapsed — matches prod
-                // initial state where Advanced isn't expanded).
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = stringResource(R.string.advanced),
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.weight(1f),
-                    )
-                    Icon(
-                        imageVector = Icons.Default.ExpandMore,
-                        contentDescription = null,
-                    )
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-            }
             }
         }
+    }
+
+    @Composable
+    private fun ColumnScope.ParamsTabBody() {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+            InlineParamSlider(label = stringResource(R.string.context_size), value = 4096f, valueRange = 512f..8192f, valueDisplay = "4096")
+            InlineParamSlider(label = stringResource(R.string.thinking_budget), value = 1024f, valueRange = 64f..4096f, valueDisplay = stringResource(R.string.tokens_value, 1024))
+            InlineParamSlider(label = stringResource(R.string.temperature), value = 0.7f, valueRange = 0f..2f, valueDisplay = "0.70")
+            InlineParamSlider(label = stringResource(R.string.top_p), value = 0.9f, valueRange = 0f..1f, valueDisplay = "0.90")
+            InlineParamSlider(label = stringResource(R.string.repetition_penalty), value = 1.1f, valueRange = 1f..2f, valueDisplay = "1.10")
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(text = stringResource(R.string.advanced), style = MaterialTheme.typography.titleSmall, modifier = Modifier.weight(1f))
+                Icon(imageVector = Icons.Default.ExpandMore, contentDescription = null)
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            OutlinedButton(onClick = { }, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.reset))
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+
+    @Composable
+    private fun ColumnScope.PromptTabBody() {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(text = stringResource(R.string.system_prompt_current), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(text = stringResource(R.string.clear), color = MaterialTheme.colorScheme.primary, style = MaterialTheme.typography.labelLarge, modifier = Modifier.padding(horizontal = 8.dp))
+            }
+            Spacer(modifier = Modifier.height(4.dp))
+            OutlinedCard(modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(12.dp)) {
+                Text(text = stringResource(R.string.screenshot_system_prompt_sample), modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp), style = MaterialTheme.typography.bodySmall, minLines = 3, maxLines = 3, overflow = TextOverflow.Ellipsis)
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(text = stringResource(R.string.saved_prompts), style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            Spacer(modifier = Modifier.height(8.dp))
+            SavedPromptCard(stringResource(R.string.screenshot_system_prompt_sample), selected = true)
+            Spacer(modifier = Modifier.height(8.dp))
+            SavedPromptCard(stringResource(R.string.screenshot_prompt_sample_code), selected = false)
+            Spacer(modifier = Modifier.height(8.dp))
+            SavedPromptCard(stringResource(R.string.screenshot_prompt_sample_translator), selected = false)
+            Spacer(modifier = Modifier.height(8.dp))
+            SavedPromptCard(stringResource(R.string.screenshot_prompt_sample_brainstorm), selected = false)
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+
+    @Composable
+    private fun SavedPromptCard(text: String, selected: Boolean) {
+        val border: BorderStroke = if (selected) {
+            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+        } else {
+            CardDefaults.outlinedCardBorder()
+        }
+        OutlinedCard(modifier = Modifier.fillMaxWidth(), border = border, shape = RoundedCornerShape(12.dp)) {
+            Text(text = text, modifier = Modifier.padding(horizontal = 12.dp, vertical = 10.dp), style = MaterialTheme.typography.bodySmall, minLines = 2, maxLines = 3, overflow = TextOverflow.Ellipsis)
+        }
+    }
+
+    @Composable
+    private fun ColumnScope.ToolsTabBody() {
+        val tools = listOf(StubTool("web_search"), StubTool("web_fetch"), StubTool("run_javascript"))
+        val enabled = mapOf("web_search" to true, "web_fetch" to true, "run_javascript" to true)
+        ToolsContent(
+            tools = tools,
+            enabledStates = enabled,
+            onToolEnabledChanged = { _, _ -> },
+            modifier = Modifier
+                .fillMaxWidth()
+                .weight(1f),
+        )
     }
 
     // ── Fake status bar ─────────────────────────────────────────────
@@ -944,14 +941,73 @@ class TabletStoreScreenshots(
         }
     }
 
-    // Scene 3: Generation parameters as a bottom sheet, fully
-    // expanded. Same content as the prior plain-surface version, just
-    // wrapped in a sheet-styled container (rounded top corners +
-    // drag handle) so it reads as the production
-    // [GenerationParamsSheet]. No chat backdrop / scrim — sheet takes
-    // the entire display so the params get full marketing focus.
+    // Scene 3: Chat about an image (vision) with the permanent sidebar.
     @Test
-    fun scene3_generationParams() {
+    fun scene3_chatWithImage() {
+        paparazzi.snapshot {
+            LocaleTheme {
+                val question = stringResource(R.string.screenshot_vision_question)
+                val response = stringResource(R.string.screenshot_vision_response)
+                val gemma4 = gemma4Model()
+                val sessions = sampleSessions()
+                TabletStoreScreenshotFrame(
+                    icon = Icons.Outlined.AddPhotoAlternate,
+                    title = stringResource(R.string.screenshot_vision),
+                    subtitle = stringResource(R.string.screenshot_vision_sub),
+                ) {
+                    PermanentNavigationDrawer(
+                        drawerContent = {
+                            PermanentSessionList(
+                                sessions = sessions,
+                                currentSessionId = sessions[0].id,
+                                onSessionSelected = {},
+                                onDeleteSession = {},
+                                onRenameSession = { _, _ -> },
+                                onPinSession = { _, _ -> },
+                                onSettingsClicked = {},
+                            )
+                        },
+                    ) {
+                        Surface(modifier = Modifier.fillMaxSize()) {
+                            Column {
+                                ConversationBar(
+                                    modelInfo = gemma4,
+                                    modelStatus = null,
+                                    compact = true,
+                                    showNavIcon = false,
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 8.dp)
+                                ) {
+                                    UserImageMessage(R.drawable.sample_vision_sheep, question)
+                                    com.druk.lmplayground.conversation.Message(
+                                        msg = Message(
+                                            author = "Assistant",
+                                            content = response,
+                                            responseTokens = 38,
+                                            responseDurationSeconds = 1.4f
+                                        ),
+                                        isUserMe = false,
+                                        showActions = true
+                                    )
+                                }
+                                UserInput(
+                                    integrateWithSurface = true,
+                                    onMessageSent = {},
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Scene 4: Generation parameters (chat sheet, Params tab).
+    @Test
+    fun scene4_generationParams() {
         paparazzi.snapshot {
             LocaleTheme {
                 TabletStoreScreenshotFrame(
@@ -959,15 +1015,17 @@ class TabletStoreScreenshots(
                     title = stringResource(R.string.screenshot_fine_tune),
                     subtitle = stringResource(R.string.screenshot_fine_tune_sub),
                 ) {
-                    FakeGenerationParamsSheet()
+                    TabletSheet(selectedTab = TAB_PARAMS) {
+                        ParamsTabBody()
+                    }
                 }
             }
         }
     }
 
-    // Scene 4: Models download
+    // Scene 7: Models download
     @Test
-    fun scene4_modelsDownload() {
+    fun scene7_modelsDownload() {
         paparazzi.snapshot {
             LocaleTheme {
                 val efficient = stringResource(R.string.model_category_efficient)
@@ -1052,122 +1110,46 @@ class TabletStoreScreenshots(
         }
     }
 
-    // Scene 5: Reusable system prompts — adaptive multi-column grid
-    // (the tablet-only layout the phone shot can't show).
+    // Scene 5: Reusable system prompts (chat sheet, Prompt tab).
     @Test
     fun scene5_systemPrompts() {
         paparazzi.snapshot {
             LocaleTheme {
-                val prompts = listOf(
-                    SystemPromptEntity(id = "1", text = stringResource(R.string.screenshot_system_prompt_sample), createdAt = 0L),
-                    SystemPromptEntity(id = "2", text = stringResource(R.string.screenshot_prompt_sample_code), createdAt = 0L),
-                    SystemPromptEntity(id = "3", text = stringResource(R.string.screenshot_prompt_sample_translator), createdAt = 0L),
-                    SystemPromptEntity(id = "4", text = stringResource(R.string.screenshot_prompt_sample_brainstorm), createdAt = 0L),
-                )
                 TabletStoreScreenshotFrame(
                     icon = Icons.Outlined.Description,
                     title = stringResource(R.string.screenshot_prompts),
                     subtitle = stringResource(R.string.screenshot_prompts_sub),
                 ) {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        topBar = {
-                            TopAppBar(
-                                title = { Text(stringResource(R.string.system_prompts)) },
-                                navigationIcon = {
-                                    IconButton(onClick = { }) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = stringResource(R.string.back),
-                                        )
-                                    }
-                                },
-                            )
-                        },
-                    ) { padding ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(padding),
-                            contentAlignment = Alignment.TopCenter,
-                        ) {
-                            SystemPromptsContent(
-                                prompts = prompts,
-                                onSelect = { },
-                                modifier = Modifier
-                                    .widthIn(max = 760.dp)
-                                    .fillMaxSize(),
-                                onNewPrompt = { },
-                            )
-                        }
+                    TabletSheet(selectedTab = TAB_PROMPT) {
+                        PromptTabBody()
                     }
                 }
             }
         }
     }
 
-    // Scene 6: Tools — per-tool toggles in Settings, centered to match
-    // the tablet content width used by the other scenes.
+    // Scene 6: Tools — per-tool toggles (chat sheet, Tools tab).
     @Test
     fun scene6_tools() {
         paparazzi.snapshot {
             LocaleTheme {
-                val tools = listOf(
-                    StubTool("web_search"),
-                    StubTool("web_fetch"),
-                    StubTool("run_javascript"),
-                )
-                val enabled = mapOf(
-                    "web_search" to true,
-                    "web_fetch" to true,
-                    "run_javascript" to true,
-                )
                 TabletStoreScreenshotFrame(
                     icon = Icons.Outlined.Build,
                     title = stringResource(R.string.screenshot_tools),
                     subtitle = stringResource(R.string.screenshot_tools_sub),
                 ) {
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        topBar = {
-                            TopAppBar(
-                                title = { Text(stringResource(R.string.tools)) },
-                                navigationIcon = {
-                                    IconButton(onClick = { }) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = stringResource(R.string.back),
-                                        )
-                                    }
-                                },
-                            )
-                        },
-                    ) { padding ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(padding),
-                            contentAlignment = Alignment.TopCenter,
-                        ) {
-                            ToolsContent(
-                                tools = tools,
-                                enabledStates = enabled,
-                                onToolEnabledChanged = { _, _ -> },
-                                modifier = Modifier
-                                    .widthIn(max = 720.dp)
-                                    .fillMaxWidth(),
-                            )
-                        }
+                    TabletSheet(selectedTab = TAB_TOOLS) {
+                        ToolsTabBody()
                     }
                 }
             }
         }
     }
 
-    // Scene 7: Background generation notification over the dimmed
+    // Scene 8: Background generation notification over the dimmed
     // sidebar chat — the reply kept running after the user left.
     @Test
-    fun scene7_notification() {
+    fun scene8_notification() {
         paparazzi.snapshot {
             LocaleTheme {
                 val gemma4 = gemma4Model()
@@ -1256,6 +1238,49 @@ class TabletStoreScreenshots(
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+// Tab indices for the generation/prompt/tools sheet.
+private const val TAB_PARAMS = 0
+private const val TAB_PROMPT = 1
+private const val TAB_TOOLS = 2
+
+// User message with an attached image. Production renders the attachment
+// via Coil AsyncImage(imageUri), which Paparazzi can't decode; we mirror
+// the same bubble (image thumbnail above a primary-coloured text bubble,
+// right-aligned) with a painterResource.
+private val UserBubbleShape = RoundedCornerShape(20.dp, 20.dp, 4.dp, 20.dp)
+
+@Composable
+private fun UserImageMessage(@DrawableRes imageRes: Int, text: String) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 60.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
+        horizontalArrangement = Arrangement.End
+    ) {
+        Column(horizontalAlignment = Alignment.End) {
+            Image(
+                painter = painterResource(imageRes),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(240.dp)
+                    .aspectRatio(3f / 2f)
+                    .clip(RoundedCornerShape(16.dp))
+            )
+            Spacer(modifier = Modifier.height(6.dp))
+            Surface(color = MaterialTheme.colorScheme.primary, shape = UserBubbleShape) {
+                CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onPrimary) {
+                    Text(
+                        text = text,
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
+                    )
                 }
             }
         }

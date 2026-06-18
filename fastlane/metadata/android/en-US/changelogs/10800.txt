@@ -1,0 +1,4 @@
+- Vision — send a photo and chat about it. Pick an image from your gallery or snap one with the camera, then ask your model what it sees
+- Works with Gemma, Qwen and Ministral vision models — the image add-on downloads automatically with the model
+- Generation settings reorganized into tabs for easier tuning
+- Updated inference engine, plus performance and stability improvements

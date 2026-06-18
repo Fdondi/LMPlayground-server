@@ -246,6 +246,8 @@
     <string name="screenshot_choose_model_sub">from leading AI providers</string>
     <string name="screenshot_chat">Chat privately</string>
     <string name="screenshot_chat_sub">on your device</string>
+    <string name="screenshot_vision">Chat about images</string>
+    <string name="screenshot_vision_sub">your model can see them too</string>
     <string name="screenshot_fine_tune">Fine-tune</string>
     <string name="screenshot_fine_tune_sub">generation parameters</string>
     <string name="screenshot_download_models">Download any model</string>
@@ -264,6 +266,8 @@
     <string name="screenshot_prompt_sample_brainstorm">You are a creative brainstorming partner. Offer bold, unexpected ideas and build on mine.</string>
 
     <!-- Screenshot sample chat -->
+    <string name="screenshot_vision_question">What animal is in this photo?</string>
+    <string name="screenshot_vision_response">A **sheep** with a thick, curly cream-white fleece, grazing head-down on a lush green hillside. The overcast sky and rocky pasture suggest a cool, upland setting.</string>
     <string name="screenshot_chat_question">What is machine learning?</string>
     <string name="screenshot_chat_response">Machine learning is a branch of artificial intelligence where computers **learn from data** instead of being explicitly programmed.\n\nKey concepts:\n\n\u2022 **Training**: feeding data to algorithms\n\u2022 **Models**: learned patterns from data\n\u2022 **Inference**: making predictions on new data</string>
 
@@ -279,6 +283,10 @@
 
     <!-- What\'s New -->
     <string name="whats_new">What\'s New</string>
+    <string name="whats_new_vision">Vision — send a photo and chat about it</string>
+    <string name="whats_new_vision_detail">Pick an image from your gallery or snap one with the camera</string>
+    <string name="whats_new_vision_models">Works with Gemma, Qwen &amp; Ministral vision models</string>
+    <!-- Superseded What\'s New items (kept as translation base; not shown in UI) -->
     <string name="whats_new_item_1">Tools — capable models can now use:</string>
     <string name="whats_new_tools">Web search, fetch page, and run JavaScript</string>
     <string name="whats_new_cache">Faster replies with cached prompts &amp; tools</string>

@@ -254,6 +254,15 @@
     <string name="screenshot_chat_question">Ano ang machine learning?</string>
     <string name="screenshot_chat_response">Ang machine learning ay isang sangay ng artificial intelligence kung saan ang mga computer ay **natututo mula sa data** sa halip na tahasang programado.\n\nMga pangunahing konsepto:\n\n\u2022 **Pagsasanay**: pagbibigay ng data sa mga algorithm\n\u2022 **Mga Modelo**: mga natutunan na pattern mula sa data\n\u2022 **Inference**: paggawa ng mga hula sa bagong data</string>
 
+    <!-- Vision (1.8.0) -->
+    <string name="screenshot_vision">Mag-chat tungkol sa mga larawan</string>
+    <string name="screenshot_vision_sub">nakikita rin ito ng iyong modelo</string>
+    <string name="screenshot_vision_question">Anong hayop ang nasa larawang ito?</string>
+    <string name="screenshot_vision_response">Isang **tupa** na may makapal at kulot na cream-white na balahibo, nakayukong nanginginain sa isang luntiang gilid ng burol. Ang makulimlim na langit at mabatong pastulan ay nagpapahiwatig ng malamig na kapaligiran sa kabundukan.</string>
+    <string name="whats_new_vision">Vision \u2014 magpadala ng larawan at pag-usapan ito</string>
+    <string name="whats_new_vision_detail">Pumili ng larawan mula sa iyong gallery o kumuha gamit ang camera</string>
+    <string name="whats_new_vision_models">Gumagana sa mga vision model ng Gemma, Qwen &amp; Ministral</string>
+
     <!-- Model categories -->
     <string name="model_category_lightweight">Magaan na chat model</string>
     <string name="model_category_general">Pangkalahatang chat model</string>

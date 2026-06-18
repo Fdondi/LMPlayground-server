@@ -8,6 +8,8 @@ Lịch sử trò chuyện — tất cả cuộc hội thoại được lưu và 
 
 Trải nghiệm trò chuyện phong phú — phản hồi được hiển thị với hỗ trợ markdown đầy đủ bao gồm tiêu đề, khối mã, danh sách, in đậm, in nghiêng và nhiều hơn nữa.
 
+Thị giác — gửi một bức ảnh và trò chuyện về nó. Đính kèm ảnh từ thư viện hoặc chụp một tấm bằng camera, rồi hỏi mô hình về những gì nó thấy: mô tả khung cảnh, nhận diện vật thể hoặc đọc chữ. Hoạt động với các mô hình thị giác Gemma, Qwen và Ministral, và hình ảnh được hiểu ngay trên thiết bị của bạn.
+
 Mô hình suy luận — xem quá trình suy nghĩ của các mô hình như DeepSeek R1, Nemotron và LFM2.5 Thinking được hiển thị trong phần có kiểu dáng đẹp, có thể thu gọn với ngân sách suy nghĩ có thể điều chỉnh.
 
 Công cụ — các mô hình có khả năng có thể tìm kiếm web, tải một trang và chạy JavaScript ngay trong một phản hồi. Mỗi công cụ đều tắt theo mặc định; chỉ bật những công cụ bạn muốn, cho từng mô hình, trong Cài đặt → Công cụ. Tìm kiếm web và tải trang chỉ kết nối internet khi bạn bật chúng — mọi thứ khác đều ở trên thiết bị của bạn.

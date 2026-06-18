@@ -173,6 +173,9 @@
     <string name="thoughts">Роздуми</string>
     <string name="functionality_not_available">Функція недоступна \uD83D\uDE48</string>
     <string name="whats_new">Що нового</string>
+    <string name="whats_new_vision">Vision — надішли фото та поспілкуйся про нього</string>
+    <string name="whats_new_vision_detail">Вибери зображення з галереї або зроби знімок камерою</string>
+    <string name="whats_new_vision_models">Працює з візуальними моделями Gemma, Qwen &amp; Ministral</string>
     <string name="whats_new_item_1">Нові моделі Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Параметри генерації для кожної моделі</string>
     <string name="whats_new_item_3">Керування бюджетом мислення</string>
@@ -194,6 +197,10 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Обирай модель</string>
     <string name="screenshot_chat">Спілкуйся приватно</string>
+    <string name="screenshot_vision">Спілкуйся про зображення</string>
+    <string name="screenshot_vision_sub">твоя модель теж їх бачить</string>
+    <string name="screenshot_vision_question">Яка тварина на цьому фото?</string>
+    <string name="screenshot_vision_response">**Вівця** з густим, кучерявим, кремово-білим руном, що пасеться, опустивши голову, на соковитому зеленому схилі. Похмуре небо та кам\'янисте пасовище натякають на прохолодну гірську місцевість.</string>
     <string name="screenshot_fine_tune">Налаштовуй</string>
     <string name="screenshot_download_models">Завантажуй будь-яку модель</string>
     <string name="screenshot_download_models_sub">у будь-яку обрану теку</string>

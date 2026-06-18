@@ -176,6 +176,9 @@
     <string name="whats_new_item_1">Modele noi Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Parametri de generare per model</string>
     <string name="whats_new_item_3">Control buget de ra\u021Bionament</string>
+    <string name="whats_new_vision">Viziune \u2014 trimite o fotografie \u0219i discut\u0103 despre ea</string>
+    <string name="whats_new_vision_detail">Alege o imagine din galerie sau f\u0103 una cu camera</string>
+    <string name="whats_new_vision_models">Func\u021Bioneaz\u0103 cu modelele de viziune Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Prompturi de sistem</string>
@@ -194,6 +197,8 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Alege modelul</string>
     <string name="screenshot_chat">Discut\u0103 privat</string>
+    <string name="screenshot_vision">Discut\u0103 despre imagini</string>
+    <string name="screenshot_vision_sub">modelul t\u0103u le poate vedea \u0219i el</string>
     <string name="screenshot_fine_tune">Ajustare fin\u0103</string>
     <string name="screenshot_download_models">Descarc\u0103 orice model</string>
     <string name="screenshot_download_models_sub">\u00EEn orice folder alegi</string>
@@ -209,6 +214,8 @@
     <string name="screenshot_prompt_sample_code">E\u0219ti un recenzent de cod experimentat. Semnaleaz\u0103 bug-uri, cazuri limit\u0103 \u0219i probleme de securitate. Fii direct \u0219i specific.</string>
     <string name="screenshot_prompt_sample_translator">E\u0219ti un traduc\u0103tor. Transform\u0103 tot ce \u00EE\u021Bi trimit \u00EEn francez\u0103 natural\u0103 \u0219i fluent\u0103 \u0219i p\u0103streaz\u0103 formatarea.</string>
     <string name="screenshot_prompt_sample_brainstorm">E\u0219ti un partener creativ de brainstorming. Propune idei \u00EEndr\u0103zne\u021Be \u0219i nea\u0219teptate \u0219i dezvolt\u0103-le pe ale mele.</string>
+    <string name="screenshot_vision_question">Ce animal este \u00EEn aceast\u0103 fotografie?</string>
+    <string name="screenshot_vision_response">O **oaie** cu o l\u00E2n\u0103 deas\u0103, crea\u021B\u0103, de culoare alb-crem, care pa\u0219te cu capul plecat pe un deal verde \u0219i luxuriant. Cerul \u00EEnnorat \u0219i p\u0103\u0219unea pietroas\u0103 sugereaz\u0103 un cadru r\u0103coros, de munte.</string>
     <string name="screenshot_chat_question">Ce este \u00EEnv\u0103\u021Barea automat\u0103?</string>
     <string name="screenshot_chat_response">\u00CEnv\u0103\u021Barea automat\u0103 este o ramur\u0103 a inteligen\u021Bei artificiale \u00EEn care computerele **\u00EEnva\u021B\u0103 din date** \u00EEn loc s\u0103 fie programate explicit.\n\nConcepte cheie:\n\n\u2022 **Antrenament**: furnizarea de date algoritmilor\n\u2022 **Modele**: tipare \u00EEnv\u0103\u021Bate din date\n\u2022 **Inferen\u021B\u0103**: realizarea de predic\u021Bii pe date noi</string>
 

@@ -8,6 +8,8 @@ Istoric conversații — toate conversațiile tale sunt salvate și organizate. 
 
 Experiență de chat bogată — răspunsurile sunt randate cu suport complet pentru markdown, inclusiv titluri, blocuri de cod, liste, bold, italic și altele.
 
+Viziune — trimite o fotografie și discută despre ea. Atașează o imagine din galerie sau fă una cu camera, apoi întreabă-ți modelul ce vede: să descrie o scenă, să identifice obiecte sau să citească text. Funcționează cu modelele de viziune Gemma, Qwen și Ministral, iar imaginea este interpretată direct pe dispozitivul tău.
+
 Modele de raționament — urmărește procesul de gândire al modelelor precum DeepSeek R1, Nemotron și LFM2.5 Thinking afișat într-o secțiune stilizată, reductibilă, cu buget de raționament ajustabil.
 
 Instrumente — modelele capabile pot căuta pe web, deschide o pagină și rula JavaScript chiar în interiorul unui răspuns. Fiecare instrument este dezactivat implicit; activează doar pe cele dorite, pentru fiecare model, în Setări → Instrumente. Căutarea web și deschiderea paginilor accesează internetul doar când le activezi — restul rămâne pe dispozitivul tău.

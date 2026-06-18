@@ -1,0 +1,4 @@
+- Penglihatan — hantar foto dan bersembang mengenainya. Pilih imej dari galeri atau tangkap satu dengan kamera, kemudian tanya model apa yang dilihatnya
+- Berfungsi dengan model penglihatan Gemma, Qwen dan Ministral — add-on imej dimuat turun secara automatik bersama model
+- Tetapan penjanaan disusun semula menjadi tab untuk penalaan yang lebih mudah
+- Enjin inferens dikemas kini, serta penambahbaikan prestasi dan kestabilan

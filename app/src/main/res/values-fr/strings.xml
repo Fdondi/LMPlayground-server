@@ -176,6 +176,9 @@
     <string name="whats_new_item_1">Nouveaux mod\u00E8les Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Param\u00E8tres de g\u00E9n\u00E9ration par mod\u00E8le</string>
     <string name="whats_new_item_3">Contr\u00F4le du budget de r\u00E9flexion</string>
+    <string name="whats_new_vision">Vision \u2014 envoyez une photo et discutez-en</string>
+    <string name="whats_new_vision_detail">Choisissez une image dans votre galerie ou prenez-en une avec l\'appareil photo</string>
+    <string name="whats_new_vision_models">Compatible avec les mod\u00E8les de vision Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Invites syst\u00E8me</string>
@@ -194,6 +197,8 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Choisir un mod\u00E8le</string>
     <string name="screenshot_chat">Discutez en priv\u00E9</string>
+    <string name="screenshot_vision">Discutez d\'images</string>
+    <string name="screenshot_vision_sub">votre mod\u00E8le peut les voir aussi</string>
     <string name="screenshot_fine_tune">Ajustement fin</string>
     <string name="screenshot_download_models">T\u00E9l\u00E9chargez n\'importe quel mod\u00E8le</string>
     <string name="screenshot_download_models_sub">dans le dossier de votre choix</string>
@@ -209,6 +214,8 @@
     <string name="screenshot_prompt_sample_code">Tu es un relecteur de code exp\u00E9riment\u00E9. Signale les bugs, les cas limites et les probl\u00E8mes de s\u00E9curit\u00E9. Sois direct et pr\u00E9cis.</string>
     <string name="screenshot_prompt_sample_translator">Tu es un traducteur. Transforme tout ce que je t\'envoie en fran\u00E7ais naturel et fluide, et conserve la mise en forme.</string>
     <string name="screenshot_prompt_sample_brainstorm">Tu es un partenaire de brainstorming cr\u00E9atif. Propose des id\u00E9es audacieuses et inattendues, et d\u00E9veloppe les miennes.</string>
+    <string name="screenshot_vision_question">Quel animal y a-t-il sur cette photo ?</string>
+    <string name="screenshot_vision_response">Un **mouton** à la toison épaisse, bouclée et d\'un blanc crème, broutant tête baissée sur un coteau verdoyant. Le ciel couvert et le pâturage rocailleux évoquent un cadre frais de hautes terres.</string>
     <string name="screenshot_chat_question">Qu\'est-ce que l\'apprentissage automatique ?</string>
     <string name="screenshot_chat_response">L\'apprentissage automatique est une branche de l\'intelligence artificielle o\u00F9 les ordinateurs **apprennent \u00E0 partir des donn\u00E9es** au lieu d\'\u00EAtre explicitement programm\u00E9s.\n\nConcepts cl\u00E9s :\n\n\u2022 **Entra\u00EEnement** : fournir des donn\u00E9es aux algorithmes\n\u2022 **Mod\u00E8les** : motifs appris \u00E0 partir des donn\u00E9es\n\u2022 **Inf\u00E9rence** : faire des pr\u00E9dictions sur de nouvelles donn\u00E9es</string>
 

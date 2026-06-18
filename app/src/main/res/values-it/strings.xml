@@ -176,6 +176,9 @@
     <string name="whats_new_item_1">Nuovi modelli Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Parametri di generazione per modello</string>
     <string name="whats_new_item_3">Controllo del budget di ragionamento</string>
+    <string name="whats_new_vision">Visione — invia una foto e parlane</string>
+    <string name="whats_new_vision_detail">Scegli un\'immagine dalla galleria o scattane una con la fotocamera</string>
+    <string name="whats_new_vision_models">Funziona con i modelli di visione Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Prompt di sistema</string>
@@ -194,6 +197,8 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Scegli modello</string>
     <string name="screenshot_chat">Chatta in privato</string>
+    <string name="screenshot_vision">Chatta sulle immagini</string>
+    <string name="screenshot_vision_sub">il tuo modello può vederle</string>
     <string name="screenshot_fine_tune">Regolazione fine</string>
     <string name="screenshot_download_models">Scarica qualsiasi modello</string>
     <string name="screenshot_download_models_sub">nella cartella che preferisci</string>
@@ -209,6 +214,8 @@
     <string name="screenshot_prompt_sample_code">Sei un revisore di codice esperto. Segnala bug, casi limite e problemi di sicurezza. Sii diretto e specifico.</string>
     <string name="screenshot_prompt_sample_translator">Sei un traduttore. Trasforma tutto ciò che ti invio in francese naturale e fluente e mantieni la formattazione.</string>
     <string name="screenshot_prompt_sample_brainstorm">Sei un partner creativo di brainstorming. Proponi idee audaci e inaspettate e sviluppa le mie.</string>
+    <string name="screenshot_vision_question">Che animale c\'\u00E8 in questa foto?</string>
+    <string name="screenshot_vision_response">Una **pecora** dal vello folto, riccio e bianco crema, che pascola a testa bassa su una collina verde e rigogliosa. Il cielo coperto e il pascolo roccioso suggeriscono un ambiente fresco di altopiano.</string>
     <string name="screenshot_chat_question">Cos\'\u00E8 l\'apprendimento automatico?</string>
     <string name="screenshot_chat_response">L\'apprendimento automatico \u00E8 un ramo dell\'intelligenza artificiale in cui i computer **imparano dai dati** invece di essere programmati esplicitamente.\n\nConcetti chiave:\n\n\u2022 **Addestramento**: fornire dati agli algoritmi\n\u2022 **Modelli**: schemi appresi dai dati\n\u2022 **Inferenza**: fare previsioni su nuovi dati</string>
 

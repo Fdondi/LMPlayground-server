@@ -1,0 +1,4 @@
+- Viziune — trimite o fotografie și discută despre ea. Alege o imagine din galerie sau fă una cu camera, apoi întreabă-ți modelul ce vede
+- Funcționează cu modelele de viziune Gemma, Qwen și Ministral — suplimentul de imagine se descarcă automat cu modelul
+- Setări de generare reorganizate în file pentru o reglare mai ușoară
+- Motor de inferență actualizat, plus îmbunătățiri de performanță și stabilitate

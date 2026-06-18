@@ -1,0 +1,4 @@
+- Vision — sende ein Foto und chatte darüber. Wähle ein Bild aus deiner Galerie oder mach eines mit der Kamera und frag dein Modell dann, was es sieht
+- Funktioniert mit den Vision-Modellen Gemma, Qwen und Ministral — das Bild-Add-on wird automatisch zusammen mit dem Modell heruntergeladen
+- Generierungseinstellungen für leichtere Feinabstimmung in Tabs umorganisiert
+- Aktualisierte Inferenz-Engine sowie Leistungs- und Stabilitätsverbesserungen

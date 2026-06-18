@@ -1,0 +1,4 @@
+- Görü — bir fotoğraf gönderin ve hakkında sohbet edin. Galerinizden bir görsel seçin ya da kamerayla çekin, sonra modelinize ne gördüğünü sorun
+- Gemma, Qwen ve Ministral görü modelleriyle çalışır — görsel eklentisi modelle birlikte otomatik indirilir
+- Üretim ayarları, daha kolay ince ayar için sekmelere yeniden düzenlendi
+- Çıkarım motoru güncellendi, ayrıca performans ve kararlılık iyileştirmeleri

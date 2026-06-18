@@ -234,6 +234,8 @@
     <string name="screenshot_choose_model_sub">johtavilta tekoälytoimittajilta</string>
     <string name="screenshot_chat">Keskustele yksityisesti</string>
     <string name="screenshot_chat_sub">laitteellasi</string>
+    <string name="screenshot_vision">Keskustele kuvista</string>
+    <string name="screenshot_vision_sub">mallisi näkee ne myös</string>
     <string name="screenshot_fine_tune">Hienosäädä</string>
     <string name="screenshot_fine_tune_sub">generointiparametreja</string>
     <string name="screenshot_download_models">Lataa mikä tahansa malli</string>
@@ -252,6 +254,8 @@
     <string name="screenshot_prompt_sample_brainstorm">Olet luova ideointikumppani. Tarjoa rohkeita, odottamattomia ideoita ja kehitä omiani eteenpäin.</string>
 
     <!-- Screenshot sample chat -->
+    <string name="screenshot_vision_question">Mikä eläin tässä kuvassa on?</string>
+    <string name="screenshot_vision_response">**Lammas**, jolla on paksu, kihara kermanvalkoinen villa, laiduntaa pää alhaalla rehevällä vihreällä rinteellä. Pilvinen taivas ja kivinen laidun viittaavat viileään ylänköympäristöön.</string>
     <string name="screenshot_chat_question">Mitä on koneoppiminen?</string>
     <string name="screenshot_chat_response">Koneoppiminen on tekoälyn ala, jossa tietokoneet **oppivat datasta** sen sijaan, että niitä ohjelmoitaisiin eksplisiittisesti.\n\nKeskeiset käsitteet:\n\n\u2022 **Koulutus**: datan syöttäminen algoritmeille\n\u2022 **Mallit**: opitut kuviot datasta\n\u2022 **Päättely**: ennusteiden tekeminen uudelle datalle</string>
 
@@ -267,6 +271,9 @@
 
     <!-- What\'s New -->
     <string name="whats_new">Uutta</string>
+    <string name="whats_new_vision">Näkö — lähetä valokuva ja keskustele siitä</string>
+    <string name="whats_new_vision_detail">Valitse kuva galleriasta tai ota uusi kameralla</string>
+    <string name="whats_new_vision_models">Toimii Gemma, Qwen &amp; Ministral -näkömallien kanssa</string>
     <string name="whats_new_item_1">Uudet Gemma 4 -mallit (E2B, E4B)</string>
     <string name="whats_new_item_2">Mallikohtaiset generointiparametrit</string>
     <string name="whats_new_item_3">Ajattelubudjetin hallinta</string>

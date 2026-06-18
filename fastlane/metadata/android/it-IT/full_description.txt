@@ -8,6 +8,8 @@ Cronologia chat — tutte le tue conversazioni vengono salvate e organizzate. Fi
 
 Esperienza di chat ricca — le risposte vengono renderizzate con supporto completo del markdown, inclusi titoli, blocchi di codice, elenchi, grassetto, corsivo e altro.
 
+Visione — invia una foto e parlane. Allega un'immagine dalla galleria o scattane una con la fotocamera, poi chiedi al tuo modello cosa vede: descrivere una scena, identificare oggetti o leggere il testo. Funziona con i modelli di visione Gemma, Qwen e Ministral, e l'immagine viene interpretata direttamente sul tuo dispositivo.
+
 Modelli di ragionamento — visualizza il processo di pensiero di modelli come DeepSeek R1, Nemotron e LFM2.5 Thinking in una sezione stilizzata e comprimibile con budget di ragionamento regolabile.
 
 Strumenti — i modelli più capaci possono cercare sul web, aprire una pagina ed eseguire JavaScript direttamente all'interno di una risposta. Ogni strumento è disattivato per impostazione predefinita; attiva solo quelli che vuoi, per ogni modello, in Impostazioni → Strumenti. La ricerca web e l'apertura delle pagine accedono a internet solo quando le attivi — tutto il resto rimane sul tuo dispositivo.

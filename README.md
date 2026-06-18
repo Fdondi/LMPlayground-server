@@ -12,9 +12,13 @@ LM Playground is an Android application for running Large Language Models locall
 ## Features
 
 - **On-device inference** - no cloud, no API keys, fully offline
-- **Vision/image input** - attach images from gallery for vision-capable models (Qwen 3.5, Gemma 3, Ministral 3)
+- **Vision/image input** - attach a photo from your gallery or camera and ask vision-capable models about it (Gemma 4, Gemma 3, Qwen 3.5, Ministral 3)
 - **Rich markdown** in chat responses - headers, code blocks, lists, and more
 - **Reasoning model support** - thinking steps from models like GPT-OSS, DeepSeek R1, and Nemotron are displayed in a styled section
+- **Tools** - capable models can search the web, fetch a page, and run JavaScript mid-reply; each tool is off by default and enabled per model
+- **Reusable system prompts** - save a persona, tone, or output format once and apply it to any model
+- **Chat history** - conversations are saved and organized; pin, rename, delete, and resume sessions from the sidebar
+- **Custom GGUF models** - load your own model files from any source alongside the built-in catalog
 - **Reliable background downloads** - custom download engine with OkHttp and WorkManager, progress notifications with speed and ETA, automatic resume on network interruptions
 - **Storage management** - choose where to keep multi-GB model files with Android's Storage Access Framework
 - **ARM optimized** - KleidiAI kernels and OpenMP for faster generation on arm64 devices
@@ -27,7 +31,7 @@ LM Playground is an Android application for running Large Language Models locall
 | GPT-OSS | 20B | OpenAI |
 | Qwen 3.5 | 0.8B, 2B, 4B (all vision) | Alibaba |
 | Qwen 3 | 0.6B, 1.7B, 4B | Alibaba |
-| Gemma 4 | E2B, E4B, 12B (vision) | Google |
+| Gemma 4 | E2B, E4B (vision), 12B | Google |
 | Gemma 3n | E2B, E4B | Google |
 | Gemma 3 | 1B, 4B (vision) | Google |
 | Nemotron 3 Nano | 4B | NVIDIA |

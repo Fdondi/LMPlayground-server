@@ -1,0 +1,4 @@
+- Visión — envía una foto y chatea sobre ella. Elige una imagen de tu galería o toma una con la cámara y pregúntale a tu modelo qué ve
+- Funciona con modelos de visión Gemma, Qwen y Ministral — el complemento de imagen se descarga automáticamente con el modelo
+- Ajustes de generación reorganizados en pestañas para afinarlos más fácilmente
+- Motor de inferencia actualizado, además de mejoras de rendimiento y estabilidad

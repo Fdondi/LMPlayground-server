@@ -294,6 +294,7 @@
     .lmp-model-size { font-size: 10.5px; color: #9096AE; margin-top: 2px; letter-spacing: 0.01em; }
     .lmp-chat { flex: 1; padding: 6px 16px 4px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
     .lmp-user-msg { align-self: flex-end; max-width: 82%; background: #C9CEF9; color: #1D2040; padding: 9px 16px; border-radius: 22px; font-size: 12.5px; line-height: 1.35; overflow-wrap: anywhere; }
+    .lmp-user-img { align-self: flex-end; width: 58%; max-width: 150px; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 14px; display: block; }
     .lmp-think { font-size: 12px; color: #9096AE; padding: 2px 0; font-style: italic; }
     .lmp-asst { font-size: 12px; line-height: 1.5; color: #D8DAE8; }
     .lmp-asst p { margin: 0 0 8px; }
@@ -443,6 +444,8 @@
     .badge-new { background: rgba(61,220,132,0.12); color: #3DDC84; }
     .badge-tools { background: rgba(150,110,255,0.16); color: #C7B0FF; display: inline-flex; align-items: center; gap: 4px; }
     .badge-hammer { width: 10px; height: 10px; }
+    .badge-vision { background: rgba(64,196,255,0.14); color: #7FD7FF; display: inline-flex; align-items: center; gap: 4px; }
+    .badge-eye { width: 11px; height: 11px; }
     .model-badges { display: flex; align-items: center; gap: 6px; }
     .model-name { font-size: 19px; font-weight: 500; letter-spacing: -0.015em; }
     .model-desc { font-size: 13px; color: var(--fg-dim); line-height: 1.5; margin-top: -6px; }
@@ -765,7 +768,7 @@
     "downloadUrl": "https://play.google.com/store/apps/details?id=com.druk.lmplayground",
     "installUrl": "https://play.google.com/store/apps/details?id=com.druk.lmplayground",
     "url": "https://lmplayground.app/",
-    "softwareVersion": "1.5.1",
+    "softwareVersion": "1.8.0",
     "description": "Free, open-source Android app for running large language models on-device with llama.cpp. Offline, private, no API keys.",
     "image": "https://lmplayground.app/banner.png",
     "author": {
@@ -927,6 +930,7 @@
         <a href="#how" data-i18n="nav.how">How it works</a>
         <a href="#prompts" data-i18n="nav.prompts">System Prompts</a>
         <a href="#tools" data-i18n="nav.tools">Tools</a>
+        <a href="#vision" data-i18n="nav.vision">Vision</a>
         <a href="#languages" data-i18n="nav.languages">Languages</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
         <a href="https://github.com/andriydruk/LMPlayground" aria-label="GitHub" style="display:flex;align-items:center;gap:6px;">
@@ -949,7 +953,7 @@
     <div class="hero-grid"></div>
     <div class="container hero-inner">
       <div>
-        <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">v1.7.0 · Introducing tool support</span></span>
+        <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">v1.8.0 · Now with vision</span></span>
         <h1 class="hero-title" data-i18n-html="hero.title">Run large language models<br/>on <em>your</em> phone.</h1>
         <p class="hero-sub hero-sub-lg" data-i18n="hero.sub">
           No cloud, no internet, no tracking.
@@ -1121,6 +1125,7 @@
           <button class="models-tab active" data-filter="all" data-i18n="models.tab.all">All</button>
           <button class="models-tab" data-filter="reason" data-i18n="models.tab.reason">Reasoning</button>
           <button class="models-tab" data-filter="tools" data-i18n="models.tab.tools">Tools</button>
+          <button class="models-tab" data-filter="vision" data-i18n="models.tab.vision">Vision</button>
           <button class="models-tab" data-filter="small" data-i18n="models.tab.small">Under 1GB</button>
         </div>
       </div>
@@ -1233,6 +1238,49 @@
     </div>
   </section>
 
+  <!-- VISION -->
+  <section id="vision" style="padding-top:0;">
+    <div class="container">
+      <div class="eyebrow-row">
+        <span class="eyebrow" data-i18n="vision.eyebrow">Vision</span>
+      </div>
+      <h2 class="section-title" data-i18n-html="vision.title">Show your model<br/>what you're looking at.</h2>
+      <p class="section-sub" data-i18n="vision.sub">Attach a photo from your gallery or snap one with the camera, then ask about it. The image is understood right on your phone — nothing is uploaded.</p>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+            <h3 data-i18n="vision.t1.title">Pick or snap</h3>
+          </div>
+          <p data-i18n="vision.t1.body">Attach an image from your gallery or take a new photo with the camera, then ask about it.</p>
+          <div class="tool-ex">gallery / camera <span class="arr">→</span> attach</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+            <h3 data-i18n="vision.t2.title">Read &amp; describe</h3>
+          </div>
+          <p data-i18n="vision.t2.body">Identify objects, describe a scene, read the text in a photo, or get a quick caption.</p>
+          <div class="tool-ex">photo <span class="arr">→</span> description</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h3 data-i18n="vision.t3.title">Stays on device</h3>
+          </div>
+          <p data-i18n="vision.t3.body">The vision model runs on your phone, so your photos never leave it.</p>
+          <div class="tool-ex">0 <span class="arr">→</span> uploads</div>
+        </div>
+      </div>
+
+      <div class="tools-note">
+        <svg class="hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        <span data-i18n="vision.note">Vision works with Gemma, Qwen and Ministral vision models — a small image add-on downloads automatically with the model.</span>
+      </div>
+    </div>
+  </section>
+
   <!-- SYSTEM PROMPTS -->
   <section id="prompts" style="padding-top:0;">
     <div class="container">
@@ -1263,7 +1311,6 @@
     <div class="container">
       <div class="eyebrow-row">
         <span class="eyebrow" data-i18n="tools.eyebrow">Tools</span>
-        <span class="beta-tag">BETA</span>
       </div>
       <h2 class="section-title" data-i18n-html="tools.title">Let capable models<br/>take real actions.</h2>
       <p class="section-sub" data-i18n="tools.sub">Turn on tools and a capable model can act mid-reply — run a calculation, search the web, or read a page — then use the result in its answer. Everything runs on your phone.</p>
@@ -1498,6 +1545,15 @@
     // Hammer for the tools-capability badge — mirrors the app's hammer badge on
     // tool-capable models (m.tools is sourced from the app's TOOL_CAPABLE set).
     const HAMMER_SVG = '<svg class="badge-hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.7 6.3a4 4 0 0 0-5.6 5.6L3 18l3 3 6.1-6.1a4 4 0 0 0 5.6-5.6l-2.5 2.5-2-2 2.5-2.5z"/></svg>';
+    // Vision (image input) — mirrors the app's models that ship an mmproj
+    // projector (ModelInfoProvider.kt). Drives the VISION badge + filter tab.
+    const VISION_MODELS = new Set([
+      'Gemma 4 E4B', 'Gemma 4 E2B', 'Qwen 3.5 4B', 'Qwen 3.5 2B', 'Qwen 3.5 0.8B',
+      'Gemma 3 4B', 'Ministral 3 8B Reasoning', 'Ministral 3 8B Instruct',
+      'Ministral 3 3B Reasoning', 'Ministral 3 3B Instruct',
+    ]);
+    const isVision = (m) => VISION_MODELS.has(m.name);
+    const VISION_SVG = '<svg class="badge-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
 
     // Track filter + lang globally so renderModels can re-render after either
     // changes. (Lang gets set in applyTranslations; filter in tab handler.)
@@ -1510,11 +1566,12 @@
       const primaryBadge = primaryKey
         ? '<span class="model-badge ' + badgeMap[primaryKey][0] + '">' + badgeMap[primaryKey][1] + '</span>'
         : '';
+      const visionBadge = isVision(m) ? '<span class="model-badge badge-vision">' + VISION_SVG + 'VISION</span>' : '';
       const toolsBadge = m.tools ? '<span class="model-badge badge-tools">' + HAMMER_SVG + 'TOOLS</span>' : '';
       return '<div class="model-card">'
         + '<div class="model-card-top">'
         +   '<span class="model-provider">' + m.provider + '</span>'
-        +   '<span class="model-badges">' + primaryBadge + toolsBadge + '</span>'
+        +   '<span class="model-badges">' + primaryBadge + visionBadge + toolsBadge + '</span>'
         + '</div>'
         + '<div class="model-name">' + m.name + '</div>'
         + '<div class="model-desc">' + m.desc + '</div>'
@@ -1529,9 +1586,10 @@
       const filter = currentFilter;
       const lang = (typeof window.__lmpLang === 'string') ? window.__lmpLang : 'en';
       const filtered =
-        filter === 'all'   ? MODELS :
-        filter === 'tools' ? MODELS.filter(m => m.tools) :
-                             MODELS.filter(m => m.tags.includes(filter));
+        filter === 'all'    ? MODELS :
+        filter === 'tools'  ? MODELS.filter(m => m.tools) :
+        filter === 'vision' ? MODELS.filter(isVision) :
+                              MODELS.filter(m => m.tags.includes(filter));
 
       // For English (or any locale without an ISO mapping in our model lists)
       // we don't split — every model "supports your language" trivially.
@@ -1755,6 +1813,13 @@
           think: { secs: 2, content: t('phone.r0', 'The user wants a simple definition. Cover learning from data versus explicit rules, then the core steps: training, models, and inference. Keep it beginner-friendly.') },
           a: t('phone.a', ''),
           resp: 110 },
+        // Vision scene — an attached photo plus a question about it. No tool;
+        // the image is understood on-device, then the model answers.
+        { q: t('phone.qV', 'What animal is in this photo?'),
+          img: 'assets/sheep.jpg',
+          think: { secs: 2, content: t('phone.rV', 'The user wants me to identify the animal in the photo. It is a small tabby kitten with blue eyes resting on a green surface. Answer briefly and note its key features.') },
+          a: t('phone.aV', 'A **tabby kitten** with bright blue eyes, resting on a soft green surface. Its fur shows the classic brown-and-grey mackerel striping.'),
+          resp: 45 },
         // Tool scenes — one per tool. Tools run fast; the thinking phase after the
         // tool is what takes the time, then the answer.
         { q: t('phone.q1', 'If I invest $5,000 at 4% annual interest, what will it be worth in 10 years?'),
@@ -1779,7 +1844,8 @@
       const blocks = (s.a || '').split(/\n{2,}/).map(x => x.trim()).filter(Boolean);
       const p1 = blocks[0] || '';
       const p2 = blocks.slice(1).join('\n');
-      return '<div class="lmp-user-msg">' + escHtml(s.q) + '</div>'
+      return (s.img ? '<img class="lmp-user-img" src="' + s.img + '" alt=""/>' : '')
+        + '<div class="lmp-user-msg">' + escHtml(s.q) + '</div>'
         + '<div class="lmp-steps"></div>'
         + '<div class="lmp-asst">'
         +   '<p class="lmp-anim-p1">' + renderInline(p1).replace(/\n/g, '<br/>') + '</p>'

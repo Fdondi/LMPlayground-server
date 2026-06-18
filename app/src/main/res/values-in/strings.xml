@@ -211,6 +211,15 @@
     <string name="screenshot_chat_question">Apa itu machine learning?</string>
     <string name="screenshot_chat_response">Machine learning adalah cabang kecerdasan buatan di mana komputer **belajar dari data** alih-alih diprogram secara eksplisit.\n\nKonsep utama:\n\n\u2022 **Pelatihan**: memberikan data ke algoritma\n\u2022 **Model**: pola yang dipelajari dari data\n\u2022 **Inferensi**: membuat prediksi pada data baru</string>
 
+    <!-- Vision (1.8.0) -->
+    <string name="screenshot_vision">Mengobrol tentang gambar</string>
+    <string name="screenshot_vision_sub">modelmu juga bisa melihatnya</string>
+    <string name="screenshot_vision_question">Hewan apa yang ada di foto ini?</string>
+    <string name="screenshot_vision_response">Seekor **domba** dengan bulu putih krem yang tebal dan keriting, sedang menunduk merumput di lereng bukit hijau yang subur. Langit mendung dan padang rumput berbatu menunjukkan suasana dataran tinggi yang sejuk.</string>
+    <string name="whats_new_vision">Vision \u2014 kirim foto dan obrolkan</string>
+    <string name="whats_new_vision_detail">Pilih gambar dari galeri atau ambil satu dengan kamera</string>
+    <string name="whats_new_vision_models">Berfungsi dengan model vision Gemma, Qwen &amp; Ministral</string>
+
     <!-- Model categories -->
     <string name="model_category_lightweight">Model obrolan ringan</string>
     <string name="model_category_general">Model obrolan serbaguna</string>

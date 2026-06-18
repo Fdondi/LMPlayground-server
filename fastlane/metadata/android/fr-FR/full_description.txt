@@ -1,32 +1,34 @@
-LM Playground vous permet d'exécuter des modèles de langage directement sur votre appareil Android. Téléchargez des modèles, chargez-les en un appui et discutez — le tout hors ligne, en toute confidentialité. Aucun serveur cloud, aucune clé API, aucune donnée ne quitte votre appareil.
+LM Playground vous permet d'exécuter des modèles de langage directement sur votre appareil Android. Téléchargez des modèles, chargez-les en un appui et discutez — hors ligne et en toute confidentialité. Aucun serveur cloud, aucune clé API, aucune donnée ne quitte votre appareil.
 
 FONCTIONNALITÉS CLÉS
 
-Inférence sur l'appareil — tout le traitement se fait localement sur votre appareil. Vos conversations restent privées et ne quittent jamais votre téléphone.
+Inférence sur l'appareil — tout le traitement se fait localement. Vos conversations restent privées et ne quittent jamais votre téléphone.
 
-Historique des conversations — toutes vos conversations sont sauvegardées et organisées. Épinglez, renommez ou supprimez des sessions depuis la barre latérale. Reprenez n'importe quelle conversation là où vous l'aviez laissée.
+Historique des conversations — toutes vos conversations sont sauvegardées et organisées. Épinglez, renommez ou supprimez des sessions depuis la barre latérale. Reprenez chaque conversation là où vous l'aviez laissée.
 
 Expérience de chat riche — les réponses sont rendues avec un support complet du markdown, incluant titres, blocs de code, listes, gras, italique et plus encore.
 
-Modèles de raisonnement — visualisez le processus de réflexion de modèles comme DeepSeek R1, Nemotron et LFM2.5 Thinking dans une section stylisée et repliable avec un budget de raisonnement ajustable.
+Vision — envoyez une photo et discutez-en. Joignez une image de votre galerie ou prenez-en une avec l'appareil photo, puis demandez à votre modèle ce qu'il voit : décrire une scène, identifier des objets ou lire du texte. Compatible avec les modèles de vision Gemma, Qwen et Ministral, l'image étant comprise sur votre appareil.
 
-Outils — les modèles capables peuvent rechercher sur le web, récupérer une page et exécuter du JavaScript directement dans une réponse. Chaque outil est désactivé par défaut ; activez uniquement ceux que vous voulez, par modèle, dans Paramètres → Outils. La recherche web et la récupération de pages accèdent à internet uniquement lorsque vous les activez — tout le reste reste sur votre appareil.
+Modèles de raisonnement — visualisez la réflexion de modèles comme DeepSeek R1, Nemotron et LFM2.5 Thinking dans une section stylisée et repliable, avec un budget de raisonnement ajustable.
 
-Génération en arrière-plan — lancez une réponse, puis quittez l'application : elle continue de tourner. Une notification en direct affiche l'état de la génération et le nombre de tokens, vous permet de copier ou partager le résultat sans rouvrir l'application, et émet un son une fois terminée.
+Outils — les modèles capables peuvent rechercher sur le web, récupérer une page et exécuter du JavaScript dans une réponse. Chaque outil est désactivé par défaut ; activez uniquement ceux que vous voulez, par modèle, dans Paramètres → Outils. La recherche web et la récupération de pages accèdent à internet seulement quand vous les activez — tout le reste reste sur votre appareil.
+
+Génération en arrière-plan — lancez une réponse, puis quittez l'application : elle continue de tourner. Une notification en direct affiche l'état et le nombre de tokens, permet de copier ou partager le résultat sans rouvrir l'application, et émet un son une fois terminée.
 
 Suivi de la vitesse de génération — consultez le nombre de tokens, le temps de génération et la vitesse en tok/s pour chaque réponse.
 
 Paramètres par modèle — chaque modèle mémorise ses propres réglages de génération. Ajustez la taille du contexte, le budget de raisonnement, la température, Top-P, Top-K, Min-P, la pénalité de répétition et la graine.
 
-Invites système — enregistrez des instructions réutilisables une seule fois et choisissez la bonne pour chaque modèle. Conservez un ton, un rôle ou un format de sortie cohérents entre les sessions.
+Invites système — enregistrez des instructions réutilisables une fois et choisissez la bonne pour chaque modèle. Conservez un ton, un rôle ou un format de sortie cohérents entre les sessions.
 
 Modèles personnalisés — chargez vos propres fichiers de modèle GGUF depuis n'importe quelle source aux côtés du catalogue intégré.
 
-Téléchargements fiables — moteur de téléchargement personnalisé avec notifications de progression, affichage de la vitesse et du temps estimé, et reprise automatique en cas d'interruptions réseau.
+Téléchargements fiables — moteur de téléchargement personnalisé avec notifications de progression, vitesse et temps estimé, et reprise automatique en cas d'interruption réseau.
 
-Stockage flexible — choisissez où stocker les fichiers de modèles de plusieurs Go grâce au Storage Access Framework d'Android. Déplacez facilement les modèles entre les emplacements.
+Stockage flexible — choisissez où stocker les fichiers de modèles de plusieurs Go grâce au Storage Access Framework d'Android. Déplacez facilement les modèles d'un emplacement à un autre.
 
-Performances optimisées — optimisé pour ARM avec les kernels KleidiAI et OpenMP pour une génération plus rapide sur les appareils arm64.
+Performances optimisées — optimisé pour ARM avec les kernels KleidiAI et OpenMP pour une génération plus rapide sur arm64.
 
 MODÈLES COMPATIBLES
 
@@ -41,7 +43,7 @@ MODÈLES COMPATIBLES
 • Ministral 3 (3B, 8B — Instruct & Reasoning) — Mistral
 • Llama 3.2 (1B, 3B) — Meta
 
-À partir de seulement 267 Mo pour le plus petit modèle. Les modèles plus grands (4B–8B) bénéficient de 8+ Go de RAM, et le modèle 20B nécessite un appareil haut de gamme doté de beaucoup de mémoire. Vous pouvez aussi charger n'importe quel modèle GGUF personnalisé.
+À partir de seulement 267 Mo pour le plus petit modèle. Les modèles plus grands (4B–8B) bénéficient de 8+ Go de RAM, et le modèle 20B nécessite un appareil haut de gamme avec beaucoup de mémoire. Vous pouvez aussi charger n'importe quel modèle GGUF personnalisé.
 
 OPEN SOURCE
 

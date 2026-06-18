@@ -8,6 +8,8 @@ Chatgeschiedenis — al je gesprekken worden opgeslagen en georganiseerd. Pin, h
 
 Rijke chatervaring — antwoorden worden weergegeven met volledige markdown-ondersteuning, inclusief koppen, codeblokken, lijsten, vet, cursief en meer.
 
+Vision — stuur een foto en chat erover. Voeg een afbeelding uit je galerij toe of maak er een met de camera en vraag je model dan wat het ziet: een scène beschrijven, objecten herkennen of tekst lezen. Werkt met de vision-modellen Gemma, Qwen en Ministral, en de afbeelding wordt direct op je apparaat begrepen.
+
 Redeneermodellen — zie het denkproces van modellen zoals DeepSeek R1, Nemotron en LFM2.5 Thinking, weergegeven in een gestileerde, inklapbare sectie met aanpasbaar denkbudget.
 
 Tools — krachtige modellen kunnen het web doorzoeken, een pagina ophalen en JavaScript direct binnen een antwoord uitvoeren. Elke tool staat standaard uit; schakel per model alleen de tools in die je wilt, via Instellingen → Tools. Webzoeken en ophalen maken alleen verbinding met internet wanneer je ze inschakelt — al het andere blijft op je apparaat.

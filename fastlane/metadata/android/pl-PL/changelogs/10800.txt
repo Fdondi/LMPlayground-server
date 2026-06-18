@@ -1,0 +1,4 @@
+- Vision — wyślij zdjęcie i porozmawiaj o nim. Wybierz obraz z galerii lub zrób zdjęcie aparatem, a następnie zapytaj swój model, co na nim widzi
+- Działa z modelami wizyjnymi Gemma, Qwen i Ministral — dodatek do obsługi obrazów pobiera się automatycznie wraz z modelem
+- Ustawienia generowania uporządkowane w karty dla łatwiejszego dostrajania
+- Zaktualizowany silnik inferencji oraz poprawki wydajności i stabilności

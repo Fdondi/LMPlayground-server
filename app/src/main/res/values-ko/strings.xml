@@ -173,6 +173,9 @@
     <string name="thoughts">사고 과정</string>
     <string name="functionality_not_available">기능을 사용할 수 없습니다 \uD83D\uDE48</string>
     <string name="whats_new">새로운 기능</string>
+    <string name="whats_new_vision">Vision — 사진을 보내고 사진에 대해 대화하세요</string>
+    <string name="whats_new_vision_detail">갤러리에서 이미지를 선택하거나 카메라로 촬영하세요</string>
+    <string name="whats_new_vision_models">Gemma, Qwen &amp; Ministral 비전 모델 지원</string>
     <string name="whats_new_item_1">새로운 Gemma 4 모델 (E2B, E4B)</string>
     <string name="whats_new_item_2">모델별 생성 매개변수</string>
     <string name="whats_new_item_3">사고 예산 제어</string>
@@ -194,6 +197,10 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">모델 선택</string>
     <string name="screenshot_chat">비공개로 채팅</string>
+    <string name="screenshot_vision">이미지에 대해 대화</string>
+    <string name="screenshot_vision_sub">모델도 이미지를 볼 수 있어요</string>
+    <string name="screenshot_vision_question">이 사진 속 동물은 무엇인가요?</string>
+    <string name="screenshot_vision_response">두껍고 곱슬곱슬한 크림색 양털을 가진 **양**이 푸르른 녹색 언덕에서 머리를 숙이고 풀을 뜯고 있습니다. 흐린 하늘과 돌이 많은 목초지는 서늘한 고지대 환경을 떠올리게 합니다.</string>
     <string name="screenshot_fine_tune">미세 조정</string>
     <string name="screenshot_download_models">원하는 모델 다운로드</string>
 

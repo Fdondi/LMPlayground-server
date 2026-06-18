@@ -173,6 +173,9 @@
     <string name="thoughts">思考</string>
     <string name="functionality_not_available">機能は利用できません \uD83D\uDE48</string>
     <string name="whats_new">新機能</string>
+    <string name="whats_new_vision">Vision — 写真を送って、それについてチャット</string>
+    <string name="whats_new_vision_detail">ギャラリーから画像を選ぶか、カメラで撮影</string>
+    <string name="whats_new_vision_models">Gemma、Qwen &amp; Ministral のビジョンモデルに対応</string>
     <string name="whats_new_item_1">新しい Gemma 4 モデル（E2B、E4B）</string>
     <string name="whats_new_item_2">モデルごとの生成パラメータ</string>
     <string name="whats_new_item_3">思考バジェット制御</string>
@@ -194,6 +197,10 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">モデルを選択</string>
     <string name="screenshot_chat">プライベートにチャット</string>
+    <string name="screenshot_vision">画像についてチャット</string>
+    <string name="screenshot_vision_sub">モデルも画像を見られる</string>
+    <string name="screenshot_vision_question">この写真に写っているのは何の動物ですか？</string>
+    <string name="screenshot_vision_response">**羊**です。ふさふさと巻いたクリーム色の羊毛をまとい、緑豊かな丘の斜面で頭を下げて草を食んでいます。どんよりとした空と岩がちの牧草地は、涼しい高地の環境を思わせます。</string>
     <string name="screenshot_fine_tune">微調整</string>
     <string name="screenshot_download_models">どんなモデルもダウンロード</string>
 

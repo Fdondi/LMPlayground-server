@@ -8,6 +8,8 @@ Kasaysayan ng chat — lahat ng iyong mga usapan ay nase-save at inaayos. I-pin,
 
 Mayamang karanasan sa chat — ang mga tugon ay nire-render nang may buong suporta sa markdown kabilang ang mga header, code block, listahan, bold, italic, at higit pa.
 
+Vision — mag-attach ng larawan mula sa gallery o kunan ng camera, pagkatapos ay itanong sa modelo kung ano ang nakikita: ilarawan ang eksena, tukuyin ang mga bagay, o basahin ang teksto. Gumagana sa mga vision model ng Gemma, Qwen, at Ministral, nang nasa device lang ang larawan.
+
 Reasoning models — tingnan ang proseso ng pag-iisip ng mga modelo tulad ng DeepSeek R1, Nemotron, at LFM2.5 Thinking na ipinapakita sa isang istilong, na-kokolaps na seksyon na may nababagay na thinking budget.
 
 Mga tool — kayang maghanap sa web ng mga mahuhusay na modelo, kumuha ng pahina, at magpatakbo ng JavaScript mismo sa loob ng isang tugon. Bawat tool ay naka-off bilang default; i-on lamang ang mga gusto mo, kada modelo, sa Mga setting → Tools. Umaabot sa internet ang web search at fetch tuwing iyong i-o-on ang mga ito lamang — ang lahat ng iba ay nananatili sa iyong device.

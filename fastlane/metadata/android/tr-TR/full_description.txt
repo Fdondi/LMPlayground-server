@@ -8,6 +8,8 @@ Sohbet geçmişi — tüm konuşmalarınız kaydedilir ve düzenlenir. Oturumlar
 
 Zengin sohbet deneyimi — yanıtlar başlıklar, kod blokları, listeler, kalın, italik ve daha fazlası dahil olmak üzere tam markdown desteğiyle işlenir.
 
+Görü — bir fotoğraf gönderin ve hakkında sohbet edin. Galerinizden bir görsel ekleyin ya da kamerayla bir tane çekin, sonra modelinize ne gördüğünü sorun: bir sahneyi betimleyin, nesneleri tanıyın ya da metni okuyun. Gemma, Qwen ve Ministral görü modelleriyle çalışır ve görsel doğrudan cihazınızda anlaşılır.
+
 Akıl yürütme modelleri — DeepSeek R1, Nemotron ve LFM2.5 Thinking gibi modellerin düşünme sürecini, ayarlanabilir düşünme bütçesi ile şık ve katlanabilir bir bölümde görün.
 
 Araçlar — yetenekli modeller web'de arama yapabilir, bir sayfayı getirebilir ve JavaScript'i doğrudan yanıtın içinde çalıştırabilir. Her araç varsayılan olarak kapalıdır; Ayarlar → Araçlar bölümünden yalnızca istediklerinizi model bazında açın. Web araması ve getirme yalnızca siz açtığınızda internete erişir — geri kalan her şey cihazınızda kalır.

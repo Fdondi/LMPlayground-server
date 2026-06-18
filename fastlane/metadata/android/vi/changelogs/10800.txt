@@ -1,0 +1,4 @@
+- Thị giác — gửi một bức ảnh và trò chuyện về nó. Chọn ảnh từ thư viện hoặc chụp một tấm bằng camera, rồi hỏi mô hình về những gì nó thấy
+- Hoạt động với các mô hình thị giác Gemma, Qwen và Ministral — phần bổ trợ hình ảnh tự động tải xuống cùng mô hình
+- Cài đặt tạo được sắp xếp lại thành các tab để tinh chỉnh dễ dàng hơn
+- Cập nhật công cụ suy luận, cùng các cải tiến về hiệu suất và độ ổn định

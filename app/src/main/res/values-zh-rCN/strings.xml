@@ -173,6 +173,9 @@
     <string name="thoughts">思考过程</string>
     <string name="functionality_not_available">功能不可用 \uD83D\uDE48</string>
     <string name="whats_new">新功能</string>
+    <string name="whats_new_vision">视觉 — 发送照片并就其聊天</string>
+    <string name="whats_new_vision_detail">从相册选择图片或用相机拍摄一张</string>
+    <string name="whats_new_vision_models">支持 Gemma、Qwen &amp; Ministral 视觉模型</string>
     <string name="whats_new_item_1">新增 Gemma 4 模型（E2B、E4B）</string>
     <string name="whats_new_item_2">按模型设置生成参数</string>
     <string name="whats_new_item_3">思考预算控制</string>
@@ -194,6 +197,10 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">选择模型</string>
     <string name="screenshot_chat">私密聊天</string>
+    <string name="screenshot_vision">就图片聊天</string>
+    <string name="screenshot_vision_sub">你的模型也能看见</string>
+    <string name="screenshot_vision_question">这张照片里是什么动物？</string>
+    <string name="screenshot_vision_response">一只**绵羊**，长着浓密卷曲的乳白色羊毛，正低头在郁郁葱葱的绿色山坡上吃草。阴沉的天空和多石的牧场暗示这是一处凉爽的高地环境。</string>
     <string name="screenshot_fine_tune">微调</string>
     <string name="screenshot_download_models">下载任意模型</string>
 

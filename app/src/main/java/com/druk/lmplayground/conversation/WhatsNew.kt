@@ -26,9 +26,9 @@ fun WhatsNewText(
     onSetUpTools: (() -> Unit)? = null,
 ) {
     val items = listOf(
-        stringResource(R.string.whats_new_item_1),
-        stringResource(R.string.whats_new_tools),
-        stringResource(R.string.whats_new_cache)
+        stringResource(R.string.whats_new_vision),
+        stringResource(R.string.whats_new_vision_detail),
+        stringResource(R.string.whats_new_vision_models)
     )
 
     Column(

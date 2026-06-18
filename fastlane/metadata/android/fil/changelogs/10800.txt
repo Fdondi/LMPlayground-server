@@ -1,0 +1,4 @@
+- Vision — magpadala ng larawan at pag-usapan ito. Pumili ng larawan mula sa gallery o kumuha gamit ang camera, pagkatapos ay tanungin ang modelo kung ano ang nakikita nito
+- Gumagana sa mga vision model ng Gemma, Qwen, at Ministral — awtomatikong nada-download ang image add-on kasama ng modelo
+- Inayos ang mga setting ng paglikha sa mga tab para mas madaling i-tune
+- Na-update ang inference engine, plus mga pagpapahusay sa performance at stability

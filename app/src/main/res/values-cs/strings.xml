@@ -235,6 +235,10 @@
     <string name="screenshot_choose_model_sub">od předních poskytovatelů AI</string>
     <string name="screenshot_chat">Chatujte soukromě</string>
     <string name="screenshot_chat_sub">na vašem zařízení</string>
+    <string name="screenshot_vision">Chatujte o obrázcích</string>
+    <string name="screenshot_vision_sub">váš model je také vidí</string>
+    <string name="screenshot_vision_question">Jaké zvíře je na této fotografii?</string>
+    <string name="screenshot_vision_response">**Ovce** s hustým, kudrnatým, krémově bílým rounem, pasoucí se se skloněnou hlavou na svěže zeleném svahu. Zatažená obloha a kamenitá pastvina naznačují chladné, horské prostředí.</string>
     <string name="screenshot_fine_tune">Doladění</string>
     <string name="screenshot_fine_tune_sub">parametrů generování</string>
     <string name="screenshot_download_models">Stáhněte jakýkoli model</string>
@@ -268,6 +272,9 @@
 
     <!-- What\'s New -->
     <string name="whats_new">Co je nového</string>
+    <string name="whats_new_vision">Vision — pošlete fotku a chatujte o ní</string>
+    <string name="whats_new_vision_detail">Vyberte obrázek z galerie nebo pořiďte snímek fotoaparátem</string>
+    <string name="whats_new_vision_models">Funguje s vizuálními modely Gemma, Qwen &amp; Ministral</string>
     <string name="whats_new_item_1">Nové modely Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Parametry generování pro jednotlivé modely</string>
     <string name="whats_new_item_3">Ovládání rozpočtu přemýšlení</string>

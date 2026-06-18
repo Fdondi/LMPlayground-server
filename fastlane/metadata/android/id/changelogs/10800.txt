@@ -1,0 +1,4 @@
+- Vision — kirim foto dan obrolkan. Pilih gambar dari galeri atau ambil satu dengan kamera, lalu tanyakan kepada model apa yang dilihatnya
+- Berfungsi dengan model vision Gemma, Qwen, dan Ministral — add-on gambar terunduh otomatis bersama model
+- Pengaturan pembuatan ditata ulang menjadi tab agar lebih mudah disesuaikan
+- Mesin inferensi diperbarui, plus peningkatan performa dan stabilitas

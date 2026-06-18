@@ -211,6 +211,15 @@
     <string name="screenshot_chat_question">H\u1ECDc m\u00E1y l\u00E0 g\u00EC?</string>
     <string name="screenshot_chat_response">H\u1ECDc m\u00E1y l\u00E0 m\u1ED9t nh\u00E1nh c\u1EE7a tr\u00ED tu\u1EC7 nh\u00E2n t\u1EA1o, trong \u0111\u00F3 m\u00E1y t\u00EDnh **h\u1ECDc t\u1EEB d\u1EEF li\u1EC7u** thay v\u00EC \u0111\u01B0\u1EE3c l\u1EADp tr\u00ECnh r\u00F5 r\u00E0ng.\n\nC\u00E1c kh\u00E1i ni\u1EC7m ch\u00EDnh:\n\n\u2022 **Hu\u1EA5n luy\u1EC7n**: cung c\u1EA5p d\u1EEF li\u1EC7u cho thu\u1EADt to\u00E1n\n\u2022 **M\u00F4 h\u00ECnh**: c\u00E1c m\u1EABu h\u1ECDc \u0111\u01B0\u1EE3c t\u1EEB d\u1EEF li\u1EC7u\n\u2022 **Suy lu\u1EADn**: \u0111\u01B0a ra d\u1EF1 \u0111o\u00E1n tr\u00EAn d\u1EEF li\u1EC7u m\u1EDBi</string>
 
+    <!-- Vision (1.8.0) -->
+    <string name="screenshot_vision">Tr\u00F2 chuy\u1EC7n v\u1EC1 h\u00ECnh \u1EA3nh</string>
+    <string name="screenshot_vision_sub">m\u00F4 h\u00ECnh c\u1EE7a b\u1EA1n c\u0169ng nh\u00ECn th\u1EA5y ch\u00FAng</string>
+    <string name="screenshot_vision_question">Con v\u1EADt trong b\u1EE9c \u1EA3nh n\u00E0y l\u00E0 g\u00EC?</string>
+    <string name="screenshot_vision_response">M\u1ED9t con **c\u1EEBu** v\u1EDBi b\u1ED9 l\u00F4ng tr\u1EAFng ng\u00E0 d\u00E0y v\u00E0 xo\u0103n, \u0111ang c\u00FAi \u0111\u1EA7u g\u1EB7m c\u1ECF tr\u00EAn s\u01B0\u1EDDn \u0111\u1ED3i xanh m\u01B0\u1EDBt. B\u1EA7u tr\u1EDDi \u00E2m u v\u00E0 \u0111\u1ED3ng c\u1ECF nhi\u1EC1u \u0111\u00E1 g\u1EE3i l\u00EAn m\u1ED9t v\u00F9ng cao nguy\u00EAn m\u00E1t m\u1EBB.</string>
+    <string name="whats_new_vision">Th\u1ECB gi\u00E1c \u2014 g\u1EEDi m\u1ED9t b\u1EE9c \u1EA3nh v\u00E0 tr\u00F2 chuy\u1EC7n v\u1EC1 n\u00F3</string>
+    <string name="whats_new_vision_detail">Ch\u1ECDn \u1EA3nh t\u1EEB th\u01B0 vi\u1EC7n ho\u1EB7c ch\u1EE5p m\u1ED9t t\u1EA5m b\u1EB1ng camera</string>
+    <string name="whats_new_vision_models">Ho\u1EA1t \u0111\u1ED9ng v\u1EDBi c\u00E1c m\u00F4 h\u00ECnh th\u1ECB gi\u00E1c Gemma, Qwen &amp; Ministral</string>
+
     <!-- Model categories -->
     <string name="model_category_lightweight">M\u00F4 h\u00ECnh tr\u00F2 chuy\u1EC7n nh\u1EB9</string>
     <string name="model_category_general">M\u00F4 h\u00ECnh tr\u00F2 chuy\u1EC7n \u0111a n\u0103ng</string>

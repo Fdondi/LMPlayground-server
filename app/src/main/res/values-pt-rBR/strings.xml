@@ -176,6 +176,9 @@
     <string name="whats_new_item_1">Novos modelos Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Par\u00E2metros de gera\u00E7\u00E3o por modelo</string>
     <string name="whats_new_item_3">Controle de or\u00E7amento de racioc\u00EDnio</string>
+    <string name="whats_new_vision">Vis\u00E3o \u2014 envie uma foto e converse sobre ela</string>
+    <string name="whats_new_vision_detail">Escolha uma imagem da galeria ou tire uma com a c\u00E2mera</string>
+    <string name="whats_new_vision_models">Funciona com os modelos de vis\u00E3o Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Prompts de sistema</string>
@@ -194,6 +197,8 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Escolher modelo</string>
     <string name="screenshot_chat">Converse com privacidade</string>
+    <string name="screenshot_vision">Converse sobre imagens</string>
+    <string name="screenshot_vision_sub">seu modelo também consegue vê-las</string>
     <string name="screenshot_fine_tune">Ajuste fino</string>
     <string name="screenshot_download_models">Baixe qualquer modelo</string>
     <string name="screenshot_download_models_sub">na pasta que voc\u00EA escolher</string>
@@ -209,6 +214,8 @@
     <string name="screenshot_prompt_sample_code">Voc\u00EA \u00E9 um revisor de c\u00F3digo s\u00EAnior. Aponte bugs, casos extremos e problemas de seguran\u00E7a. Seja direto e espec\u00EDfico.</string>
     <string name="screenshot_prompt_sample_translator">Voc\u00EA \u00E9 um tradutor. Transforme tudo que eu enviar em franc\u00EAs natural e fluente e mantenha a formata\u00E7\u00E3o.</string>
     <string name="screenshot_prompt_sample_brainstorm">Voc\u00EA \u00E9 um parceiro criativo de brainstorming. Ofere\u00E7a ideias ousadas e inesperadas e desenvolva as minhas.</string>
+    <string name="screenshot_vision_question">Que animal aparece nesta foto?</string>
+    <string name="screenshot_vision_response">Uma **ovelha** de l\u00E3 espessa, encaracolada e de cor branco-creme, pastando de cabe\u00E7a baixa numa encosta verde e exuberante. O c\u00E9u nublado e o pasto rochoso sugerem um ambiente fresco de terras altas.</string>
     <string name="screenshot_chat_question">O que \u00E9 aprendizado de m\u00E1quina?</string>
     <string name="screenshot_chat_response">Aprendizado de m\u00E1quina \u00E9 um ramo da intelig\u00EAncia artificial onde os computadores **aprendem com os dados** em vez de serem programados explicitamente.\n\nConceitos-chave:\n\n\u2022 **Treinamento**: alimentar algoritmos com dados\n\u2022 **Modelos**: padr\u00F5es aprendidos dos dados\n\u2022 **Infer\u00EAncia**: fazer predi\u00E7\u00F5es com novos dados</string>
 

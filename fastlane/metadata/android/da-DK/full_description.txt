@@ -8,6 +8,8 @@ Chathistorik — alle dine samtaler gemmes og organiseres. Fastgør, omdøb elle
 
 Rig chatoplevelse — svar vises med fuld markdown-understøttelse, herunder overskrifter, kodeblokke, lister, fed, kursiv og meget mere.
 
+Vision — send et foto og chat om det. Vedhæft et billede fra dit galleri eller tag et med kameraet, og spørg derefter din model, hvad den ser: beskrive en scene, identificere objekter eller læse tekst. Fungerer med vision-modellerne Gemma, Qwen og Ministral, og billedet forstås direkte på din enhed.
+
 Ræsonnementsmodeller — se tankeprocessen i modeller som DeepSeek R1, Nemotron og LFM2.5 Thinking vist i en stiliseret, sammenklappelig sektion med justerbart tænkebudget.
 
 Værktøjer — kapable modeller kan søge på nettet, hente en side og køre JavaScript direkte inde i et svar. Hvert værktøj er slået fra som standard; aktivér kun dem, du ønsker, pr. model, under Indstillinger → Værktøjer. Websøgning og hentning når kun internettet, når du slår dem til — alt andet bliver på din enhed.

@@ -8,6 +8,8 @@ Keskusteluhistoria — kaikki keskustelusi tallennetaan ja järjestetään. Kiin
 
 Rikas keskustelukokemus — vastaukset esitetään täydellä markdown-tuella, mukaan lukien otsikot, koodilohkot, luettelot, lihavointi, kursivointi ja paljon muuta.
 
+Näkö — lähetä valokuva ja keskustele siitä. Liitä kuva galleriasta tai ota uusi kameralla, ja kysy sitten mallilta, mitä se näkee: kuvaile näkymä, tunnista esineitä tai lue tekstiä. Toimii Gemma, Qwen ja Ministral -näkömallien kanssa, ja kuva ymmärretään suoraan laitteellasi.
+
 Päättelymallit — näe mallien kuten DeepSeek R1, Nemotron ja LFM2.5 Thinking ajatusprosessi tyylitellyssä, laskostuvassa osiossa, jossa on säädettävä ajattelubudjetti.
 
 Työkalut — kyvykkäät mallit voivat hakea verkosta, noutaa sivun ja suorittaa JavaScriptiä suoraan vastauksessa. Jokainen työkalu on oletuksena pois päältä; ota käyttöön vain haluamasi, mallikohtaisesti, kohdassa Asetukset → Työkalut. Verkkohaku ja nouto ottavat yhteyden internetiin vain, kun otat ne käyttöön — kaikki muu pysyy laitteellasi.

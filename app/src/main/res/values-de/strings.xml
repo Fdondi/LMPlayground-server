@@ -173,6 +173,9 @@
     <string name="thoughts">Gedanken</string>
     <string name="functionality_not_available">Funktion nicht verfügbar \uD83D\uDE48</string>
     <string name="whats_new">Neuigkeiten</string>
+    <string name="whats_new_vision">Vision — sende ein Foto und chatte darüber</string>
+    <string name="whats_new_vision_detail">Wähle ein Bild aus deiner Galerie oder mach eines mit der Kamera</string>
+    <string name="whats_new_vision_models">Funktioniert mit den Vision-Modellen Gemma, Qwen &amp; Ministral</string>
     <string name="whats_new_item_1">Neue Gemma 4 Modelle (E2B, E4B)</string>
     <string name="whats_new_item_2">Generierungsparameter pro Modell</string>
     <string name="whats_new_item_3">Steuerung des Denkbudgets</string>
@@ -194,6 +197,10 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Modell ausw\u00E4hlen</string>
     <string name="screenshot_chat">Privat chatten</string>
+    <string name="screenshot_vision">Über Bilder chatten</string>
+    <string name="screenshot_vision_sub">dein Modell sieht sie auch</string>
+    <string name="screenshot_vision_question">Welches Tier ist auf diesem Foto?</string>
+    <string name="screenshot_vision_response">Ein **Schaf** mit dichtem, gekräuseltem, cremeweißem Vlies, das mit gesenktem Kopf auf einem saftig grünen Hügel grast. Der bedeckte Himmel und die felsige Weide deuten auf eine kühle Hochlandlandschaft hin.</string>
     <string name="screenshot_fine_tune">Feinabstimmung</string>
     <string name="screenshot_download_models">Jedes Modell herunterladen</string>
     <string name="screenshot_download_models_sub">in den Ordner deiner Wahl</string>

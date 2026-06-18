@@ -176,6 +176,9 @@
     <string name="whats_new_item_1">Nuevos modelos Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Par\u00E1metros de generaci\u00F3n por modelo</string>
     <string name="whats_new_item_3">Control de presupuesto de razonamiento</string>
+    <string name="whats_new_vision">Visión — envía una foto y chatea sobre ella</string>
+    <string name="whats_new_vision_detail">Elige una imagen de tu galería o toma una con la cámara</string>
+    <string name="whats_new_vision_models">Funciona con modelos de visión Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Prompts de sistema</string>
@@ -194,6 +197,8 @@
     <!-- Screenshot titles -->
     <string name="screenshot_choose_model">Elegir modelo</string>
     <string name="screenshot_chat">Chatea en privado</string>
+    <string name="screenshot_vision">Chatea sobre imágenes</string>
+    <string name="screenshot_vision_sub">tu modelo también puede verlas</string>
     <string name="screenshot_fine_tune">Ajuste fino</string>
     <string name="screenshot_download_models">Descarga cualquier modelo</string>
     <string name="screenshot_download_models_sub">en la carpeta que elijas</string>
@@ -209,6 +214,8 @@
     <string name="screenshot_prompt_sample_code">Eres un revisor de código sénior. Señala errores, casos límite y problemas de seguridad. Sé directo y específico.</string>
     <string name="screenshot_prompt_sample_translator">Eres un traductor. Convierte todo lo que te envíe en francés natural y fluido, y conserva el formato.</string>
     <string name="screenshot_prompt_sample_brainstorm">Eres un compañero creativo de lluvia de ideas. Propón ideas audaces e inesperadas y desarrolla las mías.</string>
+    <string name="screenshot_vision_question">\u00BFQu\u00E9 animal hay en esta foto?</string>
+    <string name="screenshot_vision_response">Una **oveja** de lana espesa, rizada y de color crema blanquecino, paciendo con la cabeza baja en una ladera verde y exuberante. El cielo nublado y el pasto rocoso sugieren un entorno fresco de tierras altas.</string>
     <string name="screenshot_chat_question">\u00BFQu\u00E9 es el aprendizaje autom\u00E1tico?</string>
     <string name="screenshot_chat_response">El aprendizaje autom\u00E1tico es una rama de la inteligencia artificial donde las computadoras **aprenden de los datos** en lugar de ser programadas expl\u00EDcitamente.\n\nConceptos clave:\n\n\u2022 **Entrenamiento**: alimentar algoritmos con datos\n\u2022 **Modelos**: patrones aprendidos de los datos\n\u2022 **Inferencia**: hacer predicciones con datos nuevos</string>
 

@@ -1,0 +1,4 @@
+- Visione — invia una foto e parlane. Scegli un'immagine dalla galleria o scattane una con la fotocamera, poi chiedi al tuo modello cosa vede
+- Funziona con i modelli di visione Gemma, Qwen e Ministral — il componente immagine si scarica automaticamente con il modello
+- Impostazioni di generazione riorganizzate in schede per una regolazione più semplice
+- Motore di inferenza aggiornato, oltre a miglioramenti di prestazioni e stabilità

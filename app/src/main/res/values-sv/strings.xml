@@ -234,6 +234,10 @@
     <string name="screenshot_choose_model_sub">från ledande AI-leverantörer</string>
     <string name="screenshot_chat">Chatta privat</string>
     <string name="screenshot_chat_sub">på din enhet</string>
+    <string name="screenshot_vision">Chatta om bilder</string>
+    <string name="screenshot_vision_sub">din modell kan se dem också</string>
+    <string name="screenshot_vision_question">Vilket djur är på det här fotot?</string>
+    <string name="screenshot_vision_response">Ett **får** med en tjock, lockig, gräddvit ull som betar med sänkt huvud på en frodig grön kulle. Den molniga himlen och den steniga betesmarken antyder en sval miljö i höglandet.</string>
     <string name="screenshot_fine_tune">Finjustera</string>
     <string name="screenshot_fine_tune_sub">genereringsparametrar</string>
     <string name="screenshot_download_models">Ladda ned valfri modell</string>
@@ -267,6 +271,9 @@
 
     <!-- What\'s New -->
     <string name="whats_new">Nyheter</string>
+    <string name="whats_new_vision">Vision — skicka ett foto och chatta om det</string>
+    <string name="whats_new_vision_detail">Välj en bild från ditt galleri eller ta en med kameran</string>
+    <string name="whats_new_vision_models">Fungerar med vision-modellerna Gemma, Qwen &amp; Ministral</string>
     <string name="whats_new_item_1">Nya Gemma 4-modeller (E2B, E4B)</string>
     <string name="whats_new_item_2">Genereringsparametrar per modell</string>
     <string name="whats_new_item_3">Kontroll av tänkbudget</string>

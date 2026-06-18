@@ -1,0 +1,4 @@
+- Näkö — lähetä valokuva ja keskustele siitä. Valitse kuva galleriasta tai ota uusi kameralla, ja kysy sitten mallilta, mitä se näkee
+- Toimii Gemma, Qwen ja Ministral -näkömallien kanssa — kuvalisäosa latautuu automaattisesti mallin mukana
+- Generointiasetukset järjestetty välilehtiin helpompaa hienosäätöä varten
+- Päivitetty päättelymoottori sekä suorituskyky- ja vakausparannuksia

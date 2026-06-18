@@ -1,0 +1,4 @@
+- Vision — pošlete fotku a chatujte o ní. Vyberte obrázek z galerie nebo pořiďte snímek fotoaparátem a poté se svého modelu zeptejte, co vidí
+- Funguje s vizuálními modely Gemma, Qwen a Ministral — doplněk pro obrázky se stahuje automaticky spolu s modelem
+- Nastavení generování přehledně uspořádané do karet pro snadnější ladění
+- Aktualizovaný inferenční engine a vylepšení výkonu a stability
