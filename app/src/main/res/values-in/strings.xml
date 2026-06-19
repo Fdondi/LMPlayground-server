@@ -217,8 +217,8 @@
     <string name="screenshot_vision_question">Hewan apa yang ada di foto ini?</string>
     <string name="screenshot_vision_response">Seekor **domba** dengan bulu putih krem yang tebal dan keriting, sedang menunduk merumput di lereng bukit hijau yang subur. Langit mendung dan padang rumput berbatu menunjukkan suasana dataran tinggi yang sejuk.</string>
     <string name="whats_new_vision">Vision \u2014 kirim foto dan obrolkan</string>
-    <string name="whats_new_vision_detail">Pilih gambar dari galeri atau ambil satu dengan kamera</string>
-    <string name="whats_new_vision_models">Berfungsi dengan model vision Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Pilih gambar dari galeri atau ambil satu</string>
+    <string name="whats_new_vision_models">Berfungsi dengan Gemma, Qwen &amp; Ministral</string>
 
     <!-- Model categories -->
     <string name="model_category_lightweight">Model obrolan ringan</string>

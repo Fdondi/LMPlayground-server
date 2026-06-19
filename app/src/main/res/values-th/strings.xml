@@ -272,8 +272,8 @@
     <!-- What\'s New -->
     <string name="whats_new">มีอะไรใหม่</string>
     <string name="whats_new_vision">วิทัศน์ — ส่งรูปภาพและแชทเกี่ยวกับมัน</string>
-    <string name="whats_new_vision_detail">เลือกรูปจากแกลเลอรีหรือถ่ายด้วยกล้อง</string>
-    <string name="whats_new_vision_models">ใช้ได้กับโมเดลวิทัศน์ Gemma, Qwen และ Ministral</string>
+    <string name="whats_new_vision_detail">เลือกรูปจากแกลเลอรีหรือถ่ายภาพ</string>
+    <string name="whats_new_vision_models">ใช้ได้กับ Gemma, Qwen และ Ministral</string>
     <string name="whats_new_item_1">โมเดล Gemma 4 ใหม่ (E2B, E4B)</string>
     <string name="whats_new_item_2">พารามิเตอร์การสร้างเฉพาะโมเดล</string>
     <string name="whats_new_item_3">การควบคุมงบประมาณการคิด</string>

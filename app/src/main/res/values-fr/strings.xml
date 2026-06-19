@@ -177,8 +177,8 @@
     <string name="whats_new_item_2">Param\u00E8tres de g\u00E9n\u00E9ration par mod\u00E8le</string>
     <string name="whats_new_item_3">Contr\u00F4le du budget de r\u00E9flexion</string>
     <string name="whats_new_vision">Vision \u2014 envoyez une photo et discutez-en</string>
-    <string name="whats_new_vision_detail">Choisissez une image dans votre galerie ou prenez-en une avec l\'appareil photo</string>
-    <string name="whats_new_vision_models">Compatible avec les mod\u00E8les de vision Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Choisissez une image dans votre galerie ou prenez-en une</string>
+    <string name="whats_new_vision_models">Compatible avec Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Invites syst\u00E8me</string>

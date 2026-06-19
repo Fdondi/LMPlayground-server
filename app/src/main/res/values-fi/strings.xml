@@ -272,8 +272,8 @@
     <!-- What\'s New -->
     <string name="whats_new">Uutta</string>
     <string name="whats_new_vision">Näkö — lähetä valokuva ja keskustele siitä</string>
-    <string name="whats_new_vision_detail">Valitse kuva galleriasta tai ota uusi kameralla</string>
-    <string name="whats_new_vision_models">Toimii Gemma, Qwen &amp; Ministral -näkömallien kanssa</string>
+    <string name="whats_new_vision_detail">Valitse kuva galleriasta tai ota uusi</string>
+    <string name="whats_new_vision_models">Toimii Gemma, Qwen &amp; Ministral -mallien kanssa</string>
     <string name="whats_new_item_1">Uudet Gemma 4 -mallit (E2B, E4B)</string>
     <string name="whats_new_item_2">Mallikohtaiset generointiparametrit</string>
     <string name="whats_new_item_3">Ajattelubudjetin hallinta</string>

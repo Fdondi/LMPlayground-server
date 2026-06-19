@@ -273,8 +273,8 @@
     <!-- What\'s New -->
     <string name="whats_new">Wat is er nieuw</string>
     <string name="whats_new_vision">Vision — stuur een foto en chat erover</string>
-    <string name="whats_new_vision_detail">Kies een afbeelding uit je galerij of maak er een met de camera</string>
-    <string name="whats_new_vision_models">Werkt met de vision-modellen Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Kies een afbeelding uit je galerij of maak er een</string>
+    <string name="whats_new_vision_models">Werkt met Gemma, Qwen &amp; Ministral</string>
     <string name="whats_new_item_1">Nieuwe Gemma 4-modellen (E2B, E4B)</string>
     <string name="whats_new_item_2">Generatieparameters per model</string>
     <string name="whats_new_item_3">Besturing van denkbudget</string>

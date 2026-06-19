@@ -174,8 +174,8 @@
     <string name="functionality_not_available">Funkcja niedostępna \uD83D\uDE48</string>
     <string name="whats_new">Co nowego</string>
     <string name="whats_new_vision">Vision — wyślij zdjęcie i porozmawiaj o nim</string>
-    <string name="whats_new_vision_detail">Wybierz obraz z galerii lub zrób zdjęcie aparatem</string>
-    <string name="whats_new_vision_models">Działa z modelami wizyjnymi Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Wybierz obraz z galerii lub zrób zdjęcie</string>
+    <string name="whats_new_vision_models">Działa z Gemma, Qwen &amp; Ministral</string>
     <string name="whats_new_item_1">Nowe modele Gemma 4 (E2B, E4B)</string>
     <string name="whats_new_item_2">Parametry generowania per model</string>
     <string name="whats_new_item_3">Kontrola budżetu myślenia</string>

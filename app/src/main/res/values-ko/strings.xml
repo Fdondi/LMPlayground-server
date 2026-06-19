@@ -174,8 +174,8 @@
     <string name="functionality_not_available">기능을 사용할 수 없습니다 \uD83D\uDE48</string>
     <string name="whats_new">새로운 기능</string>
     <string name="whats_new_vision">Vision — 사진을 보내고 사진에 대해 대화하세요</string>
-    <string name="whats_new_vision_detail">갤러리에서 이미지를 선택하거나 카메라로 촬영하세요</string>
-    <string name="whats_new_vision_models">Gemma, Qwen &amp; Ministral 비전 모델 지원</string>
+    <string name="whats_new_vision_detail">갤러리에서 이미지를 선택하거나 촬영하세요</string>
+    <string name="whats_new_vision_models">Gemma, Qwen &amp; Ministral 지원</string>
     <string name="whats_new_item_1">새로운 Gemma 4 모델 (E2B, E4B)</string>
     <string name="whats_new_item_2">모델별 생성 매개변수</string>
     <string name="whats_new_item_3">사고 예산 제어</string>

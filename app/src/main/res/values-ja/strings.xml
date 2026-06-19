@@ -174,8 +174,8 @@
     <string name="functionality_not_available">機能は利用できません \uD83D\uDE48</string>
     <string name="whats_new">新機能</string>
     <string name="whats_new_vision">Vision — 写真を送って、それについてチャット</string>
-    <string name="whats_new_vision_detail">ギャラリーから画像を選ぶか、カメラで撮影</string>
-    <string name="whats_new_vision_models">Gemma、Qwen &amp; Ministral のビジョンモデルに対応</string>
+    <string name="whats_new_vision_detail">ギャラリーから画像を選ぶか、撮影</string>
+    <string name="whats_new_vision_models">Gemma、Qwen &amp; Ministral に対応</string>
     <string name="whats_new_item_1">新しい Gemma 4 モデル（E2B、E4B）</string>
     <string name="whats_new_item_2">モデルごとの生成パラメータ</string>
     <string name="whats_new_item_3">思考バジェット制御</string>

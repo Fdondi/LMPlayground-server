@@ -272,8 +272,8 @@
     <!-- What\'s New -->
     <string name="whats_new">Nyheder</string>
     <string name="whats_new_vision">Vision — send et foto og chat om det</string>
-    <string name="whats_new_vision_detail">Vælg et billede fra dit galleri, eller tag et med kameraet</string>
-    <string name="whats_new_vision_models">Fungerer med vision-modellerne Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Vælg et billede fra dit galleri, eller tag et</string>
+    <string name="whats_new_vision_models">Fungerer med Gemma, Qwen &amp; Ministral</string>
     <string name="whats_new_item_1">Nye Gemma 4-modeller (E2B, E4B)</string>
     <string name="whats_new_item_2">Genereringsparametre pr. model</string>
     <string name="whats_new_item_3">Styring af tænkebudget</string>

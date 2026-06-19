@@ -260,8 +260,8 @@
     <string name="screenshot_vision_question">Haiwan apakah dalam foto ini?</string>
     <string name="screenshot_vision_response">Seekor **bebiri** dengan bulu putih krim yang tebal dan kerinting, sedang menunduk meragut di lereng bukit yang hijau subur. Langit mendung dan padang ragut berbatu menggambarkan suasana tanah tinggi yang nyaman.</string>
     <string name="whats_new_vision">Penglihatan \u2014 hantar foto dan bersembang mengenainya</string>
-    <string name="whats_new_vision_detail">Pilih imej daripada galeri anda atau tangkap satu dengan kamera</string>
-    <string name="whats_new_vision_models">Berfungsi dengan model penglihatan Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Pilih imej daripada galeri anda atau tangkap satu</string>
+    <string name="whats_new_vision_models">Berfungsi dengan Gemma, Qwen &amp; Ministral</string>
 
     <!-- Model categories -->
     <string name="model_category_lightweight">Model sembang ringan</string>

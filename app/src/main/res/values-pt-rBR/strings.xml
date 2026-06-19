@@ -177,8 +177,8 @@
     <string name="whats_new_item_2">Par\u00E2metros de gera\u00E7\u00E3o por modelo</string>
     <string name="whats_new_item_3">Controle de or\u00E7amento de racioc\u00EDnio</string>
     <string name="whats_new_vision">Vis\u00E3o \u2014 envie uma foto e converse sobre ela</string>
-    <string name="whats_new_vision_detail">Escolha uma imagem da galeria ou tire uma com a c\u00E2mera</string>
-    <string name="whats_new_vision_models">Funciona com os modelos de vis\u00E3o Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Escolha uma imagem da galeria ou tire uma</string>
+    <string name="whats_new_vision_models">Funciona com Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Prompts de sistema</string>

@@ -177,8 +177,8 @@
     <string name="whats_new_item_2">Parametri di generazione per modello</string>
     <string name="whats_new_item_3">Controllo del budget di ragionamento</string>
     <string name="whats_new_vision">Visione — invia una foto e parlane</string>
-    <string name="whats_new_vision_detail">Scegli un\'immagine dalla galleria o scattane una con la fotocamera</string>
-    <string name="whats_new_vision_models">Funziona con i modelli di visione Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Scegli un\'immagine dalla galleria o scattane una</string>
+    <string name="whats_new_vision_models">Funziona con Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Prompt di sistema</string>

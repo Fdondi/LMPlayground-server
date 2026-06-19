@@ -217,8 +217,8 @@
     <string name="screenshot_vision_question">Bu foto\u011Fraftaki hayvan nedir?</string>
     <string name="screenshot_vision_response">Yemye\u015Fil bir yama\u00E7ta ba\u015F\u0131n\u0131 e\u011Fmi\u015F otlayan, kal\u0131n ve k\u0131v\u0131rc\u0131k krem beyaz\u0131 y\u00FCnl\u00FC bir **koyun**. Kapal\u0131 g\u00F6ky\u00FCz\u00FC ve kayal\u0131k otlak, serin bir yayla ortam\u0131na i\u015Faret ediyor.</string>
     <string name="whats_new_vision">G\u00F6r\u00FC \u2014 bir foto\u011Fraf g\u00F6nder ve hakk\u0131nda sohbet et</string>
-    <string name="whats_new_vision_detail">Galerinden bir g\u00F6rsel se\u00E7 ya da kamerayla \u00E7ek</string>
-    <string name="whats_new_vision_models">Gemma, Qwen &amp; Ministral g\u00F6r\u00FC modelleriyle \u00E7al\u0131\u015F\u0131r</string>
+    <string name="whats_new_vision_detail">Galerinden bir g\u00F6rsel se\u00E7 ya da \u00E7ek</string>
+    <string name="whats_new_vision_models">Gemma, Qwen &amp; Ministral ile \u00E7al\u0131\u015F\u0131r</string>
 
     <!-- Model categories -->
     <string name="model_category_lightweight">Hafif sohbet modeli</string>

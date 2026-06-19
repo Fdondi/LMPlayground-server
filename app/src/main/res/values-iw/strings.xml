@@ -272,8 +272,8 @@
     <!-- What\'s New -->
     <string name="whats_new">מה חדש</string>
     <string name="whats_new_vision">ראייה — שלחו תמונה ושוחחו עליה</string>
-    <string name="whats_new_vision_detail">בחרו תמונה מהגלריה או צלמו אחת במצלמה</string>
-    <string name="whats_new_vision_models">עובד עם מודלי הראייה Gemma, Qwen ו-Ministral</string>
+    <string name="whats_new_vision_detail">בחרו תמונה מהגלריה או צלמו אחת</string>
+    <string name="whats_new_vision_models">עובד עם Gemma, Qwen ו-Ministral</string>
     <string name="whats_new_item_1">מודלי Gemma 4 חדשים (E2B, E4B)</string>
     <string name="whats_new_item_2">פרמטרי יצירה לכל מודל</string>
     <string name="whats_new_item_3">בקרת תקציב חשיבה</string>

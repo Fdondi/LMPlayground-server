@@ -217,8 +217,8 @@
     <string name="screenshot_vision_question">Con v\u1EADt trong b\u1EE9c \u1EA3nh n\u00E0y l\u00E0 g\u00EC?</string>
     <string name="screenshot_vision_response">M\u1ED9t con **c\u1EEBu** v\u1EDBi b\u1ED9 l\u00F4ng tr\u1EAFng ng\u00E0 d\u00E0y v\u00E0 xo\u0103n, \u0111ang c\u00FAi \u0111\u1EA7u g\u1EB7m c\u1ECF tr\u00EAn s\u01B0\u1EDDn \u0111\u1ED3i xanh m\u01B0\u1EDBt. B\u1EA7u tr\u1EDDi \u00E2m u v\u00E0 \u0111\u1ED3ng c\u1ECF nhi\u1EC1u \u0111\u00E1 g\u1EE3i l\u00EAn m\u1ED9t v\u00F9ng cao nguy\u00EAn m\u00E1t m\u1EBB.</string>
     <string name="whats_new_vision">Th\u1ECB gi\u00E1c \u2014 g\u1EEDi m\u1ED9t b\u1EE9c \u1EA3nh v\u00E0 tr\u00F2 chuy\u1EC7n v\u1EC1 n\u00F3</string>
-    <string name="whats_new_vision_detail">Ch\u1ECDn \u1EA3nh t\u1EEB th\u01B0 vi\u1EC7n ho\u1EB7c ch\u1EE5p m\u1ED9t t\u1EA5m b\u1EB1ng camera</string>
-    <string name="whats_new_vision_models">Ho\u1EA1t \u0111\u1ED9ng v\u1EDBi c\u00E1c m\u00F4 h\u00ECnh th\u1ECB gi\u00E1c Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Ch\u1ECDn \u1EA3nh t\u1EEB th\u01B0 vi\u1EC7n ho\u1EB7c ch\u1EE5p m\u1ED9t t\u1EA5m</string>
+    <string name="whats_new_vision_models">Ho\u1EA1t \u0111\u1ED9ng v\u1EDBi Gemma, Qwen &amp; Ministral</string>
 
     <!-- Model categories -->
     <string name="model_category_lightweight">M\u00F4 h\u00ECnh tr\u00F2 chuy\u1EC7n nh\u1EB9</string>

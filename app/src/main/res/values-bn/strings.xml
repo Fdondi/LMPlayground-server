@@ -271,8 +271,8 @@
     <!-- What\'s New -->
     <string name="whats_new">নতুন কী আছে</string>
     <string name="whats_new_vision">ভিশন — ছবি পাঠান এবং তা নিয়ে চ্যাট করুন</string>
-    <string name="whats_new_vision_detail">গ্যালারি থেকে একটি ছবি বাছুন বা ক্যামেরা দিয়ে একটি তুলুন</string>
-    <string name="whats_new_vision_models">Gemma, Qwen এবং Ministral ভিশন মডেলের সাথে কাজ করে</string>
+    <string name="whats_new_vision_detail">গ্যালারি থেকে একটি ছবি বাছুন বা একটি তুলুন</string>
+    <string name="whats_new_vision_models">Gemma, Qwen এবং Ministral-এর সাথে কাজ করে</string>
     <string name="whats_new_item_1">নতুন Gemma 4 মডেল (E2B, E4B)</string>
     <string name="whats_new_item_2">প্রতি-মডেল জেনারেশন প্যারামিটার</string>
     <string name="whats_new_item_3">থিংকিং বাজেট নিয়ন্ত্রণ</string>

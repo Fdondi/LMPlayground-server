@@ -177,8 +177,8 @@
     <string name="whats_new_item_2">Parametri de generare per model</string>
     <string name="whats_new_item_3">Control buget de ra\u021Bionament</string>
     <string name="whats_new_vision">Viziune \u2014 trimite o fotografie \u0219i discut\u0103 despre ea</string>
-    <string name="whats_new_vision_detail">Alege o imagine din galerie sau f\u0103 una cu camera</string>
-    <string name="whats_new_vision_models">Func\u021Bioneaz\u0103 cu modelele de viziune Gemma, Qwen &amp; Ministral</string>
+    <string name="whats_new_vision_detail">Alege o imagine din galerie sau f\u0103 una</string>
+    <string name="whats_new_vision_models">Func\u021Bioneaz\u0103 cu Gemma, Qwen &amp; Ministral</string>
 
     <!-- System prompts -->
     <string name="system_prompts">Prompturi de sistem</string>

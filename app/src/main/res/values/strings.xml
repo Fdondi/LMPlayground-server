@@ -284,8 +284,8 @@
     <!-- What\'s New -->
     <string name="whats_new">What\'s New</string>
     <string name="whats_new_vision">Vision — send a photo and chat about it</string>
-    <string name="whats_new_vision_detail">Pick an image from your gallery or snap one with the camera</string>
-    <string name="whats_new_vision_models">Works with Gemma, Qwen &amp; Ministral vision models</string>
+    <string name="whats_new_vision_detail">Pick an image from your gallery or snap one</string>
+    <string name="whats_new_vision_models">Works with Gemma, Qwen &amp; Ministral</string>
     <!-- Superseded What\'s New items (kept as translation base; not shown in UI) -->
     <string name="whats_new_item_1">Tools — capable models can now use:</string>
     <string name="whats_new_tools">Web search, fetch page, and run JavaScript</string>
