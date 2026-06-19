@@ -259,8 +259,7 @@ val sceneRenames = mapOf(
     "scene4_generationParams" to "4_generation_params",
     "scene5_systemPrompts" to "5_system_prompts",
     "scene6_tools" to "6_tools",
-    "scene7_modelsDownload" to "7_models_download",
-    "scene8_notification" to "8_notification"
+    "scene7_modelsDownload" to "7_models_download"
 )
 
 // TabletStoreScreenshots emits per-variant English-only landscape shots
