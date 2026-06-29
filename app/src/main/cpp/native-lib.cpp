@@ -88,6 +88,23 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_probeModelMetadata(JNIEnv *env, jobjec
     return result;
 }
 
+// GPUs whose Vulkan driver mishandles the CLIP vision graph. The encoder runs
+// on Vulkan by default (much faster than CPU); these specific parts fall back
+// to CPU. Matched as a substring of the ggml device description (the Vulkan
+// deviceName). Denylist, not allowlist: an untested bad GPU still crashes, but
+// only into the survivable :llama-restart recovery path. Extend from Vitals.
+static bool clipVulkanIsKnownBad(const char *gpuDescription) {
+    if (gpuDescription == nullptr) return false;
+    static const char *kDeny[] = {
+        "PowerVR",  // Tensor G5 (Pixel 10): CLIP encode slow AND numerically wrong
+        "Mali-G52", // Galaxy A32 (Helio G80) etc.: SIGSEGV in ggml_vk_create_buffer
+    };
+    for (const char *needle : kDeny) {
+        if (strstr(gpuDescription, needle) != nullptr) return true;
+    }
+    return false;
+}
+
 extern "C" JNIEXPORT int
 JNICALL
 Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstring nativeLibDir) {
@@ -95,32 +112,6 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstr
     // Redirect std::cerr to logcat
     AndroidLogBuf androidLogBuf;
     std::cerr.rdbuf(&androidLogBuf);
-
-    // Backend for the CLIP vision encoder. Default: the Vulkan GPU by device
-    // name ("Vulkan0") — ggml_backend_init_by_type(GPU) fails inside libmtmd on
-    // Android, but selecting it by name works. Read by clip.cpp's backend
-    // selection; a no-op when Vulkan isn't loaded (e.g. x86_64 emulator), where
-    // vision falls back to CPU.
-    //
-    // Exception: some GPUs' Vulkan drivers mishandle the CLIP graph. On the
-    // Tensor G5 (Pixel 10) PowerVR GPU the encode is both far slower AND
-    // numerically wrong, so prefer CPU there (the G5 CPU has i8mm/bf16). Detect
-    // via ro.hardware.vulkan / ro.hardware.egl ("powervr"). Override with
-    // `setprop debug.lmp.mtmd_backend <name>`.
-    const char *mtmd_backend = "Vulkan0";
-    char gpu_hw[PROP_VALUE_MAX] = {0};
-    if (__system_property_get("ro.hardware.vulkan", gpu_hw) <= 0) {
-        __system_property_get("ro.hardware.egl", gpu_hw);
-    }
-    if (strstr(gpu_hw, "powervr") != nullptr) {
-        mtmd_backend = "CPU";
-    }
-    char backend_override[PROP_VALUE_MAX] = {0};
-    if (__system_property_get("debug.lmp.mtmd_backend", backend_override) > 0) {
-        mtmd_backend = backend_override;
-    }
-    setenv("MTMD_BACKEND_DEVICE", mtmd_backend, 1);
-    __android_log_print(ANDROID_LOG_INFO, TAG, "vision backend: %s (gpu=%s)", mtmd_backend, gpu_hw);
 
     llama_log_set(log_callback, NULL);
     ggml_log_set(log_callback, NULL);
@@ -140,6 +131,42 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstr
     } else {
         ggml_backend_load_all();
     }
+
+    // Pick the CLIP vision-encoder backend now that the Vulkan backend (if any)
+    // is loaded and its devices are enumerable. clip.cpp selects by device name
+    // (MTMD_BACKEND_DEVICE, e.g. "Vulkan0"). Default to the GPU (much faster
+    // than CPU vision) and fall back to "CPU" only for denylisted parts whose
+    // Vulkan driver mishandles the CLIP graph. Mobile GPUs register as IGPU (not
+    // GPU), so dev_by_type(GPU) misses them; enumerate instead. Reading the
+    // device name/description is safe (no buffer allocation, which is where the
+    // crash happens). Override with `setprop debug.lmp.mtmd_backend <name>`.
+    const char *mtmd_backend = "CPU";
+    const char *gpu_name = nullptr;
+    const char *gpu_desc = nullptr;
+    size_t dev_count = ggml_backend_dev_count();
+    for (size_t i = 0; i < dev_count; i++) {
+        ggml_backend_dev_t dev = ggml_backend_dev_get(i);
+        if (dev == nullptr) continue;
+        enum ggml_backend_dev_type type = ggml_backend_dev_type(dev);
+        const char *name = ggml_backend_dev_name(dev);
+        const char *desc = ggml_backend_dev_description(dev);
+        __android_log_print(ANDROID_LOG_INFO, TAG, "ggml device %zu: name=%s type=%d desc=%s",
+                            i, name ? name : "?", (int) type, desc ? desc : "?");
+        if (type == GGML_BACKEND_DEVICE_TYPE_GPU || type == GGML_BACKEND_DEVICE_TYPE_IGPU) {
+            gpu_name = name;
+            gpu_desc = desc;
+        }
+    }
+    if (gpu_name != nullptr && !clipVulkanIsKnownBad(gpu_desc)) {
+        mtmd_backend = gpu_name;
+    }
+    char backend_override[PROP_VALUE_MAX] = {0};
+    if (__system_property_get("debug.lmp.mtmd_backend", backend_override) > 0) {
+        mtmd_backend = backend_override;
+    }
+    setenv("MTMD_BACKEND_DEVICE", mtmd_backend, 1);
+    __android_log_print(ANDROID_LOG_INFO, TAG, "vision backend: %s (gpu=%s)",
+                        mtmd_backend, gpu_desc ? gpu_desc : "none");
 
     llama_backend_init();
     return 0;
