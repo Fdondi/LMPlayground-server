@@ -120,7 +120,10 @@
     <string name="browse_more_models">Duy\u1EC7t m\u00F4 h\u00ECnh</string>
     <string name="cancel">H\u1EE7y</string>
     <string name="low_ram_warning_title">Mô hình có thể không ổn định</string>
-    <string name="low_ram_warning_message">Mô hình cần khoảng %1$s RAM nhưng thiết bị này chỉ có tổng cộng %2$s. Có thể tải chậm hoặc phản hồi không thể đoán trước.</string>
+    <string name="low_ram_warning_message">Mô hình cần khoảng %1$s RAM nhưng thiết bị này chỉ có tổng cộng %2$s. Có thể bị hết bộ nhớ và gặp sự cố. Nếu điều đó xảy ra, hãy bật Tắt repack trong Cài đặt → Nâng cao để tải mô hình ở chế độ ít bộ nhớ.</string>
+    <string name="advanced_subtitle">Tùy chọn bộ nhớ và hiệu suất</string>
+    <string name="disable_repack_title">Tắt repack</string>
+    <string name="disable_repack_desc">Tải trọng số mô hình theo kiểu ánh xạ bộ nhớ thay vì đóng gói lại chúng vào RAM. Sử dụng ít bộ nhớ hơn nhiều, giúp các mô hình lớn tải mà không gặp sự cố, nhưng làm phản hồi chậm hơn. Hãy để tắt trừ khi một mô hình bị hết bộ nhớ.</string>
     <string name="load_anyway">V\u1EABn t\u1EA3i</string>
     <string name="download_notification_channel">T\u1EA3i m\u00F4 h\u00ECnh</string>
     <string name="download_notification_channel_description">Hi\u1EC3n th\u1ECB ti\u1EBFn tr\u00ECnh t\u1EA3i t\u1EC7p m\u00F4 h\u00ECnh</string>

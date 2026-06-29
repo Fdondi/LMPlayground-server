@@ -371,20 +371,23 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             // model so the user can cancel the warning and keep their
             // existing session intact.
             //
-            // A model over the RAM budget isn't refused — instead we load it
-            // memory-mapped by disabling weight repacking (disableRepack
-            // below). Repacking would copy the quantized weights into RAM and
-            // OOM-kill the :llama process; mmap keeps the footprint small (at
-            // the cost of slower matmuls). The warning still fires once so the
-            // user knows it'll be slower; "load anyway" re-enters with
-            // forceLoad=true and the same disableRepack decision.
+            // Weight repacking is controlled by the user via Settings →
+            // Advanced ("Disable repack"), OFF by default. With it OFF every
+            // model repacks (faster matmuls) at the cost of a second resident
+            // copy of the weights; with it ON weights stay memory-mapped
+            // (smaller footprint, slower decode). A model over the RAM budget
+            // is never refused — but while repacking is on it can OOM-kill the
+            // :llama process, so we warn once (unless repack is already off, in
+            // which case the mmap-only load won't blow the budget). "Load
+            // anyway" re-enters with forceLoad=true.
+            val disableRepack = storagePreferences.disableRepack
             val fileSizeBytes = withContext(Dispatchers.IO) {
                 storageRepository.getModelFiles()
                     .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
             }
             val totalRamBytes = DeviceCapability.totalRamBytes(app)
             val exceedsRam = DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)
-            if (!forceLoad && exceedsRam) {
+            if (!forceLoad && exceedsRam && !disableRepack) {
                 _pendingRamWarning.value = RamWarning(
                     modelInfo = modelInfo,
                     neededRam = Formatter.formatFileSize(app, fileSizeBytes),
@@ -500,7 +503,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                                 )
                             }
                         },
-                        disableRepack = exceedsRam,
+                        disableRepack = disableRepack,
                     )
 
                     // Load mmproj for vision models. The mtmd loader needs a

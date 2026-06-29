@@ -120,7 +120,10 @@
     <string name="browse_more_models">Jelajahi Model</string>
     <string name="cancel">Batal</string>
     <string name="low_ram_warning_title">Model mungkin tidak stabil</string>
-    <string name="low_ram_warning_message">Model membutuhkan ~%1$s RAM, tetapi perangkat ini hanya memiliki total %2$s. Pemuatan mungkin lambat atau respons tidak dapat diprediksi.</string>
+    <string name="low_ram_warning_message">Model membutuhkan ~%1$s RAM, tetapi perangkat ini hanya memiliki total %2$s. Memori mungkin habis dan menyebabkan crash. Jika itu terjadi, aktifkan Nonaktifkan repack di Pengaturan → Lanjutan untuk memuatnya dalam mode memori rendah.</string>
+    <string name="advanced_subtitle">Opsi memori dan performa</string>
+    <string name="disable_repack_title">Nonaktifkan repack</string>
+    <string name="disable_repack_desc">Memuat bobot model dengan pemetaan memori alih-alih mengemasnya kembali ke RAM. Menggunakan jauh lebih sedikit memori, yang membantu model besar dimuat tanpa crash, tetapi membuat respons lebih lambat. Biarkan nonaktif kecuali memori sebuah model habis.</string>
     <string name="load_anyway">Tetap muat</string>
     <string name="download_notification_channel">Unduhan Model</string>
     <string name="download_notification_channel_description">Menampilkan progres unduhan file model</string>

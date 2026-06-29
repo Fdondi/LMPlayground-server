@@ -120,7 +120,10 @@
     <string name="browse_more_models">Parcourir les mod\u00E8les</string>
     <string name="cancel">Annuler</string>
     <string name="low_ram_warning_title">Le modèle pourrait être instable</string>
-    <string name="low_ram_warning_message">Le modèle nécessite environ %1$s de RAM, mais cet appareil n\'en a que %2$s au total. Le chargement peut être lent ou les réponses imprévisibles.</string>
+    <string name="low_ram_warning_message">Le modèle nécessite environ %1$s de RAM, mais cet appareil n\'en a que %2$s au total. Il pourrait manquer de mémoire et planter. Si cela arrive, activez Désactiver le réagencement dans Paramètres → Avancé pour le charger dans un mode à faible mémoire.</string>
+    <string name="advanced_subtitle">Options de mémoire et de performances</string>
+    <string name="disable_repack_title">Désactiver le réagencement</string>
+    <string name="disable_repack_desc">Charge les poids du modèle mappés en mémoire au lieu de les réagencer dans la RAM. Utilise beaucoup moins de mémoire, ce qui aide les grands modèles à se charger sans planter, mais rend les réponses plus lentes. Laissez désactivé sauf si un modèle manque de mémoire.</string>
     <string name="load_anyway">Charger quand même</string>
     <string name="download_notification_channel">T\u00E9l\u00E9chargements de mod\u00E8les</string>
     <string name="download_notification_channel_description">Affiche la progression des t\u00E9l\u00E9chargements de mod\u00E8les</string>

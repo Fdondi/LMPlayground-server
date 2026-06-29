@@ -120,7 +120,10 @@
     <string name="browse_more_models">Przeglądaj modele</string>
     <string name="cancel">Anuluj</string>
     <string name="low_ram_warning_title">Model może być niestabilny</string>
-    <string name="low_ram_warning_message">Model wymaga ok. %1$s RAM, a to urządzenie ma łącznie tylko %2$s. Ładowanie może być wolne, a odpowiedzi nieprzewidywalne.</string>
+    <string name="low_ram_warning_message">Model wymaga ok. %1$s RAM, a to urządzenie ma łącznie tylko %2$s. Może zabraknąć pamięci i nastąpić awaria. Jeśli tak się stanie, włącz opcję Wyłącz przepakowywanie w Ustawienia → Zaawansowane, aby załadować go w trybie małej ilości pamięci.</string>
+    <string name="advanced_subtitle">Opcje pamięci i wydajności</string>
+    <string name="disable_repack_title">Wyłącz przepakowywanie</string>
+    <string name="disable_repack_desc">Ładuje wagi modelu mapowane w pamięci zamiast przepakowywać je do RAM. Zużywa znacznie mniej pamięci, co pomaga dużym modelom załadować się bez awarii, ale spowalnia odpowiedzi. Pozostaw wyłączone, chyba że modelowi zabraknie pamięci.</string>
     <string name="load_anyway">Załaduj mimo to</string>
     <string name="download_notification_channel">Pobieranie modeli</string>
     <string name="download_notification_channel_description">Pokazuje postęp pobierania plików modeli</string>

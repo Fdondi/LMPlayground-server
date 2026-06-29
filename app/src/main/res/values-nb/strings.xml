@@ -137,7 +137,10 @@
     <string name="browse_more_models">Bla gjennom modeller</string>
     <string name="cancel">Avbryt</string>
     <string name="low_ram_warning_title">Modellen kan være ustabil</string>
-    <string name="low_ram_warning_message">Modellen trenger ~%1$s RAM, men denne enheten har bare %2$s totalt. Den kan lastes inn sakte eller svare uforutsigbart.</string>
+    <string name="low_ram_warning_message">Modellen trenger ~%1$s RAM, men denne enheten har bare %2$s totalt. Den kan gå tom for minne og krasje. Hvis det skjer, slå på Deaktiver ompakking i Innstillinger → Avansert for å laste den inn i en modus med lite minne.</string>
+    <string name="advanced_subtitle">Alternativer for minne og ytelse</string>
+    <string name="disable_repack_title">Deaktiver ompakking</string>
+    <string name="disable_repack_desc">Laster inn modellvektene minnetilordnet i stedet for å pakke dem om i RAM. Bruker mye mindre minne, noe som hjelper store modeller med å lastes inn uten å krasje, men gjør svarene tregere. La være av med mindre en modell går tom for minne.</string>
     <string name="load_anyway">Last inn likevel</string>
 
     <!-- Download notifications -->

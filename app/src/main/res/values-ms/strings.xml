@@ -136,7 +136,10 @@
     <string name="browse_more_models">Layari Model</string>
     <string name="cancel">Batal</string>
     <string name="low_ram_warning_title">Model mungkin tidak stabil</string>
-    <string name="low_ram_warning_message">Model memerlukan ~%1$s RAM tetapi peranti ini hanya mempunyai %2$s secara keseluruhan. Ia mungkin dimuatkan perlahan atau bertindak balas tanpa diduga.</string>
+    <string name="low_ram_warning_message">Model memerlukan ~%1$s RAM tetapi peranti ini hanya mempunyai %2$s secara keseluruhan. Ia mungkin kehabisan memori dan ranap. Jika itu berlaku, hidupkan Lumpuhkan repack dalam Tetapan → Lanjutan untuk memuatkannya dalam mod memori rendah.</string>
+    <string name="advanced_subtitle">Pilihan memori dan prestasi</string>
+    <string name="disable_repack_title">Lumpuhkan repack</string>
+    <string name="disable_repack_desc">Memuatkan pemberat model secara dipetakan memori dan bukannya mengemasnya semula ke dalam RAM. Menggunakan memori yang jauh lebih sedikit, yang membantu model besar dimuatkan tanpa ranap, tetapi menjadikan respons lebih perlahan. Biarkan dimatikan melainkan sesuatu model kehabisan memori.</string>
     <string name="load_anyway">Muatkan juga</string>
 
     <!-- Download notifications -->

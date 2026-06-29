@@ -29,6 +29,7 @@ import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Language
 import androidx.compose.material.icons.outlined.Policy
 import androidx.compose.material.icons.outlined.Storage
+import androidx.compose.material.icons.outlined.Tune
 import androidx.compose.material.icons.outlined.VolumeUp
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -61,7 +62,7 @@ import java.util.Locale
  * [promptsDetailContent] slots — the caller owns the ViewModels and passes
  * the appropriate Composable when on tablet.
  */
-private enum class SettingsDetail { Models, Prompts, Language, Tools, SoundHaptic, PrivacyPolicy, Faq }
+private enum class SettingsDetail { Models, Prompts, Language, Tools, SoundHaptic, Advanced, PrivacyPolicy, Faq }
 
 @Composable
 fun SettingsScreen(
@@ -73,6 +74,7 @@ fun SettingsScreen(
     onFaqClick: () -> Unit,
     onToolsClick: () -> Unit,
     onSoundHapticClick: () -> Unit,
+    onAdvancedClick: () -> Unit,
     onSendFeedbackClick: () -> Unit,
     appVersion: String,
     /**
@@ -101,6 +103,10 @@ fun SettingsScreen(
      * section.
      */
     soundHapticDetailContent: (@Composable () -> Unit)? = null,
+    /**
+     * Tablet-only mirror of [modelsDetailContent] for the Advanced section.
+     */
+    advancedDetailContent: (@Composable () -> Unit)? = null,
     /**
      * Optional deep-link target: when "tools", the screen opens directly on the
      * Tools detail (tablet). Used by the What's New "Set up tools" button.
@@ -219,6 +225,13 @@ fun SettingsScreen(
                                 onSoundHapticClick()
                             }
                         },
+                        onAdvancedClick = {
+                            if (advancedDetailContent != null) {
+                                detail = SettingsDetail.Advanced
+                            } else {
+                                onAdvancedClick()
+                            }
+                        },
                         onPrivacyPolicyClick = { detail = SettingsDetail.PrivacyPolicy },
                         onFaqClick = { detail = SettingsDetail.Faq },
                         onCrashEngineClick = onCrashEngineClick
@@ -235,6 +248,7 @@ fun SettingsScreen(
                 SettingsDetail.Language -> stringResource(R.string.language)
                 SettingsDetail.Tools -> stringResource(R.string.tools)
                 SettingsDetail.SoundHaptic -> stringResource(R.string.sound_and_haptic)
+                SettingsDetail.Advanced -> stringResource(R.string.advanced)
                 SettingsDetail.PrivacyPolicy -> stringResource(R.string.privacy_policy)
                 SettingsDetail.Faq -> stringResource(R.string.faq)
                 null -> ""
@@ -256,6 +270,7 @@ fun SettingsScreen(
                         SettingsDetail.Language -> languageDetailContent?.invoke()
                         SettingsDetail.Tools -> toolsDetailContent?.invoke()
                         SettingsDetail.SoundHaptic -> soundHapticDetailContent?.invoke()
+                        SettingsDetail.Advanced -> advancedDetailContent?.invoke()
                         SettingsDetail.PrivacyPolicy ->
                             PrivacyPolicyContent(onSendFeedbackClick = onSendFeedbackClick)
                         SettingsDetail.Faq -> FaqContent()
@@ -293,6 +308,7 @@ fun SettingsScreen(
                 onLanguageClick = onLanguageClick,
                 onToolsClick = onToolsClick,
                 onSoundHapticClick = onSoundHapticClick,
+                onAdvancedClick = onAdvancedClick,
                 onPrivacyPolicyClick = onPrivacyPolicyClick,
                 onFaqClick = onFaqClick,
                 onCrashEngineClick = onCrashEngineClick,
@@ -319,6 +335,7 @@ private fun SettingsList(
     onLanguageClick: () -> Unit,
     onToolsClick: () -> Unit,
     onSoundHapticClick: () -> Unit,
+    onAdvancedClick: () -> Unit,
     onPrivacyPolicyClick: () -> Unit,
     onFaqClick: () -> Unit,
     onCrashEngineClick: (() -> Unit)?,
@@ -362,6 +379,15 @@ private fun SettingsList(
             subtitle = stringResource(R.string.sound_and_haptic_subtitle),
             selected = selectedDetail == SettingsDetail.SoundHaptic,
             onClick = onSoundHapticClick
+        )
+
+        // Advanced row
+        SettingsRow(
+            icon = Icons.Outlined.Tune,
+            title = stringResource(R.string.advanced),
+            subtitle = stringResource(R.string.advanced_subtitle),
+            selected = selectedDetail == SettingsDetail.Advanced,
+            onClick = onAdvancedClick
         )
 
         // Language row
@@ -492,6 +518,7 @@ private fun SettingsScreenPreview() {
             onLanguageClick = {},
             onToolsClick = {},
             onSoundHapticClick = {},
+            onAdvancedClick = {},
             onPrivacyPolicyClick = {},
             onFaqClick = {},
             onSendFeedbackClick = {},

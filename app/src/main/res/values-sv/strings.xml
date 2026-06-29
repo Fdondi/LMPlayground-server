@@ -137,7 +137,10 @@
     <string name="browse_more_models">Bläddra bland modeller</string>
     <string name="cancel">Avbryt</string>
     <string name="low_ram_warning_title">Modellen kan vara instabil</string>
-    <string name="low_ram_warning_message">Modellen behöver ~%1$s RAM, men den här enheten har bara %2$s totalt. Den kan laddas långsamt eller svara oförutsägbart.</string>
+    <string name="low_ram_warning_message">Modellen behöver ~%1$s RAM, men den här enheten har bara %2$s totalt. Minnet kan ta slut och appen krascha. Om det händer, slå på Inaktivera ompackning under Inställningar → Avancerat för att läsa in den i ett lågminnesläge.</string>
+    <string name="advanced_subtitle">Alternativ för minne och prestanda</string>
+    <string name="disable_repack_title">Inaktivera ompackning</string>
+    <string name="disable_repack_desc">Läser in modellvikterna minnesmappade i stället för att packa om dem i RAM. Använder mycket mindre minne, vilket hjälper stora modeller att läsas in utan att krascha, men gör svaren långsammare. Lämna av om inte en modell får slut på minne.</string>
     <string name="load_anyway">Läs in ändå</string>
 
     <!-- Download notifications -->

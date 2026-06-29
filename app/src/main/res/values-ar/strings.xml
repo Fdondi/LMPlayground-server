@@ -120,7 +120,10 @@
     <string name="browse_more_models">\u062A\u0635\u0641\u062D \u0627\u0644\u0646\u0645\u0627\u0630\u062C</string>
     <string name="cancel">\u0625\u0644\u063A\u0627\u0621</string>
     <string name="low_ram_warning_title">قد يكون النموذج غير مستقر</string>
-    <string name="low_ram_warning_message">يحتاج النموذج إلى ~%1$s من RAM، لكن هذا الجهاز يحتوي على %2$s فقط إجمالاً. قد يكون التحميل بطيئاً أو الاستجابة غير متوقعة.</string>
+    <string name="low_ram_warning_message">يحتاج النموذج إلى ~%1$s من RAM، لكن هذا الجهاز يحتوي على %2$s فقط إجمالاً. قد ينفد منه الذاكرة ويتعطل. إذا حدث ذلك، فعّل تعطيل إعادة التعبئة في الإعدادات → متقدم لتحميله في وضع الذاكرة المنخفضة.</string>
+    <string name="advanced_subtitle">خيارات الذاكرة والأداء</string>
+    <string name="disable_repack_title">تعطيل إعادة التعبئة</string>
+    <string name="disable_repack_desc">يحمّل أوزان النموذج عبر التعيين في الذاكرة بدلاً من إعادة تعبئتها في RAM. يستخدم ذاكرة أقل بكثير، مما يساعد النماذج الكبيرة على التحميل دون تعطل، لكنه يجعل الاستجابات أبطأ. اتركه معطلاً إلا إذا نفدت ذاكرة النموذج.</string>
     <string name="load_anyway">\u062A\u062D\u0645\u064A\u0644 \u0639\u0644\u0649 \u0623\u064A \u062D\u0627\u0644</string>
     <string name="download_notification_channel">\u062A\u0646\u0632\u064A\u0644\u0627\u062A \u0627\u0644\u0646\u0645\u0627\u0630\u062C</string>
     <string name="download_notification_channel_description">\u064A\u0639\u0631\u0636 \u062A\u0642\u062F\u0645 \u062A\u0646\u0632\u064A\u0644 \u0645\u0644\u0641\u0627\u062A \u0627\u0644\u0646\u0645\u0627\u0630\u062C</string>

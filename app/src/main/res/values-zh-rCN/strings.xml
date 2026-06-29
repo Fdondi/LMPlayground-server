@@ -120,7 +120,10 @@
     <string name="browse_more_models">浏览模型</string>
     <string name="cancel">取消</string>
     <string name="low_ram_warning_title">模型可能不稳定</string>
-    <string name="low_ram_warning_message">模型大约需要 %1$s RAM，但此设备总共只有 %2$s。加载可能较慢或响应不可预测。</string>
+    <string name="low_ram_warning_message">模型大约需要 %1$s RAM，但此设备总共只有 %2$s。可能会内存不足并崩溃。如果发生这种情况，请在 设置 → 高级 中开启“禁用重打包”，以低内存模式加载它。</string>
+    <string name="advanced_subtitle">内存与性能选项</string>
+    <string name="disable_repack_title">禁用重打包</string>
+    <string name="disable_repack_desc">以内存映射方式加载模型权重，而不是将它们重打包到 RAM 中。占用的内存少得多，有助于大型模型加载而不崩溃，但会让回复变慢。除非模型内存不足，否则请保持关闭。</string>
     <string name="load_anyway">仍然加载</string>
     <string name="download_notification_channel">模型下载</string>
     <string name="download_notification_channel_description">显示模型文件的下载进度</string>

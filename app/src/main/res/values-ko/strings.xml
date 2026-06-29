@@ -120,7 +120,10 @@
     <string name="browse_more_models">모델 둘러보기</string>
     <string name="cancel">취소</string>
     <string name="low_ram_warning_title">모델이 불안정할 수 있습니다</string>
-    <string name="low_ram_warning_message">모델에 약 %1$s RAM이 필요하지만 이 기기의 총 용량은 %2$s에 불과합니다. 로딩이 느리거나 응답이 예측 불가능할 수 있습니다.</string>
+    <string name="low_ram_warning_message">모델에 약 %1$s RAM이 필요하지만 이 기기의 총 용량은 %2$s에 불과합니다. 메모리가 부족해 충돌할 수 있습니다. 그런 경우 설정 → 고급에서 “리팩 비활성화”를 켜서 저메모리 모드로 로드하세요.</string>
+    <string name="advanced_subtitle">메모리 및 성능 옵션</string>
+    <string name="disable_repack_title">리팩 비활성화</string>
+    <string name="disable_repack_desc">모델 가중치를 RAM으로 리팩하는 대신 메모리 매핑으로 로드합니다. 메모리를 훨씬 적게 사용해 큰 모델이 충돌 없이 로드되도록 돕지만 응답이 느려집니다. 모델에서 메모리가 부족하지 않은 한 꺼 두세요.</string>
     <string name="load_anyway">계속 로드</string>
     <string name="download_notification_channel">모델 다운로드</string>
     <string name="download_notification_channel_description">모델 파일 다운로드 진행 상황을 표시합니다</string>

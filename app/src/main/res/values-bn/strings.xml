@@ -136,7 +136,10 @@
     <string name="browse_more_models">মডেল ব্রাউজ করুন</string>
     <string name="cancel">বাতিল</string>
     <string name="low_ram_warning_title">মডেলটি অস্থির হতে পারে</string>
-    <string name="low_ram_warning_message">মডেলের জন্য প্রায় %1$s RAM প্রয়োজন, কিন্তু এই ডিভাইসে মোট %2$s আছে। এটি ধীরে লোড হতে পারে বা অপ্রত্যাশিতভাবে সাড়া দিতে পারে।</string>
+    <string name="low_ram_warning_message">মডেলের জন্য প্রায় %1$s RAM প্রয়োজন, কিন্তু এই ডিভাইসে মোট %2$s আছে। এর মেমরি ফুরিয়ে গিয়ে এটি ক্র্যাশ করতে পারে। তা ঘটলে, কম-মেমরি মোডে এটি লোড করতে সেটিংস → উন্নত-এ রিপ্যাক নিষ্ক্রিয় করুন চালু করুন।</string>
+    <string name="advanced_subtitle">মেমরি ও কর্মক্ষমতার বিকল্প</string>
+    <string name="disable_repack_title">রিপ্যাক নিষ্ক্রিয় করুন</string>
+    <string name="disable_repack_desc">মডেলের ওজন RAM-এ রিপ্যাক করার পরিবর্তে মেমরি-ম্যাপড আকারে লোড করে। অনেক কম মেমরি ব্যবহার করে, যা বড় মডেলগুলোকে ক্র্যাশ ছাড়াই লোড হতে সাহায্য করে, তবে সাড়া ধীর করে দেয়। কোনো মডেলের মেমরি ফুরিয়ে না গেলে এটি বন্ধ রাখুন।</string>
     <string name="load_anyway">তবুও লোড করুন</string>
 
     <!-- Download notifications -->

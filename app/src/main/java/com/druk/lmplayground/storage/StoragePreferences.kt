@@ -32,6 +32,18 @@ class StoragePreferences(context: Context) {
         get() = prefs.getBoolean("haptic_on_generation", true)
         set(value) = prefs.edit { putBoolean("haptic_on_generation", value) }
 
+    /**
+     * Disable llama.cpp CPU weight repacking (load weights memory-mapped only).
+     * OFF by default → repacking stays on, which is faster but allocates a
+     * second resident copy of the weights (~2x footprint) and can OOM-crash
+     * large models on low-RAM devices. Users who hit those crashes can turn
+     * this ON to trade decode speed for a far smaller resident set. Read by
+     * [com.druk.lmplayground.conversation.ConversationViewModel] at load time.
+     */
+    var disableRepack: Boolean
+        get() = prefs.getBoolean("disable_repack", false)
+        set(value) = prefs.edit { putBoolean("disable_repack", value) }
+
     fun getCustomModelMetadata(filename: String): Pair<String, Boolean>? {
         val value = prefs.getString("custom_model_$filename", null) ?: return null
         val parts = value.split("|", limit = 2)

@@ -53,6 +53,7 @@ class SettingsFragment : Fragment() {
     private val systemPromptsViewModel: SystemPromptsViewModel by viewModels()
     private val toolsViewModel: ToolsViewModel by viewModels()
     private val soundHapticViewModel: SoundHapticViewModel by viewModels()
+    private val advancedViewModel: AdvancedViewModel by viewModels()
 
     // Action deferred across the notification-permission request (a download
     // started only after the user answers the permission dialog).
@@ -228,6 +229,9 @@ class SettingsFragment : Fragment() {
                     onSoundHapticClick = {
                         findNavController().navigateFromSettings(R.id.action_settings_to_sound_haptic)
                     },
+                    onAdvancedClick = {
+                        findNavController().navigateFromSettings(R.id.action_settings_to_advanced)
+                    },
                     onSendFeedbackClick = {
                         val email = getString(R.string.privacy_policy_contact_email)
                         val intent = Intent(Intent.ACTION_SENDTO).apply {
@@ -250,6 +254,9 @@ class SettingsFragment : Fragment() {
                     } else null,
                     soundHapticDetailContent = if (twoPane) {
                         { SoundHapticDetailPane() }
+                    } else null,
+                    advancedDetailContent = if (twoPane) {
+                        { AdvancedDetailPane() }
                     } else null,
                     initialDetailKey = openDetail,
                     masterWidth = masterWidth,
@@ -358,6 +365,19 @@ class SettingsFragment : Fragment() {
             hapticEnabled = hapticEnabled,
             onSoundChanged = { soundHapticViewModel.setSoundEnabled(it) },
             onHapticChanged = { soundHapticViewModel.setHapticEnabled(it) },
+        )
+    }
+
+    /**
+     * Embedded Advanced pane — memory/performance toggles, rendered without
+     * the Scaffold/topBar that [AdvancedFragment] adds on phone.
+     */
+    @androidx.compose.runtime.Composable
+    private fun AdvancedDetailPane() {
+        val disableRepack by advancedViewModel.disableRepack.observeAsState(false)
+        AdvancedContent(
+            disableRepack = disableRepack,
+            onDisableRepackChanged = { advancedViewModel.setDisableRepack(it) },
         )
     }
 

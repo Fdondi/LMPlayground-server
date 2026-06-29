@@ -144,7 +144,7 @@
     <string name="browse_more_models">Browse Models</string>
     <string name="cancel">Cancel</string>
     <string name="low_ram_warning_title">Model could be unstable</string>
-    <string name="low_ram_warning_message">Model needs ~%1$s RAM but this device only has %2$s total. It may load slowly or respond unpredictably.</string>
+    <string name="low_ram_warning_message">Model needs ~%1$s RAM but this device only has %2$s total. It may run out of memory and crash. If that happens, turn on Disable repack in Settings → Advanced to load it in a low-memory mode.</string>
     <string name="load_anyway">Load anyway</string>
 
     <!-- Download notifications -->
@@ -301,6 +301,9 @@
     <string name="sound_on_completion_desc">Plays a short chime when the model finishes a response while the app is in the background.</string>
     <string name="haptic_on_generation_title">Haptic feedback on generation</string>
     <string name="haptic_on_generation_desc">A gentle tick as each part of the response streams in.</string>
+    <string name="advanced_subtitle">Memory and performance options</string>
+    <string name="disable_repack_title">Disable repack</string>
+    <string name="disable_repack_desc">Loads model weights memory-mapped instead of repacking them into RAM. Uses much less memory, which helps large models load without crashing, but makes responses slower. Leave off unless a model runs out of memory.</string>
 
     <!-- Tools -->
     <string name="tools">Tools</string>
