@@ -381,10 +381,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             // which case the mmap-only load won't blow the budget). "Load
             // anyway" re-enters with forceLoad=true.
             val disableRepack = storagePreferences.disableRepack
-            val fileSizeBytes = withContext(Dispatchers.IO) {
-                storageRepository.getModelFiles()
-                    .find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
-            }
+            val modelFiles = withContext(Dispatchers.IO) { storageRepository.getModelFiles() }
+            val fileSizeBytes = modelFiles.find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
+            // Pair the model with a multimodal projector present on disk (its
+            // declared one, or a convention-matched sibling for custom/sideloaded
+            // models). Authoritative for every load path, incl. loadModelByFilename.
+            val model = ModelInfoProvider.resolveMmproj(
+                modelInfo, modelFiles.map { it.name }.toSet()
+            )
             val totalRamBytes = DeviceCapability.totalRamBytes(app)
             val exceedsRam = DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)
             if (!forceLoad && exceedsRam && !disableRepack) {
@@ -445,7 +449,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
             withContext(Dispatchers.Default) {
                 _modelLoadingProgress.postValue(0f)
-                _loadedModel.postValue(modelInfo)
+                _loadedModel.postValue(model)
                 _thinkingEnabled.postValue(false)
                 _supportsThinking.postValue(false)
                 _supportsVision.postValue(false)
@@ -509,11 +513,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // Load mmproj for vision models. The mtmd loader needs a
                     // real filesystem path, so we copy the mmproj GGUF to a
                     // temp file in app-private storage before handing it off.
-                    if (modelInfo.mmprojFilename != null) {
+                    if (model.mmprojFilename != null) {
                         _loadedModelStatus.postValue("Loading vision...")
                         val mmprojTempFile = java.io.File(app.cacheDir, "mmproj_temp.gguf")
                         val copied = storageRepository.copyModelToFile(
-                            modelInfo.mmprojFilename, mmprojTempFile
+                            model.mmprojFilename, mmprojTempFile
                         )
                         if (copied) {
                             android.util.Log.d(
@@ -530,15 +534,15 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         } else {
                             android.util.Log.d(
                                 "ConversationVM",
-                                "mmproj file not found: ${modelInfo.mmprojFilename}"
+                                "mmproj file not found: ${model.mmprojFilename}"
                             )
                             // Vision-capable model loaded without its image
                             // module: offer to download it, once per model.
-                            if (modelInfo.mmprojUri != null &&
-                                !storagePreferences.wasVisionModuleHintShown(modelInfo.filename)
+                            if (model.mmprojUri != null &&
+                                !storagePreferences.wasVisionModuleHintShown(model.filename)
                             ) {
-                                storagePreferences.setVisionModuleHintShown(modelInfo.filename)
-                                _visionModuleHint.postValue(modelInfo)
+                                storagePreferences.setVisionModuleHintShown(model.filename)
+                                _visionModuleHint.postValue(model)
                             }
                         }
                     }

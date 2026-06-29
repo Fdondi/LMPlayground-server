@@ -529,28 +529,46 @@ object ModelInfoProvider {
     }
 
     /**
+     * Resolve a model's effective mmproj against the files actually present on
+     * disk ([onDiskFilenames]). A catalog model keeps its declared projector
+     * while that exact file is present; when the declared one is missing (or
+     * the model declares none — e.g. a custom GGUF), we fall back to a
+     * projector in the folder whose name matches by convention. This is what
+     * lets sideloaded/custom models and manually-placed projectors light up
+     * vision. The declared [ModelInfo.mmprojUri] (download source) is preserved
+     * so the normal download path still works.
+     */
+    fun resolveMmproj(model: ModelInfo, onDiskFilenames: Set<String>): ModelInfo {
+        val declared = model.mmprojFilename
+        if (declared != null && declared in onDiskFilenames) return model
+        val paired = MmprojPairing.findMmprojFor(model.filename, onDiskFilenames)
+        return if (paired == null || paired == declared) model
+        else model.copy(mmprojFilename = paired)
+    }
+
+    /**
      * Get models with their download status.
      */
     fun getModelsWithStatus(
         downloadedFilenames: Set<String>,
         customModels: List<ModelInfo> = emptyList()
     ): List<ModelWithStatus> {
+        fun statusFor(model: ModelInfo, isDownloaded: Boolean): ModelWithStatus {
+            val resolved = resolveMmproj(model, downloadedFilenames)
+            return ModelWithStatus(
+                model = resolved,
+                isDownloaded = isDownloaded,
+                isMmprojDownloaded = resolved.mmprojFilename != null &&
+                    resolved.mmprojFilename in downloadedFilenames,
+            )
+        }
         val knownModels = allModels
             .sortedByDescending { it.releaseDate }
             // Deprecated entries are recognized but never offered for download:
             // only surface them when the file is actually present on disk.
             .filter { !it.deprecated || it.filename in downloadedFilenames }
-            .map { model ->
-                ModelWithStatus(
-                    model = model,
-                    isDownloaded = model.filename in downloadedFilenames,
-                    isMmprojDownloaded = model.mmprojFilename != null &&
-                        model.mmprojFilename in downloadedFilenames,
-                )
-            }
-        val customWithStatus = customModels.map { model ->
-            ModelWithStatus(model = model, isDownloaded = true)
-        }
+            .map { model -> statusFor(model, isDownloaded = model.filename in downloadedFilenames) }
+        val customWithStatus = customModels.map { model -> statusFor(model, isDownloaded = true) }
         return customWithStatus + knownModels
     }
 }

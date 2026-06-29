@@ -10,6 +10,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.druk.lmplayground.App
 import com.druk.lmplayground.download.DownloadRepository
+import com.druk.lmplayground.models.MmprojPairing
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
@@ -125,6 +126,10 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
         val llamaCpp = (getApplication<Application>() as? App)?.llamaCpp ?: return emptyList()
         val unknownFiles = modelFiles.filter { it.name !in ModelInfoProvider.knownFilenames }
         return unknownFiles.mapNotNull { file ->
+            // A projector GGUF is paired with its base model (resolveMmproj), not
+            // surfaced as a standalone model. Skip it before the metadata probe —
+            // mmproj files have no chat template, so probing them is wasted work.
+            if (MmprojPairing.isMmproj(file.name)) return@mapNotNull null
             val cached = prefs.getCustomModelMetadata(file.name)
             val (name, hasChatTemplate) = if (cached != null) {
                 cached
