@@ -105,9 +105,57 @@ static bool clipVulkanIsKnownBad(const char *gpuDescription) {
     return false;
 }
 
+// --- Vulkan CLIP crash sentinel ---------------------------------------------
+// Catches GPUs not on the static denylist after a single crash. The inflight
+// marker brackets the Vulkan vision-encoder init (the SIGSEGV happens inside
+// the GPU driver and can't be caught); if it's still present at the next
+// process start, that attempt crashed -> promote to a permanent block so CLIP
+// runs on CPU from then on. An empty stateDir disables the sentinel (tests).
+static std::string g_clipStateDir;
+static std::string clipInflightPath() { return g_clipStateDir + "/vulkan_clip.inflight"; }
+static std::string clipBlockedPath()  { return g_clipStateDir + "/vulkan_clip.blocked"; }
+
+static bool fileExists(const std::string &path) {
+    FILE *f = fopen(path.c_str(), "r");
+    if (f != nullptr) { fclose(f); return true; }
+    return false;
+}
+static void touchFile(const std::string &path) {
+    FILE *f = fopen(path.c_str(), "w");
+    if (f != nullptr) fclose(f);
+}
+
+void clipSentinelInit(const std::string &stateDir) {
+    g_clipStateDir = stateDir;
+    if (g_clipStateDir.empty()) return;
+    // A marker that survived a process restart means the last Vulkan vision
+    // attempt took the process down. Make the block permanent.
+    if (fileExists(clipInflightPath())) {
+        touchFile(clipBlockedPath());
+        remove(clipInflightPath().c_str());
+        __android_log_print(ANDROID_LOG_WARN, TAG,
+            "previous Vulkan CLIP attempt crashed; disabling Vulkan vision");
+    }
+}
+bool clipSentinelVulkanBlocked() {
+    return !g_clipStateDir.empty() && fileExists(clipBlockedPath());
+}
+void clipSentinelBeginVulkanAttempt() {
+    if (!g_clipStateDir.empty()) touchFile(clipInflightPath());
+}
+void clipSentinelEndVulkanAttempt() {
+    if (!g_clipStateDir.empty()) remove(clipInflightPath().c_str());
+}
+
 extern "C" JNIEXPORT int
 JNICALL
-Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstring nativeLibDir) {
+Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstring nativeLibDir, jstring stateDir) {
+
+    if (stateDir != nullptr) {
+        const char *sd = env->GetStringUTFChars(stateDir, nullptr);
+        clipSentinelInit(sd);
+        env->ReleaseStringUTFChars(stateDir, sd);
+    }
 
     // Redirect std::cerr to logcat
     AndroidLogBuf androidLogBuf;
@@ -157,7 +205,8 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstr
             gpu_desc = desc;
         }
     }
-    if (gpu_name != nullptr && !clipVulkanIsKnownBad(gpu_desc)) {
+    if (gpu_name != nullptr && !clipVulkanIsKnownBad(gpu_desc)
+            && !clipSentinelVulkanBlocked()) {
         mtmd_backend = gpu_name;
     }
     char backend_override[PROP_VALUE_MAX] = {0};

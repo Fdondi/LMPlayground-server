@@ -16,7 +16,14 @@ class NativeLlamaCpp {
         }
     }
 
-    external fun init(nativeLibDir: String): Int
+    /**
+     * @param stateDir an app-writable directory for the Vulkan-vision crash
+     *   sentinel (see native-lib.cpp). Pass "" to disable it.
+     */
+    external fun init(nativeLibDir: String, stateDir: String): Int
+
+    /** Convenience for callers that don't need the vision crash sentinel. */
+    fun init(nativeLibDir: String): Int = init(nativeLibDir, "")
 
     external fun systemInfo(): String
 

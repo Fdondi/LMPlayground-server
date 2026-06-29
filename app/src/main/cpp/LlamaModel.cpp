@@ -17,6 +17,7 @@
 #include <cinttypes>
 #include <cmath>
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 #include <ctime>
 #include <fstream>
@@ -93,6 +94,14 @@ void LlamaModel::loadMmprojModel(const std::string &mmprojPath) {
     LOGi("loadMmprojModel: loading %s (use_gpu=%d, n_threads=%d, image_max_tokens=%d)",
          mmprojPath.c_str(), params.use_gpu, params.n_threads, params.image_max_tokens);
 
+    // The Vulkan CLIP init can SIGSEGV inside the GPU driver on some devices —
+    // an uncatchable crash, not a C++ exception. Bracket it with the sentinel so
+    // a crash here is detected on the next launch and Vulkan vision is disabled.
+    // CPU encodes never hit this, so only mark the Vulkan path.
+    const char *clip_backend = std::getenv("MTMD_BACKEND_DEVICE");
+    bool clip_on_vulkan = (clip_backend != nullptr && strcmp(clip_backend, "CPU") != 0);
+    if (clip_on_vulkan) clipSentinelBeginVulkanAttempt();
+
     // mtmd_init_from_file catches exceptions internally and returns null,
     // but its LOG_ERR may not reach Android logcat reliably. Wrap again to be safe.
     try {
@@ -104,6 +113,10 @@ void LlamaModel::loadMmprojModel(const std::string &mmprojPath) {
         LOGe("loadMmprojModel UNKNOWN EXCEPTION");
         mtmd_ctx = nullptr;
     }
+
+    // Reached only if mtmd_init returned (success or caught failure) without
+    // crashing — clear the marker so this load isn't counted as a crash.
+    if (clip_on_vulkan) clipSentinelEndVulkanAttempt();
 
     // Also check n_embd match manually for better diagnostics
     if (mtmd_ctx == nullptr) {

@@ -13,6 +13,17 @@
 
 #include <atomic>
 
+// Vulkan CLIP crash sentinel (implemented in native-lib.cpp). A marker file is
+// written right before the crash-prone Vulkan vision-encoder init and removed
+// right after it returns; if it survives to the next process start, the attempt
+// took the :llama process down, so Vulkan vision is disabled for this install
+// and CLIP runs on CPU. clipSentinelInit() promotes a surviving marker to a
+// permanent block; begin/end bracket the risky init in LlamaModel.
+void clipSentinelInit(const std::string &stateDir);
+bool clipSentinelVulkanBlocked();
+void clipSentinelBeginVulkanAttempt();
+void clipSentinelEndVulkanAttempt();
+
 struct SamplerParams {
     int n_ctx;
     float temperature;

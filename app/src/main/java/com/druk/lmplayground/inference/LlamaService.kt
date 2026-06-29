@@ -36,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference
 class LlamaService : Service() {
 
     private val nativeLlamaCpp by lazy {
-        NativeLlamaCpp().also { it.init(applicationInfo.nativeLibraryDir) }
+        NativeLlamaCpp().also { it.init(applicationInfo.nativeLibraryDir, filesDir.absolutePath) }
     }
 
     private val nextModelId = AtomicInteger(1)
