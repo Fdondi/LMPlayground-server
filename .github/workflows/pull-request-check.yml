@@ -25,5 +25,9 @@ jobs:
         cache: 'gradle'
     - name: Setup Android SDK
       uses: android-actions/setup-android@v3
+    - name: Run unit tests
+      run: ./gradlew app:testDebugUnitTest -PskipScreenshots
+    - name: Run lint
+      run: ./gradlew app:lintDebug
     - name: Run connected android tests
       run: ./gradlew app:mvdApi35Check

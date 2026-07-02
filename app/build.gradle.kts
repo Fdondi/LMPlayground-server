@@ -233,6 +233,12 @@ android {
         excludes += "/META-INF/AL2.0"
         excludes += "/META-INF/LGPL2.1"
     }
+
+    lint {
+        // Existing issues live in the baseline; only new issues fail the build.
+        baseline = file("lint-baseline.xml")
+        abortOnError = true
+    }
 }
 
 // ── Play Store screenshot organization ───────────────────────────────
@@ -333,6 +339,11 @@ tasks.matching { it.name == "recordPaparazziDebug" }.configureEach {
 // auto-trigger the organize task.
 tasks.withType<Test>().configureEach {
     reports.html.required.set(false)
+    // CI runs unit tests with -PskipScreenshots: Paparazzi golden snapshots
+    // are not git-tracked, so verify mode would fail there.
+    if (project.hasProperty("skipScreenshots")) {
+        exclude("**/screenshots/**")
+    }
 }
 
 dependencies {

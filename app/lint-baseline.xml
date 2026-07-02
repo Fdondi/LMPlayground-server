@@ -1,0 +1,3575 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.13.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.13.2)" variant="all" version="8.13.2">
+
+    <issue
+        id="OldTargetApi"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
+        errorLine1="        targetSdk = libs.versions.targetSdk.get().toInt()"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="90"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="OldTargetApi"
+        message="Not targeting the latest versions of Android; compatibility modes apply. Consider testing and updating this version. Consult the `android.os.Build.VERSION_CODES` javadoc for details."
+        errorLine1="targetSdk = &quot;35&quot;"
+        errorLine2="            ~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="61"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedAttribute"
+        message="Attribute `localeConfig` is only used in API level 33 and higher (current min is 30)"
+        errorLine1="        android:localeConfig=&quot;@xml/locales_config&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="31"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of Gradle than 8.13 is available: 8.14.5"
+        errorLine1="distributionUrl=https\://services.gradle.org/distributions/gradle-8.13-bin.zip"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/wrapper/gradle-wrapper.properties"
+            line="3"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 8.13.2 is available: 9.2.1"
+        errorLine1="androidGradlePlugin = &quot;8.13.2&quot;"
+        errorLine2="                      ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="7"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.test than 8.13.2 is available: 9.2.1"
+        errorLine1="androidGradlePlugin = &quot;8.13.2&quot;"
+        errorLine2="                      ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="7"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of `compileSdkVersion` than 35 is available: 36"
+        errorLine1="    compileSdk = libs.versions.compileSdk.get().toInt()"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="84"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.javascriptengine:javascriptengine than 1.0.0-beta01 is available: 1.1.0"
+        errorLine1="    implementation(&quot;androidx.javascriptengine:javascriptengine:1.0.0-beta01&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="384"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-compose than 1.10.1 is available: 1.13.0"
+        errorLine1="androidx-activity-compose = &quot;1.10.1&quot;"
+        errorLine2="                            ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="8"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity-ktx than 1.10.1 is available: 1.13.0"
+        errorLine1="androidx-activity-compose = &quot;1.10.1&quot;"
+        errorLine2="                            ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="8"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.benchmark:benchmark-macro than 1.2.0 is available: 1.4.1"
+        errorLine1="androidx-benchmark = &quot;1.2.0&quot;"
+        errorLine2="                     ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="10"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.benchmark:benchmark-macro-junit4 than 1.2.1 is available: 1.4.1"
+        errorLine1="androidx-benchmark-junit4 = &quot;1.2.1&quot;"
+        errorLine2="                            ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="11"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2025.12.00 is available: 2026.06.01"
+        errorLine1="androidx-compose-bom = &quot;2025.12.00&quot;"
+        errorLine2="                       ~~~~~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="12"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.constraintlayout:constraintlayout-compose than 1.0.1 is available: 1.1.1"
+        errorLine1="androidx-constraintlayout = &quot;1.0.1&quot;"
+        errorLine2="                            ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="13"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.core:core-ktx than 1.15.0 is available: 1.19.0"
+        errorLine1="androidx-corektx = &quot;1.15.0&quot;"
+        errorLine2="                   ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="14"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.glance:glance than 1.0.0 is available: 1.1.1"
+        errorLine1="androidx-glance = &quot;1.0.0&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="15"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.glance:glance-appwidget than 1.0.0 is available: 1.1.1"
+        errorLine1="androidx-glance = &quot;1.0.0&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="15"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.glance:glance-material3 than 1.0.0 is available: 1.1.1"
+        errorLine1="androidx-glance = &quot;1.0.0&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="15"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-compose than 2.8.7 is available: 2.11.0"
+        errorLine1="androidx-lifecycle-compose = &quot;2.8.7&quot;"
+        errorLine2="                             ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="16"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-ktx than 2.8.7 is available: 2.11.0"
+        errorLine1="androidx-lifecycle-compose = &quot;2.8.7&quot;"
+        errorLine2="                             ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="16"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-viewmodel-savedstate than 2.8.7 is available: 2.11.0"
+        errorLine1="androidx-lifecycle-compose = &quot;2.8.7&quot;"
+        errorLine2="                             ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="16"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-compose than 2.8.7 is available: 2.11.0"
+        errorLine1="androidx-lifecycle-runtime-compose = &quot;2.8.7&quot;"
+        errorLine2="                                     ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="17"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-compose than 2.7.7 is available: 2.9.8"
+        errorLine1="androidx-navigation = &quot;2.7.7&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="18"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-fragment-ktx than 2.7.7 is available: 2.9.8"
+        errorLine1="androidx-navigation = &quot;2.7.7&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="18"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-ui-ktx than 2.7.7 is available: 2.9.8"
+        errorLine1="androidx-navigation = &quot;2.7.7&quot;"
+        errorLine2="                      ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="18"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material3.adaptive:adaptive-layout than 1.1.0 is available: 1.2.0"
+        errorLine1="androidx-compose-material3-adaptive = &quot;1.1.0&quot;"
+        errorLine2="                                      ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="24"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material3.adaptive:adaptive-navigation than 1.1.0 is available: 1.2.0"
+        errorLine1="androidx-compose-material3-adaptive = &quot;1.1.0&quot;"
+        errorLine2="                                      ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="24"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.window:window than 1.3.0-alpha01 is available: 1.5.1"
+        errorLine1="androidx-window = &quot;1.3.0-alpha01&quot;"
+        errorLine2="                  ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="25"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.work:work-runtime-ktx than 2.10.5 is available: 2.11.2"
+        errorLine1="androidx-work = &quot;2.10.5&quot;"
+        errorLine2="                ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="26"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.hilt:hilt-navigation-compose than 1.1.0 is available: 1.4.0"
+        errorLine1="androidxHiltNavigationCompose = &quot;1.1.0&quot;"
+        errorLine2="                                ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="27"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.uiautomator:uiautomator than 2.2.0 is available: 2.4.0"
+        errorLine1="androix-test-uiautomator = &quot;2.2.0&quot;"
+        errorLine2="                           ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="28"
+            column="28"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of `compileSdkVersion` than 35 is available: 36"
+        errorLine1="compileSdk = &quot;35&quot;"
+        errorLine2="             ~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="32"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.gms:play-services-maps than 18.2.0 is available: 20.0.0"
+        errorLine1="google-maps = &quot;18.2.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="35"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.hilt:hilt-compiler than 1.1.0 is available: 1.4.0"
+        errorLine1="hiltExt = &quot;1.1.0&quot;"
+        errorLine2="          ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="42"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.material:material than 1.12.0 is available: 1.14.0"
+        errorLine1="material = &quot;1.12.0&quot;"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="51"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.7.1 is available: 2.8.4"
+        errorLine1="room = &quot;2.7.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="58"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-ktx than 2.7.1 is available: 2.8.4"
+        errorLine1="room = &quot;2.7.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="58"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-runtime than 2.7.1 is available: 2.8.4"
+        errorLine1="room = &quot;2.7.1&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="58"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.lifecycle:lifecycle-runtime-ktx than 2.6.0-alpha04 is available: 2.11.0"
+        errorLine1="androidx-lifecycle-runtime = &quot;androidx.lifecycle:lifecycle-runtime-ktx:2.6.0-alpha04&quot;"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="104"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.accompanist:accompanist-adaptive than 0.32.0 is available: 0.37.3"
+        errorLine1="accompanist = &quot;0.32.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.accompanist:accompanist-flowlayout than 0.32.0 is available: 0.36.0"
+        errorLine1="accompanist = &quot;0.32.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.accompanist:accompanist-pager than 0.32.0 is available: 0.36.0"
+        errorLine1="accompanist = &quot;0.32.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.accompanist:accompanist-permissions than 0.32.0 is available: 0.37.3"
+        errorLine1="accompanist = &quot;0.32.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.accompanist:accompanist-swiperefresh than 0.32.0 is available: 0.36.0"
+        errorLine1="accompanist = &quot;0.32.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.accompanist:accompanist-systemuicontroller than 0.32.0 is available: 0.36.0"
+        errorLine1="accompanist = &quot;0.32.0&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="6"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of io.coil-kt:coil-compose than 2.4.0 is available: 2.7.0"
+        errorLine1="coil = &quot;2.4.0&quot;"
+        errorLine2="       ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="29"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.commonmark:commonmark than 0.24.0 is available: 0.29.0"
+        errorLine1="commonmark = &quot;0.24.0&quot;"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="30"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.commonmark:commonmark-ext-gfm-strikethrough than 0.24.0 is available: 0.29.0"
+        errorLine1="commonmark = &quot;0.24.0&quot;"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="30"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-android than 1.7.3 is available: 1.11.0"
+        errorLine1="coroutines = &quot;1.7.3&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="34"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-coroutines-test than 1.7.3 is available: 1.11.0"
+        errorLine1="coroutines = &quot;1.7.3&quot;"
+        errorLine2="             ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="34"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.github.ben-manes.versions than 0.50.0 is available: 0.54.0"
+        errorLine1="gradle-versions = &quot;0.50.0&quot;"
+        errorLine2="                  ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="36"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of dev.chrisbanes.haze:haze than 1.6.10 is available: 1.7.2"
+        errorLine1="haze = &quot;1.6.10&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="40"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger.hilt.android than 2.48.1 is available: 2.60"
+        errorLine1="hilt = &quot;2.48.1&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="41"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger:hilt-android than 2.48.1 is available: 2.60"
+        errorLine1="hilt = &quot;2.48.1&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="41"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger:hilt-android-compiler than 2.48.1 is available: 2.60"
+        errorLine1="hilt = &quot;2.48.1&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="41"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.dagger:hilt-android-testing than 2.48.1 is available: 2.60"
+        errorLine1="hilt = &quot;2.48.1&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="41"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jsoup:jsoup than 1.18.3 is available: 1.22.2"
+        errorLine1="jsoup = &quot;1.18.3&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="45"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.android than 2.3.0 is available: 2.4.0"
+        errorLine1="kotlin = &quot;2.3.0&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="47"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.kapt than 2.3.0 is available: 2.4.0"
+        errorLine1="kotlin = &quot;2.3.0&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="47"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.compose than 2.3.0 is available: 2.4.0"
+        errorLine1="kotlin = &quot;2.3.0&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="47"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlin.plugin.parcelize than 2.3.0 is available: 2.4.0"
+        errorLine1="kotlin = &quot;2.3.0&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="47"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.jetbrains.kotlinx:kotlinx-collections-immutable than 0.3.5 is available: 0.5.0"
+        errorLine1="kotlinx_immutable = &quot;0.3.5&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="48"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.maps.android:maps-compose than 3.1.1 is available: 8.3.0"
+        errorLine1="maps-compose = &quot;3.1.1&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="50"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.squareup.okhttp3:logging-interceptor than 4.11.0 is available: 5.4.0"
+        errorLine1="okhttp = &quot;4.11.0&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="54"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.squareup.okhttp3:okhttp than 4.11.0 is available: 5.4.0"
+        errorLine1="okhttp = &quot;4.11.0&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="54"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of app.cash.paparazzi than 2.0.0-alpha04 is available: 2.0.0-alpha05"
+        errorLine1="paparazzi = &quot;2.0.0-alpha04&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of org.robolectric:robolectric than 4.14.1 is available: 4.16.1"
+        errorLine1="robolectric = &quot;4.14.1&quot;"
+        errorLine2="              ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="56"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.rometools:rome than 1.18.0 is available: 2.1.0"
+        errorLine1="rome = &quot;1.18.0&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="57"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.rometools:rome-modules than 1.18.0 is available: 2.1.0"
+        errorLine1="rome = &quot;1.18.0&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="57"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of nl.littlerobots.version-catalog-update than 0.8.3 is available: 1.1.0"
+        errorLine1="version-catalog-update = &quot;0.8.3&quot;"
+        errorLine2="                         ~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="62"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-viewmodel-ktx but with different version"
+        errorLine1="androidx-lifecycle-livedata-ktx = { module = &quot;androidx.lifecycle:lifecycle-viewmodel-ktx&quot;, version.ref = &quot;androidx-lifecycle-compose&quot; }"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="103"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-viewmodel-ktx but with different version"
+        errorLine1="androidx-lifecycle-viewmodel-ktx = { module = &quot;androidx.lifecycle:lifecycle-viewmodel-ktx&quot;, version.ref = &quot;androidx-lifecycle-compose&quot; }"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/Projects/LMPlayground/gradle/libs.versions.toml"
+            line="107"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="ConfigurationScreenWidthHeight"
+        message="Using Configuration.screenHeightDp instead of LocalWindowInfo.current.containerSize"
+        errorLine1="    val screenHeightDp = LocalConfiguration.current.screenHeightDp"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/GenerationParamsSheet.kt"
+            line="106"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="ConfigurationScreenWidthHeight"
+        message="Using Configuration.screenWidthDp instead of LocalWindowInfo.current.containerSize"
+        errorLine1="                val twoPane = configuration.screenWidthDp >= 840"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/SettingsFragment.kt"
+            line="181"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="ConfigurationScreenWidthHeight"
+        message="Using Configuration.screenWidthDp instead of LocalWindowInfo.current.containerSize"
+        errorLine1="    val twoPane = configuration.screenWidthDp >= 840"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/SettingsScreen.kt"
+            line="134"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="ConfigurationScreenWidthHeight"
+        message="Using Configuration.screenWidthDp instead of LocalWindowInfo.current.containerSize"
+        errorLine1="    val isWide = configuration.screenWidthDp >= 840"
+        errorLine2="                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/SystemPromptsScreen.kt"
+            line="129"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/ConversationBar.kt"
+            line="45"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/SystemPromptEditorSheet.kt"
+            line="88"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="ModifierParameter"
+        message="Modifier parameter should be the first optional parameter"
+        errorLine1="    modifier: Modifier = Modifier,"
+        errorLine2="    ~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/UserInput.kt"
+            line="124"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;es&quot; (Spanish) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;inference_notification_tokens&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-es/strings.xml"
+            line="271"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;fr&quot; (French) the following quantity should also be defined: `many` (e.g. &quot;1000000 de jours&quot;)"
+        errorLine1="    &lt;plurals name=&quot;inference_notification_tokens&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-fr/strings.xml"
+            line="271"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;it&quot; (Italian) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;inference_notification_tokens&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-it/strings.xml"
+            line="271"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingQuantity"
+        message="For locale &quot;pt&quot; (Portuguese) the following quantity should also be defined: `many`"
+        errorLine1="    &lt;plurals name=&quot;inference_notification_tokens&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-pt-rBR/strings.xml"
+            line="271"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;take_photo&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;take_photo&quot;>Take photo&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="21"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;choose_from_library&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;choose_from_library&quot;>Choose from library&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="22"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;camera_unavailable&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;camera_unavailable&quot;>No camera available&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;saved_prompts&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;saved_prompts&quot;>Saved prompts&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="179"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tab_params&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;tab_params&quot;>Params&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="208"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tab_prompt&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;tab_prompt&quot;>Prompt&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="209"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;tools_unsupported&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;tools_unsupported&quot;>This model doesn\&apos;t support tools&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="314"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;cd_supports_vision&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;cd_supports_vision&quot;>Supports image input&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="321"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;download_with_vision_title&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;download_with_vision_title&quot;>Download image support?&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="323"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;download_with_vision_message&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;download_with_vision_message&quot;>%1$s can also understand images. Download the image module too, or get the text-only model? You can add image support later.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="324"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;download_with_images&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;download_with_images&quot;>With images&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="325"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;download_text_only&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;download_text_only&quot;>Text only&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="326"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;image_module_description&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;image_module_description&quot;>Image module — adds image input&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="327"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;cd_download_image_module&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;cd_download_image_module&quot;>Download image support&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="328"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;vision_module_available&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;vision_module_available&quot;>Add image support · Download&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="330"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="MissingTranslation"
+        message="&quot;vision_module_downloading&quot; is not translated in &quot;de&quot; (German), &quot;hi&quot; (Hindi), &quot;fi&quot; (Finnish), &quot;pt&quot; (Portuguese), &quot;fil&quot; (Filipino; Pilipino), &quot;bn&quot; (Bangla), &quot;fr&quot; (French), &quot;uk&quot; (Ukrainian), &quot;sv&quot; (Swedish), &quot;ko&quot; (Korean), &quot;in&quot; (Indonesian), &quot;ms&quot; (Malay), &quot;it&quot; (Italian), &quot;es&quot; (Spanish), &quot;iw&quot; (Hebrew), &quot;zh&quot; (Chinese), &quot;cs&quot; (Czech), &quot;ar&quot; (Arabic), &quot;vi&quot; (Vietnamese), &quot;nb&quot; (Norwegian Bokmål), &quot;th&quot; (Thai), &quot;ja&quot; (Japanese), &quot;pl&quot; (Polish), &quot;da&quot; (Danish), &quot;ro&quot; (Romanian), &quot;nl&quot; (Dutch), &quot;tr&quot; (Turkish)"
+        errorLine1="    &lt;string name=&quot;vision_module_downloading&quot;>Downloading image support — ready next time you load this model&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="331"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="&quot;internett&quot; is usually capitalized as &quot;Internett&quot;"
+        errorLine1="    &lt;string name=&quot;privacy_policy_s2_body&quot;>Samtalene dine, systemledetekstene og modellens svar behandles lokalt på enheten din av modellen på enheten. Dette innholdet sendes aldri til meg eller til noen server for inferens. Det blir værende på enheten din med mindre du velger å bruke en funksjon som kobler til internett, slik det er beskrevet nedenfor.&lt;/string>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                        ~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="76"
+            column="313"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="&quot;internett&quot; is usually capitalized as &quot;Internett&quot;"
+        errorLine1="    &lt;string name=&quot;privacy_policy_s4_body&quot;>Dyktige modeller kan bruke valgfrie verktøy, som er av som standard. Når du aktiverer nettverktøyene, forlater noe informasjon enheten din: verktøyet Nettsøk sender modellens søk til DuckDuckGo, og verktøyet Hent nettside laster ned sidene modellen bestemmer seg for å åpne fra disse nettstedene. Disse forespørslene håndteres av tredjepartsnettstedene under deres egne personvernerklæringer — jeg verken mottar eller lagrer dem. Verktøyet Kjør JavaScript kjører utelukkende på enheten din i en sandkasse uten internett-tilgang. For å holde alt offline lar du bare verktøyene være av.&lt;/string>"
+        errorLine2="                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="80"
+            column="553"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="&quot;internett&quot; is usually capitalized as &quot;Internett&quot;"
+        errorLine1="    &lt;string name=&quot;faq_a13&quot;>Bare når du aktiverer dem. Nettsøk sender modellens søk til DuckDuckGo, og Hent nettside laster ned sidene modellen velger å åpne — disse forespørslene går til nettstedene selv, ikke til utvikleren. Kjør JavaScript blir værende utelukkende på enheten din uten internett-tilgang. Med alle verktøy av (standarden) forlater ingenting enheten din. Se personvernerklæringen for detaljer.&lt;/string>"
+        errorLine2="                                                                                                                                                                                                                                                                                               ~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="119"
+            column="288"/>
+    </issue>
+
+    <issue
+        id="Typos"
+        message="&quot;internett&quot; is usually capitalized as &quot;Internett&quot;"
+        errorLine1="    &lt;string name=&quot;tool_run_javascript_desc&quot;>Kjører JavaScript i en sikker sandkasse for matematikk, datoer og tekstbehandling. Ingen internett- eller filtilgang.&lt;/string>"
+        errorLine2="                                                                                                                                     ~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="321"
+            column="134"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="2"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="2"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="2"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="2"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="2"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="2"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="3"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="3"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="3"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;app_name&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;app_name&quot; translatable=&quot;false&quot;>LM Playground&lt;/string>"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="3"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="6"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="6"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="6"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="6"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="6"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="6"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="7"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="7"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="7"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="7"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="7"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="7"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="7"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="7"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="7"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_title&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="7"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="8"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="8"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="8"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;nav_header_subtitle&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="8"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="34"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="34"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="34"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="34"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="34"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="34"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="35"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="35"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="35"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;lorem&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="35"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="87"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="87"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="87"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="87"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="87"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="88"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="88"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="88"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="88"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;privacy_policy_contact_email&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;privacy_policy_contact_email&quot; translatable=&quot;false&quot;>andriydruk@gmail.com&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="89"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="207"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="207"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="208"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;bn&quot; (Bangla) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-bn/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;ms&quot; (Malay) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-ms/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;top_p&quot; translatable=&quot;false&quot;>Top-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="209"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;da&quot; (Danish) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-da/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;fi&quot; (Finnish) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-fi/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;iw&quot; (Hebrew) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nb&quot; (Norwegian Bokmål) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nb/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;sv&quot; (Swedish) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-sv/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;th&quot; (Thai) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-th/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;top_k&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;top_k&quot; translatable=&quot;false&quot;>Top-K&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="210"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;cs&quot; (Czech) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-cs/strings.xml"
+            line="211"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="Untranslatable"
+        message="The resource string &quot;min_p&quot; is marked as translatable=&quot;false&quot;, but is translated to &quot;nl&quot; (Dutch) here"
+        errorLine1="    &lt;string name=&quot;min_p&quot; translatable=&quot;false&quot;>Min-P&lt;/string>"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-nl/strings.xml"
+            line="211"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;members&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string name=&quot;members&quot;>%d members&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;model&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string name=&quot;migrate_models_message&quot;>Found %1$d model(s) (%2$s) in the previous folder. Would you like to copy them to the new location?&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="162"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;model&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string name=&quot;migrate_models_from_downloads&quot;>Found %1$d model(s) (%2$s) in your Downloads folder. Would you like to move them to the selected storage location?&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="163"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="PluralsCandidate"
+        message="Formatting %d followed by words (&quot;tokens&quot;): This should probably be a plural rather than a string"
+        errorLine1="    &lt;string name=&quot;tokens_value&quot;>%d tokens&lt;/string>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="214"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedQuantity"
+        message="For language &quot;iw&quot; (Hebrew) the following quantities are not relevant: `many`"
+        errorLine1="    &lt;plurals name=&quot;inference_notification_tokens&quot;>"
+        errorLine2="    ^">
+        <location
+            file="src/main/res/values-iw/strings.xml"
+            line="309"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedTranslation"
+        message="The language `in (Indonesian)` is present in this project, but not declared in the `localeConfig` resource"
+        errorLine1="        android:localeConfig=&quot;@xml/locales_config&quot;"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="31"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="UnusedTranslation"
+        message="The language `iw (Hebrew)` is present in this project, but not declared in the `localeConfig` resource"
+        errorLine1="        android:localeConfig=&quot;@xml/locales_config&quot;"
+        errorLine2="                              ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="31"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 30"
+        errorLine1="                Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &amp;&amp;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/GenerationHaptics.kt"
+            line="43"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 30"
+        errorLine1="                Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q -> {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/GenerationHaptics.kt"
+            line="58"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 30"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/inference/LlamaService.kt"
+            line="548"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; `SDK_INT` is always >= 30"
+        errorLine1="        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/inference/ProcessUtils.kt"
+            line="9"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 30. Merge all the resources in this folder into `drawable`.">
+        <location
+            file="src/main/res/drawable-v24"/>
+    </issue>
+
+    <issue
+        id="MergeRootFrame"
+        message="This `&lt;FrameLayout>` can be replaced with a `&lt;merge>` tag"
+        errorLine1="&lt;FrameLayout"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/content_main.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    var selectedTab by rememberSaveable { mutableStateOf(0) }"
+        errorLine2="                                          ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/GenerationParamsSheet.kt"
+            line="100"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableFloatStateOf` instead of `mutableStateOf`"
+        errorLine1="    var dragAccumulator by remember { mutableStateOf(0f) }"
+        errorLine2="                                      ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/UserInput.kt"
+            line="157"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.menu.activity_main_drawer` appears to be unused"
+        errorLine1="&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/menu/activity_main_drawer.xml"
+            line="3"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.yellow_logo` appears to be unused"
+        errorLine1="    &lt;color name=&quot;yellow_logo&quot;>@color/yellow700&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="14"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.blue_logo` appears to be unused"
+        errorLine1="    &lt;color name=&quot;blue_logo&quot;>@color/blue500&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="15"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.activity_horizontal_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;activity_horizontal_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.activity_vertical_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;activity_vertical_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.nav_header_spacing` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;nav_header_spacing&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.nav_header_logo_spacing` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;nav_header_logo_spacing&quot;>8dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.nav_header_logo_size` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;nav_header_logo_size&quot;>24dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.dimen.fab_margin` appears to be unused"
+        errorLine1="    &lt;dimen name=&quot;fab_margin&quot;>16dp&lt;/dimen>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/dimens.xml"
+            line="9"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.layout.fragment_profile` appears to be unused"
+        errorLine1="&lt;androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/layout/fragment_profile.xml"
+            line="16"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_baseline_person` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_baseline_person.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.penrose_triangle_monochrome` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/penrose_triangle_monochrome.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.navigation_drawer_close` appears to be unused"
+        errorLine1="    &lt;string name=&quot;navigation_drawer_close&quot;>Close navigation drawer&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.nav_header_title` appears to be unused"
+        errorLine1="    &lt;string name=&quot;nav_header_title&quot; translatable=&quot;false&quot;>Composer&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.nav_header_subtitle` appears to be unused"
+        errorLine1="    &lt;string name=&quot;nav_header_subtitle&quot; translatable=&quot;false&quot;>android.studio@android.com&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="7"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.nav_header_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;nav_header_desc&quot;>Navigation header&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.action_settings` appears to be unused"
+        errorLine1="    &lt;string name=&quot;action_settings&quot;>Settings&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.menu_home` appears to be unused"
+        errorLine1="    &lt;string name=&quot;menu_home&quot;>Home&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.menu_gallery` appears to be unused"
+        errorLine1="    &lt;string name=&quot;menu_gallery&quot;>Gallery&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.menu_slideshow` appears to be unused"
+        errorLine1="    &lt;string name=&quot;menu_slideshow&quot;>Slideshow&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.profile` appears to be unused"
+        errorLine1="    &lt;string name=&quot;profile&quot;>Profile&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="15"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.author_me` appears to be unused"
+        errorLine1="    &lt;string name=&quot;author_me&quot;>me&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.members` appears to be unused"
+        errorLine1="    &lt;string name=&quot;members&quot;>%d members&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="19"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.swipe_to_cancel_recording` appears to be unused"
+        errorLine1="    &lt;string name=&quot;swipe_to_cancel_recording&quot;>&amp;#x25C0; Swipe to cancel&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.emojis_label` appears to be unused"
+        errorLine1="    &lt;string name=&quot;emojis_label&quot;>Emojis&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.stickers_label` appears to be unused"
+        errorLine1="    &lt;string name=&quot;stickers_label&quot;>Stickers&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="26"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.message` appears to be unused"
+        errorLine1="    &lt;string name=&quot;message&quot;>Message&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.edit_profile` appears to be unused"
+        errorLine1="    &lt;string name=&quot;edit_profile&quot;>Edit Profile&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="29"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.profile_error` appears to be unused"
+        errorLine1="    &lt;string name=&quot;profile_error&quot;>There was an error loading the profile&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="30"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.bio` appears to be unused"
+        errorLine1="    &lt;string name=&quot;bio&quot;>Bio&lt;/string>"
+        errorLine2="            ~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.display_name` appears to be unused"
+        errorLine1="    &lt;string name=&quot;display_name&quot;>Display name&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.status` appears to be unused"
+        errorLine1="    &lt;string name=&quot;status&quot;>Status&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.timezone` appears to be unused"
+        errorLine1="    &lt;string name=&quot;timezone&quot;>Timezone&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.twitter` appears to be unused"
+        errorLine1="    &lt;string name=&quot;twitter&quot;>Twitter&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="35"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.common_channels` appears to be unused"
+        errorLine1="    &lt;string name=&quot;common_channels&quot;>Channels in common&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.lorem` appears to be unused"
+        errorLine1="    &lt;string name=&quot;lorem&quot; translatable=&quot;false&quot;>Lorem or Ipsum&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.emoji_selector_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;emoji_selector_desc&quot;>Emoji selector&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="41"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.emoji_selector_bt_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;emoji_selector_bt_desc&quot;>Show Emoji selector&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="42"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.dm_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;dm_desc&quot;>Direct Message&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.attach_photo_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;attach_photo_desc&quot;>Attach Photo&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.map_selector_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;map_selector_desc&quot;>Location selector&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="45"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.videochat_desc` appears to be unused"
+        errorLine1="    &lt;string name=&quot;videochat_desc&quot;>Start videochat&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.not_available` appears to be unused"
+        errorLine1="    &lt;string name=&quot;not_available&quot;>Functionality currently not available&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.not_available_subtitle` appears to be unused"
+        errorLine1="    &lt;string name=&quot;not_available_subtitle&quot;>Grab a beverage and check back later!&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="49"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.search` appears to be unused"
+        errorLine1="    &lt;string name=&quot;search&quot;>Search&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="51"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.info` appears to be unused"
+        errorLine1="    &lt;string name=&quot;info&quot;>Information&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="52"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.more_options` appears to be unused"
+        errorLine1="    &lt;string name=&quot;more_options&quot;>More options&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.touch_and_hold_to_record` appears to be unused"
+        errorLine1="    &lt;string name=&quot;touch_and_hold_to_record&quot;>Touch and hold to record&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="54"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.record_message` appears to be unused"
+        errorLine1="    &lt;string name=&quot;record_message&quot;>Record voice message&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.starting_download` appears to be unused"
+        errorLine1="    &lt;string name=&quot;starting_download&quot;>Starting download\u2026&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="155"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.download_failed` appears to be unused"
+        errorLine1="    &lt;string name=&quot;download_failed&quot;>Download failed&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="156"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.download_cancelled` appears to be unused"
+        errorLine1="    &lt;string name=&quot;download_cancelled&quot;>Download cancelled&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="157"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.waiting_for_network` appears to be unused"
+        errorLine1="    &lt;string name=&quot;waiting_for_network&quot;>Waiting for network\u2026&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="158"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.screenshot_notification` appears to be unused"
+        errorLine1="    &lt;string name=&quot;screenshot_notification&quot;>Runs in the background&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="259"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.screenshot_notification_sub` appears to be unused"
+        errorLine1="    &lt;string name=&quot;screenshot_notification_sub&quot;>get a ping when it\&apos;s done&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="260"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.whats_new_item_1` appears to be unused"
+        errorLine1="    &lt;string name=&quot;whats_new_item_1&quot;>Tools — capable models can now use:&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="290"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.whats_new_tools` appears to be unused"
+        errorLine1="    &lt;string name=&quot;whats_new_tools&quot;>Web search, fetch page, and run JavaScript&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="291"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.whats_new_cache` appears to be unused"
+        errorLine1="    &lt;string name=&quot;whats_new_cache&quot;>Faster replies with cached prompts &amp;amp; tools&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="292"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.whats_new_item_2` appears to be unused"
+        errorLine1="    &lt;string name=&quot;whats_new_item_2&quot;>Now available in 28 languages&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="293"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.whats_new_item_3` appears to be unused"
+        errorLine1="    &lt;string name=&quot;whats_new_item_3&quot;>Performance improvements&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="294"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.tools_section_intro` appears to be unused"
+        errorLine1="    &lt;string name=&quot;tools_section_intro&quot;>Tools let capable models take actions during a reply, like searching the web or running a calculation. Each tool is off by default — turn on only the ones you want. Tools work only with models that support them (look for the hammer badge).&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="311"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.tools_params_sheet_subtitle` appears to be unused"
+        errorLine1="    &lt;string name=&quot;tools_params_sheet_subtitle&quot;>The model can call these during a reply&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="313"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Theme_App_AppBarOverlay` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Theme.App.AppBarOverlay&quot; parent=&quot;ThemeOverlay.MaterialComponents.Dark.ActionBar&quot; />"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes.xml"
+            line="18"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Theme_App_PopupOverlay` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Theme.App.PopupOverlay&quot; parent=&quot;ThemeOverlay.MaterialComponents.Light&quot; />"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/themes.xml"
+            line="20"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UseOfNonLambdaOffsetOverload"
+        message="State backed values should use the lambda overload of Modifier.offset"
+        errorLine1="                    .offset(x = 0.dp, y = -bottomOffset)"
+        errorLine2="                     ~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/JumpToBottom.kt"
+            line="74"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UseOfNonLambdaOffsetOverload"
+        message="State backed values should use the lambda overload of Modifier.offset"
+        errorLine1="                    .offset(x = 0.dp, y = -bottomOffset)"
+        errorLine2="                     ~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/JumpToBottom.kt"
+            line="108"
+            column="22"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                remoteUri = Uri.parse(&quot;https://example.com/model.gguf&quot;),"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/ConversationBar.kt"
+            line="181"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `Bitmap.scale` instead?"
+        errorLine1="            val s = Bitmap.createScaledBitmap(bitmap, targetW, targetH, true)"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/conversation/ConversationViewModel.kt"
+            line="1946"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="        val storageUri = Uri.parse(storageUriString)"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/download/DownloadWorker.kt"
+            line="115"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Qwen3-0.6B-GGUF/resolve/main/Qwen3-0.6B-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="43"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Qwen3-1.7B-GGUF/resolve/main/Qwen3-1.7B-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="52"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Qwen3-4B-GGUF/resolve/main/Qwen3-4B-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="61"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/bartowski/Qwen_Qwen3.5-0.8B-GGUF/resolve/main/Qwen_Qwen3.5-0.8B-Q3_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="70"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/bartowski/Qwen_Qwen3.5-0.8B-GGUF/resolve/main/mmproj-Qwen_Qwen3.5-0.8B-f16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="76"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/bartowski/Qwen_Qwen3.5-2B-GGUF/resolve/main/Qwen_Qwen3.5-2B-Q3_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="81"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/bartowski/Qwen_Qwen3.5-2B-GGUF/resolve/main/mmproj-Qwen_Qwen3.5-2B-f16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="87"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/Qwen_Qwen3.5-4B-Q3_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="92"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/bartowski/Qwen_Qwen3.5-4B-GGUF/resolve/main/mmproj-Qwen_Qwen3.5-4B-f16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="98"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-3-1b-it-GGUF/resolve/main/gemma-3-1b-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="103"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="112"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-mmproj-f16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="118"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Llama-3.2-1B-Instruct-GGUF/resolve/main/Llama-3.2-1B-Instruct-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="123"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Llama-3.2-3B-Instruct-GGUF/resolve/main/Llama-3.2-3B-Instruct-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="132"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Phi-4-mini-instruct-GGUF/resolve/main/Phi-4-mini-instruct-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="141"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-1.5B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-1.5B-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="150"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/DeepSeek-R1-Distill-Qwen-7B-GGUF/resolve/main/DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="159"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/LiquidAI/LFM2.5-350M-GGUF/resolve/main/LFM2.5-350M-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="168"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/LFM2.5-1.2B-Thinking-GGUF/resolve/main/LFM2.5-1.2B-Thinking-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="177"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-3B-Instruct-2512-GGUF/resolve/main/Ministral-3-3B-Instruct-2512-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="186"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-3B-Instruct-2512-GGUF/resolve/main/mmproj-Ministral-3-3B-Instruct-2512-F16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="192"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-3B-Reasoning-2512-GGUF/resolve/main/Ministral-3-3B-Reasoning-2512-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="197"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-3B-Reasoning-2512-GGUF/resolve/main/mmproj-Ministral-3-3B-Reasoning-2512-F16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="203"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-8B-Instruct-2512-GGUF/resolve/main/Ministral-3-8B-Instruct-2512-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="208"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-8B-Instruct-2512-GGUF/resolve/main/mmproj-Ministral-3-8B-Instruct-2512-F16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="214"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-8B-Reasoning-2512-GGUF/resolve/main/Ministral-3-8B-Reasoning-2512-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="219"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Ministral-3-8B-Reasoning-2512-GGUF/resolve/main/mmproj-Ministral-3-8B-Reasoning-2512-F16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="225"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/granite-4.0-micro-GGUF/resolve/main/granite-4.0-micro-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="230"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/granite-4.0-h-tiny-GGUF/resolve/main/granite-4.0-h-tiny-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="239"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/granite-4.1-3b-GGUF/resolve/main/granite-4.1-3b-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="248"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/granite-4.1-8b-GGUF/resolve/main/granite-4.1-8b-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="257"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Nano-4B-GGUF/resolve/main/NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="266"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-3n-E2B-it-text-GGUF/resolve/main/gemma-3n-E2B-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="275"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-3n-E4B-it-text-GGUF/resolve/main/gemma-3n-E4B-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="284"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/google/gemma-4-E2B-it-qat-q4_0-gguf/resolve/main/gemma-4-E2B_q4_0-it.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="293"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-4-E2B-it-GGUF/resolve/main/mmproj-gemma-4-E2B-it-BF16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="301"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/google/gemma-4-E4B-it-qat-q4_0-gguf/resolve/main/gemma-4-E4B_q4_0-it.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="306"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/resolve/main/mmproj-gemma-4-E4B-it-BF16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="312"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/google/gemma-4-12B-it-qat-q4_0-gguf/resolve/main/gemma-4-12b-it-qat-q4_0.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="317"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-4-E2B-it-GGUF/resolve/main/gemma-4-E2B-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="329"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-4-E2B-it-GGUF/resolve/main/mmproj-gemma-4-E2B-it-BF16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="336"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="341"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            mmprojUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/gemma-4-E4B-it-GGUF/resolve/main/mmproj-gemma-4-E4B-it-BF16.gguf&quot;)"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="348"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/ggml-org/gemma-4-12B-it-GGUF/resolve/main/gemma-4-12B-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="353"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Qwen2.5-0.5B-Instruct-GGUF/resolve/main/Qwen2.5-0.5B-Instruct-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="363"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Qwen2.5-1.5B-Instruct-GGUF/resolve/main/Qwen2.5-1.5B-Instruct-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="372"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/bartowski/Phi-3.5-mini-instruct-GGUF/resolve/main/Phi-3.5-mini-instruct-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="381"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Mistral-7B-Instruct-v0.3-GGUF/resolve/main/Mistral-7B-Instruct-v0.3-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="390"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/lmstudio-community/Meta-Llama-3.1-8B-Instruct-GGUF/resolve/main/Meta-Llama-3.1-8B-Instruct-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="399"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/bartowski/gemma-2-9b-it-GGUF/resolve/main/gemma-2-9b-it-Q4_K_M.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="408"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="            remoteUri = Uri.parse(&quot;https://huggingface.co/ggml-org/gpt-oss-20b-GGUF/resolve/main/gpt-oss-20b-mxfp4.gguf&quot;),"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/models/ModelInfoProvider.kt"
+            line="417"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        requireContext().getSharedPreferences(&quot;download_prefs&quot;, 0)"
+        errorLine2="        ^">
+        <location
+            file="src/main/java/com/druk/lmplayground/storage/ModelsFragment.kt"
+            line="84"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            data = Uri.parse(&quot;mailto:$email&quot;)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/PrivacyPolicyFragment.kt"
+            line="32"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            data = Uri.parse(&quot;mailto:$email&quot;)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/PrivacyPolicyFragment.kt"
+            line="32"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `SharedPreferences.edit` instead?"
+        errorLine1="        requireContext().getSharedPreferences(&quot;download_prefs&quot;, 0)"
+        errorLine2="        ^">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/SettingsFragment.kt"
+            line="110"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            data = Uri.parse(&quot;mailto:$email&quot;)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/SettingsFragment.kt"
+            line="238"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UseKtx"
+        message="Use the KTX extension function `String.toUri` instead?"
+        errorLine1="                            data = Uri.parse(&quot;mailto:$email&quot;)"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/druk/lmplayground/settings/SettingsFragment.kt"
+            line="238"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="UseTomlInstead"
+        message="Use version catalog instead"
+        errorLine1="    implementation(&quot;androidx.javascriptengine:javascriptengine:1.0.0-beta01&quot;)"
+        errorLine2="                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="build.gradle.kts"
+            line="384"
+            column="20"/>
+    </issue>
+
+</issues>
