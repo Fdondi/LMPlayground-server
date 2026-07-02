@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.DeadObjectException
 import android.os.IBinder
 import android.os.IBinder.DeathRecipient
+import android.os.Looper
 import android.os.RemoteException
 import android.util.Log
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -131,7 +132,13 @@ class InferenceClient(
         if (s is InferenceState.Connecting) {
             // Race the bind. runBlocking is fine here because production
             // callers are already on background dispatchers (Dispatchers
-            // .Default / IO) — never the main thread.
+            // .Default / IO) — never the main thread. Enforce that contract
+            // loudly in debug builds instead of silently janking the UI.
+            if (com.druk.lmplayground.BuildConfig.DEBUG) {
+                check(Looper.myLooper() != Looper.getMainLooper()) {
+                    "requireConnected() must not block the main thread; use awaitConnected()"
+                }
+            }
             val service = kotlinx.coroutines.runBlocking {
                 kotlinx.coroutines.withTimeoutOrNull(waitForBindMs) { awaitConnected() }
             }

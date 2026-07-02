@@ -85,7 +85,7 @@ void LlamaModel::loadMmprojModel(const std::string &mmprojPath) {
     }
 
     mtmd_context_params params = mtmd_context_params_default();
-    params.n_threads = std::max(1, std::min(8, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
+    params.n_threads = std::max(1, std::min(kMaxVisionThreads, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
     params.warmup = false;
     params.print_timings = true;
     // Use model defaults for image tokens (-1). Some models like Gemma 4

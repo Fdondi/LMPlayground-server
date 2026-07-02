@@ -12,6 +12,17 @@
 #include "mtmd-helper.h"
 
 #include <atomic>
+#include <mutex>
+
+// Decode batch cap — bounds per-decode compute kernel launches on mobile.
+constexpr int kMaxBatchSize = 512;
+// Generation thread cap — leaves cores free for the UI process.
+constexpr int kMaxGenerationThreads = 4;
+// Vision (CLIP) encode thread cap — encode is short-lived, so use more cores.
+constexpr int kMaxVisionThreads = 8;
+// renderPreambleString fallback: how far back from the probe position to
+// search for the opening '<' of a template's user-turn marker.
+constexpr size_t kUserMarkerSearchWindow = 80;
 
 // Vulkan CLIP crash sentinel (implemented in native-lib.cpp). A marker file is
 // written right before the crash-prone Vulkan vision-encoder init and removed
@@ -139,7 +150,11 @@ private:
     // Vision: image bytes staged by setImageData() for the next user turn,
     // and a one-shot flag so generate() skips the initial decode already
     // performed by mtmd_helper_eval_chunks during the vision addMessage path.
+    // setImageData and addMessage are separate AIDL transactions and may land
+    // on different binder threads, so the staged bytes are guarded by
+    // [image_mutex] (addMessage swaps them out under the lock).
     std::vector<unsigned char> pending_image_data;
+    std::mutex image_mutex;
     bool skip_first_decode = false;
     // Set by requestAbort() (cancel path), read by the llama abort callback
     // during decode so Stop can interrupt the prompt-eval phase, not just the

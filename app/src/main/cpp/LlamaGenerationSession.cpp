@@ -136,6 +136,7 @@ void LlamaGenerationSession::recreateToolSampler(const common_chat_params &rende
 }
 
 void LlamaGenerationSession::setImageData(const unsigned char *data, size_t len) {
+    std::lock_guard<std::mutex> lock(image_mutex);
     pending_image_data.assign(data, data + len);
 }
 
@@ -146,7 +147,7 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
     vocab = llama_model_get_vocab(model);
     chat_tmpls = tmpls;
 
-    int n_threads = std::max(1, std::min(4, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
+    int n_threads = std::max(1, std::min(kMaxGenerationThreads, (int) sysconf(_SC_NPROCESSORS_ONLN) - 2));
     LOGi("Using %d threads", n_threads);
 
     int n_ctx_train = llama_model_n_ctx_train(model);
@@ -155,7 +156,7 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
 
     llama_context_params ctx_params = llama_context_default_params();
     ctx_params.n_ctx = n_ctx;
-    ctx_params.n_batch = std::min(n_ctx, 512);
+    ctx_params.n_batch = std::min(n_ctx, kMaxBatchSize);
     ctx_params.n_threads       = n_threads;
     ctx_params.n_threads_batch = n_threads;
 
@@ -241,7 +242,15 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         tryPreambleCache(enableThinking);
     }
 
-    bool has_image = mtmd_ctx != nullptr && !pending_image_data.empty();
+    // Take ownership of any staged image bytes for this turn. Swapping under
+    // the lock keeps the critical section tiny and leaves the staging slot
+    // empty for the next setImageData.
+    std::vector<unsigned char> image_data;
+    if (mtmd_ctx != nullptr) {
+        std::lock_guard<std::mutex> lock(image_mutex);
+        std::swap(image_data, pending_image_data);
+    }
+    bool has_image = !image_data.empty();
 
     common_chat_msg user_msg;
     user_msg.role = "user";
@@ -320,7 +329,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     // vision are mutually exclusive in the UI, so the tool sampler above is a
     // no-op here.)
     if (has_image) {
-        LOGi("Vision path: processing image (%zu bytes) with prompt", pending_image_data.size());
+        LOGi("Vision path: processing image (%zu bytes) with prompt", image_data.size());
 
         // Strip media markers from older user messages — we can't re-encode old images,
         // and mtmd_tokenize requires marker count == bitmap count
@@ -351,11 +360,10 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         // `placeholder` flag; pass false for real image data (not a token-counting
         // placeholder), and unwrap .bitmap (video_ctx is unused for still images).
         mtmd_bitmap *bitmap = mtmd_helper_bitmap_init_from_buf(
-            mtmd_ctx, pending_image_data.data(), pending_image_data.size(),
+            mtmd_ctx, image_data.data(), image_data.size(),
             /*placeholder=*/false).bitmap;
         if (bitmap == nullptr) {
             LOGe("Failed to create bitmap from image data");
-            pending_image_data.clear();
             return 1;
         }
 
@@ -369,7 +377,6 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
 
         int32_t tokenize_result = mtmd_tokenize(mtmd_ctx, chunks, &text, bitmaps, 1);
         mtmd_bitmap_free(bitmap);
-        pending_image_data.clear();
 
         if (tokenize_result != 0) {
             LOGe("Failed to tokenize vision prompt (error: %d)", tokenize_result);
@@ -957,7 +964,7 @@ std::string LlamaGenerationSession::renderPreambleString(bool enableThinking) {
                 // window. Simpler & safe: report position right BEFORE
                 // the user marker (find the last "<" before pos).
                 auto marker_start = rendered.rfind('<', pos);
-                if (marker_start == std::string::npos || marker_start < pos - 80) {
+                if (marker_start == std::string::npos || marker_start < pos - kUserMarkerSearchWindow) {
                     // Couldn't locate — fall back to "everything before the probe content".
                     preamble = rendered.substr(0, pos);
                 } else {
@@ -1067,7 +1074,7 @@ bool LlamaGenerationSession::tryPreambleCache(bool enableThinking) {
     }
 
     // Decode in batches matching n_batch from init().
-    const int n_batch = std::min(n_ctx, 512);
+    const int n_batch = std::min(n_ctx, kMaxBatchSize);
     for (int i = 0; i < (int)tokens.size(); i += n_batch) {
         int chunk = std::min(n_batch, (int)tokens.size() - i);
         llama_batch b = llama_batch_get_one(tokens.data() + i, chunk);
