@@ -32,7 +32,6 @@ import com.druk.lmplayground.models.resolveCapabilities
 import com.druk.lmplayground.storage.StoragePreferences
 import com.druk.lmplayground.storage.StorageRepository
 import com.druk.lmplayground.tools.ToolRegistry
-import org.json.JSONArray
 import androidx.compose.runtime.snapshots.Snapshot
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
@@ -42,15 +41,11 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.net.Uri
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.io.ByteArrayOutputStream
 import java.util.UUID
 import kotlin.math.ln
-import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.round
 
@@ -68,20 +63,16 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     // Keep strong reference to prevent GC from closing the file descriptor
     private var modelFileHandle: StorageRepository.ModelFileHandle? = null
 
+    private val imageStore = ChatImageStore(app)
+    private val preambleCache = PreambleCacheManager(app.filesDir)
+    private val notifications = InferenceNotificationUpdater(app, llamaCpp)
+
     private val _isGenerating = MutableLiveData(false)
     private val _isModelReady = MutableLiveData(false)
     private val _modelLoadingProgress = MutableLiveData(0f)
     private val _loadedModel = MutableLiveData<ModelInfo?>(null)
     private val _loadedModelStatus = MutableLiveData<String?>(null)
 
-    // Captured at load time and reused as the foreground-notification
-    // description across load -> generating -> ready transitions, so the
-    // silent notification reflects what the model is currently doing
-    // without ever re-posting noisily. The "loaded" state shows the size
-    // line ("<name> - <size>"); generating/ready swap in a live token
-    // count ("<name> · <N> tokens"), so the model name is kept too.
-    private var notificationModelLine: String? = null
-    private var notificationModelName: String? = null
     private val _models = MutableLiveData<List<ModelWithStatus>>(emptyList())
     private val _supportsThinking = MutableLiveData(false)
     private val _thinkingEnabled = MutableLiveData(false)
@@ -330,34 +321,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /**
-     * Silently flip the foreground-service notification to reflect the
-     * current inference state (loaded / generating / ready). [text]
-     * defaults to the cached "<name> - <size>" line used by the loaded
-     * state; generating/ready pass a token-count line. No-op until a
-     * model has been loaded. Safe to call from any thread — the
-     * underlying AIDL call swallows binder failures.
-     */
-    private fun updateInferenceNotification(
-        titleRes: Int,
-        text: String? = notificationModelLine,
-        actionBody: String? = null,
-    ) {
-        if (text == null) return
-        llamaCpp?.setForegroundContent(app.getString(titleRes), text, actionBody)
-    }
-
-    /** "<name> · <N> tokens" for the generating/ready notification line. */
-    private fun notificationTokensLine(tokens: Int): String? {
-        val name = notificationModelName ?: return null
-        val tokenStr = app.resources.getQuantityString(
-            com.druk.lmplayground.R.plurals.inference_notification_tokens, tokens, tokens
-        )
-        return app.getString(
-            com.druk.lmplayground.R.string.inference_notification_tokens_line, name, tokenStr
-        )
-    }
-
     @MainThread
     fun loadModel(modelInfo: ModelInfo, forceLoad: Boolean = false) {
         val llamaCpp = llamaCpp ?: return
@@ -555,9 +518,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // the shade). The description line is cached so generation
                     // can later flip the title to "Generating…"/"Response
                     // ready" without re-deriving it.
-                    notificationModelLine = "${modelInfo.name} - $modelDescription"
-                    notificationModelName = modelInfo.name
-                    updateInferenceNotification(
+                    notifications.modelLine = "${modelInfo.name} - $modelDescription"
+                    notifications.modelName = modelInfo.name
+                    notifications.update(
                         com.druk.lmplayground.R.string.inference_notification_loaded_title
                     )
                     val nCtxTrain = llamaModel.getContextTrainSize()
@@ -623,7 +586,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     val messages = uiState.messages.toList()
                     if (messages.isNotEmpty()) {
                         try {
-                            replayHistoryToSession(llamaSession, messages)
+                            HistoryReplay.replayToSession(llamaSession, messages)
                         } catch (e: PayloadTooLargeException) {
                             this@ConversationViewModel.llamaSession = null
                             this@ConversationViewModel.llamaModel = null
@@ -674,62 +637,30 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     /**
-     * Pre-flight check for every session-recreation path. Verifies the
-     * system prompt and each persisted message fit under the AIDL
-     * binder cap so the recreate doesn't half-succeed: destroying the
-     * old session and then throwing inside `createSession` /
-     * `replayHistory` leaves the UI with `_isModelReady=true` but
-     * `llamaSession=null`, and the next Send breaks.
-     *
-     * Returns `null` if all payloads are within budget. Returns a
-     * user-facing localized error string (already posted to
-     * `_userError`) if anything is too large; the caller MUST then
-     * abort without mutating session state.
+     * Pre-flight check for every session-recreation path (see
+     * [HistoryReplay.validateReplaySize]). Maps failures to a localized
+     * one-shot [_userError] and returns false; the caller MUST then abort
+     * without mutating session state.
      */
     private fun validateReplaySize(systemPrompt: String, messages: List<Message>): Boolean {
-        val promptBytes = systemPrompt.length * 2
-        if (promptBytes > InferenceLimits.MAX_PAYLOAD_BYTES) {
-            _userError.postValue(
-                app.getString(
-                    com.druk.lmplayground.R.string.system_prompt_too_large,
-                    promptBytes / 1024,
-                    InferenceLimits.MAX_PAYLOAD_BYTES / 1024,
+        return when (val result = HistoryReplay.validateReplaySize(systemPrompt, messages)) {
+            HistoryReplay.ValidationResult.Ok -> true
+            is HistoryReplay.ValidationResult.SystemPromptTooLarge -> {
+                _userError.postValue(
+                    app.getString(
+                        com.druk.lmplayground.R.string.system_prompt_too_large,
+                        result.promptBytes / 1024,
+                        result.maxBytes / 1024,
+                    )
                 )
-            )
-            return false
-        }
-        for (msg in messages) {
-            if (msg.content.length * 2 > InferenceLimits.MAX_PAYLOAD_BYTES) {
+                false
+            }
+            HistoryReplay.ValidationResult.MessageTooLarge -> {
                 _userError.postValue(
                     app.getString(com.druk.lmplayground.R.string.history_message_too_large)
                 )
-                return false
+                false
             }
-        }
-        return true
-    }
-
-    private fun replayHistoryToSession(session: LlamaGenerationSession, messages: List<Message>) {
-        val userMessages = mutableListOf<String>()
-        val assistantMessages = mutableListOf<String>()
-
-        var i = 0
-        while (i < messages.size) {
-            val msg = messages[i]
-            if (msg.author == "User" && i + 1 < messages.size && messages[i + 1].author == "Assistant") {
-                userMessages.add(msg.content)
-                assistantMessages.add(messages[i + 1].content)
-                i += 2
-            } else {
-                i++
-            }
-        }
-
-        if (userMessages.isNotEmpty()) {
-            session.replayHistory(
-                userMessages.toTypedArray(),
-                assistantMessages.toTypedArray()
-            )
         }
     }
 
@@ -759,7 +690,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     ): Boolean {
         try {
             if (messages.isNotEmpty()) {
-                replayHistoryToSession(newSession, messages)
+                HistoryReplay.replayToSession(newSession, messages)
             }
         } catch (e: PayloadTooLargeException) {
             try { newSession.destroy() } catch (_: Throwable) {}
@@ -816,38 +747,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             null
         }
     }
-
-    /**
-     * Copy the picked image into app-private *persistent* storage
-     * (filesDir/chat_images) so it survives the picker URI's lifetime, process
-     * death and cache eviction. The absolute path is saved on the message row
-     * (see [persistMessage]) so reopened conversations keep their images.
-     * Returns the persisted file, or null on failure.
-     */
-    private fun persistImageFile(sourceUri: Uri): java.io.File? {
-        return try {
-            val imagesDir = java.io.File(app.filesDir, "chat_images")
-            imagesDir.mkdirs()
-            val destFile = java.io.File(imagesDir, "img_${System.currentTimeMillis()}.jpg")
-            app.contentResolver.openInputStream(sourceUri)?.use { input ->
-                destFile.outputStream().use { output ->
-                    input.copyTo(output)
-                }
-            }
-            destFile
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    /**
-     * Content URI (via FileProvider) for a persisted chat image, used both for
-     * in-app display (Coil) and for handing off to an external viewer.
-     */
-    private fun imageContentUri(file: java.io.File): Uri =
-        androidx.core.content.FileProvider.getUriForFile(
-            app, "${app.packageName}.fileprovider", file
-        )
 
     @MainThread
     fun updateGenerationParams(params: GenerationParams) {
@@ -942,9 +841,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun addMessage(message: Message, imageUri: Uri? = null) {
         // Persist the image so it survives the picker URI lifetime and is kept
         // with the saved conversation (path stored on the message row below).
-        val persistedImageFile = imageUri?.let { persistImageFile(it) }
+        val persistedImageFile = imageUri?.let { imageStore.persistImageFile(it) }
         val userMessage = if (persistedImageFile != null) {
-            message.copy(imageUri = imageContentUri(persistedImageFile))
+            message.copy(imageUri = imageStore.imageContentUri(persistedImageFile))
         } else {
             message
         }
@@ -1011,7 +910,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 val imageBytes: ByteArray? = if (persistedImageFile != null) {
                     try {
                         withContext(Dispatchers.IO) {
-                            resizeImageForVision(persistedImageFile)
+                            imageStore.resizeImageForVision(persistedImageFile)
                         }?.also {
                             android.util.Log.d("ConversationVM", "Image loaded: ${it.size} bytes")
                         } ?: run {
@@ -1100,9 +999,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         val nowMs = System.currentTimeMillis()
                         if (nowMs - lastNotifUpdateMs >= 1000L) {
                             lastNotifUpdateMs = nowMs
-                            updateInferenceNotification(
+                            notifications.update(
                                 com.druk.lmplayground.R.string.inference_notification_generating_title,
-                                notificationTokensLine(totalTokens),
+                                notifications.tokensLine(totalTokens),
                             )
                         }
                         var string = ResponseProcessor.process(response)
@@ -1166,9 +1065,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 // starting token count; the callback above bumps the count
                 // ~1/sec as tokens stream. The finally block below freezes
                 // it at the final total under "Response ready".
-                updateInferenceNotification(
+                notifications.update(
                     com.druk.lmplayground.R.string.inference_notification_generating_title,
-                    notificationTokensLine(0),
+                    notifications.tokensLine(0),
                 )
                 try {
                     var toolRounds = 0
@@ -1205,7 +1104,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             "Tool results (${toolDurationMs}ms): $toolResults",
                         )
 
-                        val toolCallInfoList = buildToolCallInfoList(
+                        val toolCallInfoList = ToolCallInfoMapper.buildToolCallInfoList(
                             toolCallsJson, toolResults, toolDurationMs,
                         )
                         Snapshot.withMutableSnapshot {
@@ -1300,9 +1199,9 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                             ?.content
                             ?.let { stripThinkTags(it) })
                             ?.takeIf { it.isNotBlank() }
-                        updateInferenceNotification(
+                        notifications.update(
                             com.druk.lmplayground.R.string.inference_notification_ready_title,
-                            notificationTokensLine(callback.totalTokens),
+                            notifications.tokensLine(callback.totalTokens),
                             actionBody = readyBody,
                         )
 
@@ -1417,7 +1316,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 // it if the file is gone so the bubble just shows text.
                 val imageUri = entity.imagePath?.let { path ->
                     val file = java.io.File(path)
-                    if (file.exists()) imageContentUri(file) else null
+                    if (file.exists()) imageStore.imageContentUri(file) else null
                 }
                 Message(
                     author = entity.author,
@@ -1810,150 +1709,22 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     /**
      * Set up the persistent preamble (system prompt + tools) KV cache for
-     * [session]. Path is `<filesDir>/kv_preamble/<fingerprint>` where
-     * fingerprint is SHA-1 over (model filename, system prompt, tools
-     * JSON). Cache files are shared across sessions: any new conversation
-     * with the same model / sys prompt / tool set re-uses the same disk
-     * cache. LRU prune keeps disk footprint bounded ([KV_PREAMBLE_KEEP]
-     * most-recent files).
+     * [session] — gathers the loaded model's identity and delegates to
+     * [PreambleCacheManager]. getModelSize() is a cheap AIDL call backed
+     * by an in-memory llama_model field.
      */
     private fun applyPreambleCache(
         session: LlamaGenerationSession,
         toolsJson: String,
     ) {
-        try {
-            val modelInfo = _loadedModel.value
-            val modelName = modelInfo?.filename
-            if (modelName.isNullOrEmpty()) {
-                // Model info isn't ready (shouldn't happen here but be safe).
-                session.setPreambleCachePath("", "")
-                return
-            }
-            // Include the loaded model's byte size in the fingerprint so a
-            // replaced-but-same-named model file invalidates stale caches.
-            // Filename alone wouldn't catch re-quantization or upgrades
-            // where the filename was kept; the byte size differs in
-            // virtually all real cases. getModelSize() is a cheap AIDL
-            // call backed by an in-memory llama_model field.
-            val modelSize = try { llamaModel?.getModelSize() ?: 0L } catch (_: Throwable) { 0L }
-            val modelKey = "$modelName:$modelSize"
-            val systemPrompt = _systemPrompt.value.orEmpty()
-            val fingerprint = sha1Hex(
-                "$modelKey $systemPrompt $toolsJson"
-            )
-            val dir = kvPreambleDir().apply { mkdirs() }
-            val path = java.io.File(dir, fingerprint).absolutePath
-            session.setPreambleCachePath(path, fingerprint)
-            pruneOldKvPreambles(KV_PREAMBLE_KEEP)
-        } catch (t: Throwable) {
-            android.util.Log.w(
-                "ConversationViewModel",
-                "applyPreambleCache failed (continuing without cache)", t
-            )
-            try { session.setPreambleCachePath("", "") } catch (_: Throwable) {}
-        }
-    }
-
-    private fun kvPreambleDir(): java.io.File =
-        java.io.File(app.filesDir, "kv_preamble")
-
-    private fun pruneOldKvPreambles(keep: Int) {
-        try {
-            val dir = kvPreambleDir()
-            val bins = dir.listFiles()?.filter { it.name.endsWith(".bin") } ?: return
-            if (bins.size <= keep) return
-            val ordered = bins.sortedByDescending { it.lastModified() }
-            for (i in keep until ordered.size) {
-                val bin = ordered[i]
-                bin.delete()
-                java.io.File(bin.absolutePath.removeSuffix(".bin") + ".json").delete()
-            }
-        } catch (t: Throwable) {
-            android.util.Log.w("ConversationViewModel", "pruneOldKvPreambles failed", t)
-        }
-    }
-
-    private fun sha1Hex(input: String): String {
-        val md = java.security.MessageDigest.getInstance("SHA-1")
-        val bytes = md.digest(input.toByteArray(Charsets.UTF_8))
-        val sb = StringBuilder(bytes.size * 2)
-        for (b in bytes) {
-            val v = b.toInt() and 0xff
-            sb.append(HEX[v ushr 4])
-            sb.append(HEX[v and 0x0f])
-        }
-        return sb.toString()
-    }
-
-    private fun buildToolCallInfoList(
-        toolCallsJson: String,
-        toolResultsJson: String,
-        totalDurationMs: Long
-    ): List<ToolCallInfo> {
-        val calls = JSONArray(toolCallsJson)
-        val results = JSONArray(toolResultsJson)
-        val resultMap = mutableMapOf<String, String>()
-        for (i in 0 until results.length()) {
-            val r = results.getJSONObject(i)
-            resultMap[r.getString("id")] = r.getString("content")
-        }
-        val count = calls.length().coerceAtLeast(1)
-        val perCallMs = totalDurationMs / count
-        return (0 until calls.length()).map { i ->
-            val call = calls.getJSONObject(i)
-            val id = call.getString("id")
-            ToolCallInfo(
-                name = call.getString("name"),
-                arguments = call.getString("arguments"),
-                result = resultMap[id] ?: "",
-                durationMs = perCallMs
-            )
-        }
-    }
-
-    // Reads from the already-persisted local file rather than the original
-    // picker (content://media/picker/...) URI: those URIs are unreliable to
-    // reopen — a second openInputStream can fail even after the first one
-    // succeeded, silently dropping the image and producing a text-only turn.
-    // The copy made by persistImageFile is always readable.
-    private fun resizeImageForVision(file: java.io.File): ByteArray? {
-        val path = file.absolutePath
-
-        // Decode bounds first
-        val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(path, options)
-
-        val maxDimension = 768
-        val origWidth = options.outWidth
-        val origHeight = options.outHeight
-        if (origWidth <= 0 || origHeight <= 0) return null
-        val scaleFactor = if (max(origWidth, origHeight) > maxDimension) {
-            maxDimension.toFloat() / max(origWidth, origHeight)
-        } else {
-            1f
-        }
-
-        // Subsample for memory efficiency
-        options.inJustDecodeBounds = false
-        options.inSampleSize = (1f / scaleFactor).toInt().coerceAtLeast(1)
-
-        val bitmap = BitmapFactory.decodeFile(path, options) ?: return null
-
-        // Scale to exact target if needed
-        val targetW = (origWidth * scaleFactor).toInt().coerceAtLeast(1)
-        val targetH = (origHeight * scaleFactor).toInt().coerceAtLeast(1)
-        val scaled = if (bitmap.width != targetW || bitmap.height != targetH) {
-            val s = Bitmap.createScaledBitmap(bitmap, targetW, targetH, true)
-            bitmap.recycle()
-            s
-        } else {
-            bitmap
-        }
-
-        val out = ByteArrayOutputStream()
-        scaled.compress(Bitmap.CompressFormat.JPEG, 85, out)
-        scaled.recycle()
-        return out.toByteArray()
+        val modelSize = try { llamaModel?.getModelSize() ?: 0L } catch (_: Throwable) { 0L }
+        preambleCache.apply(
+            session,
+            _loadedModel.value?.filename,
+            modelSize,
+            _systemPrompt.value.orEmpty(),
+            toolsJson,
+        )
     }
 
     fun resetModelList() {
@@ -1966,15 +1737,4 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val totalRam: String,
     )
 
-    private companion object {
-        // Number of preamble cache files to retain (LRU by mtime). Each
-        // file is small relative to the model itself but scales with
-        // (system_prompt + tools_description) token count — typically a
-        // few KB to a few hundred KB. 8 covers "user has 8 different
-        // model + tool-set combinations they use regularly" without
-        // bloating /data.
-        private const val KV_PREAMBLE_KEEP = 8
-
-        private val HEX = "0123456789abcdef".toCharArray()
-    }
 }
