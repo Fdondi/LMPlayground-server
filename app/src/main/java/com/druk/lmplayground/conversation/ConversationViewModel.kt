@@ -18,12 +18,9 @@ import com.druk.llamacpp.LlamaModel
 import com.druk.llamacpp.LlamaProgressCallback
 import com.druk.llamacpp.PayloadTooLargeException
 import com.druk.lmplayground.App
-import com.druk.lmplayground.data.ChatMessageEntity
-import com.druk.lmplayground.data.ChatRepository
 import com.druk.lmplayground.data.ChatSessionEntity
 import com.druk.lmplayground.data.ConversationMetadata
 import com.druk.lmplayground.data.SystemPromptEntity
-import com.druk.lmplayground.data.SystemPromptRepository
 import com.druk.lmplayground.models.DeviceCapability
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
@@ -44,7 +41,6 @@ import kotlinx.coroutines.isActive
 import android.net.Uri
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.UUID
 import kotlin.math.ln
 import kotlin.math.min
 import kotlin.math.round
@@ -168,13 +164,14 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     )
 
     // Session persistence
-    private val chatRepository: ChatRepository? = (app as? App)?.chatRepository
-    private val systemPromptRepository: SystemPromptRepository? =
-        (app as? App)?.systemPromptRepository
+    private val sessionStore = ChatSessionStore(
+        (app as? App)?.chatRepository,
+        (app as? App)?.systemPromptRepository,
+        imageStore,
+    )
     private val _currentSessionId = MutableLiveData<String?>(null)
     val currentSessionId: LiveData<String?> = _currentSessionId
-    val sessions: LiveData<List<ChatSessionEntity>> =
-        chatRepository?.getAllSessions() ?: MutableLiveData(emptyList())
+    val sessions: LiveData<List<ChatSessionEntity>> = sessionStore.allSessions()
     /**
      * Per-model MRU list. When the loaded model changes, switchMap swaps in
      * the corresponding query so the picker reflects "prompts I've used on
@@ -182,13 +179,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
      */
     val recentSystemPrompts: LiveData<List<SystemPromptEntity>> =
         _loadedModel.switchMap { model ->
-            val repo = systemPromptRepository
-            val filename = model?.filename
-            if (repo == null || filename.isNullOrEmpty()) {
-                MutableLiveData(emptyList())
-            } else {
-                repo.getRecentForModelLive(filename)
-            }
+            sessionStore.recentSystemPromptsForModel(model?.filename)
         }
 
     init {
@@ -605,7 +596,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                     // Update session model info if we have an active session
                     val sessionId = _currentSessionId.value
                     if (sessionId != null) {
-                        chatRepository?.updateSessionModel(
+                        sessionStore.updateSessionModel(
                             sessionId, modelInfo.filename, modelInfo.name
                         )
                     }
@@ -778,12 +769,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val sessionId = _currentSessionId.value
         if (sessionId != null) {
             viewModelScope.launch {
-                chatRepository?.updateSessionParams(
-                    sessionId,
-                    params.contextSize, params.temperature, params.topP,
-                    params.repetitionPenalty, params.topK, params.minP, params.seed,
-                    params.thinkingBudget
-                )
+                sessionStore.updateSessionParams(sessionId, params)
             }
         }
 
@@ -898,7 +884,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
             // Persist user message (with the attached image path, if any)
             val sessionId = ensureSession(message)
-            persistMessage(sessionId, userMessage, persistedImageFile?.absolutePath)
+            sessionStore.persistMessage(sessionId, userMessage, persistedImageFile?.absolutePath)
 
             withContext(Dispatchers.Default) {
                 val llamaSession = llamaSession ?: return@withContext
@@ -1223,11 +1209,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         val assistantMessage = uiState.messages.lastOrNull()
                         if (assistantMessage != null && assistantMessage.author == "Assistant") {
                             try {
-                                persistMessage(sessionId, assistantMessage)
-                                chatRepository?.updateSessionTimestamp(
-                                    sessionId,
-                                    System.currentTimeMillis(),
-                                )
+                                sessionStore.persistMessage(sessionId, assistantMessage)
+                                sessionStore.touchSessionTimestamp(sessionId)
                                 persistConversationMetadata(sessionId)
                             } catch (_: Throwable) { /* best-effort */ }
                         }
@@ -1241,94 +1224,25 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val existing = _currentSessionId.value
         if (existing != null) return existing
 
-        val modelInfo = _loadedModel.value
-        val params = _generationParams.value ?: GenerationParams()
-        val id = UUID.randomUUID().toString()
-        val title = firstUserMessage.content.take(50)
-        val now = System.currentTimeMillis()
-        chatRepository?.insertSession(
-            ChatSessionEntity(
-                id = id,
-                title = title,
-                modelFilename = modelInfo?.filename ?: "",
-                modelName = modelInfo?.name ?: "Unknown",
-                createdAt = now,
-                updatedAt = now,
-                contextSize = params.contextSize,
-                temperature = params.temperature,
-                topP = params.topP,
-                repetitionPenalty = params.repetitionPenalty,
-                topK = params.topK,
-                minP = params.minP,
-                seed = params.seed,
-                thinkingBudget = params.thinkingBudget,
-                systemPrompt = _systemPrompt.value.orEmpty()
-            )
+        val id = sessionStore.createSession(
+            firstUserMessage,
+            _loadedModel.value,
+            _generationParams.value ?: GenerationParams(),
+            _systemPrompt.value.orEmpty(),
         )
         _currentSessionId.postValue(id)
         return id
     }
 
-    /**
-     * Snapshot the web_search link references into the conversation's metadata
-     * so a returned ref still resolves after the app is restarted and the
-     * conversation reopened. Read-modify-write to preserve any other metadata
-     * keys. No-op when there are no references to save.
-     */
     private suspend fun persistConversationMetadata(sessionId: String) {
-        val repo = chatRepository ?: return
-        val links = toolRegistry.webLinkStore.snapshot()
-        if (links.isEmpty()) return
-        val existing = repo.getSession(sessionId)?.metadata
-        val updated = ConversationMetadata.parse(existing)
-            .putStringMap(ConversationMetadata.KEY_WEB_LINKS, links)
-            .toJson()
-        repo.updateSessionMetadata(sessionId, updated)
-    }
-
-    private suspend fun persistMessage(
-        sessionId: String,
-        message: Message,
-        imagePath: String? = null,
-    ) {
-        chatRepository?.insertMessage(
-            ChatMessageEntity(
-                sessionId = sessionId,
-                author = message.author,
-                content = message.content,
-                thinkingDurationSeconds = message.thinkingDurationSeconds,
-                thinkingTokens = message.thinkingTokens,
-                responseTokens = message.responseTokens,
-                responseDurationSeconds = message.responseDurationSeconds,
-                timestamp = message.timestamp,
-                imagePath = imagePath
-            )
-        )
+        sessionStore.persistWebLinks(sessionId, toolRegistry.webLinkStore.snapshot())
     }
 
     @MainThread
     fun loadSession(sessionId: String) {
         viewModelScope.launch {
-            val messages = chatRepository?.getMessages(sessionId) ?: return@launch
-            val sessionEntity = chatRepository.getSession(sessionId)
-            val uiMessages = messages.map { entity ->
-                // Re-derive the display URI from the persisted image file; drop
-                // it if the file is gone so the bubble just shows text.
-                val imageUri = entity.imagePath?.let { path ->
-                    val file = java.io.File(path)
-                    if (file.exists()) imageStore.imageContentUri(file) else null
-                }
-                Message(
-                    author = entity.author,
-                    content = entity.content,
-                    thinkingDurationSeconds = entity.thinkingDurationSeconds,
-                    thinkingTokens = entity.thinkingTokens,
-                    responseTokens = entity.responseTokens,
-                    responseDurationSeconds = entity.responseDurationSeconds,
-                    timestamp = entity.timestamp,
-                    imageUri = imageUri
-                )
-            }
+            val uiMessages = sessionStore.loadSessionMessages(sessionId) ?: return@launch
+            val sessionEntity = sessionStore.getSession(sessionId)
 
             // Pre-flight the saved chat against the AIDL payload cap
             // BEFORE switching any UI state. If a persisted message
@@ -1369,7 +1283,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 if (stored.isEmpty()) {
                     _systemPromptId.value = null
                 } else {
-                    val entity = systemPromptRepository?.findByText(stored)
+                    val entity = sessionStore.findSystemPromptByText(stored)
                     _systemPromptId.value = entity?.id
                 }
 
@@ -1471,7 +1385,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         val sessionId = _currentSessionId.value
         if (sessionId != null) {
             viewModelScope.launch {
-                chatRepository?.updateSessionSystemPrompt(sessionId, text)
+                sessionStore.updateSessionSystemPrompt(sessionId, text)
             }
         }
 
@@ -1480,7 +1394,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             val modelFilename = _loadedModel.value?.filename
             if (!modelFilename.isNullOrEmpty()) {
                 viewModelScope.launch {
-                    systemPromptRepository?.touchUsage(promptId, modelFilename)
+                    sessionStore.touchSystemPromptUsage(promptId, modelFilename)
                 }
             }
         }
@@ -1528,14 +1442,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun updateLinkedSystemPrompt(text: String) {
         val trimmed = text.trim()
         val id = _systemPromptId.value
-        val repo = systemPromptRepository
-        if (id == null || repo == null) {
+        if (id == null || !sessionStore.systemPromptsAvailable) {
             applySystemPrompt(null, trimmed)
             return
         }
         viewModelScope.launch {
-            val existing = repo.getById(id) ?: return@launch
-            repo.update(existing.copy(text = trimmed))
+            if (!sessionStore.updateSystemPromptText(id, trimmed)) return@launch
             applySystemPrompt(id, trimmed)
         }
     }
@@ -1548,19 +1460,12 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     fun createAndApplySystemPrompt(text: String) {
         val trimmed = text.trim()
         if (trimmed.isEmpty()) return
-        val repo = systemPromptRepository ?: run {
+        if (!sessionStore.systemPromptsAvailable) {
             applySystemPrompt(null, trimmed)
             return
         }
         viewModelScope.launch {
-            val now = System.currentTimeMillis()
-            val entity = SystemPromptEntity(
-                id = UUID.randomUUID().toString(),
-                text = trimmed,
-                createdAt = now,
-                updatedAt = now
-            )
-            repo.insert(entity)
+            val entity = sessionStore.createSystemPrompt(trimmed) ?: return@launch
             applySystemPrompt(entity.id, entity.text)
         }
     }
@@ -1568,28 +1473,21 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     @MainThread
     fun renameSession(sessionId: String, newTitle: String) {
         viewModelScope.launch {
-            chatRepository?.updateSessionTitle(sessionId, newTitle)
+            sessionStore.renameSession(sessionId, newTitle)
         }
     }
 
     @MainThread
     fun pinSession(sessionId: String, pinned: Boolean) {
         viewModelScope.launch {
-            chatRepository?.updateSessionPinned(sessionId, pinned)
+            sessionStore.pinSession(sessionId, pinned)
         }
     }
 
     @MainThread
     fun deleteSession(sessionId: String) {
         viewModelScope.launch {
-            // Delete on-disk image copies first: the DB CASCADE removes the
-            // message rows but not the files they point at.
-            chatRepository?.getMessages(sessionId)?.forEach { entity ->
-                entity.imagePath?.let { path ->
-                    try { java.io.File(path).delete() } catch (_: Exception) {}
-                }
-            }
-            chatRepository?.deleteSession(sessionId)
+            sessionStore.deleteSession(sessionId)
             if (_currentSessionId.value == sessionId) {
                 _currentSessionId.value = null
                 uiState.resetMessages()
