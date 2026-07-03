@@ -53,7 +53,7 @@ material = "1.12.0"
 minSdk = "30"
 okhttp = "4.11.0"
 paparazzi = "2.0.0-alpha04"
-robolectric = "4.14.1"
+robolectric = "4.16.1"
 rome = "1.18.0"
 room = "2.7.1"
 secrets = "2.0.1"
@@ -122,6 +122,7 @@ androidx-test-runner = "androidx.test:runner:1.7.0"
 androidx-test-uiautomator = { module = "androidx.test.uiautomator:uiautomator", version.ref = "androix-test-uiautomator" }
 androidx-window = { module = "androidx.window:window", version.ref = "androidx-window" }
 androidx-work-runtime-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work" }
+androidx-work-testing = { module = "androidx.work:work-testing", version.ref = "androidx-work" }
 coil-kt-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 commonmark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
 commonmark-ext-gfm-strikethrough = { module = "org.commonmark:commonmark-ext-gfm-strikethrough", version.ref = "commonmark" }
