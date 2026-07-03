@@ -14,10 +14,8 @@ import com.druk.llamacpp.InferenceUnavailableException
 import com.druk.llamacpp.LlamaCpp
 import com.druk.llamacpp.LlamaGenerationCallback
 import com.druk.llamacpp.LlamaGenerationSession
-import com.druk.llamacpp.LlamaModel
-import com.druk.llamacpp.LlamaProgressCallback
-import com.druk.llamacpp.PayloadTooLargeException
 import com.druk.lmplayground.App
+import com.druk.lmplayground.inference.ModelRuntime
 import com.druk.lmplayground.data.ChatSessionEntity
 import com.druk.lmplayground.data.ConversationMetadata
 import com.druk.lmplayground.data.SystemPromptEntity
@@ -31,19 +29,13 @@ import com.druk.lmplayground.storage.StorageRepository
 import com.druk.lmplayground.tools.ToolRegistry
 import androidx.compose.runtime.snapshots.Snapshot
 import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancelAndJoin
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import android.net.Uri
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.ln
-import kotlin.math.min
-import kotlin.math.round
 
 // Minimum gap between per-token haptic ticks. ~60 ms (≈16/s) reads as
 // distinct typewriter taps rather than a continuous buzz on fast streams.
@@ -52,12 +44,6 @@ private const val HAPTIC_MIN_INTERVAL_MS = 60L
 class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val llamaCpp: LlamaCpp? = (app as? App)?.llamaCpp
-    private var llamaModel: LlamaModel? = null
-    private var llamaSession: LlamaGenerationSession? = null
-    private var generatingJob: Job? = null
-
-    // Keep strong reference to prevent GC from closing the file descriptor
-    private var modelFileHandle: StorageRepository.ModelFileHandle? = null
 
     private val imageStore = ChatImageStore(app)
     private val preambleCache = PreambleCacheManager(app.filesDir)
@@ -109,6 +95,104 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     private val storagePreferences = StoragePreferences(app)
     val storageRepository = StorageRepository(app, storagePreferences)
+
+    /**
+     * Translates engine lifecycle events into this ViewModel's LiveData.
+     * Callbacks arrive from background dispatchers — postValue only.
+     */
+    private val runtimeListener = object : ModelRuntime.Listener {
+        override fun onLoadProgress(progress: Float) {
+            _modelLoadingProgress.postValue(progress)
+        }
+
+        override fun onLoadStatus(status: String?) {
+            _loadedModelStatus.postValue(status)
+        }
+
+        override fun onModelResolved(model: ModelInfo) {
+            _loadedModel.postValue(model)
+            _thinkingEnabled.postValue(false)
+            _supportsThinking.postValue(false)
+            _supportsVision.postValue(false)
+        }
+
+        override fun onVisionModuleHint(model: ModelInfo?) {
+            _visionModuleHint.postValue(model)
+        }
+
+        override fun onMaxContextSize(maxContextSize: Int) {
+            _maxContextSize.postValue(maxContextSize)
+        }
+
+        override fun onGenerationParams(params: GenerationParams) {
+            _generationParams.postValue(params)
+        }
+
+        override fun onSystemPromptReset() {
+            _systemPrompt.postValue("")
+            _systemPromptId.postValue(null)
+        }
+
+        override fun onCapabilities(
+            model: ModelInfo,
+            thinking: Boolean,
+            vision: Boolean,
+            toolCalling: Boolean,
+        ) {
+            _supportsThinking.postValue(thinking)
+            _supportsVision.postValue(vision)
+            _supportsToolCalling.postValue(toolCalling)
+            if (toolCalling) {
+                val states = mutableMapOf<String, Boolean>()
+                for (tool in toolRegistry.getAllTools()) {
+                    // Per-model override wins, else the global default.
+                    val enabled = storagePreferences.effectiveToolEnabled(
+                        model.filename, tool.name
+                    )
+                    toolRegistry.setToolEnabled(tool.name, enabled)
+                    states[tool.name] = enabled
+                }
+                _toolEnabledStates.postValue(states)
+            } else {
+                _toolEnabledStates.postValue(emptyMap())
+            }
+            _sessionModelHint.postValue(null)
+        }
+
+        override fun onModelReady(model: ModelInfo) {
+            _isModelReady.postValue(true)
+            // Update session model info if we have an active session
+            val sessionId = _currentSessionId.value
+            if (sessionId != null) {
+                viewModelScope.launch {
+                    sessionStore.updateSessionModel(sessionId, model.filename, model.name)
+                }
+            }
+        }
+
+        override fun onModelLoadFailed(modelName: String) {
+            _modelLoadError.postValue(
+                app.getString(
+                    com.druk.lmplayground.R.string.model_load_failed_message,
+                    modelName,
+                )
+            )
+        }
+
+        override fun onUserError(message: String) {
+            _userError.postValue(message)
+        }
+    }
+
+    private val runtime = ModelRuntime(
+        app,
+        llamaCpp,
+        (app as? App)?.inferenceClient,
+        storageRepository,
+        storagePreferences,
+        notifications,
+        runtimeListener,
+    )
 
     // Whether to show the What's New "Set up tools" button. Shown until the
     // user has opened the Tools settings once (the flag is set there, not on
@@ -206,48 +290,21 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         _isModelReady.value = false
         _isGenerating.value = false
 
-        // Snapshot the references that were live AT THE TIME OF THE
-        // CRASH. We need these because our cleanup runs *after* a
-        // potentially long wait — during which the user may have
-        // acknowledged the crash and successfully loaded a NEW model.
-        // We must only clear handles that still point at the dead
-        // session/model; otherwise we'd close the new model's PFD and
-        // null the new session, leaving the UI ready with no engine.
-        val staleSession = llamaSession
-        val staleModel = llamaModel
-        val staleHandle = modelFileHandle
+        // Snapshot the handles that were live at the time of the crash —
+        // cleanup below must not touch a NEW model the user may load
+        // during the drain wait (see ModelRuntime.crashSnapshot).
+        val snapshot = runtime.crashSnapshot()
 
         viewModelScope.launch {
-            // The cancelled generation coroutine isn't done yet —
-            // generateAll() suspends up to 30 s waiting for the dead
-            // worker to drain. Until that finally block has run, the
-            // job's NonCancellable cleanup could still mutate
-            // uiState.messages.lastOrNull() and persist whatever it
-            // sees. We MUST wait for it to drain before we touch any
-            // shared state, or it'll persist a future placeholder
-            // against the now-stale sessionId.
-            val priorJob = generatingJob
-            generatingJob = null
-            try {
-                priorJob?.cancelAndJoin()
-            } catch (_: Throwable) { /* job is dead either way */ }
-
             // If the user already reloaded a model during the wait, the
             // current handles are NOT the stale ones — they belong to a
             // working session on a fresh :llama process. Bail without
             // touching anything; the new load already set
             // _isModelReady=true and a sensible status.
-            if (llamaModel !== staleModel ||
-                llamaSession !== staleSession ||
-                modelFileHandle !== staleHandle) {
+            if (!runtime.recoverFromCrash(snapshot)) {
                 return@launch
             }
 
-            // Still pointing at the dead handles — clean them up.
-            llamaSession = null
-            llamaModel = null
-            modelFileHandle?.close()
-            modelFileHandle = null
             _loadedModelStatus.value = app.getString(
                 com.druk.lmplayground.R.string.inference_engine_crashed,
             )
@@ -271,22 +328,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     override fun onCleared() {
-        val job = generatingJob
-        val session = llamaSession
-        val model = llamaModel
-        val handle = modelFileHandle
-        generatingJob = null
-        llamaSession = null
-        llamaModel = null
-        modelFileHandle = null
-
-        CoroutineScope(Dispatchers.Default).launch {
-            job?.cancel()
-            job?.join()
-            session?.destroy()
-            model?.unloadModel()
-            handle?.close()
-        }
+        runtime.shutdown()
         super.onCleared()
     }
 
@@ -357,273 +399,10 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             _models.postValue(emptyList())
             _isModelReady.postValue(false)
 
-
-            // If we're recovering from a `:llama` crash, the InferenceClient
-            // is in sticky `Crashed` state. Acknowledge it so the next AIDL
-            // call uses the freshly auto-rebound service. Safe no-op when
-            // the state is already Connected.
-            (app as? App)?.inferenceClient?.let { ic ->
-                if (ic.state.value is InferenceState.Crashed) {
-                    ic.acknowledgeCrash()
-                    // The auto-rebound service may still be landing — wait
-                    // up to 5s for the next Connected transition before
-                    // proceeding with loadModel.
-                    try {
-                        kotlinx.coroutines.withTimeout(5_000) {
-                            ic.awaitConnected()
-                        }
-                    } catch (_: Throwable) {
-                        _loadedModelStatus.postValue(
-                            app.getString(com.druk.lmplayground.R.string.inference_engine_crashed)
-                        )
-                        return@launch
-                    }
-                }
-            }
-
-            // Stop any in-flight generation and tear down previous model
-            generatingJob?.cancel()
-            generatingJob?.join()
-            generatingJob = null
-
-            // Capture and null references on main thread to prevent races
-            val prevSession = llamaSession
-            val prevModel = llamaModel
-            val prevHandle = modelFileHandle
-            llamaSession = null
-            llamaModel = null
-            modelFileHandle = null
-
-            withContext(Dispatchers.Default) {
-                prevSession?.destroy()
-                prevModel?.unloadModel()
-            }
-
-            prevHandle?.close()
-
-            withContext(Dispatchers.Default) {
-                _modelLoadingProgress.postValue(0f)
-                _loadedModel.postValue(model)
-                _thinkingEnabled.postValue(false)
-                _supportsThinking.postValue(false)
-                _supportsVision.postValue(false)
-                _loadedModelStatus.postValue("Loading...")
-
-                val fileHandle = storageRepository.openModelFile(modelInfo.filename)
-                if (fileHandle == null) {
-                    _loadedModelStatus.postValue("Cannot open file")
-                    return@withContext
-                }
-
-                modelFileHandle = fileHandle
-
-                // llama.cpp only reports progress during tensor pointer setup,
-                // which is near-instant with mmap. The slow parts (GGUF metadata
-                // parsing, mmap init, buffer allocation) report nothing.
-                // Animate estimated progress as a fallback so the bar moves
-                // during the silent phases; the real callback overrides as
-                // soon as the first real value arrives.
-                val realProgressSeen = java.util.concurrent.atomic.AtomicBoolean(false)
-                val progressJob = CoroutineScope(Dispatchers.Main).launch {
-                    val startTime = System.currentTimeMillis()
-                    while (isActive) {
-                        if (!realProgressSeen.get()) {
-                            val elapsed = (System.currentTimeMillis() - startTime) / 1000f
-                            // Logarithmic curve: rises quickly then slows, caps at 0.9
-                            val estimated = min(0.9f, ln(1f + elapsed) / ln(1f + 30f))
-                            _modelLoadingProgress.postValue(estimated)
-                            _loadedModelStatus.postValue("${round(100 * estimated).toInt()}%")
-                        }
-                        delay(100)
-                    }
-                }
-
-                // Wrap the entire load + session setup so that the
-                // progress-animation job is cancelled on every exit
-                // path (success, exception, coroutine cancel). Without
-                // this, a binder failure during loadModel would leave
-                // the progress job ticking forever, overwriting the
-                // crash status with bogus "85%" updates.
-                try {
-                    // Send the PFD across the binder. The service dups the
-                    // FD into its own process and builds a process-local
-                    // fd:N string. The app keeps `fileHandle` (the original
-                    // PFD) alive via `modelFileHandle` for the model's
-                    // lifetime.
-                    val llamaModel = llamaCpp.loadModel(
-                        fileHandle.pfd,
-                        object: LlamaProgressCallback {
-                            override fun onProgress(progress: Float) {
-                                realProgressSeen.set(true)
-                                _modelLoadingProgress.postValue(progress)
-                                _loadedModelStatus.postValue(
-                                    "${round(100 * progress).toInt()}%"
-                                )
-                            }
-                        },
-                        disableRepack = disableRepack,
-                    )
-
-                    // Load mmproj for vision models. The mtmd loader needs a
-                    // real filesystem path, so we copy the mmproj GGUF to a
-                    // temp file in app-private storage before handing it off.
-                    if (model.mmprojFilename != null) {
-                        _loadedModelStatus.postValue("Loading vision...")
-                        val mmprojTempFile = java.io.File(app.cacheDir, "mmproj_temp.gguf")
-                        val copied = storageRepository.copyModelToFile(
-                            model.mmprojFilename, mmprojTempFile
-                        )
-                        if (copied) {
-                            android.util.Log.d(
-                                "ConversationVM",
-                                "Loading mmproj from ${mmprojTempFile.absolutePath}"
-                            )
-                            llamaModel.loadMmprojModel(mmprojTempFile.absolutePath)
-                            mmprojTempFile.delete()
-                            android.util.Log.d(
-                                "ConversationVM",
-                                "mmproj loaded, supportsVision=${llamaModel.supportsVision()}"
-                            )
-                            _visionModuleHint.postValue(null)
-                        } else {
-                            android.util.Log.d(
-                                "ConversationVM",
-                                "mmproj file not found: ${model.mmprojFilename}"
-                            )
-                            // Vision-capable model loaded without its image
-                            // module: offer to download it, once per model.
-                            if (model.mmprojUri != null &&
-                                !storagePreferences.wasVisionModuleHintShown(model.filename)
-                            ) {
-                                storagePreferences.setVisionModuleHintShown(model.filename)
-                                _visionModuleHint.postValue(model)
-                            }
-                        }
-                    }
-
-                    val modelSize = llamaModel.getModelSize()
-                    val modelDescription = Formatter.formatFileSize(app, modelSize)
-                    // Surface "Model is loaded" + "<name> - <size>" in the
-                    // FGS notification (otherwise hidden under MIN importance,
-                    // but visible when the user expands the Silent group in
-                    // the shade). The description line is cached so generation
-                    // can later flip the title to "Generating…"/"Response
-                    // ready" without re-deriving it.
-                    notifications.modelLine = "${modelInfo.name} - $modelDescription"
-                    notifications.modelName = modelInfo.name
-                    notifications.update(
-                        com.druk.lmplayground.R.string.inference_notification_loaded_title
-                    )
-                    val nCtxTrain = llamaModel.getContextTrainSize()
-                    _maxContextSize.postValue(minOf(nCtxTrain, 16384))
-                    // Load saved per-model params, or use defaults
-                    val savedMap = storagePreferences.getModelGenerationParams(modelInfo.filename)
-                    val params = if (savedMap != null) {
-                        GenerationParams.fromMap(savedMap)
-                    } else {
-                        GenerationParams()
-                    }
-                    _generationParams.postValue(params)
-                    // Every model load starts without a system prompt. Per-model
-                    // MRU is surfaced in the picker row so the user can one-tap
-                    // re-apply their most-recent prompt for this model.
-                    _systemPrompt.postValue("")
-                    _systemPromptId.postValue(null)
-                    val llamaSession = createSessionWithParams(llamaModel, params, "")
-                    if (llamaSession == null) {
-                        _loadedModelStatus.postValue("Failed to create session")
-                        llamaModel.unloadModel()
-                        return@withContext
-                    }
-                    this@ConversationViewModel.llamaModel = llamaModel
-                    this@ConversationViewModel.llamaSession = llamaSession
-                    val thinkingSupported = llamaModel.supportsThinking()
-                    _supportsThinking.postValue(thinkingSupported)
-                    _supportsVision.postValue(llamaModel.supportsVision())
-                    val toolCallingSupported = llamaModel.supportsToolCalling()
-                    _supportsToolCalling.postValue(toolCallingSupported)
-                    // Cache the real, template-detected capabilities so the model
-                    // list can show accurate badges for this model (and any custom
-                    // GGUF) without having to load it again.
-                    storagePreferences.setDetectedCaps(
-                        modelInfo.filename, toolCallingSupported, thinkingSupported
-                    )
-                    if (toolCallingSupported) {
-                        val states = mutableMapOf<String, Boolean>()
-                        for (tool in toolRegistry.getAllTools()) {
-                            // Per-model override wins, else the global default.
-                            val enabled = storagePreferences.effectiveToolEnabled(
-                                modelInfo.filename, tool.name
-                            )
-                            toolRegistry.setToolEnabled(tool.name, enabled)
-                            states[tool.name] = enabled
-                        }
-                        _toolEnabledStates.postValue(states)
-                    } else {
-                        _toolEnabledStates.postValue(emptyMap())
-                    }
-                    _modelLoadingProgress.postValue(0f)
-                    _loadedModelStatus.postValue(modelDescription)
-                    _sessionModelHint.postValue(null)
-
-                    // Replay history into the new session BEFORE marking the
-                    // model ready. If a persisted message exceeds the
-                    // 700 KB binder ceiling, replayHistory throws — and we
-                    // do NOT want the user to start a new turn against a
-                    // session that's missing prior context (the model
-                    // would answer follow-up questions as if they were
-                    // fresh prompts). Tear the session+model down on
-                    // failure and surface a clear error.
-                    val messages = uiState.messages.toList()
-                    if (messages.isNotEmpty()) {
-                        try {
-                            HistoryReplay.replayToSession(llamaSession, messages)
-                        } catch (e: PayloadTooLargeException) {
-                            this@ConversationViewModel.llamaSession = null
-                            this@ConversationViewModel.llamaModel = null
-                            try { llamaSession.destroy() } catch (_: Throwable) {}
-                            try { llamaModel.unloadModel() } catch (_: Throwable) {}
-                            _loadedModelStatus.postValue(
-                                app.getString(
-                                    com.druk.lmplayground.R.string.replay_history_too_large
-                                )
-                            )
-                            return@withContext
-                        }
-                    }
-                    _isModelReady.postValue(true)
-
-                    // Update session model info if we have an active session
-                    val sessionId = _currentSessionId.value
-                    if (sessionId != null) {
-                        sessionStore.updateSessionModel(
-                            sessionId, modelInfo.filename, modelInfo.name
-                        )
-                    }
-                } catch (t: Throwable) {
-                    // Surface the failure to the user instead of leaving
-                    // the picker stuck on "Loading…" forever.
-                    _modelLoadingProgress.postValue(0f)
-                    val statusMsg = app.getString(
-                        com.druk.lmplayground.R.string.model_load_failed_status
-                    )
-                    _loadedModelStatus.postValue(statusMsg)
-                    fileHandle.close()
-                    if (t !is kotlinx.coroutines.CancellationException) {
-                        android.util.Log.w("ConversationViewModel", "loadModel failed", t)
-                        _modelLoadError.postValue(
-                            app.getString(
-                                com.druk.lmplayground.R.string.model_load_failed_message,
-                                modelInfo.name,
-                            )
-                        )
-                    } else {
-                        throw t
-                    }
-                } finally {
-                    progressJob.cancel()
-                }
-            }
+            // Engine-side load: crash acknowledge, previous-model teardown,
+            // native load + first session + history replay. Lifecycle events
+            // come back through [runtimeListener].
+            runtime.loadModel(model, disableRepack) { uiState.messages.toList() }
         }
     }
 
@@ -655,89 +434,11 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    /**
-     * Swap [newSession] in as the live session after replaying [messages]
-     * into it, destroying [prevSession] only once the replay succeeds (so a
-     * late failure leaves the prior session intact instead of stranding the
-     * UI session-less).
-     *
-     * Centralises the create-then-replace error handling shared by
-     * [updateGenerationParams], [loadSession] and [applySystemPrompt]:
-     *   - [PayloadTooLargeException]: a persisted message exceeds the binder
-     *     cap; tear the new session down and keep the old one.
-     *   - [InferenceUnavailableException]: the :llama service died mid-replay
-     *     (or never re-connected). Previously this escaped the viewModelScope
-     *     coroutine and crashed the app process — surfacing on Google Play as
-     *     withService / requireConnected IUE. Now we tear the half-built
-     *     session down and surface a recoverable error; the crash-recovery
-     *     flow ([onInferenceCrashed]) cleans up the stale handles.
-     *
-     * Returns true if the swap happened, false if the caller should abort.
-     */
-    private fun swapInSessionWithReplay(
-        newSession: LlamaGenerationSession,
-        prevSession: LlamaGenerationSession?,
-        messages: List<Message>,
-    ): Boolean {
-        try {
-            if (messages.isNotEmpty()) {
-                HistoryReplay.replayToSession(newSession, messages)
-            }
-        } catch (e: PayloadTooLargeException) {
-            try { newSession.destroy() } catch (_: Throwable) {}
-            _userError.postValue(
-                app.getString(com.druk.lmplayground.R.string.history_message_too_large)
-            )
-            return false
-        } catch (e: InferenceUnavailableException) {
-            android.util.Log.w(
-                "ConversationViewModel",
-                "replayHistory failed: service unavailable", e
-            )
-            try { newSession.destroy() } catch (_: Throwable) {}
-            _userError.postValue(
-                app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
-            )
-            return false
-        }
-        this@ConversationViewModel.llamaSession = newSession
-        prevSession?.destroy()
-        return true
-    }
-
     @MainThread
     fun toggleThinking() {
         _thinkingEnabled.value = _thinkingEnabled.value != true
     }
 
-    private fun createSessionWithParams(
-        model: LlamaModel,
-        params: GenerationParams,
-        systemPrompt: String = _systemPrompt.value.orEmpty()
-    ): LlamaGenerationSession? {
-        return try {
-            model.createSession(
-                params.contextSize,
-                params.temperature,
-                params.topP,
-                params.repetitionPenalty,
-                params.topK,
-                params.minP,
-                params.seed,
-                params.thinkingBudget,
-                systemPrompt
-            )
-        } catch (e: InferenceUnavailableException) {
-            // The :llama service died (or hasn't bound yet). Surface a
-            // recoverable error to the UI rather than letting the AIDL
-            // exception propagate and crash the app process.
-            android.util.Log.w("ConversationViewModel", "createSession failed: service unavailable", e)
-            _userError.postValue(
-                app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
-            )
-            null
-        }
-    }
 
     @MainThread
     fun updateGenerationParams(params: GenerationParams) {
@@ -755,7 +456,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         } else {
             uiState.messages.toList()
         }
-        if (llamaModel != null && !validateReplaySize(systemPrompt, messagesToReplay)) return
+        if (runtime.model != null && !validateReplaySize(systemPrompt, messagesToReplay)) return
 
         _generationParams.value = params
 
@@ -775,50 +476,22 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
         // If context size changed, must recreate session (resets conversation)
         if (oldParams.contextSize != params.contextSize) {
-            val model = llamaModel ?: return
+            if (runtime.model == null) return
             viewModelScope.launch {
-                generatingJob?.cancel()
-                generatingJob?.join()
-                generatingJob = null
-
-                val prevSession = llamaSession
+                runtime.cancelAndJoinGeneration()
 
                 _currentSessionId.value = null
                 uiState.resetMessages()
 
-                withContext(Dispatchers.Default) {
-                    val newSession = createSessionWithParams(model, params, systemPrompt)
-                    if (newSession != null) {
-                        this@ConversationViewModel.llamaSession = newSession
-                        prevSession?.destroy()
-                    } else {
-                        // Keep using the old session if we couldn't make a new one.
-                        prevSession?.destroy()
-                        this@ConversationViewModel.llamaSession = null
-                    }
-                }
+                runtime.resetSessionForContextChange(params, systemPrompt)
             }
         } else {
             // Other params: recreate session but replay history. We
             // already pre-validated at the top, so no validation here.
-            val model = llamaModel ?: return
+            if (runtime.model == null) return
             val messages = uiState.messages.toList()
             viewModelScope.launch {
-                generatingJob?.cancel()
-                generatingJob?.join()
-                generatingJob = null
-
-                val prevSession = llamaSession
-
-                withContext(Dispatchers.Default) {
-                    // Create the new session FIRST. Only after a successful
-                    // create + replay do we destroy the old one — this way
-                    // a late failure leaves the prior session intact and
-                    // usable instead of stranding the UI session-less.
-                    val newSession = createSessionWithParams(model, params, systemPrompt)
-                        ?: return@withContext
-                    swapInSessionWithReplay(newSession, prevSession, messages)
-                }
+                runtime.recreateSessionWithReplay(params, systemPrompt, messages)
             }
         }
     }
@@ -879,7 +552,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         // stuck at true. Message.id is auto-incremented and never
         // changes through .copy() updates — the right identity field.
         val ourMessageId = uiState.messages.lastOrNull()?.id ?: -1L
-        generatingJob = viewModelScope.launch {
+        runtime.generatingJob = viewModelScope.launch {
             val ourJob = coroutineContext[Job]
 
             // Persist user message (with the attached image path, if any)
@@ -887,7 +560,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             sessionStore.persistMessage(sessionId, userMessage, persistedImageFile?.absolutePath)
 
             withContext(Dispatchers.Default) {
-                val llamaSession = llamaSession ?: return@withContext
+                val llamaSession = runtime.session ?: return@withContext
 
                 // Read + downscale the picked image off the binder thread so
                 // setImageData (below) can hand the encoded bytes to the
@@ -1157,7 +830,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                         // would clobber the in-flight new generation.
                         // The new job's own finally will handle its
                         // state. We just exit quietly.
-                        val supersededByNewer = generatingJob !== ourJob
+                        val supersededByNewer = runtime.generatingJob !== ourJob
                         // Belt-and-suspenders: also confirm the last
                         // message in uiState is still our placeholder
                         // by stable Message.id identity.
@@ -1307,21 +980,13 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
             uiState.setMessages(uiMessages)
 
-            // Recreate native session with restored params and replay history
-            val model = llamaModel
-            if (model != null) {
+            // Recreate native session with restored params and replay history.
+            // Pre-validation already happened at the top of this function
+            // (before any UI state mutation).
+            if (runtime.model != null) {
                 val systemPrompt = _systemPrompt.value.orEmpty()
-                // Pre-validation already happened at the top of this
-                // function (before any UI state mutation). The
-                // try/catch below is defense-in-depth in case the
-                // saved system prompt diverges from sessionEntity's.
-                val prevSession = llamaSession
-                withContext(Dispatchers.Default) {
-                    val params = _generationParams.value ?: GenerationParams()
-                    val newSession = createSessionWithParams(model, params, systemPrompt)
-                        ?: return@withContext
-                    swapInSessionWithReplay(newSession, prevSession, uiMessages)
-                }
+                val params = _generationParams.value ?: GenerationParams()
+                runtime.recreateSessionWithReplay(params, systemPrompt, uiMessages)
             }
         }
     }
@@ -1329,9 +994,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     @MainThread
     fun newConversation() {
         viewModelScope.launch {
-            generatingJob?.cancel()
-            generatingJob?.join()
-            generatingJob = null
+            runtime.cancelAndJoinGeneration()
 
             _currentSessionId.value = null
             _sessionModelHint.value = null
@@ -1340,17 +1003,10 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             toolRegistry.webLinkStore.clear()
 
             // Recreate native session with clean KV cache
-            val model = llamaModel
-            if (model != null) {
-                val prevSession = llamaSession
-                llamaSession = null
-                withContext(Dispatchers.Default) {
-                    prevSession?.destroy()
-                    val params = _generationParams.value ?: GenerationParams()
-                    val newSession = createSessionWithParams(model, params) ?: return@withContext
-                    this@ConversationViewModel.llamaSession = newSession
-                }
-            }
+            runtime.resetSessionDestroyFirst(
+                _generationParams.value ?: GenerationParams(),
+                _systemPrompt.value.orEmpty(),
+            )
         }
     }
 
@@ -1400,33 +1056,15 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
 
         // Recreate the native session so the prompt lands as message[0].
-        val model = llamaModel ?: return
+        // Create-then-destroy with a defense-in-depth catch around create
+        // (on top of the validateReplaySize pre-check).
+        if (runtime.model == null) return
         val params = _generationParams.value ?: GenerationParams()
         viewModelScope.launch {
-            generatingJob?.cancel()
-            generatingJob?.join()
-            generatingJob = null
-
-            val prevSession = llamaSession
-
-            withContext(Dispatchers.Default) {
-                // Create-then-destroy: keep the old session alive as a
-                // fallback if creation throws (defense-in-depth on top
-                // of the validateReplaySize pre-check).
-                val newSession = try {
-                    createSessionWithParams(model, params, text)
-                } catch (e: PayloadTooLargeException) {
-                    _userError.postValue(
-                        app.getString(
-                            com.druk.lmplayground.R.string.system_prompt_too_large,
-                            text.length * 2 / 1024,
-                            InferenceLimits.MAX_PAYLOAD_BYTES / 1024,
-                        )
-                    )
-                    null
-                } ?: return@withContext
-                swapInSessionWithReplay(newSession, prevSession, messages)
-            }
+            runtime.recreateSessionWithReplay(
+                params, text, messages,
+                catchPayloadTooLargeOnCreate = true,
+            )
         }
     }
 
@@ -1497,7 +1135,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
     @MainThread
     fun cancelGeneration() {
-        generatingJob?.cancel()
+        runtime.generatingJob?.cancel()
     }
 
     fun dismissSessionModelHint() {
@@ -1534,21 +1172,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         loadModel(modelInfo)
     }
 
-    fun getReport(): String? {
-        // Invoked synchronously on the main thread from the token-count tap.
-        // Both proxy calls go over AIDL and throw InferenceUnavailableException
-        // if the :llama service crashed or hasn't bound — there's nothing to
-        // report in that case, so swallow it instead of crashing the app
-        // (seen on Google Play as withService / requireConnected IUE).
-        return try {
-            val modelReport = llamaModel?.getModelReport() ?: return null
-            val sessionReport = llamaSession?.getReport() ?: return null
-            modelReport + "\n" + sessionReport
-        } catch (e: InferenceUnavailableException) {
-            android.util.Log.w("ConversationViewModel", "getReport failed: service unavailable", e)
-            null
-        }
-    }
+    fun getReport(): String? = runtime.getReport()
 
     fun unloadModel() {
         viewModelScope.launch {
@@ -1558,25 +1182,8 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             // _loadedModel + _loadedModelStatus set with null native
             // handles; without this, tapping Unload was a no-op for that
             // path.
-            if (modelFileHandle != null || llamaModel != null) {
-                generatingJob?.cancel()
-                generatingJob?.join()
-                generatingJob = null
-
-                // Capture and null references on main thread to prevent races
-                val prevSession = llamaSession
-                val prevModel = llamaModel
-                val prevHandle = modelFileHandle
-                llamaSession = null
-                llamaModel = null
-                modelFileHandle = null
-
-                withContext(Dispatchers.Default) {
-                    prevSession?.destroy()
-                    prevModel?.unloadModel()
-                }
-
-                prevHandle?.close()
+            if (runtime.hasNativeHandles()) {
+                runtime.unloadNative()
             }
 
             _loadedModel.postValue(null)
@@ -1615,7 +1222,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         session: LlamaGenerationSession,
         toolsJson: String,
     ) {
-        val modelSize = try { llamaModel?.getModelSize() ?: 0L } catch (_: Throwable) { 0L }
+        val modelSize = try { runtime.model?.getModelSize() ?: 0L } catch (_: Throwable) { 0L }
         preambleCache.apply(
             session,
             _loadedModel.value?.filename,

@@ -159,11 +159,13 @@ class ConversationViewModelToolCallTest {
         session: LlamaGenerationSession,
     ) {
         val cls = ConversationViewModel::class.java
-        cls.getDeclaredField("llamaModel").apply {
-            isAccessible = true; set(vm, model)
+        // The native handles live on the ViewModel's ModelRuntime.
+        val runtime = cls.getDeclaredField("runtime").apply { isAccessible = true }.get(vm)
+        runtime.javaClass.getDeclaredField("model").apply {
+            isAccessible = true; set(runtime, model)
         }
-        cls.getDeclaredField("llamaSession").apply {
-            isAccessible = true; set(vm, session)
+        runtime.javaClass.getDeclaredField("session").apply {
+            isAccessible = true; set(runtime, session)
         }
         @Suppress("UNCHECKED_CAST")
         fun setBool(name: String, value: Boolean) {
