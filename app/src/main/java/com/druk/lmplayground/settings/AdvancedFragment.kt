@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,7 +26,7 @@ class AdvancedFragment : Fragment() {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
         setContent {
             PlaygroundTheme {
-                val disableRepack by viewModel.disableRepack.observeAsState(false)
+                val disableRepack by viewModel.disableRepack.collectAsStateWithLifecycle()
                 AdvancedScreen(
                     disableRepack = disableRepack,
                     onDisableRepackChanged = { viewModel.setDisableRepack(it) },

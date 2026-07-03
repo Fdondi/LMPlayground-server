@@ -19,6 +19,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -356,7 +357,7 @@ class SettingsFragment : Fragment() {
      */
     @androidx.compose.runtime.Composable
     private fun ToolsDetailPane() {
-        val enabled by toolsViewModel.enabled.observeAsState(emptyMap())
+        val enabled by toolsViewModel.enabled.collectAsStateWithLifecycle()
         ToolsContent(
             tools = toolsViewModel.tools,
             enabledStates = enabled,
@@ -371,8 +372,8 @@ class SettingsFragment : Fragment() {
      */
     @androidx.compose.runtime.Composable
     private fun SoundHapticDetailPane() {
-        val soundEnabled by soundHapticViewModel.soundEnabled.observeAsState(true)
-        val hapticEnabled by soundHapticViewModel.hapticEnabled.observeAsState(true)
+        val soundEnabled by soundHapticViewModel.soundEnabled.collectAsStateWithLifecycle()
+        val hapticEnabled by soundHapticViewModel.hapticEnabled.collectAsStateWithLifecycle()
         SoundHapticContent(
             soundEnabled = soundEnabled,
             hapticEnabled = hapticEnabled,
@@ -387,7 +388,7 @@ class SettingsFragment : Fragment() {
      */
     @androidx.compose.runtime.Composable
     private fun AdvancedDetailPane() {
-        val disableRepack by advancedViewModel.disableRepack.observeAsState(false)
+        val disableRepack by advancedViewModel.disableRepack.collectAsStateWithLifecycle()
         AdvancedContent(
             disableRepack = disableRepack,
             onDisableRepackChanged = { advancedViewModel.setDisableRepack(it) },

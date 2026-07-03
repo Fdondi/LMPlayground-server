@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,8 +26,8 @@ class SoundHapticFragment : Fragment() {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
         setContent {
             PlaygroundTheme {
-                val soundEnabled by viewModel.soundEnabled.observeAsState(true)
-                val hapticEnabled by viewModel.hapticEnabled.observeAsState(true)
+                val soundEnabled by viewModel.soundEnabled.collectAsStateWithLifecycle()
+                val hapticEnabled by viewModel.hapticEnabled.collectAsStateWithLifecycle()
                 SoundHapticScreen(
                     soundEnabled = soundEnabled,
                     hapticEnabled = hapticEnabled,

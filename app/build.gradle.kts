@@ -184,6 +184,12 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"),
                     "proguard-rules.pro")
+            // Package native debug symbols into the AAB so Play Console
+            // symbolicates :llama crashes — crash visibility without a
+            // crash-reporting SDK (see ARCHITECTURE.md, "Crash visibility").
+            ndk {
+                debugSymbolLevel = "SYMBOL_TABLE"
+            }
         }
     }
 

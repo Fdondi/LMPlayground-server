@@ -2,9 +2,9 @@ package com.druk.lmplayground.settings
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.druk.lmplayground.storage.StoragePreferences
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * Backs Settings → Sound and Haptic. Two independent toggles, both ON by
@@ -16,11 +16,11 @@ class SoundHapticViewModel(app: Application) : AndroidViewModel(app) {
 
     private val prefs = StoragePreferences(app)
 
-    private val _soundEnabled = MutableLiveData(prefs.soundOnCompletion)
-    val soundEnabled: LiveData<Boolean> = _soundEnabled
+    private val _soundEnabled = MutableStateFlow(prefs.soundOnCompletion)
+    val soundEnabled: StateFlow<Boolean> = _soundEnabled
 
-    private val _hapticEnabled = MutableLiveData(prefs.hapticOnGeneration)
-    val hapticEnabled: LiveData<Boolean> = _hapticEnabled
+    private val _hapticEnabled = MutableStateFlow(prefs.hapticOnGeneration)
+    val hapticEnabled: StateFlow<Boolean> = _hapticEnabled
 
     fun setSoundEnabled(value: Boolean) {
         prefs.soundOnCompletion = value

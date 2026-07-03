@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,7 +26,7 @@ class ToolsFragment : Fragment() {
         layoutParams = LayoutParams(MATCH_PARENT, MATCH_PARENT)
         setContent {
             PlaygroundTheme {
-                val enabled by toolsViewModel.enabled.observeAsState(emptyMap())
+                val enabled by toolsViewModel.enabled.collectAsStateWithLifecycle()
                 ToolsScreen(
                     tools = toolsViewModel.tools,
                     enabledStates = enabled,

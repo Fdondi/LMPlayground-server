@@ -2,9 +2,9 @@ package com.druk.lmplayground.settings
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.druk.lmplayground.storage.StoragePreferences
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import com.druk.lmplayground.tools.Tool
 import com.druk.lmplayground.tools.ToolRegistry
 
@@ -28,13 +28,13 @@ class ToolsViewModel(app: Application) : AndroidViewModel(app) {
     /** The catalog of available tools (same set the conversation engine uses). */
     val tools: List<Tool> = ToolRegistry.createDefault(app).getAllTools()
 
-    private val _enabled = MutableLiveData(
+    private val _enabled = MutableStateFlow(
         tools.associate { it.name to prefs.isToolEnabledDefault(it.name) }
     )
-    val enabled: LiveData<Map<String, Boolean>> = _enabled
+    val enabled: StateFlow<Map<String, Boolean>> = _enabled
 
     fun setEnabled(toolName: String, value: Boolean) {
         prefs.setToolEnabledDefault(toolName, value)
-        _enabled.value = _enabled.value.orEmpty().toMutableMap().apply { put(toolName, value) }
+        _enabled.value = _enabled.value.toMutableMap().apply { put(toolName, value) }
     }
 }
