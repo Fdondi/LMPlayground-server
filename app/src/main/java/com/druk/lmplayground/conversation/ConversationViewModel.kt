@@ -10,10 +10,7 @@ import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
 import com.druk.llamacpp.InferenceLimits
 import com.druk.llamacpp.InferenceState
-import com.druk.llamacpp.InferenceUnavailableException
 import com.druk.llamacpp.LlamaCpp
-import com.druk.llamacpp.LlamaGenerationCallback
-import com.druk.llamacpp.LlamaGenerationSession
 import com.druk.lmplayground.App
 import com.druk.lmplayground.inference.ModelRuntime
 import com.druk.lmplayground.data.ChatSessionEntity
@@ -28,18 +25,12 @@ import com.druk.lmplayground.storage.StoragePreferences
 import com.druk.lmplayground.storage.StorageRepository
 import com.druk.lmplayground.tools.ToolRegistry
 import androidx.compose.runtime.snapshots.Snapshot
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.async
-import kotlinx.coroutines.isActive
 import android.net.Uri
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-// Minimum gap between per-token haptic ticks. ~60 ms (≈16/s) reads as
-// distinct typewriter taps rather than a continuous buzz on fast streams.
-private const val HAPTIC_MIN_INTERVAL_MS = 60L
 
 class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
 
@@ -193,6 +184,146 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         notifications,
         runtimeListener,
     )
+
+    /**
+     * Translates generation-turn events into uiState mutations and
+     * persistence. Streaming callbacks arrive from background threads.
+     */
+    private val generationListener = object : GenerationCoordinator.Listener {
+        override fun onToolStatesHydrated(states: Map<String, Boolean>) {
+            _toolEnabledStates.postValue(states)
+        }
+
+        override fun onAssistantDelta(
+            text: String,
+            thinkingTokens: Int,
+            responseTokens: Int,
+            thinkingJustStarted: Boolean,
+        ) {
+            Snapshot.withMutableSnapshot {
+                if (thinkingJustStarted) {
+                    uiState.markThinkingStarted()
+                }
+                uiState.updateLastMessage(
+                    text,
+                    thinkingTokens = thinkingTokens,
+                    responseTokens = responseTokens
+                )
+            }
+        }
+
+        override fun onToolCalls(infos: List<ToolCallInfo>) {
+            Snapshot.withMutableSnapshot {
+                uiState.addToolCallsToLastMessage(infos)
+            }
+        }
+
+        override fun onThinkingRestarted() {
+            Snapshot.withMutableSnapshot {
+                uiState.markThinkingStarted()
+            }
+        }
+
+        override fun onTurnAborted(messageId: Long) {
+            Snapshot.withMutableSnapshot {
+                // Drop the empty assistant placeholder so the chat
+                // doesn't sit forever on a half-blank bubble.
+                if (uiState.messages.lastOrNull()?.id == messageId) {
+                    uiState.removeLastMessage()
+                }
+            }
+            _isGenerating.postValue(false)
+        }
+
+        override fun onUserError(message: String) {
+            _userError.postValue(message)
+        }
+
+        override suspend fun onTurnFinished(
+            ourJob: Job?,
+            messageId: Long,
+            sessionId: String,
+            totalTokens: Int,
+        ) {
+            // If a newer generation has taken over this slot
+            // (crash + reload + new prompt while we were
+            // draining the dead worker), our cleanup must NOT
+            // touch any UI/persistence — uiState.messages
+            // now belongs to the new turn, finalizing it
+            // would clobber the in-flight new generation.
+            // The new job's own finally will handle its
+            // state. We just exit quietly.
+            val supersededByNewer = runtime.generatingJob !== ourJob
+            // Belt-and-suspenders: also confirm the last
+            // message in uiState is still our placeholder
+            // by stable Message.id identity.
+            val last = uiState.messages.lastOrNull()
+            val stillOurMessage = last != null &&
+                last.author == "Assistant" &&
+                last.id == messageId
+            if (supersededByNewer || !stillOurMessage) {
+                return
+            }
+
+            Snapshot.withMutableSnapshot {
+                uiState.finalizeLastMessage()
+            }
+            _isGenerating.postValue(false)
+            // Generation (or cancellation) is done — freeze the
+            // silent notification on "Response ready" with the
+            // final token count, and attach Copy/Share actions
+            // bound to the finalized response (think-tags
+            // stripped, matching the in-chat share/copy). Skipped
+            // on the superseded path above, so a newer in-flight
+            // turn's "Generating…" line is preserved.
+            val readyBody = (uiState.messages.lastOrNull()
+                ?.takeIf { it.author == "Assistant" }
+                ?.content
+                ?.let { stripThinkTags(it) })
+                ?.takeIf { it.isNotBlank() }
+            notifications.update(
+                com.druk.lmplayground.R.string.inference_notification_ready_title,
+                notifications.tokensLine(totalTokens),
+                actionBody = readyBody,
+            )
+
+            // If the user isn't looking at the app, play a short
+            // chime so they know the answer is ready. Gated on the
+            // in-app setting, a non-blank response (so a cancelled/
+            // empty turn stays quiet), and background state; the
+            // helper itself also respects silent/vibrate/DND.
+            if (storagePreferences.soundOnCompletion &&
+                readyBody != null &&
+                (app as? App)?.isAppInForeground == false
+            ) {
+                com.druk.lmplayground.inference.ResponseSound.playIfAudible(app)
+            }
+
+            // Persist whatever the assistant produced — including
+            // a partially-streamed response on cancel — so
+            // reload-from-DB matches what the user saw on screen.
+            val assistantMessage = uiState.messages.lastOrNull()
+            if (assistantMessage != null && assistantMessage.author == "Assistant") {
+                try {
+                    sessionStore.persistMessage(sessionId, assistantMessage)
+                    sessionStore.touchSessionTimestamp(sessionId)
+                    persistConversationMetadata(sessionId)
+                } catch (_: Throwable) { /* best-effort */ }
+            }
+        }
+    }
+
+    private val generation = GenerationCoordinator(
+        app,
+        runtime,
+        toolRegistry,
+        storagePreferences,
+        notifications,
+        imageStore,
+        preambleCache,
+        generationListener,
+    )
+
 
     // Whether to show the What's New "Set up tools" button. Shown until the
     // user has opened the Tools settings once (the flag is set there, not on
@@ -559,337 +690,18 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             val sessionId = ensureSession(message)
             sessionStore.persistMessage(sessionId, userMessage, persistedImageFile?.absolutePath)
 
-            withContext(Dispatchers.Default) {
-                val llamaSession = runtime.session ?: return@withContext
-
-                // Read + downscale the picked image off the binder thread so
-                // setImageData (below) can hand the encoded bytes to the
-                // native layer before addMessage. Failures degrade to a
-                // text-only turn rather than aborting the message.
-                val imageBytes: ByteArray? = if (persistedImageFile != null) {
-                    try {
-                        withContext(Dispatchers.IO) {
-                            imageStore.resizeImageForVision(persistedImageFile)
-                        }?.also {
-                            android.util.Log.d("ConversationVM", "Image loaded: ${it.size} bytes")
-                        } ?: run {
-                            android.util.Log.e("ConversationVM", "Failed to decode image ${persistedImageFile.absolutePath}")
-                            null
-                        }
-                    } catch (e: Exception) {
-                        android.util.Log.e("ConversationVM", "Error reading image: ${e.message}")
-                        null
-                    }
-                } else {
-                    null
-                }
-
-                // Re-hydrate per-tool enablement from prefs before every turn so
-                // a tool toggled in Settings -> Tools (global default) or a
-                // model's params sheet (per-model override) takes effect on the
-                // next message — without this, enabling a tool after the model
-                // was loaded had no effect (the registry was only hydrated at
-                // load time), so the model never saw any tools.
-                _loadedModel.value?.filename?.let { filename ->
-                    val states = mutableMapOf<String, Boolean>()
-                    for (tool in toolRegistry.getAllTools()) {
-                        val enabled = storagePreferences.effectiveToolEnabled(filename, tool.name)
-                        toolRegistry.setToolEnabled(tool.name, enabled)
-                        states[tool.name] = enabled
-                    }
-                    _toolEnabledStates.postValue(states)
-                }
-
-                // Tools are active when model supports it and user has tools enabled
-                val toolsActive = _supportsToolCalling.value == true
-                    && toolRegistry.hasEnabledTools()
-                try {
-                    val toolsJson = if (toolsActive) toolRegistry.toOpenAIToolsJson() else "[]"
-                    llamaSession.setTools(toolsJson)
-                    // Persistent preamble KV cache: must be set after setTools
-                    // (the fingerprint covers the active tool set) and before
-                    // addMessage (the lazy load/save runs on the first
-                    // addMessage of the session). It's a no-op if the model
-                    // info is unavailable. Pruning the cache directory is
-                    // best-effort; failures don't block generation.
-                    applyPreambleCache(llamaSession, toolsJson)
-                    // Hand the encoded image to the native layer before
-                    // addMessage so the multimodal preprocessor can fold it
-                    // into the prompt for this turn.
-                    if (imageBytes != null) {
-                        llamaSession.setImageData(imageBytes)
-                    }
-                    llamaSession.addMessage(message.content, enableThinking)
-                } catch (e: InferenceUnavailableException) {
-                    android.util.Log.w("ConversationViewModel", "addMessage failed: service unavailable", e)
-                    _userError.postValue(
-                        app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
-                    )
-                    Snapshot.withMutableSnapshot {
-                        // Drop the empty assistant placeholder so the chat
-                        // doesn't sit forever on a half-blank bubble.
-                        if ((uiState.messages.lastOrNull() as? Message)?.id == ourMessageId) {
-                            uiState.removeLastMessage()
-                        }
-                    }
-                    _isGenerating.postValue(false)
-                    return@withContext
-                }
-
-                // Resolve the haptic gate once per turn: the in-app setting
-                // AND the system-wide haptic toggle (a ContentResolver query
-                // — too heavy to run per token).
-                val hapticsAllowed = storagePreferences.hapticOnGeneration &&
-                    GenerationHaptics.isSystemHapticsEnabled(app)
-                val callback = object: LlamaGenerationCallback {
-                    var totalTokens = 0
-                    var thinkingTokenCount = 0
-                    var thinkingComplete = !enableThinking
-                    var modelIsThinking = enableThinking
-                    // Throttle the silent token-count notification update to
-                    // ~1/sec: setForegroundContent is a blocking binder call,
-                    // so we must not fire it on every streamed token.
-                    var lastNotifUpdateMs = 0L
-                    // Throttle the per-token haptic tick so fast streams feel
-                    // like rapid typing instead of one continuous buzz.
-                    var lastHapticMs = 0L
-                    override fun onFullResponse(response: String) {
-                        totalTokens++
-                        val nowMs = System.currentTimeMillis()
-                        if (nowMs - lastNotifUpdateMs >= 1000L) {
-                            lastNotifUpdateMs = nowMs
-                            notifications.update(
-                                com.druk.lmplayground.R.string.inference_notification_generating_title,
-                                notifications.tokensLine(totalTokens),
-                            )
-                        }
-                        var string = ResponseProcessor.process(response)
-
-                        // Detect thinking from model output even when the
-                        // toggle is off (models like LFM 2.5 always think)
-                        var thinkingJustStarted = false
-                        if (!modelIsThinking && string.startsWith("<think>")) {
-                            modelIsThinking = true
-                            thinkingComplete = false
-                            thinkingJustStarted = true
-                        }
-
-                        if (!thinkingComplete && string.contains("</think>")) {
-                            thinkingComplete = true
-                            thinkingTokenCount = totalTokens
-                        }
-                        val currentThinkingTokens = if (thinkingComplete) thinkingTokenCount else totalTokens
-
-                        // Typewriter-style haptic: a light tick per *output*
-                        // token. Gated on thinkingComplete so the stream only
-                        // buzzes for the visible answer, never the hidden
-                        // thinking. Throttled, and only while the chat is
-                        // on-screen (also satisfies the OS rule that bars
-                        // background vibration).
-                        if (hapticsAllowed &&
-                            thinkingComplete &&
-                            nowMs - lastHapticMs >= HAPTIC_MIN_INTERVAL_MS &&
-                            (app as? App)?.isAppInForeground == true
-                        ) {
-                            lastHapticMs = nowMs
-                            GenerationHaptics.tick(app)
-                        }
-
-                        val finalString = string
-                        Snapshot.withMutableSnapshot {
-                            if (thinkingJustStarted) {
-                                uiState.markThinkingStarted()
-                            }
-                            uiState.updateLastMessage(
-                                finalString,
-                                thinkingTokens = currentThinkingTokens,
-                                responseTokens = totalTokens - currentThinkingTokens
-                            )
-                        }
-                    }
-                }
-                // Drive the generation loop, draining tool calls between
-                // rounds. `generateAll()` is a single AIDL call that runs
-                // service-side until the worker stops; it returns 2 when
-                // the model emitted tool calls, 0 on natural stop, or
-                // non-zero on error / cancel.
-                //
-                // Cancellation flows through the coroutine: cancelling
-                // generatingJob cancels the suspend inside generateAll(),
-                // which calls service.cancelGeneration() under the hood
-                // and re-throws CancellationException once the worker
-                // exits. We never re-enter the loop after a cancel.
-                //
-                // Silently flip the notification to "Generating…" with a
-                // starting token count; the callback above bumps the count
-                // ~1/sec as tokens stream. The finally block below freezes
-                // it at the final total under "Response ready".
-                notifications.update(
-                    com.druk.lmplayground.R.string.inference_notification_generating_title,
-                    notifications.tokensLine(0),
-                )
-                try {
-                    var toolRounds = 0
-                    val maxToolRounds = 5
-                    while (true) {
-                        val rc = llamaSession.generateAll(callback)
-                        if (rc != 2 || toolRounds >= maxToolRounds || !this.isActive) {
-                            break
-                        }
-                        toolRounds++
-
-                        val toolCallsJson = llamaSession.getToolCallsJson()
-                        android.util.Log.d(
-                            "ConversationVM",
-                            "Tool calls (round $toolRounds): $toolCallsJson",
-                        )
-
-                        val toolStartTime = System.currentTimeMillis()
-                        // Run the (blocking) tool execution on IO and await it so
-                        // Stop can interrupt it: on cancel we abort in-flight
-                        // network requests, which unblocks the call promptly.
-                        val toolResults = withContext(Dispatchers.IO) {
-                            val exec = async { toolRegistry.executeToolCalls(toolCallsJson) }
-                            try {
-                                exec.await()
-                            } catch (e: CancellationException) {
-                                toolRegistry.cancelInFlight()
-                                throw e
-                            }
-                        }
-                        val toolDurationMs = System.currentTimeMillis() - toolStartTime
-                        android.util.Log.d(
-                            "ConversationVM",
-                            "Tool results (${toolDurationMs}ms): $toolResults",
-                        )
-
-                        val toolCallInfoList = ToolCallInfoMapper.buildToolCallInfoList(
-                            toolCallsJson, toolResults, toolDurationMs,
-                        )
-                        Snapshot.withMutableSnapshot {
-                            uiState.addToolCallsToLastMessage(toolCallInfoList)
-                        }
-
-                        // Force thinking on for the response phase if the
-                        // model supports it, regardless of the user toggle.
-                        // Gemma 4 and harmony-style models emit an empty
-                        // content channel after tool calls when thinking is
-                        // off — the chat would otherwise show a blank
-                        // assistant bubble after every tool call. Reasoning
-                        // still routes to the collapsed thinking section via
-                        // the always-on DEEPSEEK extraction in the parser,
-                        // so visible content stays clean. For models without
-                        // a thinking mode this is a no-op (the flag is
-                        // silently ignored). See testReproduceAppBehavior
-                        // for the canonical repro.
-                        val supportsThinking = _supportsThinking.value == true
-                        val responseThinking = supportsThinking || enableThinking
-                        llamaSession.submitToolResults(toolResults, responseThinking)
-
-                        // Reset the streaming callback's per-round counters
-                        // so the next generateAll() reports a fresh
-                        // thinking-vs-response token split. The callback
-                        // tracks WHICH phase the model is in for THIS round,
-                        // so it follows responseThinking (the just-submitted
-                        // flag) — not the user toggle — so the UI shows the
-                        // thinking indicator while we wait for the answer.
-                        callback.totalTokens = 0
-                        callback.thinkingTokenCount = 0
-                        callback.thinkingComplete = !responseThinking
-                        callback.modelIsThinking = responseThinking
-
-                        // Restart the thinking timer for the post-tool phase:
-                        // addToolCallsToLastMessage reset thinkingStartTimeMs to 0,
-                        // and the callback's modelIsThinking is pre-set true so the
-                        // streaming path won't fire markThinkingStarted itself —
-                        // without this the post-tool "Thinking" duration stays 0s.
-                        if (responseThinking) {
-                            Snapshot.withMutableSnapshot {
-                                uiState.markThinkingStarted()
-                            }
-                        }
-                    }
-                } catch (e: InferenceUnavailableException) {
-                    android.util.Log.w("ConversationViewModel", "generateAll failed: service unavailable", e)
-                    _userError.postValue(
-                        app.getString(com.druk.lmplayground.R.string.inference_engine_unavailable)
-                    )
-                } finally {
-                    // Cleanup must complete even if the coroutine was
-                    // cancelled (Stop tapped). NonCancellable lets us
-                    // finish the Room writes and UI tear-down without
-                    // re-throwing CancellationException mid-cleanup.
-                    withContext(kotlinx.coroutines.NonCancellable) {
-                        try { llamaSession.printReport() } catch (_: Throwable) {}
-
-                        // If a newer generation has taken over this slot
-                        // (crash + reload + new prompt while we were
-                        // draining the dead worker), our cleanup must NOT
-                        // touch any UI/persistence — uiState.messages
-                        // now belongs to the new turn, finalizing it
-                        // would clobber the in-flight new generation.
-                        // The new job's own finally will handle its
-                        // state. We just exit quietly.
-                        val supersededByNewer = runtime.generatingJob !== ourJob
-                        // Belt-and-suspenders: also confirm the last
-                        // message in uiState is still our placeholder
-                        // by stable Message.id identity.
-                        val last = uiState.messages.lastOrNull()
-                        val stillOurMessage = last != null &&
-                            last.author == "Assistant" &&
-                            last.id == ourMessageId
-                        if (supersededByNewer || !stillOurMessage) {
-                            return@withContext
-                        }
-
-                        Snapshot.withMutableSnapshot {
-                            uiState.finalizeLastMessage()
-                        }
-                        _isGenerating.postValue(false)
-                        // Generation (or cancellation) is done — freeze the
-                        // silent notification on "Response ready" with the
-                        // final token count, and attach Copy/Share actions
-                        // bound to the finalized response (think-tags
-                        // stripped, matching the in-chat share/copy). Skipped
-                        // on the superseded path above, so a newer in-flight
-                        // turn's "Generating…" line is preserved.
-                        val readyBody = (uiState.messages.lastOrNull()
-                            ?.takeIf { it.author == "Assistant" }
-                            ?.content
-                            ?.let { stripThinkTags(it) })
-                            ?.takeIf { it.isNotBlank() }
-                        notifications.update(
-                            com.druk.lmplayground.R.string.inference_notification_ready_title,
-                            notifications.tokensLine(callback.totalTokens),
-                            actionBody = readyBody,
-                        )
-
-                        // If the user isn't looking at the app, play a short
-                        // chime so they know the answer is ready. Gated on the
-                        // in-app setting, a non-blank response (so a cancelled/
-                        // empty turn stays quiet), and background state; the
-                        // helper itself also respects silent/vibrate/DND.
-                        if (storagePreferences.soundOnCompletion &&
-                            readyBody != null &&
-                            (app as? App)?.isAppInForeground == false
-                        ) {
-                            com.druk.lmplayground.inference.ResponseSound.playIfAudible(app)
-                        }
-
-                        // Persist whatever the assistant produced — including
-                        // a partially-streamed response on cancel — so
-                        // reload-from-DB matches what the user saw on screen.
-                        val assistantMessage = uiState.messages.lastOrNull()
-                        if (assistantMessage != null && assistantMessage.author == "Assistant") {
-                            try {
-                                sessionStore.persistMessage(sessionId, assistantMessage)
-                                sessionStore.touchSessionTimestamp(sessionId)
-                                persistConversationMetadata(sessionId)
-                            } catch (_: Throwable) { /* best-effort */ }
-                        }
-                    }
-                }
-            }
+            generation.runTurn(
+                content = message.content,
+                enableThinking = enableThinking,
+                persistedImageFile = persistedImageFile,
+                modelFilename = _loadedModel.value?.filename,
+                supportsToolCalling = _supportsToolCalling.value == true,
+                supportsThinking = _supportsThinking.value == true,
+                systemPrompt = _systemPrompt.value.orEmpty(),
+                messageId = ourMessageId,
+                sessionId = sessionId,
+                ourJob = ourJob,
+            )
         }
     }
 
@@ -1212,25 +1024,6 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         _toolEnabledStates.value = states
     }
 
-    /**
-     * Set up the persistent preamble (system prompt + tools) KV cache for
-     * [session] — gathers the loaded model's identity and delegates to
-     * [PreambleCacheManager]. getModelSize() is a cheap AIDL call backed
-     * by an in-memory llama_model field.
-     */
-    private fun applyPreambleCache(
-        session: LlamaGenerationSession,
-        toolsJson: String,
-    ) {
-        val modelSize = try { runtime.model?.getModelSize() ?: 0L } catch (_: Throwable) { 0L }
-        preambleCache.apply(
-            session,
-            _loadedModel.value?.filename,
-            modelSize,
-            _systemPrompt.value.orEmpty(),
-            toolsJson,
-        )
-    }
 
     fun resetModelList() {
         _models.postValue(emptyList())
