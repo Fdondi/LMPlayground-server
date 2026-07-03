@@ -307,4 +307,5 @@
     <string name="response_copied">クリップボードにコピーしました</string>
     <string name="inference_engine_unavailable">推論エンジンは現在利用できません。しばらくしてからもう一度お試しください。</string>
     <string name="folder_picker_unavailable">フォルダを選択できるアプリがありません。システムの「ファイル / ドキュメント」アプリをインストールするか有効にしてください。</string>
+    <string name="storage_fallback_used">フォルダ選択を利用できないため、代わりにアプリのストレージにモデルを保存します。</string>
 </resources>

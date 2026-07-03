@@ -316,6 +316,7 @@
     <string name="share">শেয়ার করুন</string>
     <string name="response_copied">ক্লিপবোর্ডে কপি করা হয়েছে</string>
     <string name="folder_picker_unavailable">ফোল্ডার বাছাই করার জন্য কোনো অ্যাপ উপলব্ধ নেই। সিস্টেম ফাইলস / ডকুমেন্টস অ্যাপ ইনস্টল বা সক্ষম করুন।</string>
+    <string name="storage_fallback_used">ফোল্ডার বাছাইকারী উপলব্ধ নেই — এর পরিবর্তে মডেলের জন্য অ্যাপ স্টোরেজ ব্যবহার করা হবে।</string>
 
     <!-- Model capability badges -->
     <string name="cd_supports_thinking">চিন্তা সমর্থন করে</string>

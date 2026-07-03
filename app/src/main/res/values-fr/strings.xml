@@ -305,6 +305,7 @@
     <string name="tool_call_output">Sortie</string>
     <string name="response_copied">Copié dans le presse-papiers</string>
     <string name="folder_picker_unavailable">Aucune application disponible pour choisir un dossier. Installez ou activez l\'application Fichiers / Documents du système.</string>
+    <string name="storage_fallback_used">Sélecteur de dossier indisponible — le stockage de l\'application sera utilisé pour les modèles.</string>
 
     <!-- Nouveautés -->
     <string name="whats_new_tools">Recherche web, chargement de page et exécution de JavaScript</string>

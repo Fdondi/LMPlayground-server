@@ -305,6 +305,7 @@
     <string name="tool_call_output">Salida</string>
     <string name="response_copied">Copiado al portapapeles</string>
     <string name="folder_picker_unavailable">No hay ninguna app disponible para elegir una carpeta. Instala o activa la app de Archivos / Documentos del sistema.</string>
+    <string name="storage_fallback_used">Selector de carpetas no disponible — se usará el almacenamiento de la app para los modelos.</string>
 
     <!-- What's new -->
     <string name="whats_new_tools">Búsqueda web, obtener página y ejecutar JavaScript</string>

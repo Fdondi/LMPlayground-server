@@ -307,6 +307,7 @@
     <string name="cd_supports_thinking">Podporuje přemýšlení</string>
     <string name="cd_supports_tools">Podporuje nástroje</string>
     <string name="folder_picker_unavailable">Žádná aplikace pro výběr složky. Nainstalujte nebo povolte systémovou aplikaci Soubory / Dokumenty.</string>
+    <string name="storage_fallback_used">Výběr složky není k dispozici — pro modely se místo toho použije úložiště aplikace.</string>
     <string name="haptic_on_generation_desc">Jemné cuknutí při příchodu každé části odpovědi.</string>
     <string name="haptic_on_generation_title">Haptická odezva při generování</string>
     <string name="inference_engine_unavailable">Inferenční engine není právě teď dostupný. Zkuste to za okamžik znovu.</string>

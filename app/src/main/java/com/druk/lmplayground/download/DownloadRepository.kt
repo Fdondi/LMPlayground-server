@@ -3,7 +3,6 @@ package com.druk.lmplayground.download
 import android.content.Context
 import android.net.Uri
 import android.util.Log
-import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.work.BackoffPolicy
@@ -16,6 +15,7 @@ import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.storage.DownloadProgress
+import com.druk.lmplayground.storage.StorageDocuments
 import com.druk.lmplayground.storage.StoragePreferences
 import java.util.concurrent.TimeUnit
 
@@ -110,7 +110,7 @@ class DownloadRepository(private val context: Context) {
         try {
             val storageUri = StoragePreferences(context).modelStorageUri
             if (storageUri != null) {
-                val tree = DocumentFile.fromTreeUri(context, storageUri)
+                val tree = StorageDocuments.fromStorageUri(context, storageUri)
                 val files = tree?.listFiles()
                 val partPrefixes = listOfNotNull(
                     "${model.filename}.part",

@@ -306,6 +306,7 @@
     <string name="tool_call_output">Ieșire</string>
     <string name="response_copied">Copiat în clipboard</string>
     <string name="folder_picker_unavailable">Nicio aplicație disponibilă pentru a alege un folder. Instalează sau activează aplicația Fișiere / Documente a sistemului.</string>
+    <string name="storage_fallback_used">Selectorul de foldere nu este disponibil — se va folosi stocarea aplicației pentru modele.</string>
 
     <!-- Noutăți -->
     <string name="whats_new_tools">Căutare web, încărcare pagină și rulare JavaScript</string>

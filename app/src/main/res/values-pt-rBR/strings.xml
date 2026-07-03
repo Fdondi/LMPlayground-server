@@ -305,6 +305,7 @@
     <string name="tool_call_output">Saída</string>
     <string name="response_copied">Copiado para a área de transferência</string>
     <string name="folder_picker_unavailable">Nenhum app disponível para escolher uma pasta. Instale ou ative o app Arquivos / Documentos do sistema.</string>
+    <string name="storage_fallback_used">Seletor de pastas indisponível — o armazenamento do app será usado para os modelos.</string>
 
     <!-- Novidades -->
     <string name="whats_new_tools">Busca na web, carregar página e executar JavaScript</string>

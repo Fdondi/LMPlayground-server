@@ -352,4 +352,5 @@
     <string name="share">Delen</string>
     <string name="response_copied">Gekopieerd naar klembord</string>
     <string name="folder_picker_unavailable">Geen app beschikbaar om een map te kiezen. Installeer of schakel de systeem-app Bestanden / Documenten in.</string>
+    <string name="storage_fallback_used">Mapkiezer niet beschikbaar — in plaats daarvan wordt app-opslag voor modellen gebruikt.</string>
 </resources>

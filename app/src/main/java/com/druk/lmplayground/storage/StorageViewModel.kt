@@ -3,7 +3,6 @@ package com.druk.lmplayground.storage
 import android.app.Application
 import android.content.Context
 import android.net.Uri
-import androidx.documentfile.provider.DocumentFile
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -239,7 +238,7 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch {
             withContext(Dispatchers.IO) {
                 val models = migration.modelsToMigrate
-                val newDocumentFile = DocumentFile.fromTreeUri(context, migration.newUri)
+                val newDocumentFile = StorageDocuments.fromStorageUri(context, migration.newUri)
                 
                 if (newDocumentFile == null) {
                     showSnackbar("Cannot access new folder")
@@ -290,7 +289,14 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
                                 input.copyTo(outputStream, bufferSize = 8192)
                             }
                         }
-                        
+
+                        // createFile may have appended an extension (e.g.
+                        // ".bin") to the requested name — rename back so the
+                        // model stays visible to the ".gguf" listing filter.
+                        if (destFile.name != modelFile.name) {
+                            destFile.renameTo(modelFile.name)
+                        }
+
                         successCount++
                     } catch (e: Exception) {
                         failCount++
@@ -342,7 +348,7 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
      * Only returns files that match known model filenames.
      */
     private fun getModelFilesFromUri(uri: Uri): List<ModelFile> {
-        val documentFile = DocumentFile.fromTreeUri(context, uri) ?: return emptyList()
+        val documentFile = StorageDocuments.fromStorageUri(context, uri) ?: return emptyList()
         val knownFilenames = ModelInfoProvider.knownFilenames
         
         return documentFile.listFiles()

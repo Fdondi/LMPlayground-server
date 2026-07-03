@@ -319,6 +319,7 @@
     <string name="share">שתף</string>
     <string name="response_copied">הועתק ללוח</string>
     <string name="folder_picker_unavailable">אין אפליקציה זמינה לבחירת תיקייה. התקן או הפעל את אפליקציית הקבצים / המסמכים של המערכת.</string>
+    <string name="storage_fallback_used">בוחר התיקיות אינו זמין — אחסון האפליקציה ישמש למודלים במקום זאת.</string>
 
     <!-- Model capability badges -->
     <string name="cd_supports_thinking">תומך בחשיבה</string>

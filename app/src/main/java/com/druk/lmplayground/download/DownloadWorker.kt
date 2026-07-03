@@ -9,6 +9,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.Data
 import androidx.work.ForegroundInfo
 import androidx.work.WorkerParameters
+import com.druk.lmplayground.storage.StorageDocuments
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.BufferedOutputStream
@@ -113,7 +114,7 @@ class DownloadWorker(
         val workName = inputData.getString(KEY_WORK_NAME) ?: "download_$filename"
 
         val storageUri = Uri.parse(storageUriString)
-        val dir = DocumentFile.fromTreeUri(applicationContext, storageUri)
+        val dir = StorageDocuments.fromStorageUri(applicationContext, storageUri)
             ?: return failure("Storage folder not accessible")
         val notificationId = notificationManager.getNotificationId(modelName)
 

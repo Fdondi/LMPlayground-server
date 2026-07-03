@@ -199,6 +199,7 @@
     <string name="choose_storage_folder_message">Please select a folder where models will be stored. This is required to use the app.</string>
     <string name="choose_folder">Choose Folder</string>
     <string name="folder_picker_unavailable">No app available to pick a folder. Install or enable the system Files / Documents app.</string>
+    <string name="storage_fallback_used">Folder picker unavailable — using app storage for models instead.</string>
 
     <!-- Session -->
     <string name="session_info">Session Info</string>

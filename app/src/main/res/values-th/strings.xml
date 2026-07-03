@@ -308,6 +308,7 @@
     <string name="cd_supports_thinking">รองรับการคิด</string>
     <string name="cd_supports_tools">รองรับเครื่องมือ</string>
     <string name="folder_picker_unavailable">ไม่มีแอปสำหรับเลือกโฟลเดอร์ ติดตั้งหรือเปิดใช้งานแอปไฟล์ / เอกสารของระบบ</string>
+    <string name="storage_fallback_used">ตัวเลือกโฟลเดอร์ไม่พร้อมใช้งาน — จะใช้พื้นที่เก็บข้อมูลของแอปสำหรับโมเดลแทน</string>
     <string name="haptic_on_generation_title">การสั่นตอบสนองขณะสร้าง</string>
     <string name="haptic_on_generation_desc">การสั่นเบาๆ ขณะที่แต่ละส่วนของคำตอบสตรีมเข้ามา</string>
     <string name="sound_and_haptic">เสียงและการสั่น</string>

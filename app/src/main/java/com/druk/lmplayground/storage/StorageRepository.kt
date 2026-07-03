@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.ParcelFileDescriptor
 import android.os.StatFs
 import android.util.Log
-import androidx.documentfile.provider.DocumentFile
 import com.druk.lmplayground.models.ModelInfoProvider
 import java.net.URLDecoder
 
@@ -44,9 +43,9 @@ class StorageRepository(
     fun getModelFiles(): List<ModelFile> {
         val treeUri = prefs.modelStorageUri ?: return emptyList()
         
-        val documentFile = DocumentFile.fromTreeUri(context, treeUri)
+        val documentFile = StorageDocuments.fromStorageUri(context, treeUri)
         if (documentFile == null) {
-            Log.d(TAG, "getModelFiles() - DocumentFile.fromTreeUri returned null")
+            Log.d(TAG, "getModelFiles() - could not resolve storage URI")
             return emptyList()
         }
         
@@ -81,18 +80,27 @@ class StorageRepository(
             )
         }
         
-        val documentFile = DocumentFile.fromTreeUri(context, treeUri)
-        
+        val documentFile = StorageDocuments.fromStorageUri(context, treeUri)
+
         // Parse display path from URI
-        val decodedPath = try {
-            URLDecoder.decode(treeUri.path ?: "", "UTF-8")
-        } catch (e: Exception) {
-            treeUri.path ?: ""
+        val displayPath = if (treeUri.scheme == "file") {
+            val rawPath = treeUri.path ?: ""
+            if (rawPath.startsWith("/storage/emulated/0/")) {
+                "Internal Storage/" + rawPath.removePrefix("/storage/emulated/0/")
+            } else {
+                rawPath
+            }
+        } else {
+            val decodedPath = try {
+                URLDecoder.decode(treeUri.path ?: "", "UTF-8")
+            } catch (e: Exception) {
+                treeUri.path ?: ""
+            }
+            decodedPath
+                .removePrefix("/tree/")
+                .replace(":", "/")
+                .replace("primary", "Internal Storage")
         }
-        val displayPath = decodedPath
-            .removePrefix("/tree/")
-            .replace(":", "/")
-            .replace("primary", "Internal Storage")
         
         if (documentFile == null) {
             return StorageInfo(
@@ -132,7 +140,7 @@ class StorageRepository(
 
     fun deleteModel(fileName: String): Boolean {
         val treeUri = prefs.modelStorageUri ?: return false
-        val documentFile = DocumentFile.fromTreeUri(context, treeUri)
+        val documentFile = StorageDocuments.fromStorageUri(context, treeUri)
         val file = documentFile?.findFile(fileName)
         val deleted = file?.delete() == true
         Log.d(TAG, "deleteModel() - fileName: $fileName, deleted: $deleted")
@@ -187,9 +195,9 @@ class StorageRepository(
             return null
         }
         
-        val documentFile = DocumentFile.fromTreeUri(context, treeUri)
+        val documentFile = StorageDocuments.fromStorageUri(context, treeUri)
         val file = documentFile?.findFile(fileName)
-        
+
         if (file == null) {
             Log.e(TAG, "openModelFile() - file not found: $fileName")
             return null
@@ -219,7 +227,7 @@ class StorageRepository(
      */
     fun copyModelToFile(fileName: String, destFile: java.io.File): Boolean {
         val treeUri = prefs.modelStorageUri ?: return false
-        val documentFile = DocumentFile.fromTreeUri(context, treeUri)
+        val documentFile = StorageDocuments.fromStorageUri(context, treeUri)
         val file = documentFile?.findFile(fileName) ?: return false
 
         return try {
@@ -238,6 +246,10 @@ class StorageRepository(
 
     fun hasValidPermission(): Boolean {
         val uri = prefs.modelStorageUri ?: return false
+        // The file:// fallback lives in app-private storage — no grant needed.
+        if (uri.scheme == "file") {
+            return uri.path?.let { java.io.File(it).canWrite() } == true
+        }
         return try {
             val persistedUris = context.contentResolver.persistedUriPermissions
             persistedUris.any { it.uri == uri && it.isReadPermission && it.isWritePermission }

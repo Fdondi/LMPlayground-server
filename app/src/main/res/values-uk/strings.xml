@@ -267,6 +267,7 @@
     <string name="cd_supports_thinking">Підтримує мислення</string>
     <string name="cd_supports_tools">Підтримує інструменти</string>
     <string name="folder_picker_unavailable">Немає додатка для вибору папки. Установіть або увімкніть системний додаток Файли / Документи.</string>
+    <string name="storage_fallback_used">Засіб вибору папки недоступний — для моделей буде використано сховище додатка.</string>
     <string name="haptic_on_generation_desc">Легке посмикування під час надходження кожної частини відповіді.</string>
     <string name="haptic_on_generation_title">Тактильний відгук під час генерації</string>
     <string name="inference_engine_unavailable">Рушій інференсу зараз недоступний. Спробуйте ще раз за мить.</string>

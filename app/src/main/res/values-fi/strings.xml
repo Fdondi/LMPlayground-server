@@ -306,6 +306,7 @@
     <string name="cd_supports_thinking">Tukee ajattelua</string>
     <string name="cd_supports_tools">Tukee työkaluja</string>
     <string name="folder_picker_unavailable">Ei sovellusta kansion valitsemiseen. Asenna tai ota käyttöön järjestelmän Tiedostot / Dokumentit -sovellus.</string>
+    <string name="storage_fallback_used">Kansion valitsin ei ole käytettävissä — malleille käytetään sovelluksen tallennustilaa.</string>
     <string name="haptic_on_generation_desc">Kevyt naps, kun jokainen vastauksen osa saapuu.</string>
     <string name="haptic_on_generation_title">Värinäpalaute generoinnin aikana</string>
     <string name="inference_engine_unavailable">Päättelymoottori ei ole juuri nyt käytettävissä. Yritä hetken kuluttua uudelleen.</string>

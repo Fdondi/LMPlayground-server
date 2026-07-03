@@ -277,6 +277,7 @@
     <!-- Common actions -->
     <string name="response_copied">क्लिपबोर्ड पर कॉपी किया गया</string>
     <string name="folder_picker_unavailable">फ़ोल्डर चुनने के लिए कोई ऐप उपलब्ध नहीं है। सिस्टम फ़ाइल्स / डॉक्युमेंट्स ऐप इंस्टॉल या सक्षम करें।</string>
+    <string name="storage_fallback_used">फ़ोल्डर चुनने वाला ऐप उपलब्ध नहीं है — मॉडल के लिए ऐप स्टोरेज का उपयोग किया जाएगा।</string>
 
     <!-- Model capability badges -->
     <string name="cd_supports_thinking">सोच का समर्थन करता है</string>

@@ -305,6 +305,7 @@
     <string name="tool_call_output">Output</string>
     <string name="response_copied">Copiato negli appunti</string>
     <string name="folder_picker_unavailable">Nessuna app disponibile per scegliere una cartella. Installa o attiva l\'app File / Documenti di sistema.</string>
+    <string name="storage_fallback_used">Selettore di cartelle non disponibile — per i modelli verrà usata la memoria dell\'app.</string>
 
     <!-- Novità -->
     <string name="whats_new_tools">Ricerca web, caricamento pagina ed esecuzione di JavaScript</string>

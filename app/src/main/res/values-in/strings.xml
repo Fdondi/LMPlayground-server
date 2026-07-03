@@ -270,6 +270,7 @@
     <string name="cd_supports_thinking">Mendukung berpikir</string>
     <string name="cd_supports_tools">Mendukung alat</string>
     <string name="folder_picker_unavailable">Tidak ada aplikasi untuk memilih folder. Instal atau aktifkan aplikasi File / Dokumen sistem.</string>
+    <string name="storage_fallback_used">Pemilih folder tidak tersedia — penyimpanan aplikasi akan digunakan untuk model.</string>
     <string name="haptic_on_generation_title">Umpan balik haptik saat menghasilkan</string>
     <string name="haptic_on_generation_desc">Getaran halus saat setiap bagian respons mengalir masuk.</string>
     <string name="sound_and_haptic">Suara dan Haptik</string>

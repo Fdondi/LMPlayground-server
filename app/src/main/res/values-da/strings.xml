@@ -351,4 +351,5 @@
     <string name="share">Del</string>
     <string name="response_copied">Kopieret til udklipsholder</string>
     <string name="folder_picker_unavailable">Ingen app tilgængelig til at vælge en mappe. Installer eller aktivér system-appen Filer / Dokumenter.</string>
+    <string name="storage_fallback_used">Mappevælgeren er ikke tilgængelig — bruger i stedet appens lager til modeller.</string>
 </resources>

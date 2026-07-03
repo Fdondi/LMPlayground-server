@@ -351,4 +351,5 @@
     <string name="share">Dela</string>
     <string name="response_copied">Kopierat till urklipp</string>
     <string name="folder_picker_unavailable">Ingen app tillgänglig för att välja en mapp. Installera eller aktivera systemappen Filer / Dokument.</string>
+    <string name="storage_fallback_used">Mappväljaren är inte tillgänglig — appens lagring används för modeller i stället.</string>
 </resources>

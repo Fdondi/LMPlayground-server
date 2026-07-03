@@ -307,4 +307,5 @@
     <string name="response_copied">已复制到剪贴板</string>
     <string name="inference_engine_unavailable">推理引擎当前不可用。请稍后再试。</string>
     <string name="folder_picker_unavailable">没有可用于选择文件夹的应用。请安装或启用系统的“文件 / 文档”应用。</string>
+    <string name="storage_fallback_used">文件夹选择器不可用，将改用应用存储空间保存模型。</string>
 </resources>

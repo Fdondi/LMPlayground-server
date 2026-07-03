@@ -267,6 +267,7 @@
     <string name="cd_supports_thinking">Obsługuje myślenie</string>
     <string name="cd_supports_tools">Obsługuje narzędzia</string>
     <string name="folder_picker_unavailable">Brak aplikacji do wyboru folderu. Zainstaluj lub włącz systemową aplikację Pliki / Dokumenty.</string>
+    <string name="storage_fallback_used">Wybór folderu niedostępny — modele będą przechowywane w pamięci aplikacji.</string>
     <string name="haptic_on_generation_desc">Delikatne puknięcie przy każdej części spływającej odpowiedzi.</string>
     <string name="haptic_on_generation_title">Wibracje podczas generowania</string>
     <string name="inference_engine_unavailable">Silnik wnioskowania jest obecnie niedostępny. Spróbuj ponownie za chwilę.</string>

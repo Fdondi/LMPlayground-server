@@ -281,6 +281,7 @@
     <!-- Common actions -->
     <string name="response_copied">تم النسخ إلى الحافظة</string>
     <string name="folder_picker_unavailable">لا يوجد تطبيق متاح لاختيار مجلد. ثبّت تطبيق الملفات / المستندات في النظام أو فعّله.</string>
+    <string name="storage_fallback_used">منتقي المجلدات غير متاح — ستُستخدم مساحة تخزين التطبيق للنماذج بدلاً من ذلك.</string>
 
     <!-- Model capability badges -->
     <string name="cd_supports_thinking">يدعم التفكير</string>

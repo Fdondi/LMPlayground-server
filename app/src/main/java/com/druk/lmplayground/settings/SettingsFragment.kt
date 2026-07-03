@@ -37,6 +37,7 @@ import com.druk.lmplayground.App
 import com.druk.lmplayground.BuildConfig
 import com.druk.lmplayground.R
 import com.druk.lmplayground.storage.ModelsContent
+import com.druk.lmplayground.storage.StorageDocuments
 import com.druk.lmplayground.storage.StorageViewModel
 import com.druk.lmplayground.util.rememberHingeWidthDp
 import com.druk.lmplayground.theme.PlaygroundTheme
@@ -315,11 +316,23 @@ class SettingsFragment : Fragment() {
                 try {
                     folderPickerLauncher.launch(null)
                 } catch (_: ActivityNotFoundException) {
-                    Toast.makeText(
-                        requireContext(),
-                        R.string.folder_picker_unavailable,
-                        Toast.LENGTH_LONG,
-                    ).show()
+                    // No DocumentsUI on this device — offer the
+                    // app-private fallback folder instead.
+                    val fallbackUri = StorageDocuments.appStorageFallbackUri(requireContext())
+                    if (fallbackUri != null) {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.storage_fallback_used,
+                            Toast.LENGTH_LONG,
+                        ).show()
+                        storageViewModel.requestStorageFolderChange(fallbackUri)
+                    } else {
+                        Toast.makeText(
+                            requireContext(),
+                            R.string.folder_picker_unavailable,
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
                 }
             },
             onDeleteModel = { model -> storageViewModel.deleteModel(model) },

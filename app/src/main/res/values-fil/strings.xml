@@ -309,6 +309,7 @@
     <string name="cd_supports_thinking">Sumusuporta sa thinking</string>
     <string name="cd_supports_tools">Sumusuporta sa mga tool</string>
     <string name="folder_picker_unavailable">Walang app na available para pumili ng folder. I-install o i-enable ang Files / Documents app ng system.</string>
+    <string name="storage_fallback_used">Hindi available ang folder picker — gagamitin na lang ang app storage para sa mga model.</string>
     <string name="haptic_on_generation_title">Haptic feedback sa generation</string>
     <string name="haptic_on_generation_desc">Banayad na tick habang dumarating ang bawat bahagi ng tugon.</string>
     <string name="sound_and_haptic">Tunog at Haptic</string>

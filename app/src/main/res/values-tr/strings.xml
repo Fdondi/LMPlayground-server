@@ -310,4 +310,5 @@
     <string name="response_copied">Panoya kopyaland\u0131</string>
     <string name="inference_engine_unavailable">\u00C7\u0131kar\u0131m motoru \u015Fu anda kullan\u0131lam\u0131yor. Birazdan tekrar deneyin.</string>
     <string name="folder_picker_unavailable">Klas\u00F6r se\u00E7mek i\u00E7in kullan\u0131labilir uygulama yok. Sistem Dosyalar / Belgeler uygulamas\u0131n\u0131 y\u00FCkleyin veya etkinle\u015Ftirin.</string>
+    <string name="storage_fallback_used">Klas\u00F6r se\u00E7ici kullan\u0131lam\u0131yor \u2014 modeller i\u00E7in bunun yerine uygulama depolamas\u0131 kullan\u0131lacak.</string>
 </resources>

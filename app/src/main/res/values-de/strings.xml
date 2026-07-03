@@ -311,4 +311,5 @@
     <!-- Misc -->
     <string name="response_copied">In die Zwischenablage kopiert</string>
     <string name="folder_picker_unavailable">Keine App zum Auswählen eines Ordners verfügbar. Installiere oder aktiviere die System-App Dateien / Dokumente.</string>
+    <string name="storage_fallback_used">Ordnerauswahl nicht verfügbar — Modelle werden stattdessen im App-Speicher abgelegt.</string>
 </resources>
