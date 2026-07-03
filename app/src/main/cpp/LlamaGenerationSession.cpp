@@ -176,11 +176,6 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
         },
         this);
 
-    auto smplParams = llama_sampler_chain_default_params();
-    smplParams.no_perf = false;
-
-    smpl = llama_sampler_chain_init(smplParams);
-
     sampler_params = params;
 
     if (!params.system_prompt.empty()) {
@@ -190,35 +185,58 @@ void LlamaGenerationSession::init(llama_model *model, const struct common_chat_t
         messages.push_back(system_msg);
     }
 
+    rebuildSamplerChain();
+
+    prev_len = 0;
+}
+
+void LlamaGenerationSession::rebuildSamplerChain(llama_sampler *budget_first) {
+    if (smpl != nullptr) {
+        llama_sampler_free(smpl);
+    }
+    auto smplParams = llama_sampler_chain_default_params();
+    smplParams.no_perf = false;
+    smpl = llama_sampler_chain_init(smplParams);
+
+    // Budget sampler first (must override logits before other samplers filter)
+    if (budget_first != nullptr) {
+        llama_sampler_chain_add(smpl, budget_first);
+    }
+
     // Repetition penalty (only if > 1.0)
-    if (params.repetition_penalty > 1.0f) {
-        llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, params.repetition_penalty, 0.0f, 0.0f));
+    if (sampler_params.repetition_penalty > 1.0f) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, sampler_params.repetition_penalty, 0.0f, 0.0f));
     }
 
     // Top-K (only if > 0)
-    if (params.top_k > 0) {
-        llama_sampler_chain_add(smpl, llama_sampler_init_top_k(params.top_k));
+    if (sampler_params.top_k > 0) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_top_k(sampler_params.top_k));
     }
 
     // Top-P (only if < 1.0)
-    if (params.top_p < 1.0f) {
-        llama_sampler_chain_add(smpl, llama_sampler_init_top_p(params.top_p, 1));
+    if (sampler_params.top_p < 1.0f) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_top_p(sampler_params.top_p, 1));
     }
 
     // Min-P (only if > 0.0)
-    if (params.min_p > 0.0f) {
-        llama_sampler_chain_add(smpl, llama_sampler_init_min_p(params.min_p, 1));
+    if (sampler_params.min_p > 0.0f) {
+        llama_sampler_chain_add(smpl, llama_sampler_init_min_p(sampler_params.min_p, 1));
     }
 
     // Temperature: greedy if 0, otherwise temp + dist
-    if (params.temperature == 0.0f) {
+    if (sampler_params.temperature == 0.0f) {
         llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
     } else {
-        llama_sampler_chain_add(smpl, llama_sampler_init_temp(params.temperature));
-        llama_sampler_chain_add(smpl, llama_sampler_init_dist(params.seed));
+        llama_sampler_chain_add(smpl, llama_sampler_init_temp(sampler_params.temperature));
+        llama_sampler_chain_add(smpl, llama_sampler_init_dist(sampler_params.seed));
     }
+}
 
+void LlamaGenerationSession::clearKvCacheForFreshPrompt() {
+    llama_memory_clear(llama_get_memory(ctx), true);
     prev_len = 0;
+    last_full_prompt.clear();
+    last_prompt_end_pos = 0;
 }
 
 void LlamaGenerationSession::requestAbort() {
@@ -262,15 +280,11 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     }
     messages.push_back(user_msg);
 
-    auto renderPrompt = [&](bool enableThinking) -> common_chat_params {
-        return renderTemplate(enableThinking);
-    };
-
     prev_enable_thinking = enableThinking;
 
     common_chat_params result;
     try {
-        result = renderPrompt(enableThinking);
+        result = renderTemplate(enableThinking);
     } catch (const std::exception &e) {
         LOGe("Failed to render chat template: %s", e.what());
         messages.pop_back();
@@ -329,79 +343,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
     // vision are mutually exclusive in the UI, so the tool sampler above is a
     // no-op here.)
     if (has_image) {
-        LOGi("Vision path: processing image (%zu bytes) with prompt", image_data.size());
-
-        // Strip media markers from older user messages — we can't re-encode old images,
-        // and mtmd_tokenize requires marker count == bitmap count
-        std::string marker = mtmd_default_marker();
-        for (size_t i = 0; i + 1 < messages.size(); i++) {
-            if (messages[i].role == "user") {
-                size_t pos;
-                while ((pos = messages[i].content.find(marker)) != std::string::npos) {
-                    // Remove marker and trailing newline
-                    size_t end = pos + marker.size();
-                    if (end < messages[i].content.size() && messages[i].content[end] == '\n') end++;
-                    messages[i].content.erase(pos, end - pos);
-                }
-            }
-        }
-
-        // Re-render prompt after stripping old markers
-        result = renderPrompt(enableThinking);
-        full_prompt = result.prompt;
-        additional_stops = result.additional_stops;
-
-        // Always clear KV cache for vision — we re-eval the full prompt
-        llama_memory_clear(llama_get_memory(ctx), true);
-        prev_len = 0;
-
-        // Create bitmap from image data.
-        // b9621: the helper now returns a mtmd_helper_bitmap_wrapper and takes a
-        // `placeholder` flag; pass false for real image data (not a token-counting
-        // placeholder), and unwrap .bitmap (video_ctx is unused for still images).
-        mtmd_bitmap *bitmap = mtmd_helper_bitmap_init_from_buf(
-            mtmd_ctx, image_data.data(), image_data.size(),
-            /*placeholder=*/false).bitmap;
-        if (bitmap == nullptr) {
-            LOGe("Failed to create bitmap from image data");
-            return 1;
-        }
-
-        // Tokenize prompt with image
-        mtmd_input_chunks *chunks = mtmd_input_chunks_init();
-        mtmd_input_text text;
-        text.text = full_prompt.c_str();
-        text.add_special = true;
-        text.parse_special = true;
-        const mtmd_bitmap *bitmaps[] = { bitmap };
-
-        int32_t tokenize_result = mtmd_tokenize(mtmd_ctx, chunks, &text, bitmaps, 1);
-        mtmd_bitmap_free(bitmap);
-
-        if (tokenize_result != 0) {
-            LOGe("Failed to tokenize vision prompt (error: %d)", tokenize_result);
-            mtmd_input_chunks_free(chunks);
-            return 1;
-        }
-
-        // Eval all chunks (text + image)
-        int n_batch = llama_n_batch(ctx);
-        llama_pos new_n_past = 0;
-        int32_t eval_result = mtmd_helper_eval_chunks(
-            mtmd_ctx, ctx, chunks, 0, 0, n_batch, true, &new_n_past);
-
-        mtmd_input_chunks_free(chunks);
-
-        if (eval_result != 0) {
-            LOGe("Failed to eval vision chunks (error: %d)", eval_result);
-            return 1;
-        }
-
-        LOGi("Vision eval complete, n_past = %d", (int)new_n_past);
-
-        // After mtmd eval, logits are ready — skip first decode in generate()
-        skip_first_decode = true;
-        return 0;
+        return processImageTurn(image_data, enableThinking);
     }
 
     // Text-only path
@@ -411,10 +353,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
                             full_prompt.compare(0, prev_len, prev_rendered_prompt) == 0;
         if (!prefix_match) {
             LOGi("Prompt prefix mismatch, clearing KV cache");
-            llama_memory_clear(llama_get_memory(ctx), true);
-            prev_len = 0;
-            last_full_prompt.clear();
-            last_prompt_end_pos = 0;
+            clearKvCacheForFreshPrompt();
         }
     }
 
@@ -426,6 +365,82 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
 
     int n_prompt_tokens = -llama_tokenize(vocab, prompt.c_str(), prompt.size(), NULL, 0, is_first, true);
 
+    if (compactContextIfNeeded(result, full_prompt, prompt, is_first,
+                               n_ctx_used, n_prompt_tokens, enableThinking) != 0) {
+        return 1;
+    }
+
+    prompt_tokens.resize(n_prompt_tokens);
+    if (llama_tokenize(vocab, prompt.c_str(), prompt.size(), prompt_tokens.data(), prompt_tokens.size(), is_first, true) < 0) {
+        LOGe("failed to tokenize the prompt");
+        return 1;
+    }
+
+    batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
+
+    // Save the rendered string we're about to feed so the tool-call
+    // path in generate() can roll back to this point on rc=2 and
+    // submitToolResults can string-prefix-match against it. Token
+    // count gets captured at the end of the first generate() call,
+    // after llama_decode has actually committed these tokens to the
+    // KV cache.
+    last_full_prompt = full_prompt;
+
+
+    maybeAddBudgetSampler(result, enableThinking);
+
+    return 0;
+}
+
+void LlamaGenerationSession::maybeAddBudgetSampler(const common_chat_params &result, bool enableThinking) {
+    // Add reasoning budget sampler on first thinking-enabled turn, using
+    // the model's actual thinking tags from the template (not hardcoded).
+    // Must be first in chain (before top-k/top-p/temp) so it can override logits,
+    // so we rebuild the entire sampler chain.
+    if (!(sampler_params.thinking_budget >= 0 && enableThinking && !budget_sampler_added && result.supports_thinking && gsmpl == nullptr)) {
+        return;
+    }
+
+    auto tokenize_str = [&](const std::string &text) -> std::vector<llama_token> {
+        int n = -llama_tokenize(vocab, text.c_str(), text.size(), nullptr, 0, false, true);
+        std::vector<llama_token> tokens(n);
+        llama_tokenize(vocab, text.c_str(), text.size(), tokens.data(), tokens.size(), false, true);
+        return tokens;
+    };
+
+    std::string start_tag = result.thinking_start_tag;
+    std::string end_tag = result.thinking_end_tag;
+
+    // For gpt-oss (Gemma 4) and similar models that use channel-based thinking,
+    // thinking_start_tag/end_tag may be empty — detect from preserved tokens
+    if (start_tag.empty() && !result.preserved_tokens.empty()) {
+        for (const auto &tok : result.preserved_tokens) {
+            if (tok.find("channel") != std::string::npos) {
+                start_tag = "<|channel|>analysis<|message|>";
+                end_tag = "<|end|>";
+                break;
+            }
+        }
+    }
+
+    if (!start_tag.empty() && !end_tag.empty()) {
+        auto start_tokens  = tokenize_str(start_tag);
+        auto end_tokens    = tokenize_str(end_tag);
+        auto forced_tokens = end_tokens;
+        rebuildSamplerChain(common_reasoning_budget_init(
+                vocab, start_tokens, end_tokens, forced_tokens, sampler_params.thinking_budget));
+
+        budget_sampler_added = true;
+        LOGi("Reasoning budget sampler added: budget=%d, start='%s', end='%s'",
+             sampler_params.thinking_budget, start_tag.c_str(), end_tag.c_str());
+    }
+}
+
+int LlamaGenerationSession::compactContextIfNeeded(
+        common_chat_params &result, std::string &full_prompt,
+        std::string &prompt, bool &is_first,
+        int &n_ctx_used, int &n_prompt_tokens, bool enableThinking) {
+    int n_ctx = llama_n_ctx(ctx);
     bool compacted = false;
 
     // Stage 1: strip thinking content from older assistant messages
@@ -456,7 +471,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
 
         if (stripped_any) {
             try {
-                result = renderPrompt(enableThinking);
+                result = renderTemplate(enableThinking);
             } catch (const std::exception &e) {
                 LOGe("Failed to render chat template after stripping: %s", e.what());
                 messages.pop_back();
@@ -493,7 +508,7 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         }
 
         try {
-            result = renderPrompt(enableThinking);
+            result = renderTemplate(enableThinking);
         } catch (const std::exception &e) {
             LOGe("Failed to render chat template after dropping turns: %s", e.what());
             messages.pop_back();
@@ -514,93 +529,85 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
 
     if (compacted) {
         LOGi("Context compacted, clearing KV cache and reprocessing (%d tokens)", n_prompt_tokens);
-        llama_memory_clear(llama_get_memory(ctx), true);
-        prev_len = 0;
-        last_full_prompt.clear();
-        last_prompt_end_pos = 0;
+        clearKvCacheForFreshPrompt();
         is_first = true;
     }
+    return 0;
+}
 
-    prompt_tokens.resize(n_prompt_tokens);
-    if (llama_tokenize(vocab, prompt.c_str(), prompt.size(), prompt_tokens.data(), prompt_tokens.size(), is_first, true) < 0) {
-        LOGe("failed to tokenize the prompt");
+int LlamaGenerationSession::processImageTurn(std::vector<unsigned char> &image_data, bool enableThinking) {
+    LOGi("Vision path: processing image (%zu bytes) with prompt", image_data.size());
+
+    // Strip media markers from older user messages — we can't re-encode old images,
+    // and mtmd_tokenize requires marker count == bitmap count
+    std::string marker = mtmd_default_marker();
+    for (size_t i = 0; i + 1 < messages.size(); i++) {
+        if (messages[i].role == "user") {
+            size_t pos;
+            while ((pos = messages[i].content.find(marker)) != std::string::npos) {
+                // Remove marker and trailing newline
+                size_t end = pos + marker.size();
+                if (end < messages[i].content.size() && messages[i].content[end] == '\n') end++;
+                messages[i].content.erase(pos, end - pos);
+            }
+        }
+    }
+
+    // Re-render prompt after stripping old markers
+    common_chat_params result = renderTemplate(enableThinking);
+    std::string full_prompt = result.prompt;
+    additional_stops = result.additional_stops;
+
+    // Always clear KV cache for vision — we re-eval the full prompt
+    llama_memory_clear(llama_get_memory(ctx), true);
+    prev_len = 0;
+
+    // Create bitmap from image data.
+    // b9621: the helper now returns a mtmd_helper_bitmap_wrapper and takes a
+    // `placeholder` flag; pass false for real image data (not a token-counting
+    // placeholder), and unwrap .bitmap (video_ctx is unused for still images).
+    mtmd_bitmap *bitmap = mtmd_helper_bitmap_init_from_buf(
+        mtmd_ctx, image_data.data(), image_data.size(),
+        /*placeholder=*/false).bitmap;
+    if (bitmap == nullptr) {
+        LOGe("Failed to create bitmap from image data");
         return 1;
     }
 
-    batch = llama_batch_get_one(prompt_tokens.data(), prompt_tokens.size());
+    // Tokenize prompt with image
+    mtmd_input_chunks *chunks = mtmd_input_chunks_init();
+    mtmd_input_text text;
+    text.text = full_prompt.c_str();
+    text.add_special = true;
+    text.parse_special = true;
+    const mtmd_bitmap *bitmaps[] = { bitmap };
 
-    // Save the rendered string we're about to feed so the tool-call
-    // path in generate() can roll back to this point on rc=2 and
-    // submitToolResults can string-prefix-match against it. Token
-    // count gets captured at the end of the first generate() call,
-    // after llama_decode has actually committed these tokens to the
-    // KV cache.
-    last_full_prompt = full_prompt;
+    int32_t tokenize_result = mtmd_tokenize(mtmd_ctx, chunks, &text, bitmaps, 1);
+    mtmd_bitmap_free(bitmap);
 
-
-    // Add reasoning budget sampler on first thinking-enabled turn, using
-    // the model's actual thinking tags from the template (not hardcoded).
-    // Must be first in chain (before top-k/top-p/temp) so it can override logits,
-    // so we rebuild the entire sampler chain.
-    if (sampler_params.thinking_budget >= 0 && enableThinking && !budget_sampler_added && result.supports_thinking && gsmpl == nullptr) {
-        auto tokenize_str = [&](const std::string &text) -> std::vector<llama_token> {
-            int n = -llama_tokenize(vocab, text.c_str(), text.size(), nullptr, 0, false, true);
-            std::vector<llama_token> tokens(n);
-            llama_tokenize(vocab, text.c_str(), text.size(), tokens.data(), tokens.size(), false, true);
-            return tokens;
-        };
-
-        std::string start_tag = result.thinking_start_tag;
-        std::string end_tag = result.thinking_end_tag;
-
-        // For gpt-oss (Gemma 4) and similar models that use channel-based thinking,
-        // thinking_start_tag/end_tag may be empty — detect from preserved tokens
-        if (start_tag.empty() && !result.preserved_tokens.empty()) {
-            for (const auto &tok : result.preserved_tokens) {
-                if (tok.find("channel") != std::string::npos) {
-                    start_tag = "<|channel|>analysis<|message|>";
-                    end_tag = "<|end|>";
-                    break;
-                }
-            }
-        }
-
-        if (!start_tag.empty() && !end_tag.empty()) {
-            // Rebuild sampler chain with budget sampler first
-            llama_sampler_free(smpl);
-            auto smplParams = llama_sampler_chain_default_params();
-            smplParams.no_perf = false;
-            smpl = llama_sampler_chain_init(smplParams);
-
-            // Budget sampler first (must override logits before other samplers filter)
-            auto start_tokens  = tokenize_str(start_tag);
-            auto end_tokens    = tokenize_str(end_tag);
-            auto forced_tokens = end_tokens;
-            llama_sampler_chain_add(smpl, common_reasoning_budget_init(
-                    vocab, start_tokens, end_tokens, forced_tokens, sampler_params.thinking_budget));
-
-            // Re-add other samplers in original order
-            if (sampler_params.repetition_penalty > 1.0f)
-                llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, sampler_params.repetition_penalty, 0.0f, 0.0f));
-            if (sampler_params.top_k > 0)
-                llama_sampler_chain_add(smpl, llama_sampler_init_top_k(sampler_params.top_k));
-            if (sampler_params.top_p < 1.0f)
-                llama_sampler_chain_add(smpl, llama_sampler_init_top_p(sampler_params.top_p, 1));
-            if (sampler_params.min_p > 0.0f)
-                llama_sampler_chain_add(smpl, llama_sampler_init_min_p(sampler_params.min_p, 1));
-            if (sampler_params.temperature == 0.0f) {
-                llama_sampler_chain_add(smpl, llama_sampler_init_greedy());
-            } else {
-                llama_sampler_chain_add(smpl, llama_sampler_init_temp(sampler_params.temperature));
-                llama_sampler_chain_add(smpl, llama_sampler_init_dist(sampler_params.seed));
-            }
-
-            budget_sampler_added = true;
-            LOGi("Reasoning budget sampler added: budget=%d, start='%s', end='%s'",
-                 sampler_params.thinking_budget, start_tag.c_str(), end_tag.c_str());
-        }
+    if (tokenize_result != 0) {
+        LOGe("Failed to tokenize vision prompt (error: %d)", tokenize_result);
+        mtmd_input_chunks_free(chunks);
+        return 1;
     }
 
+    // Eval all chunks (text + image)
+    int n_batch = llama_n_batch(ctx);
+    llama_pos new_n_past = 0;
+    int32_t eval_result = mtmd_helper_eval_chunks(
+        mtmd_ctx, ctx, chunks, 0, 0, n_batch, true, &new_n_past);
+
+    mtmd_input_chunks_free(chunks);
+
+    if (eval_result != 0) {
+        LOGe("Failed to eval vision chunks (error: %d)", eval_result);
+        return 1;
+    }
+
+    LOGi("Vision eval complete, n_past = %d", (int)new_n_past);
+
+    // After mtmd eval, logits are ready — skip first decode in generate()
+    skip_first_decode = true;
     return 0;
 }
 
@@ -1211,18 +1218,13 @@ int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enab
                        full_prompt.compare(0, prev_len, prev_rendered_prompt) == 0;
         if (!prefix_match) {
             LOGi("submitToolResults: prefix mismatch, clearing KV cache");
-            llama_memory_clear(llama_get_memory(ctx), true);
-            prev_len = 0;
-            last_full_prompt.clear();
-            last_prompt_end_pos = 0;
+            clearKvCacheForFreshPrompt();
         }
     } else {
         // No prefix to reuse (e.g. tool_call detection rolled back
         // before any prompt was fed, or the session was truncated).
         // Clear to be safe and feed everything from scratch.
-        llama_memory_clear(llama_get_memory(ctx), true);
-        last_full_prompt.clear();
-        last_prompt_end_pos = 0;
+        clearKvCacheForFreshPrompt();
     }
 
     std::string prompt = full_prompt.substr(prev_len);

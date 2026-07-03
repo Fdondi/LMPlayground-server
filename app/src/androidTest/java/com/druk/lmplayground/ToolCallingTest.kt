@@ -246,6 +246,9 @@ class ToolCallingTest {
     @Test
     fun testToolRegistryJsonFormat() {
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
+        // Tools are disabled by default (per-model toggles); the OpenAI JSON
+        // covers enabled tools only, so enable them all for this format test.
+        registry.getAllTools().forEach { registry.setToolEnabled(it.name, true) }
         val json = registry.toOpenAIToolsJson()
         Log.d(TAG, "Tools JSON:\n$json")
 
@@ -925,10 +928,12 @@ class ToolCallingTest {
     @Test
     fun testToolRegistryIncludesWebTools() {
         val registry = ToolRegistry.createDefault(InstrumentationRegistry.getInstrumentation().targetContext)
-        val json = registry.toOpenAIToolsJson()
-        assertTrue("Should include web_search", json.contains("web_search"))
-        assertTrue("Should include web_fetch", json.contains("web_fetch"))
-        assertTrue("Should include run_javascript", json.contains("run_javascript"))
+        // The catalog itself must carry the three built-in tools; enablement
+        // (default off) is a separate per-model concern.
+        val names = registry.getAllTools().map { it.name }
+        assertTrue("Should include web_search", names.contains("web_search"))
+        assertTrue("Should include web_fetch", names.contains("web_fetch"))
+        assertTrue("Should include run_javascript", names.contains("run_javascript"))
     }
 
     // -- JavaScript tool tests --

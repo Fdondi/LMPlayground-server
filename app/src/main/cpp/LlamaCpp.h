@@ -12,6 +12,7 @@
 #include "mtmd-helper.h"
 
 #include <atomic>
+#include <memory>
 #include <mutex>
 
 // Decode batch cap — bounds per-decode compute kernel launches on mobile.
@@ -116,6 +117,37 @@ private:
     // tools are active; normal chat keeps using [smpl] unchanged.
     void recreateToolSampler(const common_chat_params &render);
     void destroyToolSampler();
+
+    // (Re)build [smpl] from [sampler_params], freeing any existing chain.
+    // [budget_first] (optional, ownership transferred) is placed at the
+    // head of the chain — the reasoning-budget sampler must override
+    // logits before the other samplers filter them.
+    void rebuildSamplerChain(llama_sampler *budget_first = nullptr);
+
+    // First thinking-enabled turn with a budget configured: rebuild the
+    // sampler chain with the reasoning-budget sampler first, using the
+    // model's actual thinking tags from the rendered template.
+    void maybeAddBudgetSampler(const common_chat_params &result, bool enableThinking);
+
+    // Vision turn: strip old media markers, re-render, clear the KV cache
+    // and eval the full prompt together with [image_data] through mtmd.
+    // Returns 0 on success, 1 on failure (addMessage returns it as-is).
+    int processImageTurn(std::vector<unsigned char> &image_data, bool enableThinking);
+
+    // Context-overflow compaction for addMessage's text path. Stage 1
+    // strips thinking from older assistant turns; Stage 2 drops oldest
+    // turns. Mutates the prompt-build state in place; on compaction the
+    // KV cache is cleared and the full prompt re-fed. Returns 0 to
+    // proceed, 1 on render failure (the just-added user message has been
+    // rolled back).
+    int compactContextIfNeeded(
+        common_chat_params &result, std::string &full_prompt,
+        std::string &prompt, bool &is_first,
+        int &n_ctx_used, int &n_prompt_tokens, bool enableThinking);
+
+    // Reset the incremental-prefix state and clear the KV cache — the next
+    // prompt is fed from scratch.
+    void clearKvCacheForFreshPrompt();
 
     const struct llama_vocab * vocab = nullptr;
     llama_context * ctx = nullptr;
