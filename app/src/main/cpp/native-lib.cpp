@@ -235,12 +235,17 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
                    jobject progressCallback,
                    jboolean disableRepack) {
 
+    // Stack-allocated and passed as a raw pointer into the progress
+    // callback: safe only because loadModel invokes the callback
+    // synchronously on this thread — it must never outlive this frame.
     struct CallbackContext {
         JNIEnv *env;
         jobject progressCallback;
     };
 
-    auto* model = new LlamaModel();
+    // unique_ptr guards the allocation until the handle is installed on
+    // the Kotlin object; any early exit (failed load, JNI error) frees it.
+    auto model = std::make_unique<LlamaModel>();
     CallbackContext ctx = {env, progressCallback};
     const char* utfModelPath = env->GetStringUTFChars(modelPath, nullptr);
     model->loadModel(utfModelPath,
@@ -258,7 +263,6 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
     env->ReleaseStringUTFChars(modelPath, utfModelPath);
 
     if (!model->isLoaded()) {
-        delete model;
         return nullptr;
     }
 
@@ -266,7 +270,7 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_loadModel(JNIEnv *env,
     jmethodID constructor = env->GetMethodID(clazz, "<init>", "()V");
     jobject obj = env->NewObject(clazz, constructor);
     jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
-    env->SetLongField(obj, fid, (long) model);
+    env->SetLongField(obj, fid, (long) model.release());
     return obj;
 }
 

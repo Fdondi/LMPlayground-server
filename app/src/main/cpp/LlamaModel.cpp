@@ -149,9 +149,11 @@ LlamaGenerationSession* LlamaModel::createGenerationSession(const SamplerParams 
     if (model == nullptr) {
         return nullptr;
     }
-    auto *session = new LlamaGenerationSession();
+    // unique_ptr guards the allocation through init(); released to the
+    // caller (the JNI layer owns it via the Kotlin object's handle).
+    auto session = std::make_unique<LlamaGenerationSession>();
     session->init(model, chat_tmpls.get(), mtmd_ctx, params);
-    return session;
+    return session.release();
 }
 
 int LlamaModel::getContextTrainSize() {
