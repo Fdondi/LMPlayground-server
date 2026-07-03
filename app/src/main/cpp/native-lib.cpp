@@ -98,6 +98,8 @@ static bool clipVulkanIsKnownBad(const char *gpuDescription) {
     static const char *kDeny[] = {
         "PowerVR",  // Tensor G5 (Pixel 10): CLIP encode slow AND numerically wrong
         "Mali-G52", // Galaxy A32 (Helio G80) etc.: SIGSEGV in ggml_vk_create_buffer
+        "Adreno (TM) 610", // SD 680/685 (Redmi Note 13, Honor X7c, Oppo A60):
+                           // SIGSEGV in ggml_vk_init/ggml_vk_create_buffer
     };
     for (const char *needle : kDeny) {
         if (strstr(gpuDescription, needle) != nullptr) return true;
