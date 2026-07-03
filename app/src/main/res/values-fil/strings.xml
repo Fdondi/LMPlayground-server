@@ -136,10 +136,10 @@
     <string name="browse_more_models">Mag-browse ng Mga Modelo</string>
     <string name="cancel">Kanselahin</string>
     <string name="low_ram_warning_title">Maaaring hindi stable ang modelo</string>
-    <string name="low_ram_warning_message">Kailangan ng modelo ng ~%1$s na RAM ngunit ang device na ito ay may %2$s lang sa kabuuan. Maaari itong maubusan ng memory at mag-crash. Kung mangyari iyon, i-on ang Disable repack sa Mga setting → Advanced upang i-load ito sa low-memory mode.</string>
+    <string name="low_ram_warning_message">Kailangan ng modelo ng ~%1$s na RAM ngunit ang device na ito ay may %2$s lang sa kabuuan. Maaari itong maubusan ng memory at mag-crash. Kung mangyari iyon, i-off ang Enable repack sa Mga setting → Advanced upang i-load ito sa low-memory mode.</string>
     <string name="advanced_subtitle">Mga opsyon sa memory at performance</string>
-    <string name="disable_repack_title">Disable repack</string>
-    <string name="disable_repack_desc">Nilo-load ang mga timbang ng modelo nang memory-mapped sa halip na muling i-pack ang mga ito sa RAM. Gumagamit ng mas kaunting memory, na tumutulong sa malalaking modelo na mag-load nang hindi nag-crash, ngunit nagiging mas mabagal ang mga tugon. Iwanang naka-off maliban kung maubusan ng memory ang isang modelo.</string>
+    <string name="enable_repack_title">Enable repack</string>
+    <string name="enable_repack_desc">Muling ini-pack ang mga timbang ng modelo sa RAM para sa mas mabibilis na tugon. Gumagamit ng mas maraming memory kaysa sa pag-load ng mga ito nang memory-mapped. I-off ito kung nauubusan ng memory ang isang malaking modelo habang naglo-load.</string>
     <string name="load_anyway">I-load pa rin</string>
 
     <!-- Download notifications -->

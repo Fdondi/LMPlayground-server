@@ -499,15 +499,15 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             // existing session intact.
             //
             // Weight repacking is controlled by the user via Settings →
-            // Advanced ("Disable repack"), OFF by default. With it OFF every
+            // Advanced ("Enable repack"), ON by default. With it ON every
             // model repacks (faster matmuls) at the cost of a second resident
-            // copy of the weights; with it ON weights stay memory-mapped
+            // copy of the weights; with it OFF weights stay memory-mapped
             // (smaller footprint, slower decode). A model over the RAM budget
             // is never refused — but while repacking is on it can OOM-kill the
             // :llama process, so we warn once (unless repack is already off, in
             // which case the mmap-only load won't blow the budget). "Load
             // anyway" re-enters with forceLoad=true.
-            val disableRepack = storagePreferences.disableRepack
+            val repackEnabled = storagePreferences.repackEnabled
             val modelFiles = withContext(Dispatchers.IO) { storageRepository.getModelFiles() }
             val fileSizeBytes = modelFiles.find { it.name == modelInfo.filename }?.sizeBytes ?: 0L
             // Pair the model with a multimodal projector present on disk (its
@@ -518,7 +518,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             )
             val totalRamBytes = DeviceCapability.totalRamBytes(app)
             val exceedsRam = DeviceCapability.exceedsRamBudget(fileSizeBytes, totalRamBytes)
-            if (!forceLoad && exceedsRam && !disableRepack) {
+            if (!forceLoad && exceedsRam && repackEnabled) {
                 _pendingRamWarning.value = RamWarning(
                     modelInfo = modelInfo,
                     neededRam = Formatter.formatFileSize(app, fileSizeBytes),
@@ -533,7 +533,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             // Engine-side load: crash acknowledge, previous-model teardown,
             // native load + first session + history replay. Lifecycle events
             // come back through [runtimeListener].
-            runtime.loadModel(model, disableRepack) { uiState.messages.toList() }
+            runtime.loadModel(model, disableRepack = !repackEnabled) { uiState.messages.toList() }
         }
     }
 

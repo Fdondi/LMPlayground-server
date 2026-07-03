@@ -120,10 +120,10 @@
     <string name="browse_more_models">Explorar modelos</string>
     <string name="cancel">Cancelar</string>
     <string name="low_ram_warning_title">El modelo podría ser inestable</string>
-    <string name="low_ram_warning_message">El modelo necesita ~%1$s de RAM, pero este dispositivo solo tiene %2$s en total. Puede quedarse sin memoria y bloquearse. Si eso ocurre, activa Desactivar reempaquetado en Ajustes → Avanzado para cargarlo en un modo de poca memoria.</string>
+    <string name="low_ram_warning_message">El modelo necesita ~%1$s de RAM, pero este dispositivo solo tiene %2$s en total. Puede quedarse sin memoria y bloquearse. Si eso ocurre, desactiva Activar reempaquetado en Ajustes → Avanzado para cargarlo en un modo de poca memoria.</string>
     <string name="advanced_subtitle">Opciones de memoria y rendimiento</string>
-    <string name="disable_repack_title">Desactivar reempaquetado</string>
-    <string name="disable_repack_desc">Carga los pesos del modelo mapeados en memoria en lugar de reempaquetarlos en la RAM. Usa mucha menos memoria, lo que ayuda a que los modelos grandes se carguen sin bloquearse, pero hace que las respuestas sean más lentas. Dejálo desactivado salvo que un modelo se quede sin memoria.</string>
+    <string name="enable_repack_title">Activar reempaquetado</string>
+    <string name="enable_repack_desc">Reempaqueta los pesos del modelo en la RAM para obtener respuestas más rápidas. Usa mucha más memoria que cargarlos mapeados en memoria. Desactívalo si un modelo grande se queda sin memoria al cargar.</string>
     <string name="load_anyway">Cargar de todos modos</string>
     <string name="download_notification_channel">Descargas de modelos</string>
     <string name="download_notification_channel_description">Muestra el progreso de las descargas de modelos</string>

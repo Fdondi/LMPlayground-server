@@ -34,8 +34,8 @@ import com.druk.lmplayground.R
 
 @Composable
 fun AdvancedScreen(
-    disableRepack: Boolean,
-    onDisableRepackChanged: (Boolean) -> Unit,
+    repackEnabled: Boolean,
+    onRepackEnabledChanged: (Boolean) -> Unit,
     onBackClick: () -> Unit,
 ) {
     Scaffold(
@@ -54,8 +54,8 @@ fun AdvancedScreen(
         }
     ) { padding ->
         AdvancedContent(
-            disableRepack = disableRepack,
-            onDisableRepackChanged = onDisableRepackChanged,
+            repackEnabled = repackEnabled,
+            onRepackEnabledChanged = onRepackEnabledChanged,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
@@ -65,17 +65,17 @@ fun AdvancedScreen(
 
 @Composable
 fun AdvancedContent(
-    disableRepack: Boolean,
-    onDisableRepackChanged: (Boolean) -> Unit,
+    repackEnabled: Boolean,
+    onRepackEnabledChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         ToggleRow(
             icon = Icons.Outlined.Memory,
-            title = stringResource(R.string.disable_repack_title),
-            description = stringResource(R.string.disable_repack_desc),
-            checked = disableRepack,
-            onCheckedChange = onDisableRepackChanged,
+            title = stringResource(R.string.enable_repack_title),
+            description = stringResource(R.string.enable_repack_desc),
+            checked = repackEnabled,
+            onCheckedChange = onRepackEnabledChanged,
         )
     }
 }

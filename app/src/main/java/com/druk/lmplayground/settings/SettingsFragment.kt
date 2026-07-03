@@ -388,10 +388,10 @@ class SettingsFragment : Fragment() {
      */
     @androidx.compose.runtime.Composable
     private fun AdvancedDetailPane() {
-        val disableRepack by advancedViewModel.disableRepack.collectAsStateWithLifecycle()
+        val repackEnabled by advancedViewModel.repackEnabled.collectAsStateWithLifecycle()
         AdvancedContent(
-            disableRepack = disableRepack,
-            onDisableRepackChanged = { advancedViewModel.setDisableRepack(it) },
+            repackEnabled = repackEnabled,
+            onRepackEnabledChanged = { advancedViewModel.setRepackEnabled(it) },
         )
     }
 

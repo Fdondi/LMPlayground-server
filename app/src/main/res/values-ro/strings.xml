@@ -120,10 +120,10 @@
     <string name="browse_more_models">R\u0103sfoie\u015Fte modele</string>
     <string name="cancel">Anuleaz\u0103</string>
     <string name="low_ram_warning_title">Modelul ar putea fi instabil</string>
-    <string name="low_ram_warning_message">Modelul are nevoie de ~%1$s RAM, dar acest dispozitiv are doar %2$s în total. Ar putea rămâne fără memorie și să se blocheze. Dacă se întâmplă, activează Dezactivează reambalarea din Setări → Avansat pentru a-l încărca într-un mod cu memorie redusă.</string>
+    <string name="low_ram_warning_message">Modelul are nevoie de ~%1$s RAM, dar acest dispozitiv are doar %2$s în total. Ar putea rămâne fără memorie și să se blocheze. Dacă se întâmplă, dezactivează Activează reambalarea din Setări → Avansat pentru a-l încărca într-un mod cu memorie redusă.</string>
     <string name="advanced_subtitle">Opțiuni de memorie și performanță</string>
-    <string name="disable_repack_title">Dezactivează reambalarea</string>
-    <string name="disable_repack_desc">Încarcă ponderile modelului mapate în memorie în loc să le reambaleze în RAM. Folosește mult mai puțină memorie, ceea ce ajută modelele mari să se încarce fără să se blocheze, dar face răspunsurile mai lente. Lasă dezactivat dacă nu cumva un model rămâne fără memorie.</string>
+    <string name="enable_repack_title">Activează reambalarea</string>
+    <string name="enable_repack_desc">Reambalează ponderile modelului în RAM pentru răspunsuri mai rapide. Folosește mult mai multă memorie decât încărcarea lor mapată în memorie. Dezactivează dacă un model mare rămâne fără memorie la încărcare.</string>
     <string name="load_anyway">\u00cencarc\u0103 oricum</string>
     <string name="download_notification_channel">Desc\u0103rc\u0103ri de modele</string>
     <string name="download_notification_channel_description">Afi\u015Feaz\u0103 progresul desc\u0103rc\u0103rilor de modele</string>

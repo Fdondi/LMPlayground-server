@@ -120,10 +120,10 @@
     <string name="browse_more_models">Modellere G\u00F6z At</string>
     <string name="cancel">\u0130ptal</string>
     <string name="low_ram_warning_title">Model kararsız olabilir</string>
-    <string name="low_ram_warning_message">Model yaklaşık %1$s RAM gerektirir, ancak bu cihazın toplam %2$s belleği var. Belleği tükenip çökebilir. Bu olursa, düşük bellek modunda yüklemek için Ayarlar → Gelişmiş bölümünden Yeniden paketlemeyi devre dışı bırak seçeneğini açın.</string>
+    <string name="low_ram_warning_message">Model yaklaşık %1$s RAM gerektirir, ancak bu cihazın toplam %2$s belleği var. Belleği tükenip çökebilir. Bu olursa, düşük bellek modunda yüklemek için Ayarlar → Gelişmiş bölümünden Yeniden paketlemeyi etkinleştir seçeneğini kapatın.</string>
     <string name="advanced_subtitle">Bellek ve performans seçenekleri</string>
-    <string name="disable_repack_title">Yeniden paketlemeyi devre dışı bırak</string>
-    <string name="disable_repack_desc">Model ağırlıklarını RAM\'e yeniden paketlemek yerine belleğe eşlenmiş olarak yükler. Çok daha az bellek kullanır; bu da büyük modellerin çökmeden yüklenmesine yardımcı olur, ancak yanıtları yavaşlatır. Bir modelin belleği tükenmediği sürece kapalı bırakın.</string>
+    <string name="enable_repack_title">Yeniden paketlemeyi etkinleştir</string>
+    <string name="enable_repack_desc">Daha hızlı yanıtlar için model ağırlıklarını RAM\'e yeniden paketler. Belleğe eşlenmiş olarak yüklemeye göre çok daha fazla bellek kullanır. Büyük bir model yüklenirken belleği tükenirse kapatın.</string>
     <string name="load_anyway">Yine de y\u00fckle</string>
     <string name="download_notification_channel">Model \u0130ndirmeleri</string>
     <string name="download_notification_channel_description">Model dosyalar\u0131n\u0131n indirme ilerlemesini g\u00F6sterir</string>

@@ -35,7 +35,7 @@ object DeviceCapability {
     /**
      * True when loading [modelSizeBytes] *with repacking* would blow the RAM
      * budget — the caller then loads the model memory-mapped instead
-     * (disableRepack), trading matmul speed for a far smaller resident set.
+     * (repack disabled), trading matmul speed for a far smaller resident set.
      *
      * We budget against the repacked footprint (~2x the on-disk size), not
      * the raw size. Comparing only the raw size — as before — let models in

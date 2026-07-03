@@ -137,10 +137,10 @@
     <string name="browse_more_models">Gennemse modeller</string>
     <string name="cancel">Annuller</string>
     <string name="low_ram_warning_title">Modellen kan være ustabil</string>
-    <string name="low_ram_warning_message">Modellen kræver ~%1$s RAM, men denne enhed har kun %2$s i alt. Den løber muligvis tør for hukommelse og går ned. Hvis det sker, så slå Deaktiver ompakning til under Indstillinger → Avanceret for at indlæse den i en tilstand med lav hukommelse.</string>
+    <string name="low_ram_warning_message">Modellen kræver ~%1$s RAM, men denne enhed har kun %2$s i alt. Den løber muligvis tør for hukommelse og går ned. Hvis det sker, så slå Aktiver ompakning fra under Indstillinger → Avanceret for at indlæse den i en tilstand med lav hukommelse.</string>
     <string name="advanced_subtitle">Indstillinger for hukommelse og ydeevne</string>
-    <string name="disable_repack_title">Deaktiver ompakning</string>
-    <string name="disable_repack_desc">Indlæser modelvægtene memory-mapped i stedet for at pakke dem om i RAM. Bruger meget mindre hukommelse, hvilket hjælper store modeller med at indlæse uden at gå ned, men gør svarene langsommere. Lad være slået fra, medmindre en model løber tør for hukommelse.</string>
+    <string name="enable_repack_title">Aktiver ompakning</string>
+    <string name="enable_repack_desc">Pakker modelvægtene om i RAM for hurtigere svar. Bruger meget mere hukommelse end at indlæse dem memory-mapped. Slå fra, hvis en stor model løber tør for hukommelse under indlæsning.</string>
     <string name="load_anyway">Indlæs alligevel</string>
 
     <!-- Download notifications -->

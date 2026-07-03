@@ -137,10 +137,10 @@
     <string name="browse_more_models">Selaa malleja</string>
     <string name="cancel">Peruuta</string>
     <string name="low_ram_warning_title">Malli voi olla epävakaa</string>
-    <string name="low_ram_warning_message">Malli tarvitsee noin %1$s RAM-muistia, mutta tässä laitteessa on yhteensä vain %2$s. Muisti voi loppua ja sovellus kaatua. Jos näin käy, ota käyttöön Poista uudelleenpakkaus käytöstä kohdassa Asetukset → Lisäasetukset ladataksesi sen vähämuistisessa tilassa.</string>
+    <string name="low_ram_warning_message">Malli tarvitsee noin %1$s RAM-muistia, mutta tässä laitteessa on yhteensä vain %2$s. Muisti voi loppua ja sovellus kaatua. Jos näin käy, poista Ota uudelleenpakkaus käyttöön -asetus käytöstä kohdassa Asetukset → Lisäasetukset ladataksesi sen vähämuistisessa tilassa.</string>
     <string name="advanced_subtitle">Muisti- ja suorituskykyasetukset</string>
-    <string name="disable_repack_title">Poista uudelleenpakkaus käytöstä</string>
-    <string name="disable_repack_desc">Lataa mallin painot muistiin kartoitettuna sen sijaan, että ne pakattaisiin uudelleen RAM-muistiin. Käyttää paljon vähemmän muistia, mikä auttaa suuria malleja latautumaan kaatumatta, mutta hidastaa vastauksia. Jätä pois käytöstä, ellei malliltasi lopu muisti.</string>
+    <string name="enable_repack_title">Ota uudelleenpakkaus käyttöön</string>
+    <string name="enable_repack_desc">Pakkaa mallin painot uudelleen RAM-muistiin, jotta vastaukset ovat nopeampia. Käyttää paljon enemmän muistia kuin painojen lataaminen muistiin kartoitettuna. Poista käytöstä, jos suurelta mallilta loppuu muisti latauksen aikana.</string>
     <string name="load_anyway">Lataa silti</string>
 
     <!-- Download notifications -->

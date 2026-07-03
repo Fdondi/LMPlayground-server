@@ -120,10 +120,10 @@
     <string name="browse_more_models">Modelle durchsuchen</string>
     <string name="cancel">Abbrechen</string>
     <string name="low_ram_warning_title">Modell könnte instabil sein</string>
-    <string name="low_ram_warning_message">Das Modell benötigt etwa %1$s RAM, aber dieses Gerät hat insgesamt nur %2$s. Möglicherweise geht der Speicher aus und die App stürzt ab. Falls das passiert, aktiviere unter Einstellungen → Erweitert die Option Neuverpacken deaktivieren, um es in einem speicherarmen Modus zu laden.</string>
+    <string name="low_ram_warning_message">Das Modell benötigt etwa %1$s RAM, aber dieses Gerät hat insgesamt nur %2$s. Möglicherweise geht der Speicher aus und die App stürzt ab. Falls das passiert, deaktiviere unter Einstellungen → Erweitert die Option Neuverpacken aktivieren, um es in einem speicherarmen Modus zu laden.</string>
     <string name="advanced_subtitle">Speicher- und Leistungsoptionen</string>
-    <string name="disable_repack_title">Neuverpacken deaktivieren</string>
-    <string name="disable_repack_desc">Lädt die Modellgewichte per Memory-Mapping, anstatt sie in den RAM neu zu verpacken. Verbraucht deutlich weniger Speicher, was großen Modellen hilft, ohne Absturz zu laden, macht die Antworten aber langsamer. Lasse die Option deaktiviert, sofern einem Modell nicht der Speicher ausgeht.</string>
+    <string name="enable_repack_title">Neuverpacken aktivieren</string>
+    <string name="enable_repack_desc">Verpackt die Modellgewichte neu in den RAM, um Antworten zu beschleunigen. Verbraucht deutlich mehr Speicher als das Laden per Memory-Mapping. Deaktiviere die Option, wenn einem großen Modell beim Laden der Speicher ausgeht.</string>
     <string name="load_anyway">Trotzdem laden</string>
     <string name="download_notification_channel">Modell-Downloads</string>
     <string name="download_notification_channel_description">Zeigt den Fortschritt von Modell-Downloads an</string>

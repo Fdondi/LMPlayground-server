@@ -137,10 +137,10 @@
     <string name="browse_more_models">עיין במודלים</string>
     <string name="cancel">ביטול</string>
     <string name="low_ram_warning_title">המודל עשוי להיות לא יציב</string>
-    <string name="low_ram_warning_message">המודל זקוק לכ-%1$s RAM, אך למכשיר זה יש בסך הכל %2$s בלבד. ייתכן שייגמר לו הזיכרון והוא יקרוס. אם זה קורה, הפעל את ביטול האריזה מחדש בהגדרות → מתקדם כדי לטעון אותו במצב זיכרון נמוך.</string>
+    <string name="low_ram_warning_message">המודל זקוק לכ-%1$s RAM, אך למכשיר זה יש בסך הכל %2$s בלבד. ייתכן שייגמר לו הזיכרון והוא יקרוס. אם זה קורה, כבה את האפשרות הפעלת אריזה מחדש בהגדרות → מתקדם כדי לטעון אותו במצב זיכרון נמוך.</string>
     <string name="advanced_subtitle">אפשרויות זיכרון וביצועים</string>
-    <string name="disable_repack_title">ביטול האריזה מחדש</string>
-    <string name="disable_repack_desc">טוען את משקלי המודל ממופים לזיכרון במקום לארוז אותם מחדש ל-RAM. משתמש בהרבה פחות זיכרון, מה שעוזר למודלים גדולים להיטען בלי לקרוס, אך הופך את התגובות לאיטיות יותר. השאר כבוי אלא אם נגמר למודל הזיכרון.</string>
+    <string name="enable_repack_title">הפעלת אריזה מחדש</string>
+    <string name="enable_repack_desc">אורז מחדש את משקלי המודל ל-RAM לקבלת תגובות מהירות יותר. משתמש בהרבה יותר זיכרון מאשר טעינתם ממופים לזיכרון. כבה אם למודל גדול נגמר הזיכרון במהלך הטעינה.</string>
     <string name="load_anyway">טען בכל זאת</string>
 
     <!-- Download notifications -->

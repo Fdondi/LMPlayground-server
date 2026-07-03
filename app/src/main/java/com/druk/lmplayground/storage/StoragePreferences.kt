@@ -40,9 +40,11 @@ class StoragePreferences(context: Context) {
      * this ON to trade decode speed for a far smaller resident set. Read by
      * [com.druk.lmplayground.conversation.ConversationViewModel] at load time.
      */
-    var disableRepack: Boolean
-        get() = prefs.getBoolean("disable_repack", false)
-        set(value) = prefs.edit { putBoolean("disable_repack", value) }
+    // Stored inverted under the legacy "disable_repack" key so existing
+    // installs keep their setting; the UI reads the positive form.
+    var repackEnabled: Boolean
+        get() = !prefs.getBoolean("disable_repack", false)
+        set(value) = prefs.edit { putBoolean("disable_repack", !value) }
 
     fun getCustomModelMetadata(filename: String): Pair<String, Boolean>? {
         val value = prefs.getString("custom_model_$filename", null) ?: return null

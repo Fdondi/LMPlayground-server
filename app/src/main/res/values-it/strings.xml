@@ -120,10 +120,10 @@
     <string name="browse_more_models">Sfoglia modelli</string>
     <string name="cancel">Annulla</string>
     <string name="low_ram_warning_title">Il modello potrebbe essere instabile</string>
-    <string name="low_ram_warning_message">Il modello richiede circa %1$s di RAM, ma questo dispositivo ne ha solo %2$s in totale. Potrebbe esaurire la memoria e bloccarsi. Se succede, attiva Disattiva riorganizzazione in Impostazioni → Avanzate per caricarlo in modalità a bassa memoria.</string>
+    <string name="low_ram_warning_message">Il modello richiede circa %1$s di RAM, ma questo dispositivo ne ha solo %2$s in totale. Potrebbe esaurire la memoria e bloccarsi. Se succede, disattiva Attiva riorganizzazione in Impostazioni → Avanzate per caricarlo in modalità a bassa memoria.</string>
     <string name="advanced_subtitle">Opzioni di memoria e prestazioni</string>
-    <string name="disable_repack_title">Disattiva riorganizzazione</string>
-    <string name="disable_repack_desc">Carica i pesi del modello mappati in memoria invece di riorganizzarli nella RAM. Usa molta meno memoria, il che aiuta i modelli grandi a caricarsi senza bloccarsi, ma rende le risposte più lente. Lascia disattivato a meno che un modello non esaurisca la memoria.</string>
+    <string name="enable_repack_title">Attiva riorganizzazione</string>
+    <string name="enable_repack_desc">Riorganizza i pesi del modello nella RAM per risposte più rapide. Usa molta più memoria rispetto al caricamento mappato in memoria. Disattiva se un modello grande esaurisce la memoria durante il caricamento.</string>
     <string name="load_anyway">Carica comunque</string>
     <string name="download_notification_channel">Download modelli</string>
     <string name="download_notification_channel_description">Mostra l\'avanzamento dei download dei modelli</string>

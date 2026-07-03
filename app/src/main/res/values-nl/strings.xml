@@ -138,10 +138,10 @@
     <string name="browse_more_models">Modellen bekijken</string>
     <string name="cancel">Annuleren</string>
     <string name="low_ram_warning_title">Model kan instabiel zijn</string>
-    <string name="low_ram_warning_message">Het model heeft ~%1$s RAM nodig, maar dit apparaat heeft in totaal slechts %2$s. Mogelijk raakt het geheugen op en crasht de app. Als dat gebeurt, schakel dan Herverpakken uitschakelen in via Instellingen → Geavanceerd om het in een modus met weinig geheugen te laden.</string>
+    <string name="low_ram_warning_message">Het model heeft ~%1$s RAM nodig, maar dit apparaat heeft in totaal slechts %2$s. Mogelijk raakt het geheugen op en crasht de app. Als dat gebeurt, schakel dan Herverpakken inschakelen uit via Instellingen → Geavanceerd om het in een modus met weinig geheugen te laden.</string>
     <string name="advanced_subtitle">Geheugen- en prestatieopties</string>
-    <string name="disable_repack_title">Herverpakken uitschakelen</string>
-    <string name="disable_repack_desc">Laadt de modelgewichten memory-mapped in plaats van ze opnieuw in het RAM te verpakken. Gebruikt veel minder geheugen, waardoor grote modellen zonder crash kunnen laden, maar maakt antwoorden trager. Laat uit tenzij een model zonder geheugen komt te zitten.</string>
+    <string name="enable_repack_title">Herverpakken inschakelen</string>
+    <string name="enable_repack_desc">Verpakt de modelgewichten opnieuw in het RAM voor snellere antwoorden. Gebruikt veel meer geheugen dan memory-mapped laden. Schakel uit als een groot model bij het laden zonder geheugen komt te zitten.</string>
     <string name="load_anyway">Toch laden</string>
 
     <!-- Download notifications -->

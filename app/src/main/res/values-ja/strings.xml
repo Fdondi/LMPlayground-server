@@ -120,10 +120,10 @@
     <string name="browse_more_models">モデルを見る</string>
     <string name="cancel">キャンセル</string>
     <string name="low_ram_warning_title">モデルが不安定になる可能性があります</string>
-    <string name="low_ram_warning_message">モデルには約 %1$s の RAM が必要ですが、このデバイスの総容量は %2$s しかありません。メモリ不足でクラッシュする可能性があります。その場合は、設定 → 詳細設定 で「再パックを無効化」をオンにして、低メモリモードで読み込んでください。</string>
+    <string name="low_ram_warning_message">モデルには約 %1$s の RAM が必要ですが、このデバイスの総容量は %2$s しかありません。メモリ不足でクラッシュする可能性があります。その場合は、設定 → 詳細設定 で「再パックを有効化」をオフにして、低メモリモードで読み込んでください。</string>
     <string name="advanced_subtitle">メモリとパフォーマンスのオプション</string>
-    <string name="disable_repack_title">再パックを無効化</string>
-    <string name="disable_repack_desc">モデルの重みを RAM に再パックする代わりに、メモリマップで読み込みます。使用メモリが大幅に少なくなるため、大きなモデルがクラッシュせずに読み込めますが、応答は遅くなります。モデルがメモリ不足になる場合を除き、オフのままにしてください。</string>
+    <string name="enable_repack_title">再パックを有効化</string>
+    <string name="enable_repack_desc">モデルの重みを RAM に再パックして応答を高速化します。メモリマップで読み込む場合よりも大幅に多くのメモリを使用します。大きなモデルが読み込み中にメモリ不足になる場合はオフにしてください。</string>
     <string name="load_anyway">それでも読み込む</string>
     <string name="download_notification_channel">モデルのダウンロード</string>
     <string name="download_notification_channel_description">モデルファイルのダウンロード進捗を表示します</string>
