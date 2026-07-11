@@ -68,6 +68,26 @@ interface ILlamaService {
 
     void unloadModel(int modelId);
 
+    // ── Embeddings ───────────────────────────────────────────────────────
+    /**
+     * Create an embeddings-enabled context (mean pooling, L2-normalized
+     * output) over a previously-loaded model. Independent of generation
+     * sessions. Returns a positive embeddingSessionId, or 0 on failure.
+     */
+    int createEmbeddingSession(int modelId, int contextSize);
+
+    /** Output dimension of the embedding session's model (0 if unknown). */
+    int getEmbeddingDim(int embeddingSessionId);
+
+    /**
+     * Embed each text; returns a flattened [texts.length * dim] array, or
+     * null on failure. Callers batch texts so that input strings and the
+     * returned floats stay well under the ~1 MB binder transaction cap.
+     */
+    @nullable float[] embedTexts(int embeddingSessionId, in String[] texts);
+
+    void destroyEmbeddingSession(int embeddingSessionId);
+
     // ── Session lifecycle ────────────────────────────────────────────────
     /** Returns a positive sessionId, or 0 on failure. */
     int createSession(int modelId, in SamplerParams params);

@@ -417,6 +417,97 @@ Java_com_druk_llamacpp_jni_NativeLlamaModel_createSession(JNIEnv *env, jobject t
     return obj;
 }
 
+extern "C"
+JNIEXPORT jobject JNICALL
+Java_com_druk_llamacpp_jni_NativeLlamaModel_createEmbeddingSession(JNIEnv *env, jobject thiz,
+                                                                   jint contextSize) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* model = (LlamaModel*) env->GetLongField(thiz, fid);
+    if (model == nullptr) {
+        return nullptr;
+    }
+
+    LlamaEmbeddingSession* session = model->createEmbeddingSession(contextSize);
+    if (session == nullptr) {
+        return nullptr;
+    }
+
+    jclass sessionClass = env->FindClass("com/druk/llamacpp/jni/NativeLlamaEmbeddingSession");
+    jmethodID constructor = env->GetMethodID(sessionClass, "<init>", "()V");
+    jobject obj = env->NewObject(sessionClass, constructor);
+    jfieldID sessionFid = env->GetFieldID(sessionClass, "nativeHandle", "J");
+    env->SetLongField(obj, sessionFid, (jlong) session);
+    return obj;
+}
+
+extern "C"
+JNIEXPORT jint JNICALL
+Java_com_druk_llamacpp_jni_NativeLlamaEmbeddingSession_getEmbeddingDim(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* session = (LlamaEmbeddingSession*) env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return 0;
+    }
+    return session->embeddingDim();
+}
+
+extern "C"
+JNIEXPORT jfloatArray JNICALL
+Java_com_druk_llamacpp_jni_NativeLlamaEmbeddingSession_embedTexts(JNIEnv *env, jobject thiz,
+                                                                  jobjectArray texts) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* session = (LlamaEmbeddingSession*) env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return nullptr;
+    }
+
+    jsize count = env->GetArrayLength(texts);
+    int dim = session->embeddingDim();
+    if (count <= 0 || dim <= 0) {
+        return nullptr;
+    }
+
+    jfloatArray result = env->NewFloatArray(count * dim);
+    if (result == nullptr) {
+        return nullptr;
+    }
+    std::vector<float> row(dim);
+    for (jsize i = 0; i < count; i++) {
+        auto jtext = (jstring) env->GetObjectArrayElement(texts, i);
+        if (jtext == nullptr) {
+            return nullptr;
+        }
+        const char* utf = env->GetStringUTFChars(jtext, nullptr);
+        if (utf == nullptr) {
+            return nullptr;
+        }
+        std::string text(utf);
+        env->ReleaseStringUTFChars(jtext, utf);
+        env->DeleteLocalRef(jtext);
+        if (session->embed(text, row.data()) != 0) {
+            return nullptr;
+        }
+        env->SetFloatArrayRegion(result, (jsize) i * dim, dim, row.data());
+    }
+    return result;
+}
+
+extern "C"
+JNIEXPORT void JNICALL
+Java_com_druk_llamacpp_jni_NativeLlamaEmbeddingSession_destroy(JNIEnv *env, jobject thiz) {
+    jclass clazz = env->GetObjectClass(thiz);
+    jfieldID fid = env->GetFieldID(clazz, "nativeHandle", "J");
+    auto* session = (LlamaEmbeddingSession*) env->GetLongField(thiz, fid);
+    if (session == nullptr) {
+        return;
+    }
+    env->SetLongField(thiz, fid, 0);
+    delete session;
+}
+
 extern "C" JNIEXPORT jint JNICALL Java_com_druk_llamacpp_jni_NativeLlamaSession_generate
         (JNIEnv *env, jobject obj, jobject callback) {
     jclass clazz = env->GetObjectClass(obj);

@@ -16,6 +16,10 @@ class NativeLlamaModel {
         systemPrompt: String
     ): NativeLlamaSession?
 
+    // Embeddings: create a pooling context over this model. Independent of
+    // generation sessions; used for models like EmbeddingGemma.
+    external fun createEmbeddingSession(contextSize: Int): NativeLlamaEmbeddingSession?
+
     external fun getContextTrainSize(): Int
 
     external fun getModelSize(): Long

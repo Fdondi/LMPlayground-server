@@ -213,12 +213,39 @@ private:
     bool preamble_attempted = false;
 };
 
+// Embeddings-enabled context over a loaded model (mean pooling, L2-normalized
+// output). Independent of LlamaGenerationSession: no sampler, no chat template,
+// no KV-cache reuse — each embed() clears the memory and feeds one sequence.
+class LlamaEmbeddingSession {
+public:
+    LlamaEmbeddingSession() = default;
+    ~LlamaEmbeddingSession();
+
+    // Create the context. n_ctx = n_batch = n_ubatch = min(nCtx, n_ctx_train):
+    // pooled sequence embeddings require the whole input in a single ubatch.
+    bool init(llama_model *model, int nCtx);
+
+    // Output dimension (llama_model_n_embd_out), 0 before init.
+    int embeddingDim() const;
+
+    // Embed one text into [out] (embeddingDim() floats, L2-normalized).
+    // Inputs longer than the batch size are truncated. Returns 0 on success.
+    int embed(const std::string &text, float *out);
+
+private:
+    llama_model *model = nullptr;
+    llama_context *ctx = nullptr;
+    const struct llama_vocab *vocab = nullptr;
+};
+
 class LlamaModel {
 public:
     LlamaModel() = default;
     ~LlamaModel() = default;
 
     LlamaGenerationSession* createGenerationSession(const SamplerParams &params);
+
+    LlamaEmbeddingSession* createEmbeddingSession(int nCtx);
     int getContextTrainSize();
     void loadModel(const std::string &modelPath,
                    int32_t n_gpu_layers,

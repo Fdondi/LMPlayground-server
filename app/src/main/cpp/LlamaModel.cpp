@@ -156,6 +156,19 @@ LlamaGenerationSession* LlamaModel::createGenerationSession(const SamplerParams 
     return session.release();
 }
 
+LlamaEmbeddingSession* LlamaModel::createEmbeddingSession(int nCtx) {
+    if (model == nullptr) {
+        return nullptr;
+    }
+    // unique_ptr guards the allocation through init(); released to the
+    // caller (the JNI layer owns it via the Kotlin object's handle).
+    auto session = std::make_unique<LlamaEmbeddingSession>();
+    if (!session->init(model, nCtx)) {
+        return nullptr;
+    }
+    return session.release();
+}
+
 int LlamaModel::getContextTrainSize() {
     if (model == nullptr) {
         return 0;

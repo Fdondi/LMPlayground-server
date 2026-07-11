@@ -53,7 +53,8 @@ add_subdirectory(llama.cpp/tools/mtmd)
 add_library(${CMAKE_PROJECT_NAME} SHARED
         native-lib.cpp
         LlamaModel.cpp
-        LlamaGenerationSession.cpp)
+        LlamaGenerationSession.cpp
+        LlamaEmbeddingSession.cpp)
 
 # mtmd public headers (mtmd.h, mtmd-helper.h) for the vision integration.
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE llama.cpp/tools/mtmd)

@@ -15,6 +15,7 @@ import com.druk.llamacpp.ILlamaService
 import com.druk.llamacpp.LlamaProgressCallback
 import com.druk.llamacpp.SamplerParams
 import com.druk.llamacpp.jni.NativeLlamaCpp
+import com.druk.llamacpp.jni.NativeLlamaEmbeddingSession
 import com.druk.llamacpp.jni.NativeLlamaModel
 import com.druk.llamacpp.jni.NativeLlamaSession
 import java.util.concurrent.ConcurrentHashMap
@@ -41,6 +42,7 @@ class LlamaService : Service() {
 
     private val nextModelId = AtomicInteger(1)
     private val nextSessionId = AtomicInteger(1)
+    private val nextEmbeddingSessionId = AtomicInteger(1)
 
     private class ModelEntry(
         val modelId: Int,
@@ -101,8 +103,29 @@ class LlamaService : Service() {
         val pendingReplayAssistants: MutableList<String> = mutableListOf()
     }
 
+    /**
+     * Embedding sessions are deliberately separate from [sessions]: they
+     * have no GenerationWorker, no replay buffers and no pendingDestroy
+     * dance — embed calls are short synchronous binder calls serialized
+     * against destroy by [lock].
+     */
+    private class EmbeddingEntry(
+        val embeddingSessionId: Int,
+        val modelId: Int,
+        val nativeSession: NativeLlamaEmbeddingSession,
+    ) {
+        /**
+         * embedTexts and the destroy path both take this lock, so a native
+         * embed in flight on one binder thread can't have its context freed
+         * out from under it by unloadModel/destroyEmbeddingSession on another.
+         */
+        val lock = Any()
+        @Volatile var destroyed = false
+    }
+
     private val models = ConcurrentHashMap<Int, ModelEntry>()
     private val sessions = ConcurrentHashMap<Int, SessionEntry>()
+    private val embeddingSessions = ConcurrentHashMap<Int, EmbeddingEntry>()
 
     override fun onCreate() {
         super.onCreate()
@@ -119,8 +142,26 @@ class LlamaService : Service() {
         // → tryFinalizeModelTeardown will finish the cleanup. The
         // process is going away anyway, so the leak is bounded.
         models.values.forEach { it.pendingDestroy = true }
+        embeddingSessions.values.toList().forEach { tearDownEmbeddingSession(it) }
         sessions.values.toList().forEach { tearDownSession(it) }
         super.onDestroy()
+    }
+
+    /**
+     * Destroy [entry]'s native context and remove it from
+     * [embeddingSessions]. Blocks until any in-flight embedTexts on
+     * another binder thread finishes (embed calls are short — one small
+     * batch per call). Idempotent.
+     */
+    private fun tearDownEmbeddingSession(entry: EmbeddingEntry) {
+        synchronized(entry.lock) {
+            if (!entry.destroyed) {
+                entry.destroyed = true
+                entry.nativeSession.destroy()
+            }
+        }
+        embeddingSessions.remove(entry.embeddingSessionId, entry)
+        tryFinalizeModelTeardown(entry.modelId)
     }
 
     /**
@@ -199,7 +240,8 @@ class LlamaService : Service() {
     private fun tryFinalizeModelTeardown(modelId: Int) {
         val entry = models[modelId] ?: return
         if (!entry.pendingDestroy) return
-        val stillHasSessions = sessions.values.any { it.modelId == modelId }
+        val stillHasSessions = sessions.values.any { it.modelId == modelId } ||
+            embeddingSessions.values.any { it.modelId == modelId }
         if (stillHasSessions) return
         if (models.remove(modelId, entry)) {
             entry.nativeModel.unloadModel()
@@ -315,10 +357,48 @@ class LlamaService : Service() {
             // nativeSession.generate() (and thus holding a llama_context
             // derived from this model) when we freed the model.
             entry.pendingDestroy = true
+            embeddingSessions.values.filter { it.modelId == modelId }.toList().forEach { e ->
+                tearDownEmbeddingSession(e)
+            }
             sessions.values.filter { it.modelId == modelId }.toList().forEach { s ->
                 tearDownSession(s)
             }
             tryFinalizeModelTeardown(modelId)
+        }
+
+        override fun createEmbeddingSession(modelId: Int, contextSize: Int): Int {
+            val model = models[modelId] ?: return 0
+            if (model.pendingDestroy) return 0
+            return try {
+                val native = model.nativeModel.createEmbeddingSession(contextSize) ?: return 0
+                val id = nextEmbeddingSessionId.getAndIncrement()
+                embeddingSessions[id] = EmbeddingEntry(id, modelId, native)
+                id
+            } catch (t: Throwable) {
+                Log.e(TAG, "createEmbeddingSession failed", t)
+                0
+            }
+        }
+
+        override fun getEmbeddingDim(embeddingSessionId: Int): Int {
+            val entry = embeddingSessions[embeddingSessionId] ?: return 0
+            synchronized(entry.lock) {
+                if (entry.destroyed) return 0
+                return entry.nativeSession.getEmbeddingDim()
+            }
+        }
+
+        override fun embedTexts(embeddingSessionId: Int, texts: Array<String>): FloatArray? {
+            val entry = embeddingSessions[embeddingSessionId] ?: return null
+            synchronized(entry.lock) {
+                if (entry.destroyed) return null
+                return entry.nativeSession.embedTexts(texts)
+            }
+        }
+
+        override fun destroyEmbeddingSession(embeddingSessionId: Int) {
+            val entry = embeddingSessions[embeddingSessionId] ?: return
+            tearDownEmbeddingSession(entry)
         }
 
         override fun createSession(modelId: Int, params: SamplerParams): Int {

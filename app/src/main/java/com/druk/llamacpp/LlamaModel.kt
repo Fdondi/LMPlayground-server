@@ -58,6 +58,17 @@ class LlamaModel internal constructor(
     }
 
     /**
+     * Embeddings: create a pooling context over this model (for embedding
+     * models like EmbeddingGemma). Independent of generation sessions.
+     * Returns null on failure.
+     */
+    fun createEmbeddingSession(contextSize: Int): LlamaEmbeddingSession? {
+        val id = client.withService { it.createEmbeddingSession(modelId, contextSize) }
+        if (id == 0) return null
+        return LlamaEmbeddingSession(client, id)
+    }
+
+    /**
      * Vision: load a multimodal projector (mmproj) so this model can accept
      * image input. [mmprojPath] is a filesystem path readable by the service
      * process (the UI copies the projector into app storage first). Returns
