@@ -492,16 +492,35 @@ object ModelInfoProvider {
     }
 
     /**
-     * Get all known model filenames (including mmproj files for vision models)
+     * Embedding model powering document (RAG) search. Deliberately NOT part
+     * of [rawModels]/[allModels]: it can't chat, so it must never appear in
+     * the model picker. Downloaded on demand through the regular download
+     * pipeline when the user first attaches a document.
      */
-    val knownFilenames: Set<String> = allModels.flatMap { model ->
+    val embeddingModel: ModelInfo = ModelInfo(
+        name = "EmbeddingGemma 300M",
+        filename = "embeddinggemma-300m-Q4_0.gguf",
+        remoteUri = Uri.parse("https://huggingface.co/unsloth/embeddinggemma-300m-GGUF/resolve/main/embeddinggemma-300m-Q4_0.gguf"),
+        releaseDate = LocalDate.parse("2025-09-04"),
+        description = "Google · Document embedding model · 278Mb",
+        logoRes = R.drawable.logo_google,
+    )
+
+    /**
+     * Get all known model filenames (including mmproj files for vision models
+     * and the embedding model, so the storage scan never surfaces those files
+     * as "custom models")
+     */
+    val knownFilenames: Set<String> = (allModels.flatMap { model ->
         listOfNotNull(model.filename, model.mmprojFilename)
-    }.toSet()
-    
+    } + embeddingModel.filename).toSet()
+
     /**
      * Get model by filename
      */
-    fun getByFilename(filename: String): ModelInfo? = allModels.find { it.filename == filename }
+    fun getByFilename(filename: String): ModelInfo? =
+        if (filename == embeddingModel.filename) embeddingModel
+        else allModels.find { it.filename == filename }
     
     /**
      * Get display name for a filename

@@ -129,6 +129,14 @@ class DownloadRepository(private val context: Context) {
         notificationManager.cancelNotification(notificationManager.getNotificationId(model.name + " (vision)"))
     }
 
+    /**
+     * WorkInfo stream for one model's (text-file) download — lets callers
+     * react to terminal states, unlike [observeDownloads] which drops
+     * finished work.
+     */
+    fun observeModelDownload(model: ModelInfo): LiveData<List<WorkInfo>> =
+        workManager.getWorkInfosForUniqueWorkLiveData(workNameFor(model))
+
     fun observeDownloads(): LiveData<Map<String, DownloadProgress>> {
         return workManager
             .getWorkInfosByTagLiveData(DownloadWorker.TAG_MODEL_DOWNLOAD)

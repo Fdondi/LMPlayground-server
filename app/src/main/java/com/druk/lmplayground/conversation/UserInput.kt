@@ -53,6 +53,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Lightbulb
+import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Image
 import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material.icons.outlined.PhotoCamera
@@ -140,6 +141,7 @@ fun UserInput(
     attachedImageUri: Uri? = null,
     onAttachImage: () -> Unit = {},
     onTakePhoto: () -> Unit = {},
+    onAttachDocument: () -> Unit = {},
     onClearImage: () -> Unit = {},
     onSwipeUp: () -> Unit = {},
     onMessageSent: (String) -> Unit,
@@ -247,6 +249,7 @@ fun UserInput(
                 cameraAvailable = cameraAvailable,
                 onAttachImage = onAttachImage,
                 onTakePhoto = onTakePhoto,
+                onAttachDocument = onAttachDocument,
                 textFieldValue = textState,
                 onTextChanged = { textState = it },
                 // Only show the keyboard if there's no input selector and text field has focus
@@ -317,6 +320,7 @@ private fun UserInputText(
     cameraAvailable: Boolean = false,
     onAttachImage: () -> Unit = {},
     onTakePhoto: () -> Unit = {},
+    onAttachDocument: () -> Unit = {},
     keyboardType: KeyboardType = KeyboardType.Text,
     onTextChanged: (TextFieldValue) -> Unit,
     textFieldValue: TextFieldValue,
@@ -328,7 +332,10 @@ private fun UserInputText(
     compact: Boolean = false
 ) {
     val a11ylabel = stringResource(id = R.string.textfield_desc)
-    val hasLeftButtons = supportsThinking || supportsVision
+    // The attach (+) button shows for every loaded model (documents are
+    // model-agnostic); the photo entries inside its menu stay vision-gated.
+    val showAttach = status != UserInputStatus.NOT_LOADED
+    val hasLeftButtons = supportsThinking || showAttach
     val textStartPadding = if (hasLeftButtons) 4.dp else 32.dp
     Row(
         modifier = Modifier
@@ -338,23 +345,23 @@ private fun UserInputText(
         horizontalArrangement = Arrangement.End,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        if (supportsVision) {
+        if (showAttach) {
             val isDisabled = status == UserInputStatus.GENERATING
             var menuExpanded by remember { mutableStateOf(false) }
             val density = LocalDensity.current
             Box {
                 IconButton(
                     onClick = {
-                        // With a camera available, offer a choice; otherwise go
-                        // straight to the picker (no point showing a 1-item menu).
-                        if (cameraAvailable) menuExpanded = true else onAttachImage()
+                        // Vision models get a menu (photos + document);
+                        // text-only models go straight to the document picker.
+                        if (supportsVision) menuExpanded = true else onAttachDocument()
                     },
                     enabled = !isDisabled,
                     modifier = Modifier.padding(start = 4.dp)
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Attach image",
+                        contentDescription = "Attach",
                         modifier = if (isDisabled) Modifier.alpha(0.8f) else Modifier,
                         tint = LocalContentColor.current
                     )
@@ -392,16 +399,18 @@ private fun UserInputText(
                             shadowElevation = 3.dp
                         ) {
                             Column(modifier = Modifier.width(IntrinsicSize.Max).padding(vertical = 8.dp)) {
-                                DropdownMenuItem(
-                                    text = { Text(stringResource(R.string.take_photo)) },
-                                    leadingIcon = {
-                                        Icon(imageVector = Icons.Outlined.PhotoCamera, contentDescription = null)
-                                    },
-                                    onClick = {
-                                        menuExpanded = false
-                                        onTakePhoto()
-                                    }
-                                )
+                                if (cameraAvailable) {
+                                    DropdownMenuItem(
+                                        text = { Text(stringResource(R.string.take_photo)) },
+                                        leadingIcon = {
+                                            Icon(imageVector = Icons.Outlined.PhotoCamera, contentDescription = null)
+                                        },
+                                        onClick = {
+                                            menuExpanded = false
+                                            onTakePhoto()
+                                        }
+                                    )
+                                }
                                 DropdownMenuItem(
                                     text = { Text(stringResource(R.string.choose_from_library)) },
                                     leadingIcon = {
@@ -410,6 +419,16 @@ private fun UserInputText(
                                     onClick = {
                                         menuExpanded = false
                                         onAttachImage()
+                                    }
+                                )
+                                DropdownMenuItem(
+                                    text = { Text(stringResource(R.string.attach_document)) },
+                                    leadingIcon = {
+                                        Icon(imageVector = Icons.Outlined.Description, contentDescription = null)
+                                    },
+                                    onClick = {
+                                        menuExpanded = false
+                                        onAttachDocument()
                                     }
                                 )
                             }
@@ -425,7 +444,7 @@ private fun UserInputText(
                 enabled = !isDisabled,
                 // When the attach (+) button precedes it, pull the bulb left so the
                 // two sit as a tight pair rather than a full icon-button gap apart.
-                modifier = if (supportsVision) {
+                modifier = if (showAttach) {
                     Modifier.offset(x = (-12).dp)
                 } else {
                     Modifier.padding(start = 4.dp)

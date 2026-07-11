@@ -70,6 +70,7 @@ import androidx.navigation.fragment.findNavController
 import com.druk.lmplayground.settings.SettingsFragment
 import com.druk.lmplayground.MainActivity
 import com.druk.lmplayground.R
+import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.SelectModelDialog
 import com.druk.lmplayground.storage.StorageViewModel
 import com.druk.lmplayground.theme.PlaygroundTheme
@@ -126,6 +127,39 @@ class ConversationFragment : Fragment() {
         runCatching { pendingCaptureFile?.delete() }
         pendingCaptureFile = null
         pendingCaptureUri = null
+    }
+
+    // Document (RAG) attachment: OpenDocument (not GetContent) so the read
+    // grant can be persisted — indexing may start after a model download,
+    // and the chip reopens the original across app restarts.
+    private val openDocumentLauncher = registerForActivityResult(
+        ActivityResultContracts.OpenDocument()
+    ) { uri ->
+        if (uri != null) viewModel.attachDocument(uri)
+    }
+
+    /**
+     * Reopen an attached document's original file in the user's viewer.
+     * The stored grant is persistable but the file may be gone (deleted,
+     * provider removed) — every failure funnels into one toast.
+     */
+    private fun openAttachedDocument(doc: com.druk.lmplayground.data.RagDocumentEntity) {
+        val uri = doc.sourceUri?.let(Uri::parse)
+        if (uri == null) {
+            Toast.makeText(requireContext(), R.string.document_source_unavailable, Toast.LENGTH_SHORT).show()
+            return
+        }
+        val intent = android.content.Intent(android.content.Intent.ACTION_VIEW).apply {
+            setDataAndType(uri, doc.mimeType ?: "*/*")
+            addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        try {
+            startActivity(intent)
+        } catch (_: Exception) {
+            // ActivityNotFound (no viewer) or SecurityException (grant/file
+            // revoked) — same user-facing outcome.
+            Toast.makeText(requireContext(), R.string.document_source_unavailable, Toast.LENGTH_SHORT).show()
+        }
     }
 
     /**
@@ -221,6 +255,11 @@ class ConversationFragment : Fragment() {
             val userError by viewModel.userError.observeAsState()
             val pendingRamWarning by viewModel.pendingRamWarning.observeAsState()
             val modelLoadError by viewModel.modelLoadError.observeAsState()
+            val sessionDocuments by viewModel.sessionDocuments.observeAsState(emptyList())
+            val embeddingModelPrompt by viewModel.embeddingModelPrompt.observeAsState()
+            var documentPendingRemoval by remember {
+                mutableStateOf<com.druk.lmplayground.data.RagDocumentEntity?>(null)
+            }
             var showParamsSheet by remember { mutableStateOf(false) }
 
             // Surface transient ViewModel errors (e.g. message-too-large)
@@ -440,6 +479,61 @@ class ConversationFragment : Fragment() {
                             }
                         },
                         confirmButton = { }
+                    )
+                }
+
+                // Document Q&A needs the embedding model on disk — offer the
+                // one-time download; the picked document stays pending and
+                // indexes automatically once the download lands.
+                embeddingModelPrompt?.let {
+                    val embeddingModel = ModelInfoProvider.embeddingModel
+                    AlertDialog(
+                        onDismissRequest = { viewModel.dismissEmbeddingModelPrompt() },
+                        title = { Text(stringResource(R.string.embedding_model_dialog_title)) },
+                        text = {
+                            Text(
+                                stringResource(
+                                    R.string.embedding_model_dialog_message,
+                                    embeddingModel.name,
+                                    embeddingModel.description.substringAfterLast("· "),
+                                )
+                            )
+                        },
+                        confirmButton = {
+                            TextButton(onClick = { viewModel.confirmEmbeddingModelDownload() }) {
+                                Text(stringResource(R.string.download_model))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { viewModel.dismissEmbeddingModelPrompt() }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
+                    )
+                }
+
+                documentPendingRemoval?.let { doc ->
+                    AlertDialog(
+                        onDismissRequest = { documentPendingRemoval = null },
+                        title = { Text(stringResource(R.string.remove_document_title)) },
+                        text = {
+                            Text(stringResource(R.string.remove_document_message, doc.displayName))
+                        },
+                        confirmButton = {
+                            TextButton(
+                                onClick = {
+                                    viewModel.removeDocument(doc.id)
+                                    documentPendingRemoval = null
+                                }
+                            ) {
+                                Text(stringResource(R.string.remove))
+                            }
+                        },
+                        dismissButton = {
+                            TextButton(onClick = { documentPendingRemoval = null }) {
+                                Text(stringResource(R.string.cancel))
+                            }
+                        }
                     )
                 }
 
@@ -669,6 +763,16 @@ class ConversationFragment : Fragment() {
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
                             }
+                            if (sessionDocuments.isNotEmpty()) {
+                                DocumentChipsRow(
+                                    documents = sessionDocuments,
+                                    onRemove = { documentPendingRemoval = it },
+                                    onOpen = { doc -> openAttachedDocument(doc) },
+                                    modifier = Modifier.padding(bottom = 4.dp),
+                                    hazeState = hazeState,
+                                    hazeStyle = hazeStyle
+                                )
+                            }
                             UserInput(
                                 integrateWithSurface = showPermanent,
                                 hazeState = hazeState,
@@ -695,6 +799,19 @@ class ConversationFragment : Fragment() {
                                     )
                                 },
                                 onTakePhoto = { launchCamera() },
+                                onAttachDocument = {
+                                    try {
+                                        openDocumentLauncher.launch(
+                                            com.druk.lmplayground.rag.DocumentTextExtractors.OPENABLE_MIME_TYPES
+                                        )
+                                    } catch (e: ActivityNotFoundException) {
+                                        Toast.makeText(
+                                            requireContext(),
+                                            R.string.document_open_failed,
+                                            Toast.LENGTH_SHORT,
+                                        ).show()
+                                    }
+                                },
                                 onClearImage = {
                                     attachedImageUri.value = null
                                     clearPendingCapture()

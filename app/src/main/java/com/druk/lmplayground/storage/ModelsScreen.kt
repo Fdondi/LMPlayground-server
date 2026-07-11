@@ -98,7 +98,8 @@ fun ModelsScreen(
     onSnackbarDismiss: () -> Unit,
     onConfirmMigration: () -> Unit,
     onSkipMigration: () -> Unit,
-    onCancelMigration: () -> Unit
+    onCancelMigration: () -> Unit,
+    embeddingModel: ModelWithStatus? = null,
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
@@ -136,6 +137,7 @@ fun ModelsScreen(
             onConfirmMigration = onConfirmMigration,
             onSkipMigration = onSkipMigration,
             onCancelMigration = onCancelMigration,
+            embeddingModel = embeddingModel,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
@@ -174,6 +176,10 @@ fun ModelsContent(
     // (e.g. tablet marketing screenshots) can override with
     // [Dp.Infinity] to fill the full pane width.
     maxContentWidth: Dp = 960.dp,
+    // Document-Q&A embedding model status. Storage management only: shown
+    // under Downloaded when on disk (delete) or while its download is in
+    // flight (progress + cancel); never offered under Available.
+    embeddingModel: ModelWithStatus? = null,
 ) {
     var modelToDelete by remember { mutableStateOf<ModelInfo?>(null) }
     // Vision model awaiting the "with images / text only" download choice.
@@ -193,6 +199,14 @@ fun ModelsContent(
     // downloadable image module.
     val downloadedModels = allModels.filter { it.isDownloaded }
     val availableModels = allModels.filter { !it.isDownloaded || it.needsVisionModule }
+
+    // The embedding model (document Q&A) surfaces under Downloaded when its
+    // file is on disk or while its download runs — it can't be chatted with,
+    // so it's never offered for download here (the chat's attach flow owns
+    // that) and never leaks into Available.
+    val embeddingDownloadProgress = embeddingModel?.let { downloadingModels[it.model.name] }
+    val showEmbeddingRow = embeddingModel != null &&
+        (embeddingModel.isDownloaded || embeddingDownloadProgress != null)
 
     // When the device language is non-English, separate models that support the user's
     // language from those that don't so users see relevant models first.
@@ -282,7 +296,7 @@ fun ModelsContent(
                     )
                 }
 
-                if (downloadedModels.isEmpty()) {
+                if (downloadedModels.isEmpty() && !showEmbeddingRow) {
                     item(span = { GridItemSpan(maxLineSpan) }) {
                         Text(
                             text = stringResource(R.string.no_downloaded_models),
@@ -301,6 +315,30 @@ fun ModelsContent(
                             vision = modelWithStatus.isMmprojDownloaded,
                             onDeleteClick = { modelToDelete = modelWithStatus.model }
                         )
+                    }
+                }
+
+                if (showEmbeddingRow && embeddingModel != null) {
+                    item(key = "embedding_" + embeddingModel.model.filename) {
+                        if (embeddingModel.isDownloaded) {
+                            DownloadedModelItem(
+                                model = embeddingModel.model,
+                                vision = false,
+                                onDeleteClick = { modelToDelete = embeddingModel.model }
+                            )
+                        } else {
+                            // Download in flight (started from the chat's attach
+                            // flow): progress + cancel. The row only exists while
+                            // downloadProgress is non-null, so the download button
+                            // inside AvailableModelItem never shows.
+                            AvailableModelItem(
+                                modelWithStatus = embeddingModel,
+                                moduleOnly = false,
+                                downloadProgress = embeddingDownloadProgress,
+                                onDownloadClick = {},
+                                onCancelClick = { onCancelDownload(embeddingModel.model) }
+                            )
+                        }
                     }
                 }
 

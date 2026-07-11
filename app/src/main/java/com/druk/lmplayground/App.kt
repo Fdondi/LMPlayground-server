@@ -12,7 +12,14 @@ import com.druk.lmplayground.data.SystemPromptRepository
 import com.druk.lmplayground.download.DownloadNotificationManager
 import com.druk.lmplayground.inference.LlamaService
 import com.druk.lmplayground.inference.ProcessUtils
+import com.druk.lmplayground.rag.EmbeddingModelManager
+import com.druk.lmplayground.rag.RagRepository
 import com.druk.lmplayground.storage.LegacyDownloadCleanup
+import com.druk.lmplayground.storage.StoragePreferences
+import com.druk.lmplayground.storage.StorageRepository
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlin.concurrent.thread
 
 class App : Application() {
@@ -25,6 +32,14 @@ class App : Application() {
         private set
     lateinit var systemPromptRepository: SystemPromptRepository
         private set
+    lateinit var ragRepository: RagRepository
+        private set
+
+    /**
+     * Outlives any ViewModel — document indexing keeps running while the
+     * user navigates away from the chat.
+     */
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     /**
      * True while any activity is in the started..stopped window, i.e. the
@@ -83,5 +98,19 @@ class App : Application() {
         val database = AppDatabase.getInstance(this)
         chatRepository = ChatRepository(database.chatDao())
         systemPromptRepository = SystemPromptRepository(database.systemPromptDao())
+
+        val embeddingModelManager = EmbeddingModelManager(
+            llamaCpp = llamaCpp,
+            storageRepository = StorageRepository(this, StoragePreferences(this)),
+            scope = applicationScope,
+        )
+        ragRepository = RagRepository(
+            appContext = applicationContext,
+            ragDao = database.ragDao(),
+            embeddingManager = embeddingModelManager,
+            applicationScope = applicationScope,
+        )
+        // Documents stuck INDEXING from a previous process death → ERROR.
+        ragRepository.resetStaleIndexing()
     }
 }

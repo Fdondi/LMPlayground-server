@@ -38,12 +38,41 @@ ConversationViewModel        UI state (LiveData) + listeners
 com.druk.llamacpp            AIDL proxy layer (public API of the engine)
   ├── InferenceClient        service binding, binder-death → Crashed state
   ├── LlamaCpp / LlamaModel / LlamaGenerationSession   typed proxies
+  ├── LlamaEmbeddingSession  typed proxy for pooled-embedding contexts
   └── jni/Native*            thin `external fun` JNI stubs
 
 LlamaService (:llama)        binds JNI ↔ AIDL; GenerationWorker thread
 app/src/main/cpp             C++ session: prompt build, KV-cache reuse,
                              sampling, vision (mtmd), tool-call grammar
 ```
+
+## Document Q&A (RAG)
+
+Attaching a document to a chat runs extract → chunk → embed → store, then
+every user turn in that chat retrieves the most relevant chunks and
+prepends them to the *wire copy* of the message (UI and Room keep the
+original; history replay resends originals since retrieval re-runs per
+turn — see `ConversationViewModel.buildWireContent`).
+
+- `com.druk.lmplayground.rag` — `DocumentTextExtractors` (PDF via
+  pdfbox-android, DOCX via ZIP+XmlPullParser, EPUB/HTML via jsoup, plain
+  text), `TextChunker` (paragraph/sentence-aware, ~1000 chars + overlap),
+  `RagRepository` (indexing job on an application-scoped coroutine so it
+  survives navigation; cosine top-K in Kotlin over the session's vectors),
+  `EmbeddingModelManager` (EmbeddingGemma task prefixes).
+- Vectors live in Room (`rag_documents`, `rag_chunks`; embeddings are
+  L2-normalized float32 BLOBs) keyed by session — brute-force dot product
+  is milliseconds at on-device scale, so no vector index. The original
+  file is never copied; `rag_documents.sourceUri` plus a persisted SAF
+  read grant lets the chat's document chip reopen it (graceful toast when
+  the file or grant is gone).
+- The embedding model (EmbeddingGemma 300M, downloaded on demand like any
+  catalog model but hidden from the chat picker) loads through the normal
+  `loadModel` path; `createEmbeddingSession` makes a separate
+  embeddings-enabled context (mean pooling) in `LlamaService`, independent
+  of generation sessions. It stays warm for 60 s after the last embed
+  call, then unloads (`EmbeddingModelManager`) so ~300 MB doesn't sit
+  next to a multi-GB chat model.
 
 ## Threading contracts
 

@@ -12,9 +12,11 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         ChatSessionEntity::class,
         ChatMessageEntity::class,
         SystemPromptEntity::class,
-        PromptUsage::class
+        PromptUsage::class,
+        RagDocumentEntity::class,
+        RagChunkEntity::class
     ],
-    version = 7,
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -22,6 +24,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun chatDao(): ChatDao
 
     abstract fun systemPromptDao(): SystemPromptDao
+
+    abstract fun ragDao(): RagDao
 
     companion object {
         @Volatile
@@ -115,6 +119,53 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        /**
+         * Document (RAG) attachments: per-session documents plus their
+         * chunked text and embedding vectors. Column shapes must match the
+         * Room-generated schema for [RagDocumentEntity]/[RagChunkEntity]
+         * exactly (index names included) or validation fails on open.
+         */
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS rag_documents (" +
+                        "id TEXT NOT NULL PRIMARY KEY, " +
+                        "sessionId TEXT NOT NULL, " +
+                        "displayName TEXT NOT NULL, " +
+                        "mimeType TEXT, " +
+                        "sourceUri TEXT, " +
+                        "sizeBytes INTEGER NOT NULL, " +
+                        "status TEXT NOT NULL, " +
+                        "chunkCount INTEGER NOT NULL, " +
+                        "embeddingDim INTEGER NOT NULL, " +
+                        "embeddingModel TEXT NOT NULL, " +
+                        "createdAt INTEGER NOT NULL, " +
+                        "FOREIGN KEY (sessionId) REFERENCES chat_sessions(id) " +
+                        "ON UPDATE NO ACTION ON DELETE CASCADE" +
+                        ")"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS index_rag_documents_sessionId " +
+                        "ON rag_documents (sessionId)"
+                )
+                db.execSQL(
+                    "CREATE TABLE IF NOT EXISTS rag_chunks (" +
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, " +
+                        "documentId TEXT NOT NULL, " +
+                        "ordinal INTEGER NOT NULL, " +
+                        "text TEXT NOT NULL, " +
+                        "embedding BLOB NOT NULL, " +
+                        "FOREIGN KEY (documentId) REFERENCES rag_documents(id) " +
+                        "ON UPDATE NO ACTION ON DELETE CASCADE" +
+                        ")"
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS index_rag_chunks_documentId " +
+                        "ON rag_chunks (documentId)"
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase {
             return INSTANCE ?: synchronized(this) {
                 INSTANCE ?: Room.databaseBuilder(
@@ -128,7 +179,8 @@ abstract class AppDatabase : RoomDatabase() {
                         MIGRATION_3_4,
                         MIGRATION_4_5,
                         MIGRATION_5_6,
-                        MIGRATION_6_7
+                        MIGRATION_6_7,
+                        MIGRATION_7_8
                     )
                     .build().also { INSTANCE = it }
             }

@@ -117,4 +117,17 @@ class DownloadRepositoryTest {
         assertEquals(WorkInfo.State.CANCELLED, workInfos("download_vision-model.gguf")[0].state)
         assertEquals(WorkInfo.State.CANCELLED, workInfos("download_vision-model.gguf_mmproj")[0].state)
     }
+
+    @Test
+    fun embeddingModelDownloadEnqueuesSingleJob() {
+        val embedding = com.druk.lmplayground.models.ModelInfoProvider.embeddingModel
+
+        repository.startDownload(embedding, storageUri)
+
+        val infos = workInfos("download_${embedding.filename}")
+        assertEquals(1, infos.size)
+        assertEquals(WorkInfo.State.ENQUEUED, infos[0].state)
+        // No mmproj sibling — the embedding model is a single GGUF.
+        assertTrue(workInfos("download_${embedding.filename}_mmproj").isEmpty())
+    }
 }

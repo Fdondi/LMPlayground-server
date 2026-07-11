@@ -48,9 +48,20 @@ class ChatSessionStore(
         modelInfo: ModelInfo?,
         params: GenerationParams,
         systemPrompt: String,
+    ): String = createSession(firstUserMessage.content.take(50), modelInfo, params, systemPrompt)
+
+    /**
+     * [createSession] variant with an explicit [title] — used when a session
+     * row must exist before the first message (e.g. attaching a document to
+     * a brand-new chat, where the rag_documents FK needs the session).
+     */
+    suspend fun createSession(
+        title: String,
+        modelInfo: ModelInfo?,
+        params: GenerationParams,
+        systemPrompt: String,
     ): String {
         val id = UUID.randomUUID().toString()
-        val title = firstUserMessage.content.take(50)
         val now = System.currentTimeMillis()
         chatRepository?.insertSession(
             ChatSessionEntity(

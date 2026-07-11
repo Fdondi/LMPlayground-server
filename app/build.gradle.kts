@@ -388,6 +388,8 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.jsoup)
     implementation("androidx.javascriptengine:javascriptengine:1.0.0-beta01")
+    // PDF text extraction for document (RAG) attachments
+    implementation(libs.pdfbox.android)
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
@@ -406,6 +408,7 @@ dependencies {
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.test.core)
     testImplementation(libs.androidx.work.testing)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.core)
     androidTestImplementation(libs.androidx.test.runner)

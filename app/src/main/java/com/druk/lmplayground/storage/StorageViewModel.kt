@@ -76,6 +76,15 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
     private val _allModels = MutableLiveData<List<ModelWithStatus>>()
     val allModels: LiveData<List<ModelWithStatus>> = _allModels
 
+    /**
+     * The document-Q&A embedding model's on-disk status. Kept out of
+     * [allModels] (it must never appear in the chat picker or the Available
+     * list); the Models screen shows it under Downloaded for storage
+     * management — delete, and progress while its download is in flight.
+     */
+    private val _embeddingModel = MutableLiveData<ModelWithStatus?>(null)
+    val embeddingModel: LiveData<ModelWithStatus?> = _embeddingModel
+
     private val _isStorageConfigured = MutableLiveData<Boolean>()
     val isStorageConfigured: LiveData<Boolean> = _isStorageConfigured
 
@@ -116,6 +125,12 @@ class StorageViewModel(application: Application) : AndroidViewModel(application)
                 _allModels.postValue(
                     ModelInfoProvider.getModelsWithStatus(downloadedFilenames, customModels)
                         .map { it.copy(model = it.model.resolveCapabilities(prefs)) }
+                )
+                _embeddingModel.postValue(
+                    ModelWithStatus(
+                        model = ModelInfoProvider.embeddingModel,
+                        isDownloaded = ModelInfoProvider.embeddingModel.filename in downloadedFilenames,
+                    )
                 )
             }
         }

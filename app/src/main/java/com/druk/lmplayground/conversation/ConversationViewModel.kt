@@ -21,14 +21,26 @@ import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelInfoProvider
 import com.druk.lmplayground.models.ModelWithStatus
 import com.druk.lmplayground.models.resolveCapabilities
+import com.druk.lmplayground.data.RagDocumentEntity
+import com.druk.lmplayground.download.DownloadRepository
+import com.druk.lmplayground.rag.DocumentTextExtractor
+import com.druk.lmplayground.rag.DocumentTextExtractors
+import com.druk.lmplayground.rag.RagPromptBuilder
+import com.druk.lmplayground.rag.RagRepository
 import com.druk.lmplayground.storage.StoragePreferences
 import com.druk.lmplayground.storage.StorageRepository
 import com.druk.lmplayground.tools.ToolRegistry
 import androidx.compose.runtime.snapshots.Snapshot
+import androidx.lifecycle.Observer
+import androidx.work.WorkInfo
+import android.content.Intent
+import android.provider.OpenableColumns
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import android.net.Uri
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 
 
@@ -397,6 +409,55 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             sessionStore.recentSystemPromptsForModel(model?.filename)
         }
 
+    // ── Document (RAG) attachments ───────────────────────────────────────
+    private val ragRepository: RagRepository? = (app as? App)?.ragRepository
+
+    /** Documents attached to the current chat, for the chips row. */
+    val sessionDocuments: LiveData<List<RagDocumentEntity>> =
+        _currentSessionId.switchMap { id ->
+            val rag = ragRepository
+            if (id == null || rag == null) MutableLiveData(emptyList())
+            else rag.observeDocuments(id)
+        }
+
+    /** A picked document waiting on user action or a model download. */
+    data class PendingDocument(
+        val uri: Uri,
+        val displayName: String,
+        val mimeType: String?,
+        val sizeBytes: Long,
+    )
+
+    /**
+     * Set when the user attached a document but the embedding model isn't
+     * downloaded yet. The UI shows a download dialog; confirm keeps the
+     * document pending and indexing starts when the download lands.
+     */
+    private val _embeddingModelPrompt = MutableLiveData<PendingDocument?>(null)
+    val embeddingModelPrompt: LiveData<PendingDocument?> = _embeddingModelPrompt
+
+    private var pendingDocument: PendingDocument? = null
+    private var embeddingDownloadLiveData: LiveData<List<WorkInfo>>? = null
+    private val embeddingDownloadObserver = Observer<List<WorkInfo>> { infos ->
+        when (infos.firstOrNull()?.state) {
+            WorkInfo.State.SUCCEEDED -> {
+                stopObservingEmbeddingDownload()
+                val doc = pendingDocument
+                pendingDocument = null
+                if (doc != null) {
+                    viewModelScope.launch { startIndexing(doc) }
+                }
+            }
+            WorkInfo.State.FAILED, WorkInfo.State.CANCELLED -> {
+                stopObservingEmbeddingDownload()
+                pendingDocument = null
+                _userError.value =
+                    app.getString(com.druk.lmplayground.R.string.document_embedding_download_failed)
+            }
+            else -> {}
+        }
+    }
+
     init {
         // Surface :llama process death to the UI. When the inference engine
         // crashes, the app process keeps running — we just need to tear
@@ -410,6 +471,25 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
                 }
             }
         }
+
+        // Failed document indexing leaves no chip behind (the row is
+        // deleted) — the reason arrives here once and surfaces as a toast.
+        ragRepository?.let { rag ->
+            viewModelScope.launch {
+                rag.indexingFailures.collect { failure ->
+                    _userError.postValue(app.getString(documentErrorRes(failure.reasonCode)))
+                }
+            }
+        }
+    }
+
+    private fun documentErrorRes(reasonCode: String): Int = when (reasonCode) {
+        "ENCRYPTED" -> com.druk.lmplayground.R.string.document_error_encrypted
+        "NO_TEXT" -> com.druk.lmplayground.R.string.document_error_no_text
+        "TOO_LARGE" -> com.druk.lmplayground.R.string.document_too_large
+        "UNSUPPORTED" -> com.druk.lmplayground.R.string.document_unsupported_format
+        "PARSE_FAILED" -> com.druk.lmplayground.R.string.document_error_parse_failed
+        else -> com.druk.lmplayground.R.string.document_error_embedding
     }
 
     private fun onInferenceCrashed() {
@@ -459,6 +539,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
     }
 
     override fun onCleared() {
+        stopObservingEmbeddingDownload()
         runtime.shutdown()
         super.onCleared()
     }
@@ -691,7 +772,7 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
             sessionStore.persistMessage(sessionId, userMessage, persistedImageFile?.absolutePath)
 
             generation.runTurn(
-                content = message.content,
+                content = buildWireContent(sessionId, message.content),
                 enableThinking = enableThinking,
                 persistedImageFile = persistedImageFile,
                 modelFilename = _loadedModel.value?.filename,
@@ -705,18 +786,59 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
     }
 
-    private suspend fun ensureSession(firstUserMessage: Message): String {
+    private suspend fun ensureSession(firstUserMessage: Message): String =
+        ensureSessionId(firstUserMessage.content.take(50))
+
+    /**
+     * Return the current session id, creating (and persisting) the session
+     * row first if this chat is brand-new. Mutex-guarded because both the
+     * send path and the document-attach path can race here, and each
+     * would otherwise create its own session.
+     */
+    private suspend fun ensureSessionId(title: String): String = sessionCreateMutex.withLock {
         val existing = _currentSessionId.value
         if (existing != null) return existing
 
         val id = sessionStore.createSession(
-            firstUserMessage,
+            title,
             _loadedModel.value,
             _generationParams.value ?: GenerationParams(),
             _systemPrompt.value.orEmpty(),
         )
-        _currentSessionId.postValue(id)
+        // Synchronous main-thread set (not postValue): a follow-up
+        // ensureSessionId must observe the id as soon as the lock drops.
+        withContext(Dispatchers.Main.immediate) { _currentSessionId.value = id }
         return id
+    }
+
+    private val sessionCreateMutex = Mutex()
+
+    /**
+     * Retrieval injection (RAG): when this chat has READY documents, wrap
+     * the outgoing message with the top-scoring excerpts. Wire-only —
+     * uiState and Room keep the original text, and history replay resends
+     * originals (retrieval re-runs for every new turn instead). Any
+     * failure degrades to the plain message.
+     */
+    private suspend fun buildWireContent(sessionId: String, userText: String): String {
+        val rag = ragRepository ?: return userText
+        return try {
+            if (!rag.hasReadyDocuments(sessionId)) return userText
+            val retrieved = rag.retrieve(sessionId, userText)
+            if (retrieved.isEmpty()) return userText
+            val contextSize = _generationParams.value?.contextSize ?: 4096
+            // Excerpt budget: ~25% of the session context, and never past
+            // the binder payload ceiling (the pre-flight check in
+            // addMessage only covered the original text).
+            val budget = minOf(
+                RagPromptBuilder.budgetChars(contextSize),
+                InferenceLimits.MAX_PAYLOAD_BYTES / 2 - userText.length - 500,
+            )
+            RagPromptBuilder.build(userText, retrieved, budget)
+        } catch (t: Throwable) {
+            android.util.Log.w("ConversationViewModel", "Retrieval failed; sending plain message", t)
+            userText
+        }
     }
 
     private suspend fun persistConversationMetadata(sessionId: String) {
@@ -974,6 +1096,118 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         }
         com.druk.lmplayground.download.DownloadRepository(app)
             .startMmprojDownload(model, storageUri)
+    }
+
+    /**
+     * Entry point from the attachment menu. Resolves the picked document's
+     * metadata, then either starts indexing right away or — when the
+     * embedding model isn't on disk yet — raises the download prompt with
+     * the document kept pending.
+     */
+    fun attachDocument(uri: Uri) {
+        val rag = ragRepository ?: return
+        viewModelScope.launch {
+            val doc = withContext(Dispatchers.IO) {
+                // Keep read access beyond this picker grant — indexing may
+                // start later (after the model download). Best-effort:
+                // some providers don't offer persistable grants.
+                try {
+                    app.contentResolver.takePersistableUriPermission(
+                        uri, Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+                } catch (_: SecurityException) {
+                }
+                resolveDocumentMeta(uri)
+            }
+            if (doc == null) {
+                _userError.value =
+                    app.getString(com.druk.lmplayground.R.string.document_open_failed)
+                return@launch
+            }
+            if (DocumentTextExtractors.forDocument(doc.mimeType, doc.displayName) == null) {
+                _userError.value =
+                    app.getString(com.druk.lmplayground.R.string.document_unsupported_format)
+                return@launch
+            }
+            if (doc.sizeBytes > DocumentTextExtractor.MAX_FILE_BYTES) {
+                _userError.value =
+                    app.getString(com.druk.lmplayground.R.string.document_too_large)
+                return@launch
+            }
+            val modelOnDisk = withContext(Dispatchers.IO) { rag.isEmbeddingModelAvailable() }
+            if (modelOnDisk) {
+                startIndexing(doc)
+            } else {
+                _embeddingModelPrompt.value = doc
+            }
+        }
+    }
+
+    /** Confirm on the embedding-model dialog: download, then auto-index. */
+    @MainThread
+    fun confirmEmbeddingModelDownload() {
+        val pending = _embeddingModelPrompt.value ?: return
+        _embeddingModelPrompt.value = null
+        val storageUri = storageRepository.getStorageUri()
+        if (storageUri == null) {
+            _userError.value =
+                app.getString(com.druk.lmplayground.R.string.document_storage_missing)
+            return
+        }
+        pendingDocument = pending
+        val downloads = DownloadRepository(app)
+        downloads.startDownload(ModelInfoProvider.embeddingModel, storageUri)
+        stopObservingEmbeddingDownload()
+        embeddingDownloadLiveData = downloads
+            .observeModelDownload(ModelInfoProvider.embeddingModel)
+            .also { it.observeForever(embeddingDownloadObserver) }
+    }
+
+    @MainThread
+    fun dismissEmbeddingModelPrompt() {
+        _embeddingModelPrompt.value = null
+    }
+
+    fun removeDocument(documentId: String) {
+        val rag = ragRepository ?: return
+        viewModelScope.launch { rag.deleteDocument(documentId) }
+    }
+
+    private suspend fun startIndexing(doc: PendingDocument) {
+        val rag = ragRepository ?: return
+        // The rag_documents row references the session (FK), so a
+        // brand-new chat needs its session row created first.
+        val sessionId = ensureSessionId(doc.displayName.take(50))
+        rag.attachDocument(sessionId, doc.uri, doc.displayName, doc.mimeType, doc.sizeBytes)
+    }
+
+    private fun stopObservingEmbeddingDownload() {
+        embeddingDownloadLiveData?.removeObserver(embeddingDownloadObserver)
+        embeddingDownloadLiveData = null
+    }
+
+    private fun resolveDocumentMeta(uri: Uri): PendingDocument? {
+        return try {
+            val mimeType = app.contentResolver.getType(uri)
+            var name: String? = null
+            var size = -1L
+            app.contentResolver.query(uri, null, null, null, null)?.use { cursor ->
+                if (cursor.moveToFirst()) {
+                    val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                    if (nameIndex >= 0) name = cursor.getString(nameIndex)
+                    val sizeIndex = cursor.getColumnIndex(OpenableColumns.SIZE)
+                    if (sizeIndex >= 0 && !cursor.isNull(sizeIndex)) {
+                        size = cursor.getLong(sizeIndex)
+                    }
+                }
+            }
+            val displayName = name ?: uri.lastPathSegment?.substringAfterLast('/')
+            if (displayName.isNullOrBlank()) null
+            else PendingDocument(uri, displayName, mimeType, size)
+        } catch (e: Exception) {
+            android.util.Log.w("ConversationViewModel", "resolveDocumentMeta failed", e)
+            null
+        }
     }
 
     @MainThread

@@ -375,6 +375,26 @@
     <string name="model_load_failed_message">Couldn\'t load %1$s. The file may be corrupt, or it uses an architecture this version of the app doesn\'t support yet. Try a different model, or update the app.</string>
     <string name="model_load_failed_dismiss">OK</string>
 
+    <!-- Document (RAG) attachments -->
+    <string name="attach_document">Attach document</string>
+    <string name="attached_document">Attached document</string>
+    <string name="remove_document">Remove document</string>
+    <string name="remove_document_title">Remove document?</string>
+    <string name="remove_document_message">“%1$s” and its indexed content will be removed from this chat.</string>
+    <string name="remove">Remove</string>
+    <string name="document_open_failed">Couldn\'t open this document.</string>
+    <string name="document_source_unavailable">The original file is no longer available.</string>
+    <string name="document_unsupported_format">This file format isn\'t supported. Try PDF, TXT, Markdown, HTML, EPUB or DOCX.</string>
+    <string name="document_too_large">This file is too large. Documents up to 30 MB are supported.</string>
+    <string name="document_storage_missing">Set up a models folder first (Settings → Models).</string>
+    <string name="document_embedding_download_failed">Downloading the embedding model failed. Check your connection and attach the document again.</string>
+    <string name="document_error_encrypted">This document is password-protected and can\'t be read.</string>
+    <string name="document_error_no_text">No readable text found — scanned documents aren\'t supported yet.</string>
+    <string name="document_error_parse_failed">This document couldn\'t be read. It may be corrupt.</string>
+    <string name="document_error_embedding">Indexing failed. Try attaching the document again.</string>
+    <string name="embedding_model_dialog_title">Enable document Q&amp;A</string>
+    <string name="embedding_model_dialog_message">Answering questions about documents needs a small embedding model, %1$s (%2$s), downloaded once and kept on your device.</string>
+
     <!-- Debug-only crash injection (only shown in debug builds — do not
          translate, English only). -->
     <string name="debug_crash_engine_title" translatable="false">Crash inference engine (debug)</string>
