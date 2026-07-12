@@ -247,6 +247,8 @@
     <string name="screenshot_choose_model_sub">from leading AI providers</string>
     <string name="screenshot_chat">Chat privately</string>
     <string name="screenshot_chat_sub">on your device</string>
+    <string name="screenshot_documents">Chat with documents</string>
+    <string name="screenshot_documents_sub">answers straight from your files</string>
     <string name="screenshot_vision">Chat about images</string>
     <string name="screenshot_vision_sub">your model can see them too</string>
     <string name="screenshot_fine_tune">Fine-tune</string>
@@ -269,6 +271,8 @@
     <!-- Screenshot sample chat -->
     <string name="screenshot_vision_question">What animal is in this photo?</string>
     <string name="screenshot_vision_response">A **sheep** with a thick, curly cream-white fleece, grazing head-down on a lush green hillside. The overcast sky and rocky pasture suggest a cool, upland setting.</string>
+    <string name="screenshot_documents_question">When can I terminate my rental agreement?</string>
+    <string name="screenshot_documents_response">You can terminate with **60 days\' written notice** after the initial six-month period. Your deposit is returned within 14 days of move-out (Section 8.2).</string>
     <string name="screenshot_chat_question">What is machine learning?</string>
     <string name="screenshot_chat_response">Machine learning is a branch of artificial intelligence where computers **learn from data** instead of being explicitly programmed.\n\nKey concepts:\n\n\u2022 **Training**: feeding data to algorithms\n\u2022 **Models**: learned patterns from data\n\u2022 **Inference**: making predictions on new data</string>
 
@@ -284,6 +288,9 @@
 
     <!-- What\'s New -->
     <string name="whats_new">What\'s New</string>
+    <string name="whats_new_documents">Documents — ask questions about your files</string>
+    <string name="whats_new_documents_detail">Attach PDFs, Word files, ebooks and more</string>
+    <string name="whats_new_documents_search">On-device search finds the right passages</string>
     <string name="whats_new_vision">Vision — send a photo and chat about it</string>
     <string name="whats_new_vision_detail">Pick an image from your gallery or snap one</string>
     <string name="whats_new_vision_models">Works with Gemma, Qwen &amp; Ministral</string>
