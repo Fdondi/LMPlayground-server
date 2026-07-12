@@ -6,7 +6,7 @@
   <meta name="color-scheme" content="dark" />
   <meta name="theme-color" content="#0A0B10" />
   <title>LM Playground — Run LLMs locally on Android</title>
-  <meta name="description" content="Free, open-source Android app for running large language models on-device with llama.cpp. Offline, private, no API keys." />
+  <meta name="description" content="Free, open-source Android app for running large language models on-device with llama.cpp. Chat with your documents offline — private, no API keys." />
   <link rel="canonical" href="https://lmplayground.app/" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
   <meta property="og:title" content="LM Playground — Run LLMs locally on Android" />
@@ -295,6 +295,10 @@
     .lmp-chat { flex: 1; padding: 6px 16px 4px; display: flex; flex-direction: column; gap: 10px; overflow: hidden; }
     .lmp-user-msg { align-self: flex-end; max-width: 82%; background: #C9CEF9; color: #1D2040; padding: 9px 16px; border-radius: 22px; font-size: 12.5px; line-height: 1.35; overflow-wrap: anywhere; }
     .lmp-user-img { align-self: flex-end; width: 58%; max-width: 150px; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 14px; display: block; }
+    /* Attached-document chip on the user turn (documents / RAG scene). */
+    .lmp-doc-chip { align-self: flex-end; display: inline-flex; align-items: center; gap: 6px; max-width: 82%; padding: 5px 11px; border: 1px solid rgba(255,255,255,0.16); border-radius: 9px; background: rgba(255,255,255,0.05); color: #C7CBDE; font-size: 11px; line-height: 1.2; }
+    .lmp-doc-chip svg { width: 12px; height: 12px; flex: none; color: #9096AE; }
+    .lmp-doc-chip span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
     .lmp-think { font-size: 12px; color: #9096AE; padding: 2px 0; font-style: italic; }
     .lmp-asst { font-size: 12px; line-height: 1.5; color: #D8DAE8; }
     .lmp-asst p { margin: 0 0 8px; }
@@ -768,8 +772,8 @@
     "downloadUrl": "https://play.google.com/store/apps/details?id=com.druk.lmplayground",
     "installUrl": "https://play.google.com/store/apps/details?id=com.druk.lmplayground",
     "url": "https://lmplayground.app/",
-    "softwareVersion": "1.8.0",
-    "description": "Free, open-source Android app for running large language models on-device with llama.cpp. Offline, private, no API keys.",
+    "softwareVersion": "1.9.0",
+    "description": "Free, open-source Android app for running large language models on-device with llama.cpp. Chat with your documents offline — private, no API keys.",
     "image": "https://lmplayground.app/banner.png",
     "author": {
       "@type": "Person",
@@ -931,6 +935,7 @@
         <a href="#prompts" data-i18n="nav.prompts">System Prompts</a>
         <a href="#tools" data-i18n="nav.tools">Tools</a>
         <a href="#vision" data-i18n="nav.vision">Vision</a>
+        <a href="#documents" data-i18n="nav.documents">Documents</a>
         <a href="#languages" data-i18n="nav.languages">Languages</a>
         <a href="#faq" data-i18n="nav.faq">FAQ</a>
         <a href="https://github.com/andriydruk/LMPlayground" aria-label="GitHub" style="display:flex;align-items:center;gap:6px;">
@@ -953,7 +958,7 @@
     <div class="hero-grid"></div>
     <div class="container hero-inner">
       <div>
-        <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">v1.8.0 · Now with vision</span></span>
+        <span class="pill"><span class="dot"></span><span data-i18n="hero.pill">v1.9.0 · Chat with your documents</span></span>
         <h1 class="hero-title" data-i18n-html="hero.title">Run large language models<br/>on <em>your</em> phone.</h1>
         <p class="hero-sub hero-sub-lg" data-i18n="hero.sub">
           No cloud, no internet, no tracking.
@@ -1277,6 +1282,49 @@
       <div class="tools-note">
         <svg class="hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
         <span data-i18n="vision.note">Vision works with Gemma, Qwen and Ministral vision models — a small image add-on downloads automatically with the model.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- DOCUMENTS -->
+  <section id="documents" style="padding-top:0;">
+    <div class="container">
+      <div class="eyebrow-row">
+        <span class="eyebrow" data-i18n="documents.eyebrow">Documents</span>
+      </div>
+      <h2 class="section-title" data-i18n-html="documents.title">Ask your files.<br/>Not the cloud.</h2>
+      <p class="section-sub" data-i18n="documents.sub">Attach a document to a chat and ask questions about it. The app finds the relevant passages and hands them to the model — everything happens on your phone, so the file never leaves it.</p>
+
+      <div class="tools-grid">
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+            <h3 data-i18n="documents.t1.title">Bring any file</h3>
+          </div>
+          <p data-i18n="documents.t1.body">PDF, Word, EPUB, HTML, Markdown or plain text — attach it like a photo and it's ready to question.</p>
+          <div class="tool-ex">pdf / docx / epub <span class="arr">→</span> attach</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <h3 data-i18n="documents.t2.title">Search by meaning</h3>
+          </div>
+          <p data-i18n="documents.t2.body">Your question is matched against the document by meaning, not keywords, so the model answers from the right passages.</p>
+          <div class="tool-ex">question <span class="arr">→</span> passages</div>
+        </div>
+        <div class="tool-card">
+          <div class="tool-head">
+            <svg class="tool-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            <h3 data-i18n="documents.t3.title">Stays on device</h3>
+          </div>
+          <p data-i18n="documents.t3.body">Indexing and search run locally, in any of the app's 28 languages — nothing is uploaded, ever.</p>
+          <div class="tool-ex">0 <span class="arr">→</span> uploads</div>
+        </div>
+      </div>
+
+      <div class="tools-note">
+        <svg class="hammer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        <span data-i18n="documents.note">Document search downloads a small embedding model once (EmbeddingGemma, 278 MB) — after that it works offline with every chat model.</span>
       </div>
     </div>
   </section>
@@ -1813,6 +1861,17 @@
           think: { secs: 2, content: t('phone.r0', 'The user wants a simple definition. Cover learning from data versus explicit rules, then the core steps: training, models, and inference. Keep it beginner-friendly.') },
           a: t('phone.a', ''),
           resp: 110 },
+        // Documents (RAG) scene — a file chip on the user turn; the on-device
+        // search step finds the relevant passages, then the model answers
+        // from them. Mirrors the 1.9.0 store screenshot.
+        { q: t('phone.qD', 'When can I terminate my rental agreement?'),
+          doc: t('phone.docD', 'rental-agreement.pdf'),
+          tool: { name: t('phone.tD', 'Searching document'), secs: 1,
+                  input: t('phone.tDin', 'termination notice period'),
+                  output: t('phone.tDout', '2 passages · Section 8') },
+          think: { secs: 3, content: t('phone.rD', 'The excerpts say the lease can be ended after the initial six-month term with 60 days’ written notice, and Section 8.2 covers the deposit: returned within 14 days of move-out. Answer with both.') },
+          a: t('phone.aD', 'You can terminate with **60 days’ written notice** after the initial six-month period. Your deposit is returned within **14 days** of move-out (Section 8.2).'),
+          resp: 52 },
         // Vision scene — an attached photo plus a question about it. No tool;
         // the image is understood on-device, then the model answers.
         { q: t('phone.qV', 'What animal is in this photo?'),
@@ -1844,7 +1903,9 @@
       const blocks = (s.a || '').split(/\n{2,}/).map(x => x.trim()).filter(Boolean);
       const p1 = blocks[0] || '';
       const p2 = blocks.slice(1).join('\n');
+      const DOC_ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
       return (s.img ? '<img class="lmp-user-img" src="' + s.img + '" alt=""/>' : '')
+        + (s.doc ? '<div class="lmp-doc-chip">' + DOC_ICON + '<span>' + escHtml(s.doc) + '</span></div>' : '')
         + '<div class="lmp-user-msg">' + escHtml(s.q) + '</div>'
         + '<div class="lmp-steps"></div>'
         + '<div class="lmp-asst">'
