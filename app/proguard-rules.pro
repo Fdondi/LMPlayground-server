@@ -34,5 +34,9 @@
 -dontwarn org.openjsse.javax.net.ssl.SSLSocket
 -dontwarn org.openjsse.net.ssl.OpenJSSE
 
+# PdfBox's optional JPEG2000 codec (com.gemalto.jp2) is not bundled;
+# JPXFilter catches its absence at runtime.
+-dontwarn com.gemalto.jp2.JP2Decoder
+
 # Keep Core
 -keep class com.druk.llamacpp.** { *; }
