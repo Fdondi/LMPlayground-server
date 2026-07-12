@@ -8,6 +8,8 @@ Kasaysayan ng chat — lahat ng iyong mga usapan ay nase-save at inaayos. I-pin,
 
 Mayamang karanasan sa chat — ang mga tugon ay nire-render nang may buong suporta sa markdown kabilang ang mga header, code block, listahan, bold, italic, at higit pa.
 
+Mga Dokumento — maglakip ng file at magtanong tungkol dito. Nahahanap ng paghahanap sa device ang mga kaugnay na bahagi, lahat sa iyong telepono.
+
 Vision — mag-attach ng larawan mula sa gallery o kunan ng camera, pagkatapos ay itanong sa modelo kung ano ang nakikita: ilarawan ang eksena, tukuyin ang mga bagay, o basahin ang teksto. Gumagana sa mga vision model ng Gemma, Qwen, at Ministral, nang nasa device lang ang larawan.
 
 Reasoning models — tingnan ang proseso ng pag-iisip ng mga modelo tulad ng DeepSeek R1, Nemotron, at LFM2.5 Thinking na ipinapakita sa isang istilong, na-kokolaps na seksyon na may nababagay na thinking budget.
@@ -27,8 +29,6 @@ Mga custom na modelo — i-load ang iyong sariling GGUF model files mula sa anum
 Maaasahang pag-download — custom na download engine na may mga notification ng pag-usad, pagpapakita ng bilis at ETA, at awtomatikong pag-resume sa mga pagkaantala ng network.
 
 Flexible na storage — piliin kung saan iimbak ang multi-GB na model file gamit ang Storage Access Framework ng Android. Madaling ilipat ang mga modelo sa pagitan ng mga lokasyon.
-
-Na-optimize na pagganap — na-optimize para sa ARM gamit ang KleidiAI kernels at OpenMP para sa mas mabilis na generation sa mga arm64 device.
 
 MGA SINUSUPORTAHANG MODELO
 

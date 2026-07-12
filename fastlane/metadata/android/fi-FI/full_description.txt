@@ -8,6 +8,8 @@ Keskusteluhistoria — kaikki keskustelusi tallennetaan ja järjestetään. Kiin
 
 Rikas keskustelukokemus — vastaukset esitetään täydellä markdown-tuella, mukaan lukien otsikot, koodilohkot, luettelot, lihavointi, kursivointi ja paljon muuta.
 
+Asiakirjat — liitä tiedosto keskusteluun ja kysy siitä. Laitteella tehtävä haku löytää olennaisimmat kohdat merkityksen perusteella ja välittää ne mallille, joten vastaukset tulevat suoraan asiakirjastasi, joka ei koskaan poistu puhelimesta. Tukee muotoja PDF, Word, EPUB, HTML, Markdown ja pelkkä teksti; pieni upotusmalli ladataan kerran ensimmäisellä käyttökerralla.
+
 Näkö — lähetä valokuva ja keskustele siitä. Liitä kuva galleriasta tai ota uusi kameralla, ja kysy sitten mallilta, mitä se näkee: kuvaile näkymä, tunnista esineitä tai lue tekstiä. Toimii Gemma, Qwen ja Ministral -näkömallien kanssa, ja kuva ymmärretään suoraan laitteellasi.
 
 Päättelymallit — näe mallien kuten DeepSeek R1, Nemotron ja LFM2.5 Thinking ajatusprosessi tyylitellyssä, laskostuvassa osiossa, jossa on säädettävä ajattelubudjetti.

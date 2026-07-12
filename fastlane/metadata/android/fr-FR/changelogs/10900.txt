@@ -1,0 +1,5 @@
+- Documents : joignez un fichier et posez des questions dessus : PDF, Word, EPUB, HTML, Markdown et texte brut
+- La recherche sur l'appareil trouve les bons passages par le sens ; vos fichiers ne quittent jamais votre téléphone
+- Un petit modèle d'embeddings se télécharge une fois à la première utilisation, puis fonctionne avec tous les modèles
+- Touchez la puce d'un document pour rouvrir le fichier d'origine
+- Améliorations des performances et de la stabilité

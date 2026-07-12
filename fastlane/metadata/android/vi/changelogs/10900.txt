@@ -1,0 +1,5 @@
+- Tài liệu — đính kèm một tệp và đặt câu hỏi về nó: PDF, Word, EPUB, HTML, Markdown và văn bản thuần
+- Tìm kiếm trên thiết bị tìm đúng đoạn theo ngữ nghĩa; tệp của bạn không bao giờ rời khỏi điện thoại
+- Một mô hình embedding nhỏ được tải một lần khi dùng lần đầu, rồi hoạt động với mọi mô hình trò chuyện
+- Chạm vào chip tài liệu để mở lại tệp gốc
+- Cải thiện hiệu suất và độ ổn định

@@ -1,0 +1,5 @@
+- Documenti: allega un file e fai domande al riguardo: PDF, Word, EPUB, HTML, Markdown e testo semplice
+- La ricerca sul dispositivo trova i passaggi giusti per significato; i tuoi file non lasciano mai il telefono
+- Un piccolo modello di embedding si scarica una volta al primo utilizzo, poi funziona con ogni modello di chat
+- Tocca il chip di un documento per riaprire il file originale
+- Miglioramenti di prestazioni e stabilità

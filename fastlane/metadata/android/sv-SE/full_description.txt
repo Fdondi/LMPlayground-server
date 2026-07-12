@@ -8,6 +8,8 @@ Chatthistorik — alla dina konversationer sparas och organiseras. Fäst, byt na
 
 Rik chattupplevelse — svaren återges med fullt stöd för markdown, inklusive rubriker, kodblock, listor, fet stil, kursiv stil och mer.
 
+Dokument — bifoga en fil till en chatt och ställ frågor om den. Sökning på enheten hittar de mest relevanta avsnitten utifrån betydelse och skickar dem till modellen, så svaren kommer direkt från ditt dokument, som aldrig lämnar telefonen. Stöder PDF, Word, EPUB, HTML, Markdown och vanlig text; en liten embedding-modell laddas ner en gång vid första användningen.
+
 Vision — skicka ett foto och chatta om det. Bifoga en bild från ditt galleri eller ta en med kameran, och fråga sedan din modell vad den ser: beskriva en scen, identifiera objekt eller läsa text. Fungerar med vision-modellerna Gemma, Qwen och Ministral, och bilden förstås direkt på din enhet.
 
 Resonemangsmodeller — se tankeprocessen hos modeller som DeepSeek R1, Nemotron och LFM2.5 Thinking visad i en stiliserad, fällbar sektion med justerbar tankebudget.

@@ -1,0 +1,5 @@
+- Dokumente – hänge eine Datei an und stelle Fragen dazu: PDF, Word, EPUB, HTML, Markdown und reiner Text
+- Die Suche auf dem Gerät findet die passenden Stellen nach Bedeutung – deine Dateien verlassen nie dein Telefon
+- Ein kleines Embedding-Modell wird einmal beim ersten Mal heruntergeladen und funktioniert dann mit jedem Chatmodell
+- Tippe auf einen Dokument-Chip, um die Originaldatei erneut zu öffnen
+- Verbesserungen bei Leistung und Stabilität

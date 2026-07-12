@@ -1,0 +1,5 @@
+- Dokumen — lampirkan file dan ajukan pertanyaan tentangnya: PDF, Word, EPUB, HTML, Markdown, dan teks biasa
+- Penelusuran di perangkat menemukan bagian yang tepat berdasarkan makna; file Anda tidak pernah keluar dari ponsel
+- Model embedding kecil diunduh sekali saat pertama digunakan, lalu berfungsi dengan semua model chat
+- Ketuk chip dokumen untuk membuka kembali file aslinya
+- Peningkatan kinerja dan stabilitas

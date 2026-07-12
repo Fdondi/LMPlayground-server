@@ -8,6 +8,8 @@ Historie konverzací — všechny vaše konverzace jsou uloženy a uspořádány
 
 Bohaté chatovací prostředí — odpovědi jsou vykreslovány s plnou podporou markdown včetně nadpisů, bloků kódu, seznamů, tučného písma, kurzívy a dalšího.
 
+Dokumenty — připojte soubor k chatu a ptejte se na něj. Vyhledávání v zařízení najde nejrelevantnější pasáže podle významu a předá je modelu, takže odpovědi pocházejí přímo z vašeho dokumentu, který nikdy neopustí telefon. Podporuje PDF, Word, EPUB, HTML, Markdown a prostý text; malý model embeddingů se jednou stáhne při prvním použití.
+
 Vision — pošlete fotku a chatujte o ní. Přiložte obrázek z galerie nebo pořiďte snímek fotoaparátem a poté se svého modelu zeptejte, co vidí: popsat scénu, rozpoznat objekty nebo přečíst text. Funguje s vizuálními modely Gemma, Qwen a Ministral a obrázek se zpracovává přímo ve vašem zařízení.
 
 Modely s uvažováním — sledujte myšlenkový proces modelů jako DeepSeek R1, Nemotron a LFM2.5 Thinking zobrazený ve stylizované, sbalitelné sekci s nastavitelným rozpočtem uvažování.

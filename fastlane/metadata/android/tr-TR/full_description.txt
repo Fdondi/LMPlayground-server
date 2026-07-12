@@ -8,6 +8,8 @@ Sohbet geçmişi — tüm konuşmalarınız kaydedilir ve düzenlenir. Oturumlar
 
 Zengin sohbet deneyimi — yanıtlar başlıklar, kod blokları, listeler, kalın, italik ve daha fazlası dahil olmak üzere tam markdown desteğiyle işlenir.
 
+Belgeler — bir sohbete dosya ekleyip hakkında sorular sorun. Cihaz üzerinde arama, en alakalı bölümleri anlama göre bulup modele iletir; böylece yanıtlar doğrudan belgenizden gelir ve belgeniz telefonunuzdan asla çıkmaz. PDF, Word, EPUB, HTML, Markdown ve düz metni destekler; küçük bir yerleştirme modeli ilk kullanımda bir kez indirilir.
+
 Görü — bir fotoğraf gönderin ve hakkında sohbet edin. Galerinizden bir görsel ekleyin ya da kamerayla bir tane çekin, sonra modelinize ne gördüğünü sorun: bir sahneyi betimleyin, nesneleri tanıyın ya da metni okuyun. Gemma, Qwen ve Ministral görü modelleriyle çalışır ve görsel doğrudan cihazınızda anlaşılır.
 
 Akıl yürütme modelleri — DeepSeek R1, Nemotron ve LFM2.5 Thinking gibi modellerin düşünme sürecini, ayarlanabilir düşünme bütçesi ile şık ve katlanabilir bir bölümde görün.

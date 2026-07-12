@@ -8,6 +8,8 @@ Sejarah sembang — semua perbualan anda disimpan dan disusun. Sematkan, namakan
 
 Pengalaman sembang yang kaya — respons dipaparkan dengan sokongan markdown penuh termasuk pengepala, blok kod, senarai, tebal, condong dan lain-lain.
 
+Dokumen — lampirkan fail dan tanya soalan mengenainya. Carian pada peranti menemui petikan relevan, sepenuhnya pada telefon anda.
+
 Penglihatan — hantar foto dan bersembang mengenainya. Lampirkan imej daripada galeri anda atau tangkap satu dengan kamera, kemudian tanya model tentang apa yang dilihatnya: gambarkan sesuatu pemandangan, kenal pasti objek atau baca teks. Berfungsi dengan model penglihatan Gemma, Qwen dan Ministral, dan imej difahami terus pada peranti anda.
 
 Model penaakulan — lihat proses pemikiran model seperti DeepSeek R1, Nemotron dan LFM2.5 Thinking dipaparkan dalam bahagian bergaya yang boleh dikuncupkan dengan belanjawan pemikiran yang boleh dilaraskan.

@@ -8,6 +8,8 @@ Riwayat obrolan — semua percakapan Anda disimpan dan diatur. Sematkan, ganti n
 
 Pengalaman obrolan yang kaya — respons ditampilkan dengan dukungan markdown lengkap termasuk judul, blok kode, daftar, tebal, miring, dan lainnya.
 
+Dokumen — lampirkan file dan ajukan pertanyaan tentangnya. Penelusuran di perangkat menemukan bagian relevan berdasarkan makna, jadi jawaban datang dari dokumen Anda tanpa keluar dari ponsel. Mendukung PDF, Word, EPUB, HTML, Markdown, dan teks biasa.
+
 Vision — kirim foto dan obrolkan. Lampirkan gambar dari galeri Anda atau ambil satu dengan kamera, lalu tanyakan kepada model apa yang dilihatnya: jelaskan sebuah pemandangan, kenali objek, atau baca teks. Berfungsi dengan model vision Gemma, Qwen, dan Ministral, dan gambar dipahami langsung di perangkat Anda.
 
 Model penalaran — lihat proses berpikir model seperti DeepSeek R1, Nemotron, dan LFM2.5 Thinking yang ditampilkan dalam bagian bergaya yang dapat dilipat dengan anggaran berpikir yang dapat disesuaikan.

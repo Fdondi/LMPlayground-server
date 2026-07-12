@@ -1,0 +1,5 @@
+- Mga Dokumento — maglakip ng file at magtanong tungkol dito: PDF, Word, EPUB, HTML, Markdown at plain text
+- Nahahanap ng paghahanap sa device ang tamang mga bahagi ayon sa kahulugan; hindi umaalis sa telepono ang iyong mga file
+- Isang maliit na embedding model ang ida-download nang isang beses sa unang paggamit, at gagana na sa lahat ng chat model
+- I-tap ang chip ng dokumento para muling buksan ang orihinal na file
+- Mga pagpapahusay sa performance at stability

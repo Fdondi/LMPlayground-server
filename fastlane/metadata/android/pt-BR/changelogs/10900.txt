@@ -1,0 +1,5 @@
+- Documentos: anexe um arquivo e faça perguntas sobre ele: PDF, Word, EPUB, HTML, Markdown e texto simples
+- A busca no dispositivo encontra os trechos certos por significado; seus arquivos nunca saem do celular
+- Um pequeno modelo de embeddings é baixado uma vez no primeiro uso e depois funciona com todos os modelos de chat
+- Toque no chip de um documento para reabrir o arquivo original
+- Melhorias de desempenho e estabilidade

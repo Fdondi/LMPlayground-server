@@ -1,0 +1,5 @@
+- Dokumenty — připojte soubor a ptejte se na něj: PDF, Word, EPUB, HTML, Markdown a prostý text
+- Vyhledávání v zařízení najde správné pasáže podle významu; vaše soubory nikdy neopustí telefon
+- Malý model embeddingů se jednou stáhne při prvním použití a pak funguje s každým modelem chatu
+- Klepnutím na štítek dokumentu znovu otevřete původní soubor
+- Vylepšení výkonu a stability

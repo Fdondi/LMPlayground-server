@@ -8,6 +8,8 @@ Lịch sử trò chuyện — tất cả cuộc hội thoại được lưu và 
 
 Trải nghiệm trò chuyện phong phú — phản hồi được hiển thị với hỗ trợ markdown đầy đủ bao gồm tiêu đề, khối mã, danh sách, in đậm, in nghiêng và nhiều hơn nữa.
 
+Tài liệu — đính kèm một tệp vào cuộc trò chuyện và đặt câu hỏi về nó. Tìm kiếm trên thiết bị tìm các đoạn liên quan nhất theo ngữ nghĩa và chuyển cho mô hình, nên câu trả lời đến thẳng từ tài liệu của bạn, thứ không bao giờ rời khỏi điện thoại. Hỗ trợ PDF, Word, EPUB, HTML, Markdown và văn bản thuần; một mô hình embedding nhỏ được tải một lần khi dùng lần đầu.
+
 Thị giác — gửi một bức ảnh và trò chuyện về nó. Đính kèm ảnh từ thư viện hoặc chụp một tấm bằng camera, rồi hỏi mô hình về những gì nó thấy: mô tả khung cảnh, nhận diện vật thể hoặc đọc chữ. Hoạt động với các mô hình thị giác Gemma, Qwen và Ministral, và hình ảnh được hiểu ngay trên thiết bị của bạn.
 
 Mô hình suy luận — xem quá trình suy nghĩ của các mô hình như DeepSeek R1, Nemotron và LFM2.5 Thinking được hiển thị trong phần có kiểu dáng đẹp, có thể thu gọn với ngân sách suy nghĩ có thể điều chỉnh.

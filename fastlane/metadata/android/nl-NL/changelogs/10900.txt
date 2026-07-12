@@ -1,0 +1,5 @@
+- Documenten – voeg een bestand toe en stel er vragen over: PDF, Word, EPUB, HTML, Markdown en platte tekst
+- Zoeken op het apparaat vindt de juiste passages op betekenis; je bestanden verlaten nooit je telefoon
+- Een klein embeddingmodel wordt één keer bij het eerste gebruik gedownload en werkt daarna met elk chatmodel
+- Tik op een documentchip om het originele bestand opnieuw te openen
+- Verbeteringen in prestaties en stabiliteit

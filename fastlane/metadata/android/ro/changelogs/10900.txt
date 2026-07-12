@@ -1,0 +1,5 @@
+- Documente — atașează un fișier și pune întrebări despre el: PDF, Word, EPUB, HTML, Markdown și text simplu
+- Căutarea pe dispozitiv găsește pasajele potrivite după sens; fișierele tale nu părăsesc niciodată telefonul
+- Un model mic de embedding se descarcă o singură dată la prima utilizare, apoi funcționează cu orice model de chat
+- Atinge eticheta unui document pentru a redeschide fișierul original
+- Îmbunătățiri de performanță și stabilitate

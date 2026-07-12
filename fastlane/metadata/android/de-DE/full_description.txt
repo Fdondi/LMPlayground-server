@@ -8,6 +8,8 @@ Chatverlauf — alle deine Unterhaltungen werden gespeichert und organisiert. He
 
 Umfangreiche Chat-Erfahrung — Antworten werden mit vollständiger Markdown-Unterstützung gerendert, einschließlich Überschriften, Codeblöcken, Listen, Fettschrift, Kursivschrift und mehr.
 
+Dokumente — hänge eine Datei an und stelle Fragen dazu. Die Suche auf dem Gerät findet die relevanten Stellen, komplett auf deinem Telefon.
+
 Vision — sende ein Foto und chatte darüber. Hänge ein Bild aus deiner Galerie an oder mach eines mit der Kamera und frag dann dein Modell, was es sieht: eine Szene beschreiben, Objekte erkennen oder Text lesen. Funktioniert mit den Vision-Modellen Gemma, Qwen und Ministral, und das Bild wird direkt auf deinem Gerät verstanden.
 
 Reasoning-Modelle — verfolge den Denkprozess von Modellen wie DeepSeek R1, Nemotron und LFM2.5 Thinking in einem gestalteten, einklappbaren Bereich mit einstellbarem Reasoning-Budget.

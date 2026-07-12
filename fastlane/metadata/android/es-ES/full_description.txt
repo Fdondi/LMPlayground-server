@@ -8,6 +8,8 @@ Historial de chat — todas tus conversaciones se guardan y organizan. Fija, ren
 
 Experiencia de chat enriquecida — las respuestas se renderizan con soporte completo de markdown, incluyendo encabezados, bloques de código, listas, negrita, cursiva y más.
 
+Documentos — adjunta un archivo y hazle preguntas. La búsqueda en el dispositivo encuentra los pasajes relevantes, todo en tu teléfono.
+
 Visión — envía una foto y chatea sobre ella. Adjunta una imagen de tu galería o toma una con la cámara y luego pregúntale a tu modelo qué ve: que describa una escena, identifique objetos o lea texto. Funciona con los modelos de visión Gemma, Qwen y Ministral, y la imagen se interpreta directamente en tu dispositivo.
 
 Modelos de razonamiento — observa el proceso de pensamiento de modelos como DeepSeek R1, Nemotron y LFM2.5 Thinking mostrado en una sección estilizada y plegable con presupuesto de razonamiento ajustable.

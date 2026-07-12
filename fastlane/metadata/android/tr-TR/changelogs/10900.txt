@@ -1,0 +1,5 @@
+- Belgeler — bir dosya ekleyip hakkında soru sorun: PDF, Word, EPUB, HTML, Markdown ve düz metin
+- Cihaz üzerinde arama, doğru bölümleri anlama göre bulur; dosyalarınız telefonunuzdan asla çıkmaz
+- Küçük bir yerleştirme modeli ilk kullanımda bir kez indirilir, sonra her sohbet modeliyle çalışır
+- Orijinal dosyayı yeniden açmak için belge etiketine dokunun
+- Performans ve kararlılık iyileştirmeleri

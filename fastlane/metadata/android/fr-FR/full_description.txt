@@ -8,6 +8,8 @@ Historique des conversations — toutes vos conversations sont sauvegardées et 
 
 Expérience de chat riche — les réponses sont rendues avec un support complet du markdown, incluant titres, blocs de code, listes, gras, italique et plus encore.
 
+Documents — joignez un fichier et posez-lui des questions. La recherche sur l'appareil trouve les passages pertinents, entièrement sur votre téléphone.
+
 Vision — envoyez une photo et discutez-en. Joignez une image de votre galerie ou prenez-en une avec l'appareil photo, puis demandez à votre modèle ce qu'il voit : décrire une scène, identifier des objets ou lire du texte. Compatible avec les modèles de vision Gemma, Qwen et Ministral, l'image étant comprise sur votre appareil.
 
 Modèles de raisonnement — visualisez la réflexion de modèles comme DeepSeek R1, Nemotron et LFM2.5 Thinking dans une section stylisée et repliable, avec un budget de raisonnement ajustable.
@@ -27,8 +29,6 @@ Modèles personnalisés — chargez vos propres fichiers de modèle GGUF depuis 
 Téléchargements fiables — moteur de téléchargement personnalisé avec notifications de progression, vitesse et temps estimé, et reprise automatique en cas d'interruption réseau.
 
 Stockage flexible — choisissez où stocker les fichiers de modèles de plusieurs Go grâce au Storage Access Framework d'Android. Déplacez facilement les modèles d'un emplacement à un autre.
-
-Performances optimisées — optimisé pour ARM avec les kernels KleidiAI et OpenMP pour une génération plus rapide sur arm64.
 
 MODÈLES COMPATIBLES
 

@@ -1,0 +1,5 @@
+- Dokumenter — vedhæft en fil og stil spørgsmål om den: PDF, Word, EPUB, HTML, Markdown og almindelig tekst
+- Søgning på enheden finder de rigtige passager efter betydning; dine filer forlader aldrig telefonen
+- En lille embedding-model downloades én gang ved første brug og virker derefter med alle chatmodeller
+- Tryk på et dokument-chip for at åbne den oprindelige fil igen
+- Forbedringer af ydeevne og stabilitet

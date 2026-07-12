@@ -1,0 +1,5 @@
+- Dokument – bifoga en fil och ställ frågor om den: PDF, Word, EPUB, HTML, Markdown och vanlig text
+- Sökning på enheten hittar rätt avsnitt utifrån betydelse; dina filer lämnar aldrig telefonen
+- En liten embedding-modell laddas ner en gång vid första användningen och fungerar sedan med alla chattmodeller
+- Tryck på en dokumentbricka för att öppna originalfilen igen
+- Förbättringar av prestanda och stabilitet

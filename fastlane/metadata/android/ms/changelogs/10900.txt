@@ -1,0 +1,5 @@
+- Dokumen — lampirkan fail dan tanya soalan mengenainya: PDF, Word, EPUB, HTML, Markdown dan teks biasa
+- Carian pada peranti menemui petikan yang betul mengikut makna; fail anda tidak pernah keluar dari telefon
+- Model embedding kecil dimuat turun sekali pada penggunaan pertama, kemudian berfungsi dengan setiap model sembang
+- Ketik cip dokumen untuk membuka semula fail asal
+- Penambahbaikan prestasi dan kestabilan

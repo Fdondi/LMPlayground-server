@@ -1,0 +1,5 @@
+- Dokumenty — załącz plik i zadawaj pytania: PDF, Word, EPUB, HTML, Markdown i zwykły tekst
+- Wyszukiwanie na urządzeniu znajduje właściwe fragmenty według znaczenia; Twoje pliki nie opuszczają telefonu
+- Mały model osadzeń pobiera się raz przy pierwszym użyciu, a potem działa z każdym modelem czatu
+- Dotknij plakietki dokumentu, aby ponownie otworzyć oryginalny plik
+- Poprawki wydajności i stabilności

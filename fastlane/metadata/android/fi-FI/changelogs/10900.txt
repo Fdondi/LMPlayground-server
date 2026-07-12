@@ -1,0 +1,5 @@
+- Asiakirjat – liitä tiedosto ja kysy siitä: PDF, Word, EPUB, HTML, Markdown ja pelkkä teksti
+- Laitteella tehtävä haku löytää oikeat kohdat merkityksen perusteella; tiedostosi eivät koskaan poistu puhelimesta
+- Pieni upotusmalli ladataan kerran ensimmäisellä käyttökerralla ja toimii sitten kaikkien chat-mallien kanssa
+- Avaa alkuperäinen tiedosto uudelleen napauttamalla asiakirjan sirua
+- Suorituskyky- ja vakausparannuksia

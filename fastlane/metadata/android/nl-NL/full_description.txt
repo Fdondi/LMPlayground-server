@@ -8,6 +8,8 @@ Chatgeschiedenis — al je gesprekken worden opgeslagen en georganiseerd. Pin, h
 
 Rijke chatervaring — antwoorden worden weergegeven met volledige markdown-ondersteuning, inclusief koppen, codeblokken, lijsten, vet, cursief en meer.
 
+Documenten — voeg een bestand toe aan een chat en stel er vragen over. Zoeken op het apparaat vindt de meest relevante passages op betekenis en geeft ze aan het model, zodat antwoorden rechtstreeks uit je document komen, dat nooit je telefoon verlaat. Ondersteunt PDF, Word, EPUB, HTML, Markdown en platte tekst; een klein embeddingmodel wordt één keer bij het eerste gebruik gedownload.
+
 Vision — stuur een foto en chat erover. Voeg een afbeelding uit je galerij toe of maak er een met de camera en vraag je model dan wat het ziet: een scène beschrijven, objecten herkennen of tekst lezen. Werkt met de vision-modellen Gemma, Qwen en Ministral, en de afbeelding wordt direct op je apparaat begrepen.
 
 Redeneermodellen — zie het denkproces van modellen zoals DeepSeek R1, Nemotron en LFM2.5 Thinking, weergegeven in een gestileerde, inklapbare sectie met aanpasbaar denkbudget.

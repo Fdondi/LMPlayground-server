@@ -8,6 +8,8 @@ Histórico de chat — todas as suas conversas são salvas e organizadas. Fixe, 
 
 Experiência de chat rica — as respostas são renderizadas com suporte completo a markdown, incluindo cabeçalhos, blocos de código, listas, negrito, itálico e mais.
 
+Documentos — anexe um arquivo e faça perguntas sobre ele. A busca no dispositivo encontra os trechos relevantes por significado, então as respostas vêm do seu documento sem que ele saia do celular. Aceita PDF, Word, EPUB, HTML, Markdown e texto simples.
+
 Visão — envie uma foto e converse sobre ela. Anexe uma imagem da galeria ou tire uma com a câmera e depois pergunte ao seu modelo o que ele vê: descrever uma cena, identificar objetos ou ler texto. Funciona com os modelos de visão Gemma, Qwen e Ministral, e a imagem é interpretada diretamente no seu dispositivo.
 
 Modelos de raciocínio — veja o processo de pensamento de modelos como DeepSeek R1, Nemotron e LFM2.5 Thinking exibido em uma seção estilizada e recolhível com orçamento de raciocínio ajustável.

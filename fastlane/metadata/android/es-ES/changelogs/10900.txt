@@ -1,0 +1,5 @@
+- Documentos: adjunta un archivo y hazle preguntas: PDF, Word, EPUB, HTML, Markdown y texto sin formato
+- La búsqueda en el dispositivo encuentra los pasajes correctos por significado; tus archivos nunca salen del teléfono
+- Un pequeño modelo de embeddings se descarga una vez al principio y luego funciona con todos los modelos de chat
+- Toca el chip de un documento para volver a abrir el archivo original
+- Mejoras de rendimiento y estabilidad

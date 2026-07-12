@@ -8,6 +8,8 @@ Historia czatu — wszystkie Twoje rozmowy są zapisywane i uporządkowane. Przy
 
 Bogata obsługa czatu — odpowiedzi są renderowane z pełnym wsparciem markdown, w tym nagłówki, bloki kodu, listy, pogrubienie, kursywa i więcej.
 
+Dokumenty — załącz plik i zadawaj mu pytania. Wyszukiwanie na urządzeniu znajduje trafne fragmenty według znaczenia, więc odpowiedzi pochodzą z Twojego dokumentu, który nie opuszcza telefonu. Obsługuje PDF, Word, EPUB, HTML, Markdown i zwykły tekst.
+
 Vision — wyślij zdjęcie i porozmawiaj o nim. Dołącz obraz z galerii lub zrób zdjęcie aparatem, a następnie zapytaj swój model, co na nim widzi: niech opisze scenę, rozpozna obiekty lub odczyta tekst. Działa z modelami wizyjnymi Gemma, Qwen i Ministral, a obraz jest analizowany bezpośrednio na Twoim urządzeniu.
 
 Modele rozumowania — obserwuj proces myślowy modeli takich jak DeepSeek R1, Nemotron i LFM2.5 Thinking wyświetlany w stylizowanej, zwijanej sekcji z regulowanym budżetem rozumowania.
