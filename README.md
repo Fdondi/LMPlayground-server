@@ -12,6 +12,7 @@ LM Playground is an Android application for running Large Language Models locall
 ## Features
 
 - **On-device inference** - no cloud, no API keys, fully offline
+- **Document Q&A (RAG)** - attach PDF, Word, EPUB, HTML, Markdown, or plain-text files and ask about them; on-device semantic search with EmbeddingGemma feeds the most relevant passages to any chat model
 - **Vision/image input** - attach a photo from your gallery or camera and ask vision-capable models about it (Gemma 4, Gemma 3, Qwen 3.5, Ministral 3)
 - **Rich markdown** in chat responses - headers, code blocks, lists, and more
 - **Reasoning model support** - thinking steps from models like GPT-OSS, DeepSeek R1, and Nemotron are displayed in a styled section

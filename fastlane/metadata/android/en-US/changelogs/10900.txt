@@ -1,0 +1,5 @@
+- Documents — attach a file and ask questions about it: PDF, Word, EPUB, HTML, Markdown, and plain text
+- On-device search finds the right passages by meaning — your files never leave your phone
+- A small embedding model downloads once on first use, then works with every chat model
+- Tap a document chip to reopen the original file
+- Performance and stability improvements
