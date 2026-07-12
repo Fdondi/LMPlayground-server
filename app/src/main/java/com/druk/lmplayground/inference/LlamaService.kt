@@ -420,7 +420,10 @@ class LlamaService : Service() {
         }
 
         override fun addMessage(sessionId: Int, message: String, enableThinking: Boolean) {
-            sessions[sessionId]?.nativeSession?.addMessage(message, enableThinking)
+            val rc = sessions[sessionId]?.nativeSession?.addMessage(message, enableThinking)
+            if (rc != null && rc != 0) {
+                Log.w(TAG, "addMessage rejected for session $sessionId (rc=$rc); turn dropped")
+            }
         }
 
         override fun setImageData(sessionId: Int, data: ByteArray) {

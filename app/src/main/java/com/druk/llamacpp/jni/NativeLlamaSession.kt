@@ -8,7 +8,8 @@ class NativeLlamaSession {
 
     external fun generate(callback: LlamaGenerationCallback): Int
 
-    external fun addMessage(message: String, enableThinking: Boolean)
+    /** Returns 0 on success, non-zero when the turn was rejected (e.g. template failure). */
+    external fun addMessage(message: String, enableThinking: Boolean): Int
 
     // Vision: stage image bytes (resized JPEG/PNG) consumed by the next
     // addMessage()'s mtmd path. Must be set before generation starts.

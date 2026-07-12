@@ -172,8 +172,14 @@ private:
     // model's generated tokens out of the cache while preserving the
     // prompt prefix.
     int last_prompt_end_pos = 0;
-    llama_token last_token;
-    llama_batch batch;
+    llama_token last_token = 0;
+    // Pending tokens for the next generate() decode. Zero-initialized and
+    // re-invalidated at the start of every addMessage/submitToolResults so a
+    // turn that fails (or never runs) leaves no batch behind — generate()
+    // refuses an empty batch rather than feeding stale or uninitialized
+    // pointers into llama_decode, which fails GGML_ASSERT(token || embd)
+    // and aborts the process.
+    llama_batch batch = {};
     std::string response;
     common_chat_parser_params parser_params;
     bool parser_initialized = false;

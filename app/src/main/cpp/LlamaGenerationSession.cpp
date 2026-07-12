@@ -248,8 +248,11 @@ int LlamaGenerationSession::addMessage(const char *string, bool enableThinking) 
         LOGe("addMessage called on uninitialized session");
         return 1;
     }
-    // Fresh turn — clear any abort left set by a previous cancel.
+    // Fresh turn — clear any abort left set by a previous cancel, and drop
+    // any batch left over from the previous turn so every early-error return
+    // below leaves the session with nothing pending for generate().
     abort_requested.store(false);
+    batch = {};
 
     // Lazy preamble KV-cache: on the first addMessage of a session, try
     // to load (or just-save) the static system+tools prefix so the user
@@ -657,6 +660,15 @@ int LlamaGenerationSession::generate(const ResponseCallback& callback) {
     if (skip_first_decode) {
         skip_first_decode = false;
     } else {
+        // No pending batch: addMessage/submitToolResults failed (or was never
+        // called) this turn, or the prompt delta tokenized to zero tokens.
+        // llama_decode aborts the process on an empty batch
+        // (GGML_ASSERT(batch.token || batch.embd)), so end the turn instead.
+        // No finalizeResponse: a failed turn was already rolled back.
+        if (batch.n_tokens <= 0 || batch.token == nullptr) {
+            LOGe("generate called with no pending batch");
+            return 1;
+        }
         int n_ctx = llama_n_ctx(ctx);
         int n_ctx_used = llama_memory_seq_pos_max(llama_get_memory(ctx), 0);
         if (n_ctx_used + batch.n_tokens > n_ctx) {
@@ -1167,8 +1179,10 @@ int LlamaGenerationSession::submitToolResults(const char *resultsJson, bool enab
         LOGe("submitToolResults called on uninitialized session");
         return 1;
     }
-    // New decode phase — clear any abort left set by a previous cancel.
+    // New decode phase — clear any abort left set by a previous cancel, and
+    // drop the previous turn's batch so error returns leave nothing pending.
     abort_requested.store(false);
+    batch = {};
 
     try {
         auto results = nlohmann::ordered_json::parse(resultsJson);
