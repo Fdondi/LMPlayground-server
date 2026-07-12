@@ -31,7 +31,6 @@ import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.BatteryFull
 import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Notifications
@@ -89,14 +88,14 @@ import app.cash.paparazzi.Paparazzi
 import com.android.ide.common.rendering.api.SessionParams
 import com.druk.lmplayground.R
 import com.druk.lmplayground.conversation.ConversationBar
+import com.druk.lmplayground.conversation.DocumentChipsRow
 import com.druk.lmplayground.conversation.Message
 import com.druk.lmplayground.conversation.UserInput
+import com.druk.lmplayground.data.RagDocumentEntity
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.Model
 import com.druk.lmplayground.models.ModelWithStatus
 import com.druk.lmplayground.settings.ToolsContent
-import com.druk.lmplayground.storage.ModelsScreen
-import com.druk.lmplayground.storage.StorageInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
 import com.druk.lmplayground.tools.Tool
 import org.junit.Rule
@@ -686,6 +685,21 @@ class StoreScreenshots(
         )
     }
 
+    // READY document chip for the documents (RAG) scene. Filename stays
+    // English in every locale — realistic, and it needs no translation.
+    private fun sampleDocument() = RagDocumentEntity(
+        id = "doc",
+        sessionId = "session",
+        displayName = "rental-agreement.pdf",
+        mimeType = "application/pdf",
+        sizeBytes = 245_000L,
+        status = RagDocumentEntity.STATUS_READY,
+        chunkCount = 18,
+        embeddingDim = 768,
+        embeddingModel = "embeddinggemma-300m-Q4_0.gguf",
+        createdAt = 0L,
+    )
+
     // Scene 0: Hero / marketing slide
     @Test
     fun scene0_hero() {
@@ -897,9 +911,64 @@ class StoreScreenshots(
         }
     }
 
-    // Scene 3: Chat about an image (vision)
+    // Scene 3: Chat about a document (RAG)
     @Test
-    fun scene3_chatWithImage() {
+    fun scene3_documents() {
+        paparazzi.snapshot {
+            PlaygroundTheme(isDarkTheme = true) { LocaleLayout {
+                val question = stringResource(R.string.screenshot_documents_question)
+                val response = stringResource(R.string.screenshot_documents_response)
+                val gemma4 = gemma4Model()
+                StoreScreenshotFrame(
+                    icon = Icons.Outlined.Description,
+                    title = stringResource(R.string.screenshot_documents),
+                    subtitle = stringResource(R.string.screenshot_documents_sub)
+                ) {
+                    Surface(modifier = Modifier.fillMaxSize()) {
+                        Column {
+                            ConversationBar(modelInfo = gemma4, modelStatus = null)
+                            // In the app the chips dock above the input, but
+                            // the device frame crops the bottom of the screen
+                            // — so for the store shot the chip sits under the
+                            // bar, where it can actually be seen.
+                            DocumentChipsRow(
+                                documents = listOf(sampleDocument()),
+                                onRemove = {},
+                                onOpen = {},
+                                modifier = Modifier.padding(bottom = 4.dp)
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .padding(horizontal = 8.dp)
+                            ) {
+                                com.druk.lmplayground.conversation.Message(
+                                    msg = Message("User", question),
+                                    isUserMe = true,
+                                    showActions = false
+                                )
+                                com.druk.lmplayground.conversation.Message(
+                                    msg = Message(
+                                        author = "Assistant",
+                                        content = response,
+                                        responseTokens = 52,
+                                        responseDurationSeconds = 1.8f
+                                    ),
+                                    isUserMe = false,
+                                    showActions = true
+                                )
+                            }
+                            UserInput(onMessageSent = {})
+                        }
+                    }
+                }
+            } }
+        }
+    }
+
+    // Scene 4: Chat about an image (vision)
+    @Test
+    fun scene4_chatWithImage() {
         paparazzi.snapshot {
             PlaygroundTheme(isDarkTheme = true) { LocaleLayout {
                 val question = stringResource(R.string.screenshot_vision_question)
@@ -938,9 +1007,9 @@ class StoreScreenshots(
         }
     }
 
-    // Scene 4: Generation parameters (chat sheet, Params tab)
+    // Scene 7: Generation parameters (chat sheet, Params tab)
     @Test
-    fun scene4_generationParams() {
+    fun scene7_generationParams() {
         paparazzi.snapshot {
             PlaygroundTheme(isDarkTheme = true) { LocaleLayout {
                 SheetScene(
@@ -951,62 +1020,6 @@ class StoreScreenshots(
                     selectedTab = TAB_PARAMS,
                 ) {
                     PhoneParamsTabBody()
-                }
-            } }
-        }
-    }
-
-    // Scene 7: Download models
-    @Test
-    fun scene7_modelsDownload() {
-        paparazzi.snapshot {
-            PlaygroundTheme(isDarkTheme = true) { LocaleLayout {
-                val efficient = stringResource(R.string.model_category_efficient)
-                val lightweight = stringResource(R.string.model_category_lightweight)
-                val general = stringResource(R.string.model_category_general)
-                val ultraLight = stringResource(R.string.model_category_ultra_lightweight)
-                val thinking = stringResource(R.string.model_category_thinking)
-                val reasoning = stringResource(R.string.model_category_reasoning)
-
-                val models = listOf(
-                    ModelWithStatus(ModelInfo("LFM2.5 350M", "lfm350.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-03-25"), "Liquid AI \u00B7 $ultraLight \u00B7 267Mb", R.drawable.logo_liquid), true),
-                    ModelWithStatus(ModelInfo("Gemma 4 E2B", "g4e2b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-03-25"), "Google \u00B7 $efficient \u00B7 3.11Gb", R.drawable.logo_google), true),
-                    ModelWithStatus(ModelInfo("Qwen 3.5 0.8B", "q35-08.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-02-27"), "Alibaba \u00B7 $lightweight \u00B7 466Mb", R.drawable.logo_qwen), true),
-                    ModelWithStatus(ModelInfo("Qwen 3.5 2B", "q35-2b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-02-27"), "Alibaba \u00B7 $general \u00B7 1.07Gb", R.drawable.logo_qwen), false),
-                    ModelWithStatus(ModelInfo("Nemotron 3 Nano", "nem4b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-12-15"), "NVIDIA \u00B7 $reasoning \u00B7 2.84Gb", R.drawable.logo_nvidia), false),
-                    ModelWithStatus(ModelInfo("LFM2.5 1.2B", "lfm12.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-01-09"), "Liquid AI \u00B7 $thinking \u00B7 731Mb", R.drawable.logo_liquid), false),
-                )
-
-                StoreScreenshotFrame(
-                    icon = Icons.Outlined.CloudDownload,
-                    title = stringResource(R.string.screenshot_download_models),
-                    subtitle = stringResource(R.string.screenshot_download_models_sub)
-                ) {
-                    ModelsScreen(
-                        storageInfo = StorageInfo(
-                            path = "/storage/emulated/0/Models",
-                            usedBytes = 3_800_000_000L,
-                            totalBytes = 64_000_000_000L,
-                            availableBytes = 42_000_000_000L,
-                            isCustomFolder = false
-                        ),
-                        allModels = models,
-                        downloadingModels = emptyMap(),
-                        snackbarMessage = null,
-                        pendingMigration = null,
-                        migrationProgress = null,
-                        deviceLanguage = "en",
-                        onBackClick = { },
-                        onChangeFolderClick = { },
-                        onDeleteModel = { },
-                        onDownloadModel = { _, _ -> },
-                        onDownloadMmproj = { },
-                        onCancelDownload = { },
-                        onSnackbarDismiss = { },
-                        onConfirmMigration = { },
-                        onSkipMigration = { },
-                        onCancelMigration = { }
-                    )
                 }
             } }
         }

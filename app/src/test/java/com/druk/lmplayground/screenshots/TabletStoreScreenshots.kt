@@ -31,13 +31,11 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.BatteryFull
 import androidx.compose.material.icons.outlined.Build
-import androidx.compose.material.icons.outlined.CloudDownload
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Description
 import androidx.compose.material.icons.outlined.Notifications
@@ -58,13 +56,11 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.PermanentNavigationDrawer
 import androidx.compose.material3.PrimaryTabRow
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
@@ -96,20 +92,18 @@ import com.android.ide.common.rendering.api.SessionParams
 import com.android.resources.ScreenOrientation
 import com.druk.lmplayground.R
 import com.druk.lmplayground.conversation.ConversationBar
+import com.druk.lmplayground.conversation.DocumentChipsRow
 import com.druk.lmplayground.conversation.Message
 import com.druk.lmplayground.conversation.PermanentSessionList
 import com.druk.lmplayground.conversation.UserInput
 import com.druk.lmplayground.data.ChatSessionEntity
+import com.druk.lmplayground.data.RagDocumentEntity
 import com.druk.lmplayground.models.Model
 import com.druk.lmplayground.models.ModelInfo
 import com.druk.lmplayground.models.ModelWithStatus
 import com.druk.lmplayground.settings.ToolsContent
-import com.druk.lmplayground.storage.ModelsContent
-import com.druk.lmplayground.storage.StorageInfo
 import com.druk.lmplayground.theme.PlaygroundTheme
 import com.druk.lmplayground.tools.Tool
-import androidx.compose.material3.SnackbarHostState
-import androidx.compose.runtime.remember
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -239,6 +233,21 @@ class TabletStoreScreenshots(
             logoRes = R.drawable.logo_google
         )
     }
+
+    // READY document chip for the documents (RAG) scene. Filename stays
+    // English in every locale — realistic, and it needs no translation.
+    private fun sampleDocument() = RagDocumentEntity(
+        id = "doc",
+        sessionId = "session",
+        displayName = "rental-agreement.pdf",
+        mimeType = "application/pdf",
+        sizeBytes = 245_000L,
+        status = RagDocumentEntity.STATUS_READY,
+        chunkCount = 18,
+        embeddingDim = 768,
+        embeddingModel = "embeddinggemma-300m-Q4_0.gguf",
+        createdAt = 0L,
+    )
 
     private fun sampleSessions(): List<ChatSessionEntity> {
         val now = System.currentTimeMillis()
@@ -941,9 +950,87 @@ class TabletStoreScreenshots(
         }
     }
 
-    // Scene 3: Chat about an image (vision) with the permanent sidebar.
+    // Scene 3: Chat about a document (RAG) with the permanent sidebar.
     @Test
-    fun scene3_chatWithImage() {
+    fun scene3_documents() {
+        paparazzi.snapshot {
+            LocaleTheme {
+                val question = stringResource(R.string.screenshot_documents_question)
+                val response = stringResource(R.string.screenshot_documents_response)
+                val gemma4 = gemma4Model()
+                val sessions = sampleSessions()
+                TabletStoreScreenshotFrame(
+                    icon = Icons.Outlined.Description,
+                    title = stringResource(R.string.screenshot_documents),
+                    subtitle = stringResource(R.string.screenshot_documents_sub),
+                ) {
+                    PermanentNavigationDrawer(
+                        drawerContent = {
+                            PermanentSessionList(
+                                sessions = sessions,
+                                currentSessionId = sessions[0].id,
+                                onSessionSelected = {},
+                                onDeleteSession = {},
+                                onRenameSession = { _, _ -> },
+                                onPinSession = { _, _ -> },
+                                onSettingsClicked = {},
+                            )
+                        },
+                    ) {
+                        Surface(modifier = Modifier.fillMaxSize()) {
+                            Column {
+                                ConversationBar(
+                                    modelInfo = gemma4,
+                                    modelStatus = null,
+                                    compact = true,
+                                    showNavIcon = false,
+                                )
+                                // In the app the chips dock above the input,
+                                // but the device frame crops the bottom of
+                                // the screen — so for the store shot the chip
+                                // sits under the bar, where it can be seen.
+                                DocumentChipsRow(
+                                    documents = listOf(sampleDocument()),
+                                    onRemove = {},
+                                    onOpen = {},
+                                    modifier = Modifier.padding(bottom = 4.dp)
+                                )
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(horizontal = 8.dp)
+                                ) {
+                                    com.druk.lmplayground.conversation.Message(
+                                        msg = Message("User", question),
+                                        isUserMe = true,
+                                        showActions = false
+                                    )
+                                    com.druk.lmplayground.conversation.Message(
+                                        msg = Message(
+                                            author = "Assistant",
+                                            content = response,
+                                            responseTokens = 52,
+                                            responseDurationSeconds = 1.8f
+                                        ),
+                                        isUserMe = false,
+                                        showActions = true
+                                    )
+                                }
+                                UserInput(
+                                    integrateWithSurface = true,
+                                    onMessageSent = {},
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Scene 4: Chat about an image (vision) with the permanent sidebar.
+    @Test
+    fun scene4_chatWithImage() {
         paparazzi.snapshot {
             LocaleTheme {
                 val question = stringResource(R.string.screenshot_vision_question)
@@ -1005,9 +1092,9 @@ class TabletStoreScreenshots(
         }
     }
 
-    // Scene 4: Generation parameters (chat sheet, Params tab).
+    // Scene 7: Generation parameters (chat sheet, Params tab).
     @Test
-    fun scene4_generationParams() {
+    fun scene7_generationParams() {
         paparazzi.snapshot {
             LocaleTheme {
                 TabletStoreScreenshotFrame(
@@ -1024,92 +1111,6 @@ class TabletStoreScreenshots(
     }
 
     // Scene 7: Models download
-    @Test
-    fun scene7_modelsDownload() {
-        paparazzi.snapshot {
-            LocaleTheme {
-                val efficient = stringResource(R.string.model_category_efficient)
-                val lightweight = stringResource(R.string.model_category_lightweight)
-                val general = stringResource(R.string.model_category_general)
-                val ultraLight = stringResource(R.string.model_category_ultra_lightweight)
-                val thinking = stringResource(R.string.model_category_thinking)
-                val reasoning = stringResource(R.string.model_category_reasoning)
-
-                val models = listOf(
-                    ModelWithStatus(ModelInfo("LFM2.5 350M", "lfm350.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-03-25"), "Liquid AI · $ultraLight · 267Mb", R.drawable.logo_liquid), true),
-                    ModelWithStatus(ModelInfo("Gemma 4 E2B", "g4e2b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-03-25"), "Google · $efficient · 3.11Gb", R.drawable.logo_google), true),
-                    ModelWithStatus(ModelInfo("Qwen 3.5 0.8B", "q35-08.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-02-27"), "Alibaba · $lightweight · 466Mb", R.drawable.logo_qwen), true),
-                    ModelWithStatus(ModelInfo("Qwen 3.5 2B", "q35-2b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2026-02-27"), "Alibaba · $general · 1.07Gb", R.drawable.logo_qwen), false),
-                    ModelWithStatus(ModelInfo("Nemotron 3 Nano", "nem4b.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-12-15"), "NVIDIA · $reasoning · 2.84Gb", R.drawable.logo_nvidia), false),
-                    ModelWithStatus(ModelInfo("LFM2.5 1.2B", "lfm12.gguf", Uri.parse("https://x.com/m"), LocalDate.parse("2025-01-09"), "Liquid AI · $thinking · 731Mb", R.drawable.logo_liquid), false),
-                )
-
-                TabletStoreScreenshotFrame(
-                    icon = Icons.Outlined.CloudDownload,
-                    title = stringResource(R.string.screenshot_download_models),
-                    subtitle = stringResource(R.string.screenshot_download_models_sub),
-                ) {
-                    // Marketing variant of the Models screen:
-                    // ‑ Real TopAppBar (back arrow + "Models") so the
-                    //   screenshot reads as the live screen, not a
-                    //   detail pane.
-                    // ‑ maxContentWidth = Dp.Infinity so the grid fills
-                    //   the full display width. On 10" landscape
-                    //   (~1140dp) the 340dp adaptive cells naturally
-                    //   produce 3 columns; on 7" landscape (~880dp)
-                    //   we still get a nice 2-column spread.
-                    val snackbarHostState = remember { SnackbarHostState() }
-                    Scaffold(
-                        modifier = Modifier.fillMaxSize(),
-                        topBar = {
-                            TopAppBar(
-                                title = { Text(stringResource(R.string.models)) },
-                                navigationIcon = {
-                                    IconButton(onClick = { }) {
-                                        Icon(
-                                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = stringResource(R.string.back),
-                                        )
-                                    }
-                                },
-                            )
-                        },
-                    ) { padding ->
-                        ModelsContent(
-                            storageInfo = StorageInfo(
-                                path = "/storage/emulated/0/Models",
-                                usedBytes = 3_800_000_000L,
-                                totalBytes = 64_000_000_000L,
-                                availableBytes = 42_000_000_000L,
-                                isCustomFolder = false
-                            ),
-                            allModels = models,
-                            downloadingModels = emptyMap(),
-                            snackbarMessage = null,
-                            pendingMigration = null,
-                            migrationProgress = null,
-                            deviceLanguage = "en",
-                            snackbarHostState = snackbarHostState,
-                            onChangeFolderClick = { },
-                            onDeleteModel = { },
-                            onDownloadModel = { _, _ -> },
-                            onDownloadMmproj = { },
-                            onCancelDownload = { },
-                            onSnackbarDismiss = { },
-                            onConfirmMigration = { },
-                            onSkipMigration = { },
-                            onCancelMigration = { },
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .padding(padding),
-                            maxContentWidth = Dp.Infinity,
-                        )
-                    }
-                }
-            }
-        }
-    }
-
     // Scene 5: Reusable system prompts (chat sheet, Prompt tab).
     @Test
     fun scene5_systemPrompts() {
