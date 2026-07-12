@@ -98,8 +98,16 @@ static bool clipVulkanIsKnownBad(const char *gpuDescription) {
     static const char *kDeny[] = {
         "PowerVR",  // Tensor G5 (Pixel 10): CLIP encode slow AND numerically wrong
         "Mali-G52", // Galaxy A32 (Helio G80) etc.: SIGSEGV in ggml_vk_create_buffer
-        "Adreno (TM) 610", // SD 680/685 (Redmi Note 13, Honor X7c, Oppo A60):
-                           // SIGSEGV in ggml_vk_init/ggml_vk_create_buffer
+        // Whole Adreno 6xx family: 1.8.0/1.8.1 Vitals show SIGSEGV in
+        // ggml_vk_init (vkCreateFence) or ggml_vk_create_buffer across the
+        // series — 610 (Redmi Note 13, Honor X7c, Oppo A60), 618 (Galaxy
+        // A52), 642L (Galaxy M52 5G), 644 (HONOR 90). The 2019-2021 driver
+        // stack for these parts is no longer updated.
+        "Adreno (TM) 6",
+        // Adreno 710 (Redmi Note 13 Pro 5G, SD 7s Gen 2): same
+        // ggml_vk_create_buffer SIGSEGV as the 6xx family. Newer 7xx
+        // (720/725/730/740/750) have no crash reports — keep them on Vulkan.
+        "Adreno (TM) 710",
     };
     for (const char *needle : kDeny) {
         if (strstr(gpuDescription, needle) != nullptr) return true;
