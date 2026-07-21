@@ -88,28 +88,27 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_probeModelMetadata(JNIEnv *env, jobjec
     return result;
 }
 
-// GPUs whose Vulkan driver mishandles the CLIP vision graph. The encoder runs
-// on Vulkan by default (much faster than CPU); these specific parts fall back
-// to CPU. Matched as a substring of the ggml device description (the Vulkan
-// deviceName). Denylist, not allowlist: an untested bad GPU still crashes, but
-// only into the survivable :llama-restart recovery path. Extend from Vitals.
-static bool clipVulkanIsKnownBad(const char *gpuDescription) {
+// GPUs whose Vulkan driver is trusted with the CLIP vision graph. The encoder
+// prefers Vulkan (much faster than CPU); everything not matched here runs the
+// encoder on CPU. Matched as a substring of the ggml device description (the
+// Vulkan deviceName). This used to be a denylist, but 1.8.x/1.9.0 Vitals kept
+// growing it one cohort per release — PowerVR, Mali-G52, then the whole
+// Adreno 6xx family and 710, then Mali-G57/G68/G72 (Galaxy A24/A53, Dimensity
+// 700), Adreno 725 (POCO F5) and the Galaxy S22 family (Adreno 730 or Xclipse
+// 920) — each costing every affected user one startup crash. Only families
+// with zero vision crashes across three releases of Vitals stay on Vulkan; the
+// crash sentinel below still catches an allowlisted part that misbehaves.
+static bool clipVulkanIsKnownGood(const char *gpuDescription) {
     if (gpuDescription == nullptr) return false;
-    static const char *kDeny[] = {
-        "PowerVR",  // Tensor G5 (Pixel 10): CLIP encode slow AND numerically wrong
-        "Mali-G52", // Galaxy A32 (Helio G80) etc.: SIGSEGV in ggml_vk_create_buffer
-        // Whole Adreno 6xx family: 1.8.0/1.8.1 Vitals show SIGSEGV in
-        // ggml_vk_init (vkCreateFence) or ggml_vk_create_buffer across the
-        // series — 610 (Redmi Note 13, Honor X7c, Oppo A60), 618 (Galaxy
-        // A52), 642L (Galaxy M52 5G), 644 (HONOR 90). The 2019-2021 driver
-        // stack for these parts is no longer updated.
-        "Adreno (TM) 6",
-        // Adreno 710 (Redmi Note 13 Pro 5G, SD 7s Gen 2): same
-        // ggml_vk_create_buffer SIGSEGV as the 6xx family. Newer 7xx
-        // (720/725/730/740/750) have no crash reports — keep them on Vulkan.
-        "Adreno (TM) 710",
+    static const char *kAllow[] = {
+        "Adreno (TM) 74",  // Snapdragon 8 Gen 2 flagships
+        "Adreno (TM) 75",  // Snapdragon 8 Gen 3 flagships
+        "Adreno (TM) 8",   // Snapdragon 8 Elite family
+        "Immortalis",      // Dimensity 9xxx flagships
+        "Xclipse 94",      // Exynos 2400 (Galaxy S24)
+        "Xclipse 95",      // Exynos 2500
     };
-    for (const char *needle : kDeny) {
+    for (const char *needle : kAllow) {
         if (strstr(gpuDescription, needle) != nullptr) return true;
     }
     return false;
@@ -192,9 +191,9 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstr
 
     // Pick the CLIP vision-encoder backend now that the Vulkan backend (if any)
     // is loaded and its devices are enumerable. clip.cpp selects by device name
-    // (MTMD_BACKEND_DEVICE, e.g. "Vulkan0"). Default to the GPU (much faster
-    // than CPU vision) and fall back to "CPU" only for denylisted parts whose
-    // Vulkan driver mishandles the CLIP graph. Mobile GPUs register as IGPU (not
+    // (MTMD_BACKEND_DEVICE, e.g. "Vulkan0"). Use the GPU (much faster than CPU
+    // vision) only for allowlisted parts whose Vulkan driver is known to handle
+    // the CLIP graph; default to "CPU". Mobile GPUs register as IGPU (not
     // GPU), so dev_by_type(GPU) misses them; enumerate instead. Reading the
     // device name/description is safe (no buffer allocation, which is where the
     // crash happens). Override with `setprop debug.lmp.mtmd_backend <name>`.
@@ -215,7 +214,7 @@ Java_com_druk_llamacpp_jni_NativeLlamaCpp_init(JNIEnv *env, jobject object, jstr
             gpu_desc = desc;
         }
     }
-    if (gpu_name != nullptr && !clipVulkanIsKnownBad(gpu_desc)
+    if (gpu_name != nullptr && clipVulkanIsKnownGood(gpu_desc)
             && !clipSentinelVulkanBlocked()) {
         mtmd_backend = gpu_name;
     }
