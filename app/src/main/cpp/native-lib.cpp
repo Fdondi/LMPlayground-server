@@ -107,6 +107,10 @@ static bool clipVulkanIsKnownGood(const char *gpuDescription) {
         "Immortalis",      // Dimensity 9xxx flagships
         "Xclipse 94",      // Exynos 2400 (Galaxy S24)
         "Xclipse 95",      // Exynos 2500
+        // Tensor G2/G3 Valhall parts, verified on Pixel 7 Pro. Deliberately
+        // NOT the bare "Mali-G71" prefix — that would also match the 2016
+        // Bifrost Mali-G71 (Galaxy S8 era).
+        "Mali-G710",
     };
     for (const char *needle : kAllow) {
         if (strstr(gpuDescription, needle) != nullptr) return true;
