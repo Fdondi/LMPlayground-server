@@ -1,0 +1,4 @@
+- Denemek için üç yeni model: LFM2.5 2.6B, SmolLM3 3B ve MiniCPM5 1B
+- Yanıtlamadan önce sorunuzu düşünürler, böylece akıl yürütmelerini adım adım izleyebilirsiniz
+- Üçü de araçları kullanabilir — web'de arama, sayfa getirme, JavaScript çalıştırma
+- Performans ve kararlılık iyileştirmeleri

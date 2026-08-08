@@ -1,0 +1,4 @@
+- Tiga model baharu untuk dicuba: LFM2.5 2.6B, SmolLM3 3B dan MiniCPM5 1B
+- Ketiga-tiganya memikirkan soalan anda sebelum menjawab, jadi anda boleh mengikuti penaakulan mereka langkah demi langkah
+- Ketiga-tiganya boleh menggunakan alat — cari di web, dapatkan halaman, jalankan JavaScript
+- Penambahbaikan prestasi dan kestabilan

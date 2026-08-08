@@ -1,0 +1,4 @@
+- Kolme uutta mallia kokeiltavaksi: LFM2.5 2.6B, SmolLM3 3B ja MiniCPM5 1B
+- Ne miettivät kysymyksesi läpi ennen vastaamista, joten voit seurata niiden päättelyä vaihe vaiheelta
+- Kaikki kolme osaavat käyttää työkaluja — verkkohaku, sivun haku ja JavaScriptin suoritus
+- Suorituskyky- ja vakausparannuksia

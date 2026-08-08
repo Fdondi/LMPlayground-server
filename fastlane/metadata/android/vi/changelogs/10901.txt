@@ -1,0 +1,4 @@
+- Ba mô hình mới để thử: LFM2.5 2.6B, SmolLM3 3B và MiniCPM5 1B
+- Chúng suy nghĩ về câu hỏi của bạn trước khi trả lời, nên bạn có thể theo dõi lập luận từng bước
+- Cả ba đều dùng được công cụ — tìm kiếm web, tải một trang, chạy JavaScript
+- Cải thiện hiệu năng và độ ổn định

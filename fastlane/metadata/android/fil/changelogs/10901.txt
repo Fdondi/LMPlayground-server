@@ -1,0 +1,4 @@
+- Tatlong bagong modelo na masusubukan: LFM2.5 2.6B, SmolLM3 3B at MiniCPM5 1B
+- Pinag-iisipan nila ang tanong mo bago sumagot, kaya masusundan mo ang kanilang pangangatwiran nang paso-paso
+- Magagamit ng tatlo ang mga tool — paghahanap sa web, pagkuha ng page, pagpapatakbo ng JavaScript
+- Mga pagpapahusay sa performance at stability

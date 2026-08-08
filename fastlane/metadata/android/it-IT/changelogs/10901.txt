@@ -1,0 +1,4 @@
+- Tre nuovi modelli da provare: LFM2.5 2.6B, SmolLM3 3B e MiniCPM5 1B
+- Ragionano sulla tua domanda prima di rispondere, così puoi seguire il loro ragionamento passo dopo passo
+- Tutti e tre possono usare gli strumenti — cercare sul web, aprire una pagina, eseguire JavaScript
+- Miglioramenti di prestazioni e stabilità
