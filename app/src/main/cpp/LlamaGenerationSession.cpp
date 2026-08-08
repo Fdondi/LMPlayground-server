@@ -121,13 +121,17 @@ void LlamaGenerationSession::recreateToolSampler(const common_chat_params &rende
 
     // Reasoning budget (matches tools/cli/cli.cpp). For lazy grammars this also
     // provides thinking-block suppression even when the budget is unlimited.
-    if (!render.thinking_end_tag.empty()) {
+    if (!render.thinking_end_tags.empty()) {
         sp.reasoning_budget_tokens = sampler_params.thinking_budget;
         if (!render.thinking_start_tag.empty()) {
             sp.reasoning_budget_start = common_tokenize(vocab, render.thinking_start_tag, false, true);
         }
-        sp.reasoning_budget_end    = common_tokenize(vocab, render.thinking_end_tag, false, true);
-        sp.reasoning_budget_forced = common_tokenize(vocab, render.thinking_end_tag, false, true);
+        for (const auto &tag : render.thinking_end_tags) {
+            if (!tag.empty()) {
+                sp.reasoning_budget_end.push_back(common_tokenize(vocab, tag, false, true));
+            }
+        }
+        sp.reasoning_budget_forced = common_tokenize(vocab, render.thinking_end_tags.front(), false, true);
     }
 
     gsmpl = common_sampler_init(llama_get_model(ctx), sp);
@@ -205,7 +209,7 @@ void LlamaGenerationSession::rebuildSamplerChain(llama_sampler *budget_first) {
 
     // Repetition penalty (only if > 1.0)
     if (sampler_params.repetition_penalty > 1.0f) {
-        llama_sampler_chain_add(smpl, llama_sampler_init_penalties(256, sampler_params.repetition_penalty, 0.0f, 0.0f));
+        llama_sampler_chain_add(smpl, llama_sampler_init_penalties(llama_vocab_n_tokens(vocab), 256, sampler_params.repetition_penalty, 0.0f, 0.0f));
     }
 
     // Top-K (only if > 0)
@@ -412,30 +416,38 @@ void LlamaGenerationSession::maybeAddBudgetSampler(const common_chat_params &res
     };
 
     std::string start_tag = result.thinking_start_tag;
-    std::string end_tag = result.thinking_end_tag;
+    std::vector<std::string> end_tags = result.thinking_end_tags;
 
     // For gpt-oss (Gemma 4) and similar models that use channel-based thinking,
-    // thinking_start_tag/end_tag may be empty — detect from preserved tokens
+    // thinking_start_tag/end_tags may be empty — detect from preserved tokens
     if (start_tag.empty() && !result.preserved_tokens.empty()) {
         for (const auto &tok : result.preserved_tokens) {
             if (tok.find("channel") != std::string::npos) {
                 start_tag = "<|channel|>analysis<|message|>";
-                end_tag = "<|end|>";
+                end_tags = {"<|end|>"};
                 break;
             }
         }
     }
 
-    if (!start_tag.empty() && !end_tag.empty()) {
-        auto start_tokens  = tokenize_str(start_tag);
-        auto end_tokens    = tokenize_str(end_tag);
-        auto forced_tokens = end_tokens;
+    if (!start_tag.empty() && !end_tags.empty()) {
+        auto start_tokens = tokenize_str(start_tag);
+        std::vector<llama_tokens> end_seqs;
+        for (const auto &tag : end_tags) {
+            if (!tag.empty()) {
+                end_seqs.push_back(tokenize_str(tag));
+            }
+        }
+        if (end_seqs.empty()) {
+            return;
+        }
+        auto forced_tokens = end_seqs.front();
         rebuildSamplerChain(common_reasoning_budget_init(
-                vocab, start_tokens, end_tokens, forced_tokens, sampler_params.thinking_budget));
+                vocab, {start_tokens}, end_seqs, forced_tokens, sampler_params.thinking_budget));
 
         budget_sampler_added = true;
         LOGi("Reasoning budget sampler added: budget=%d, start='%s', end='%s'",
-             sampler_params.thinking_budget, start_tag.c_str(), end_tag.c_str());
+             sampler_params.thinking_budget, start_tag.c_str(), end_tags.front().c_str());
     }
 }
 
