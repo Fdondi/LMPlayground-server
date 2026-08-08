@@ -59,6 +59,21 @@ class LlamaService : Service() {
         @Volatile var pendingDestroy: Boolean = false
 
         /**
+         * Serializes session creation against the native model free.
+         *
+         * A session being created is not yet in [sessions], so it is
+         * invisible to the `stillHasSessions` check in
+         * [tryFinalizeModelTeardown] — without this lock a concurrent
+         * `unloadModel` frees the model while `llama_init_from_model`
+         * is still reading it, and the context constructor faults on the
+         * dangling pointer. Creation checks [pendingDestroy] and
+         * registers the new session while holding the lock; the free
+         * takes the same lock, so it either observes the registered
+         * session or runs before creation started.
+         */
+        val lock = Any()
+
+        /**
          * Held alive for the model's lifetime when a vision projector
          * (mmproj) was loaded from a PFD. Closed in
          * [tryFinalizeModelTeardown] alongside [pfd].
@@ -240,14 +255,19 @@ class LlamaService : Service() {
     private fun tryFinalizeModelTeardown(modelId: Int) {
         val entry = models[modelId] ?: return
         if (!entry.pendingDestroy) return
-        val stillHasSessions = sessions.values.any { it.modelId == modelId } ||
-            embeddingSessions.values.any { it.modelId == modelId }
-        if (stillHasSessions) return
-        if (models.remove(modelId, entry)) {
-            entry.nativeModel.unloadModel()
-            entry.pfd?.close()
-            entry.mmprojPfd?.close()
-            if (models.isEmpty()) demoteFromForeground()
+        // Under the lock a session creation in flight has either not
+        // started (it will then see pendingDestroy and bail) or has
+        // already registered itself, so `stillHasSessions` sees it.
+        synchronized(entry.lock) {
+            val stillHasSessions = sessions.values.any { it.modelId == modelId } ||
+                embeddingSessions.values.any { it.modelId == modelId }
+            if (stillHasSessions) return
+            if (models.remove(modelId, entry)) {
+                entry.nativeModel.unloadModel()
+                entry.pfd?.close()
+                entry.mmprojPfd?.close()
+                if (models.isEmpty()) demoteFromForeground()
+            }
         }
     }
 
@@ -368,15 +388,17 @@ class LlamaService : Service() {
 
         override fun createEmbeddingSession(modelId: Int, contextSize: Int): Int {
             val model = models[modelId] ?: return 0
-            if (model.pendingDestroy) return 0
-            return try {
-                val native = model.nativeModel.createEmbeddingSession(contextSize) ?: return 0
-                val id = nextEmbeddingSessionId.getAndIncrement()
-                embeddingSessions[id] = EmbeddingEntry(id, modelId, native)
-                id
-            } catch (t: Throwable) {
-                Log.e(TAG, "createEmbeddingSession failed", t)
-                0
+            synchronized(model.lock) {
+                if (model.pendingDestroy) return 0
+                return try {
+                    val native = model.nativeModel.createEmbeddingSession(contextSize) ?: return 0
+                    val id = nextEmbeddingSessionId.getAndIncrement()
+                    embeddingSessions[id] = EmbeddingEntry(id, modelId, native)
+                    id
+                } catch (t: Throwable) {
+                    Log.e(TAG, "createEmbeddingSession failed", t)
+                    0
+                }
             }
         }
 
@@ -403,20 +425,23 @@ class LlamaService : Service() {
 
         override fun createSession(modelId: Int, params: SamplerParams): Int {
             val model = models[modelId] ?: return 0
-            val nativeSession = model.nativeModel.createSession(
-                params.contextSize,
-                params.temperature,
-                params.topP,
-                params.repetitionPenalty,
-                params.topK,
-                params.minP,
-                params.seed,
-                params.thinkingBudget,
-                params.systemPrompt,
-            ) ?: return 0
-            val id = nextSessionId.getAndIncrement()
-            sessions[id] = SessionEntry(id, modelId, nativeSession)
-            return id
+            synchronized(model.lock) {
+                if (model.pendingDestroy) return 0
+                val nativeSession = model.nativeModel.createSession(
+                    params.contextSize,
+                    params.temperature,
+                    params.topP,
+                    params.repetitionPenalty,
+                    params.topK,
+                    params.minP,
+                    params.seed,
+                    params.thinkingBudget,
+                    params.systemPrompt,
+                ) ?: return 0
+                val id = nextSessionId.getAndIncrement()
+                sessions[id] = SessionEntry(id, modelId, nativeSession)
+                return id
+            }
         }
 
         override fun addMessage(sessionId: Int, message: String, enableThinking: Boolean) {
