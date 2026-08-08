@@ -57,6 +57,29 @@ class ModelInfoProviderLanguageTest {
     }
 
     @Test
+    fun smolLm3DeclaresSixNativeLanguages() {
+        assertEquals(
+            setOf("en", "fr", "es", "de", "it", "pt"),
+            byName("SmolLM3 3B").supportedLanguages.toSet()
+        )
+    }
+
+    @Test
+    fun miniCpm5IsEnZh() {
+        assertEquals(setOf("en", "zh"), byName("MiniCPM5 1B").supportedLanguages.toSet())
+    }
+
+    @Test
+    fun lfm25LargeIsBroaderThanEarlierSizes() {
+        val large = byName("LFM2.5 2.6B").supportedLanguages
+        val small = byName("LFM2.5 350M").supportedLanguages
+        assertTrue(large.containsAll(small))
+        assertTrue(large.contains("hi"))
+        assertTrue(large.contains("vi"))
+        assertFalse(small.contains("hi"))
+    }
+
+    @Test
     fun supportsLanguageReturnsTrueForEmptyList() {
         val custom = ModelInfoProvider.createCustomModelInfo(
             filename = "custom.gguf",

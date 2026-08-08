@@ -57,6 +57,15 @@ class ModelInfoProviderCapabilityTest {
     }
 
     @Test
+    fun newReasoningFamiliesSupportToolsAndThinking() {
+        listOf("LFM2.5 2.6B", "SmolLM3 3B", "MiniCPM5 1B").forEach { name ->
+            val model = byName(name)
+            assertTrue("$name should support tools", model.supportsTools)
+            assertTrue("$name should support thinking", model.supportsThinking)
+        }
+    }
+
+    @Test
     fun customModelHasNoCapabilities() {
         val custom = ModelInfoProvider.createCustomModelInfo(
             filename = "custom.gguf",

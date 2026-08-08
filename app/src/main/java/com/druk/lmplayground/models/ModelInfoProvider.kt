@@ -25,6 +25,15 @@ object ModelInfoProvider {
     )
     private val DEEPSEEK_LANGS = listOf("en", "zh")
     private val LFM_LANGS = listOf("en", "ar", "zh", "fr", "de", "ja", "ko", "es")
+    // LFM2.5 2.6B declares a wider set than the earlier LFM2.5 sizes.
+    private val LFM25_LANGS = listOf(
+        "ar", "zh", "en", "fr", "de", "hi", "id", "it",
+        "ja", "ko", "pl", "pt", "ru", "es", "th", "vi"
+    )
+    // The card's frontmatter also tags zh/ar/ru, but the model card text is
+    // explicit that only these six are natively supported.
+    private val SMOLLM3_LANGS = listOf("en", "fr", "es", "de", "it", "pt")
+    private val MINICPM_LANGS = listOf("en", "zh")
     private val MISTRAL_LANGS = listOf(
         "en", "fr", "de", "es", "it", "pt", "nl", "zh", "ja", "ko", "ar"
     )
@@ -181,6 +190,15 @@ object ModelInfoProvider {
             supportedLanguages = LFM_LANGS
         ),
         ModelInfo(
+            name = "LFM2.5 2.6B",
+            filename = "LFM2.5-2.6B-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/LiquidAI/LFM2.5-2.6B-GGUF/resolve/main/LFM2.5-2.6B-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-07-28"),
+            description = "Liquid AI · Reasoning model · 1.67Gb",
+            logoRes = R.drawable.logo_liquid,
+            supportedLanguages = LFM25_LANGS
+        ),
+        ModelInfo(
             name = "Ministral 3 3B Instruct",
             filename = "Ministral-3-3B-Instruct-2512-Q4_K_M.gguf",
             remoteUri = Uri.parse("https://huggingface.co/lmstudio-community/Ministral-3-3B-Instruct-2512-GGUF/resolve/main/Ministral-3-3B-Instruct-2512-Q4_K_M.gguf"),
@@ -268,6 +286,24 @@ object ModelInfoProvider {
             description = "NVIDIA \u00B7 Hybrid reasoning model \u00B7 2.84Gb",
             logoRes = R.drawable.logo_nvidia,
             supportedLanguages = ENGLISH_ONLY
+        ),
+        ModelInfo(
+            name = "SmolLM3 3B",
+            filename = "HuggingFaceTB_SmolLM3-3B-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/bartowski/HuggingFaceTB_SmolLM3-3B-GGUF/resolve/main/HuggingFaceTB_SmolLM3-3B-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2025-07-08"),
+            description = "Hugging Face · Hybrid reasoning model · 1.92Gb",
+            logoRes = R.drawable.logo_huggingface,
+            supportedLanguages = SMOLLM3_LANGS
+        ),
+        ModelInfo(
+            name = "MiniCPM5 1B",
+            filename = "MiniCPM5-1B-Q4_K_M.gguf",
+            remoteUri = Uri.parse("https://huggingface.co/openbmb/MiniCPM5-1B-GGUF/resolve/main/MiniCPM5-1B-Q4_K_M.gguf"),
+            releaseDate = LocalDate.parse("2026-05-21"),
+            description = "OpenBMB · Hybrid reasoning model · 688Mb",
+            logoRes = R.drawable.logo_openbmb,
+            supportedLanguages = MINICPM_LANGS
         ),
         ModelInfo(
             name = "Gemma 3n E2B",
@@ -440,6 +476,9 @@ object ModelInfoProvider {
         "Phi-4-mini-instruct-Q4_K_M.gguf",
         "LFM2.5-350M-Q4_K_M.gguf",
         "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
+        "LFM2.5-2.6B-Q4_K_M.gguf",
+        "HuggingFaceTB_SmolLM3-3B-Q4_K_M.gguf",
+        "MiniCPM5-1B-Q4_K_M.gguf",
         "Ministral-3-3B-Instruct-2512-Q4_K_M.gguf",
         "Ministral-3-3B-Reasoning-2512-Q4_K_M.gguf",
         "Ministral-3-8B-Instruct-2512-Q4_K_M.gguf",
@@ -472,6 +511,9 @@ object ModelInfoProvider {
         "DeepSeek-R1-Distill-Qwen-7B-Q4_K_M.gguf",
         "LFM2.5-350M-Q4_K_M.gguf",
         "LFM2.5-1.2B-Thinking-Q4_K_M.gguf",
+        "LFM2.5-2.6B-Q4_K_M.gguf",
+        "HuggingFaceTB_SmolLM3-3B-Q4_K_M.gguf",
+        "MiniCPM5-1B-Q4_K_M.gguf",
         "Ministral-3-3B-Reasoning-2512-Q4_K_M.gguf",
         "Ministral-3-8B-Reasoning-2512-Q4_K_M.gguf",
         "NVIDIA-Nemotron3-Nano-4B-Q4_K_M.gguf",
