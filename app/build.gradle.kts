@@ -15,41 +15,75 @@ plugins {
 val ndkVersionPin = "27.2.12479018"
 
 // --- Vulkan build toolchain discovery (portable; no machine-specific paths) ---
+// Anything left null here is resolved by CMakeLists.txt, which falls back to
+// fetching the header-only Khronos repos. See "Vulkan host headers" there.
+
+// The Vulkan backend is a big chunk of the native build (shader compilation for
+// every ABI). -PnoVulkan drops it for fast CPU-only local iteration; release and
+// CI builds always keep it on.
+val vulkanEnabled = !project.hasProperty("noVulkan")
+
+val hostOsName = System.getProperty("os.name").lowercase()
+val hostIsWindows = hostOsName.contains("win")
+val ndkHostTag = when {
+    hostOsName.contains("mac") || hostOsName.contains("darwin") -> "darwin-x86_64"
+    hostIsWindows -> "windows-x86_64"
+    else -> "linux-x86_64"
+}
+
+val androidSdkDir: String? = System.getenv("ANDROID_HOME")
+    ?: System.getenv("ANDROID_SDK_ROOT")
+    ?: Properties().apply {
+        val lp = rootProject.file("local.properties")
+        if (lp.exists()) lp.inputStream().use { load(it) }
+    }.getProperty("sdk.dir")
+
+// An explicitly exported $VULKAN_SDK is a deliberate signal, so it outranks the
+// system package locations below.
+val vulkanSdkEnvRoot: List<File> = listOfNotNull(System.getenv("VULKAN_SDK")?.let { File(it) })
+    .filter { it.isDirectory }
+
+// Installed LunarG Vulkan SDKs, newest first. This is the only way to get the
+// Vulkan and SPIR-V headers as a system package on Windows (no apt/brew
+// equivalent), so use one when present -- otherwise CMake fetches the headers.
+val lunarGSdkRoots: List<File> = buildList {
+    if (hostIsWindows) {
+        listOf("C:/VulkanSDK", "C:/Program Files/VulkanSDK").forEach { base ->
+            File(base).listFiles()
+                ?.filter { it.isDirectory }
+                ?.sortedByDescending { it.name }
+                ?.let { addAll(it) }
+        }
+    }
+}
+
 // glslc ships inside every NDK under shader-tools/<host>; auto-derive it from the
 // pinned NDK, overridable via -PvulkanGlslc or the VULKAN_GLSLC env var.
+// Windows NDKs name the executable glslc.exe.
 val vulkanGlslcPath: String? = run {
     val override = (project.findProperty("vulkanGlslc") as String?) ?: System.getenv("VULKAN_GLSLC")
     if (override != null) return@run override
-    val sdkDir = System.getenv("ANDROID_HOME")
-        ?: System.getenv("ANDROID_SDK_ROOT")
-        ?: Properties().apply {
-            val lp = rootProject.file("local.properties")
-            if (lp.exists()) lp.inputStream().use { load(it) }
-        }.getProperty("sdk.dir")
-    val osName = System.getProperty("os.name").lowercase()
-    val hostTag = when {
-        osName.contains("mac") || osName.contains("darwin") -> "darwin-x86_64"
-        osName.contains("win") -> "windows-x86_64"
-        else -> "linux-x86_64"
-    }
-    sdkDir?.let { File("$it/ndk/$ndkVersionPin/shader-tools/$hostTag/glslc") }
+    val glslcName = if (hostIsWindows) "glslc.exe" else "glslc"
+    androidSdkDir?.let { File("$it/ndk/$ndkVersionPin/shader-tools/$ndkHostTag/$glslcName") }
         ?.takeIf { it.exists() }?.absolutePath
 }
 
 // The NDK sysroot ships only the C Vulkan headers; ggml-vulkan needs the C++
 // bindings (vulkan.hpp), so an external Vulkan-Headers source is required.
-// Override via -PvulkanIncludeDir / VULKAN_HEADERS_DIR / VULKAN_SDK; otherwise
-// probe the usual install locations (Homebrew on macOS, system include on Linux).
+// Override via -PvulkanIncludeDir / VULKAN_HEADERS_DIR; otherwise probe the
+// usual install locations ($VULKAN_SDK, Homebrew on macOS, system include on
+// Linux, LunarG SDK on Windows), each checked for vulkan.hpp before being used.
 val vulkanIncludeDir: String? = run {
     val override = (project.findProperty("vulkanIncludeDir") as String?)
         ?: System.getenv("VULKAN_HEADERS_DIR")
-        ?: System.getenv("VULKAN_SDK")?.let { "$it/include" }
     if (override != null) return@run override
-    listOf(
-        "/opt/homebrew/opt/vulkan-headers/include", // macOS arm64 (brew)
-        "/usr/local/opt/vulkan-headers/include",    // macOS x86_64 (brew)
-        "/usr/include",                              // Linux system vulkan-headers
-    ).firstOrNull { File(it, "vulkan/vulkan.hpp").exists() }
+    buildList {
+        vulkanSdkEnvRoot.forEach { add("$it/include") } // $VULKAN_SDK
+        add("/opt/homebrew/opt/vulkan-headers/include") // macOS arm64 (brew)
+        add("/usr/local/opt/vulkan-headers/include")    // macOS x86_64 (brew)
+        add("/usr/include")                             // Linux system vulkan-headers
+        lunarGSdkRoots.forEach { add("$it/include") }   // LunarG SDK (path case-insensitive on Windows)
+    }.firstOrNull { File(it, "vulkan/vulkan.hpp").exists() }
 }
 
 // b9496's ggml-vulkan requires find_package(SPIRV-Headers CONFIG). Point CMake
@@ -57,12 +91,13 @@ val vulkanIncludeDir: String? = run {
 val spirvHeadersDir: String? = run {
     val override = (project.findProperty("spirvHeadersDir") as String?) ?: System.getenv("SPIRV_HEADERS_DIR")
     if (override != null) return@run override
-    listOf(
-        "/opt/homebrew/opt/spirv-headers/share/cmake/SPIRV-Headers", // macOS arm64 (brew)
-        "/usr/local/opt/spirv-headers/share/cmake/SPIRV-Headers",    // macOS x86_64 (brew)
-        "/usr/lib/cmake/SPIRV-Headers",                               // Linux system
-        "/usr/share/cmake/SPIRV-Headers",
-    ).firstOrNull { File(it, "SPIRV-HeadersConfig.cmake").exists() }
+    buildList {
+        (vulkanSdkEnvRoot + lunarGSdkRoots).forEach { add("$it/share/cmake/SPIRV-Headers") }
+        add("/opt/homebrew/opt/spirv-headers/share/cmake/SPIRV-Headers") // macOS arm64 (brew)
+        add("/usr/local/opt/spirv-headers/share/cmake/SPIRV-Headers")    // macOS x86_64 (brew)
+        add("/usr/lib/cmake/SPIRV-Headers")                              // Linux system
+        add("/usr/share/cmake/SPIRV-Headers")
+    }.firstOrNull { File(it, "SPIRV-HeadersConfig.cmake").exists() }
 }
 
 // ggml-vulkan.cpp #includes <spirv/unified1/spirv.hpp> but the ggml-vulkan
@@ -73,11 +108,12 @@ val spirvHeadersDir: String? = run {
 val spirvIncludeDir: String? = run {
     val override = (project.findProperty("spirvIncludeDir") as String?) ?: System.getenv("SPIRV_HEADERS_INCLUDE_DIR")
     if (override != null) return@run override
-    listOf(
-        "/opt/homebrew/opt/spirv-headers/include", // macOS arm64 (brew)
-        "/usr/local/opt/spirv-headers/include",    // macOS x86_64 (brew)
-        "/usr/include",                            // Linux system
-    ).firstOrNull { File(it, "spirv/unified1/spirv.hpp").exists() }
+    buildList {
+        (vulkanSdkEnvRoot + lunarGSdkRoots).forEach { add("$it/include") }
+        add("/opt/homebrew/opt/spirv-headers/include") // macOS arm64 (brew)
+        add("/usr/local/opt/spirv-headers/include")    // macOS x86_64 (brew)
+        add("/usr/include")                            // Linux system
+    }.firstOrNull { File(it, "spirv/unified1/spirv.hpp").exists() }
 }
 
 android {
@@ -110,11 +146,13 @@ android {
                 arguments += "-DLLAMA_OPENSSL=OFF"
                 arguments += "-DGGML_LLAMAFILE=OFF"
                 arguments += "-DGGML_NATIVE=OFF"
-                arguments += "-DGGML_VULKAN=ON"
-                vulkanGlslcPath?.let { arguments += "-DVulkan_GLSLC_EXECUTABLE=$it" }
-                vulkanIncludeDir?.let { arguments += "-DVulkan_INCLUDE_DIR=$it" }
-                spirvHeadersDir?.let { arguments += "-DSPIRV-Headers_DIR=$it" }
-                spirvIncludeDir?.let { arguments += "-DSPIRV_HEADERS_INCLUDE_DIR=$it" }
+                arguments += "-DGGML_VULKAN=${if (vulkanEnabled) "ON" else "OFF"}"
+                if (vulkanEnabled) {
+                    vulkanGlslcPath?.let { arguments += "-DVulkan_GLSLC_EXECUTABLE=$it" }
+                    vulkanIncludeDir?.let { arguments += "-DVulkan_INCLUDE_DIR=$it" }
+                    spirvHeadersDir?.let { arguments += "-DSPIRV-Headers_DIR=$it" }
+                    spirvIncludeDir?.let { arguments += "-DSPIRV_HEADERS_INCLUDE_DIR=$it" }
+                }
                 // ggml-vulkan's find_package(SPIRV-Headers CONFIG) is a host
                 // package; let the Android cross-compile toolchain search the
                 // host prefix for CONFIG packages (does not affect FindVulkan,

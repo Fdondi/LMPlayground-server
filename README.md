@@ -71,6 +71,14 @@ Prerequisites:
 * Android Studio [2024.3.1+](https://developer.android.com/studio/releases)
 * NDK 27.2.12479018
 * CMake 3.31.6
+* A host C++ compiler, for the Vulkan backend's shader generator. macOS and
+  Linux already have one; on **Windows** install [LLVM](https://github.com/llvm/llvm-project/releases)
+  or the Visual Studio C++ Build Tools and make sure `clang++` (or `cl`) is on `PATH`.
+
+The Vulkan backend also needs the Vulkan C++ headers and the Khronos SPIR-V
+headers. The build finds these automatically — from Homebrew or apt if you have
+them, from a [LunarG Vulkan SDK](https://vulkan.lunarg.com/) if one is installed,
+and otherwise by fetching them at configure time. No manual setup is required.
 
 1. Clone the repository with submodules:
 ```
@@ -79,6 +87,14 @@ git clone --recurse-submodules https://github.com/andriydruk/LMPlayground.git
 2. Open the project in Android Studio: `File` > `Open` > Select the cloned repository.
 3. Connect an Android device or start an emulator.
 4. Run the application using `Run` > `Run 'app'` or the play button in Android Studio.
+
+Compiling the Vulkan shaders for every ABI dominates a clean native build. For
+faster CPU-only local iteration, build with `-PnoVulkan`:
+```
+./gradlew assembleDebug -PnoVulkan
+```
+Leave it off for anything you intend to ship — release and CI builds always
+include the Vulkan backend.
 
 ## License
 
