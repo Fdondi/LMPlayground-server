@@ -27,7 +27,13 @@ jobs:
       uses: android-actions/setup-android@v3
     - name: Run unit tests
       run: ./gradlew app:testDebugUnitTest -PskipScreenshots
+    # app:lintDebug does not analyze library dependencies (lint.checkDependencies
+    # defaults to false), so the new modules need their own runs or they rot.
     - name: Run lint
-      run: ./gradlew app:lintDebug
+      run: ./gradlew app:lintDebug playground-api:lintDebug samples:chat-client:lintDebug
+    # The sample proves the public API is usable without any :app internals.
+    # Building it in CI is what keeps that true.
+    - name: Build the API sample client
+      run: ./gradlew samples:chat-client:assembleDebug
     - name: Run connected android tests
       run: ./gradlew app:mvdApi35Check

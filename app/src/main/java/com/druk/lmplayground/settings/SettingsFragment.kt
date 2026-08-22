@@ -391,9 +391,13 @@ class SettingsFragment : Fragment() {
     @androidx.compose.runtime.Composable
     private fun AdvancedDetailPane() {
         val repackEnabled by advancedViewModel.repackEnabled.collectAsStateWithLifecycle()
+        val externalApiEnabled by advancedViewModel.externalApiEnabled
+            .collectAsStateWithLifecycle()
         AdvancedContent(
             repackEnabled = repackEnabled,
             onRepackEnabledChanged = { advancedViewModel.setRepackEnabled(it) },
+            externalApiEnabled = externalApiEnabled,
+            onExternalApiEnabledChanged = { advancedViewModel.setExternalApiEnabled(it) },
         )
     }
 

@@ -6,6 +6,11 @@ import android.content.ComponentName
 import android.os.Bundle
 import com.druk.llamacpp.InferenceClient
 import com.druk.llamacpp.LlamaCpp
+import com.druk.lmplayground.api.BlobStore
+import com.druk.lmplayground.api.ChatCompletionHandler
+import com.druk.lmplayground.api.EngineArbiter
+import com.druk.lmplayground.api.ParkedToolTurns
+import com.druk.lmplayground.conversation.ChatImageStore
 import com.druk.lmplayground.data.AppDatabase
 import com.druk.lmplayground.data.ChatRepository
 import com.druk.lmplayground.data.SystemPromptRepository
@@ -33,6 +38,20 @@ class App : Application() {
     lateinit var systemPromptRepository: SystemPromptRepository
         private set
     lateinit var ragRepository: RagRepository
+        private set
+
+    /**
+     * Arbitrates the loaded model between the user's chat and third-party API
+     * callers. Also the [com.druk.lmplayground.inference.ModelRuntime.SharedModelSink]
+     * that `ModelRuntime` publishes model transitions to.
+     */
+    lateinit var engineArbiter: EngineArbiter
+        private set
+    lateinit var blobStore: BlobStore
+        private set
+
+    /** Transport-agnostic core of the public API; `ApiService` is a thin shell. */
+    lateinit var chatCompletionHandler: ChatCompletionHandler
         private set
 
     /**
@@ -99,9 +118,12 @@ class App : Application() {
         chatRepository = ChatRepository(database.chatDao())
         systemPromptRepository = SystemPromptRepository(database.systemPromptDao())
 
+        val storagePreferences = StoragePreferences(this)
+        val storageRepository = StorageRepository(this, storagePreferences)
+
         val embeddingModelManager = EmbeddingModelManager(
             llamaCpp = llamaCpp,
-            storageRepository = StorageRepository(this, StoragePreferences(this)),
+            storageRepository = storageRepository,
             scope = applicationScope,
         )
         ragRepository = RagRepository(
@@ -112,5 +134,30 @@ class App : Application() {
         )
         // Documents stuck INDEXING from a previous process death → ERROR.
         ragRepository.resetStaleIndexing()
+
+        // Public inference API. Constructed unconditionally (this is the main
+        // process — the :llama early return above already ruled that out) so an
+        // external bindService that starts the process finds it ready.
+        engineArbiter = EngineArbiter(
+            app = this,
+            llamaCpp = llamaCpp,
+            inferenceClient = inferenceClient,
+            storageRepository = storageRepository,
+            storagePreferences = storagePreferences,
+            scope = applicationScope,
+        )
+        blobStore = BlobStore(this, ChatImageStore(this))
+        // A process death between putBlob and the request that would have
+        // consumed the image leaves an orphan nothing else cleans up.
+        blobStore.sweepOnStartup()
+        chatCompletionHandler = ChatCompletionHandler(
+            arbiter = engineArbiter,
+            blobStore = blobStore,
+            parkedTurns = ParkedToolTurns(),
+            storageRepository = storageRepository,
+            storagePreferences = storagePreferences,
+            scope = applicationScope,
+            appVersionName = BuildConfig.VERSION_NAME,
+        )
     }
 }

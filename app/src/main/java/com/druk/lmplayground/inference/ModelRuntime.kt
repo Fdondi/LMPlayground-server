@@ -59,7 +59,45 @@ class ModelRuntime(
     private val storagePreferences: StoragePreferences,
     private val notifications: InferenceNotificationUpdater,
     private val listener: Listener,
+    /**
+     * Bridge to the public inference API. Null in tests and anywhere the API
+     * bridge isn't wanted — every publish below is a safe no-op then.
+     */
+    private val sharedModelSink: SharedModelSink? = null,
 ) {
+
+    /**
+     * How the loaded model is shared with third-party API callers.
+     *
+     * Publication lives here rather than in the ViewModel because this class is
+     * the single owner of [model] / [session] / [modelFileHandle] — every
+     * transition is in this one file, so there is no call site to forget.
+     *
+     * Note that only the **model** is ever published. The user's session is
+     * never shared: an API request creates its own session on the same model,
+     * so the chat's KV cache is untouched.
+     */
+    interface SharedModelSink {
+        /** [model] null clears the publication. Called on every transition. */
+        fun publishForegroundModel(
+            model: LlamaModel?,
+            info: ModelInfo?,
+            thinking: Boolean,
+            vision: Boolean,
+            toolCalling: Boolean,
+            maxContext: Int,
+        )
+
+        /** True while the user has a chat turn in flight. */
+        fun setUserBusy(busy: Boolean)
+
+        /**
+         * Drop any transient API-owned model before the user's load, so two
+         * multi-GB models are never mapped at once. Must be bounded — the
+         * user's load cannot stall behind it.
+         */
+        suspend fun releaseHeadless()
+    }
 
     interface Listener {
         fun onLoadProgress(progress: Float)
@@ -111,8 +149,25 @@ class ModelRuntime(
      * The in-flight generation coroutine. Owned here so every lifecycle
      * transition can cancel-and-join it; set by the ViewModel when a
      * generation turn starts.
+     *
+     * The setter doubles as the user-busy signal for the API arbiter, so API
+     * requests can yield to the user's turn without any ViewModel call site
+     * having to know the arbiter exists.
      */
     var generatingJob: Job? = null
+        set(value) {
+            field = value
+            sharedModelSink?.setUserBusy(value != null && value.isActive)
+            value?.invokeOnCompletion { sharedModelSink?.setUserBusy(false) }
+        }
+
+    /** Clear the API-visible publication of the loaded model. */
+    private fun clearPublishedModel() {
+        sharedModelSink?.publishForegroundModel(
+            model = null, info = null,
+            thinking = false, vision = false, toolCalling = false, maxContext = 0,
+        )
+    }
 
     // Keep strong reference to prevent GC from closing the file descriptor
     private var modelFileHandle: StorageRepository.ModelFileHandle? = null
@@ -169,6 +224,9 @@ class ModelRuntime(
         session = null
         this.model = null
         modelFileHandle = null
+        // Unpublish before the blocking teardown, so no API request can grab a
+        // handle that is about to become invalid.
+        clearPublishedModel()
 
         withContext(Dispatchers.Default) {
             prevSession?.destroy()
@@ -176,6 +234,10 @@ class ModelRuntime(
         }
 
         prevHandle?.close()
+
+        // Drop any transient API-owned model before we map another multi-GB
+        // one. Bounded by the sink so a slow unload can't stall the user.
+        sharedModelSink?.releaseHeadless()
 
         withContext(Dispatchers.Default) {
             listener.onLoadProgress(0f)
@@ -336,10 +398,21 @@ class ModelRuntime(
                         return@withContext
                     }
                 }
+                // Publish only now: after the replay succeeded, so the API
+                // arbiter never sees a half-built model.
+                sharedModelSink?.publishForegroundModel(
+                    model = llamaModel,
+                    info = model,
+                    thinking = thinkingSupported,
+                    vision = visionSupported,
+                    toolCalling = toolCallingSupported,
+                    maxContext = minOf(nCtxTrain, 16384),
+                )
                 listener.onModelReady(model)
             } catch (t: Throwable) {
                 // Surface the failure to the user instead of leaving
                 // the picker stuck on "Loading…" forever.
+                clearPublishedModel()
                 listener.onLoadProgress(0f)
                 listener.onLoadStatus(app.getString(R.string.model_load_failed_status))
                 fileHandle.close()
@@ -569,6 +642,7 @@ class ModelRuntime(
         model = null
         modelFileHandle?.close()
         modelFileHandle = null
+        clearPublishedModel()
         return true
     }
 
@@ -589,6 +663,11 @@ class ModelRuntime(
         session = null
         model = null
         modelFileHandle = null
+        // Unpublish before the blocking teardown: LlamaService.unloadModel
+        // tears down every session on this model, including any an API request
+        // is mid-generation on, and that request must see the model gone rather
+        // than start a new session against a doomed handle.
+        clearPublishedModel()
 
         withContext(Dispatchers.Default) {
             prevSession?.destroy()
@@ -612,6 +691,7 @@ class ModelRuntime(
         this.session = null
         this.model = null
         modelFileHandle = null
+        clearPublishedModel()
 
         CoroutineScope(Dispatchers.Default).launch {
             job?.cancel()

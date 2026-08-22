@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Package-visibility filtering applies from API 30 (this app's minSdk),
+         so without this block queryIntentServices returns nothing and the app
+         concludes LM Playground isn't installed.
+
+         Query by ACTION, not by <package android:name="com.druk.lmplayground"/>:
+         LM Playground's debug build carries applicationIdSuffix ".debug", so a
+         hardcoded package silently fails against a debug install — exactly the
+         configuration a developer integrating this API is most likely to have. -->
+    <queries>
+        <intent>
+            <action android:name="com.druk.lmplayground.api.BIND_CHAT_SERVICE" />
+        </intent>
+    </queries>
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.SampleChatClient">
+
+        <activity
+            android:name=".DemoActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

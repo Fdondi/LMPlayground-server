@@ -62,6 +62,35 @@
             android:foregroundServiceType="dataSync"
             android:exported="false" />
 
+        <!-- Public inference API for third-party apps.
+
+             Exported deliberately and WITHOUT android:permission. A custom
+             <permission> declared here is only granted to a client whose
+             <uses-permission> is evaluated AFTER LM Playground is installed, so
+             a client installed first would silently never receive it and would
+             need a reinstall — a well-known footgun for a public API. Access
+             control lives in ApiAccessPolicy instead, checked per transaction
+             via Binder.getCallingUid(). That is also the seam we actually want
+             (user toggle / allowlist / signature / token / consent) and it lets
+             the user revoke access without either app being updated.
+
+             The action is intentionally NOT ${applicationId}-scoped, so the
+             .debug and release builds expose the same action and clients can
+             resolve either without hardcoding a package name.
+
+             Main process on purpose: :llama has no catalog, no SAF storage and
+             no arbiter (see App.onCreate's isLlamaProcess early return), and a
+             third process would double-load models. Not a foreground service —
+             LlamaService already promotes itself while a model is loaded. -->
+        <service
+            android:name="com.druk.lmplayground.api.ApiService"
+            android:exported="true"
+            tools:ignore="ExportedService">
+            <intent-filter>
+                <action android:name="com.druk.lmplayground.api.BIND_CHAT_SERVICE" />
+            </intent-filter>
+        </service>
+
         <!-- AppCompat per-app language: enables automatic storage of the user's language
              preference on pre-Android 13 devices. On Android 13+ the system handles it
              via the android:localeConfig declaration above. -->

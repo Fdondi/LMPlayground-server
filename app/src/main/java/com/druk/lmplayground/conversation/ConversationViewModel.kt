@@ -195,6 +195,10 @@ class ConversationViewModel(val app: Application) : AndroidViewModel(app) {
         storagePreferences,
         notifications,
         runtimeListener,
+        // Publishes model transitions to the public API arbiter, so external
+        // callers can run on the model the user has loaded. Null in unit tests
+        // and Paparazzi, where there is no App instance.
+        (app as? App)?.engineArbiter,
     )
 
     /**

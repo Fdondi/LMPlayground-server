@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" translatable="false">LM Playground</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -312,6 +312,11 @@
     <string name="advanced_subtitle">Memory and performance options</string>
     <string name="enable_repack_title">Enable repack</string>
     <string name="enable_repack_desc">Repacks model weights into RAM for faster responses. Uses much more memory than loading them memory-mapped. Turn off if a large model runs out of memory while loading.</string>
+    <!-- Awaiting translation: new in this release. Marked explicitly rather
+         than folded into lint-baseline.xml so it stays visible to the
+         translation pass instead of disappearing into 3,500 baselined lines. -->
+    <string name="external_api_title" tools:ignore="MissingTranslation">Allow other apps</string>
+    <string name="external_api_desc" tools:ignore="MissingTranslation">Let other apps on this device run prompts through LM Playground and see which models you have downloaded. Nothing leaves your device either way. Turn this off to block them.</string>
 
     <!-- Tools -->
     <string name="tools">Tools</string>

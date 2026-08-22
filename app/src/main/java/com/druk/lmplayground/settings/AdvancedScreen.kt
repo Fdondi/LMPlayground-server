@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Api
 import androidx.compose.material.icons.outlined.Memory
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,6 +37,8 @@ import com.druk.lmplayground.R
 fun AdvancedScreen(
     repackEnabled: Boolean,
     onRepackEnabledChanged: (Boolean) -> Unit,
+    externalApiEnabled: Boolean,
+    onExternalApiEnabledChanged: (Boolean) -> Unit,
     onBackClick: () -> Unit,
 ) {
     Scaffold(
@@ -56,6 +59,8 @@ fun AdvancedScreen(
         AdvancedContent(
             repackEnabled = repackEnabled,
             onRepackEnabledChanged = onRepackEnabledChanged,
+            externalApiEnabled = externalApiEnabled,
+            onExternalApiEnabledChanged = onExternalApiEnabledChanged,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding),
@@ -67,6 +72,8 @@ fun AdvancedScreen(
 fun AdvancedContent(
     repackEnabled: Boolean,
     onRepackEnabledChanged: (Boolean) -> Unit,
+    externalApiEnabled: Boolean,
+    onExternalApiEnabledChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
@@ -76,6 +83,13 @@ fun AdvancedContent(
             description = stringResource(R.string.enable_repack_desc),
             checked = repackEnabled,
             onCheckedChange = onRepackEnabledChanged,
+        )
+        ToggleRow(
+            icon = Icons.Outlined.Api,
+            title = stringResource(R.string.external_api_title),
+            description = stringResource(R.string.external_api_desc),
+            checked = externalApiEnabled,
+            onCheckedChange = onExternalApiEnabledChanged,
         )
     }
 }

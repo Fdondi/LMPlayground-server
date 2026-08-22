@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compose owns the real theming (see DemoTheme.kt); this only needs to
+         give the window a sane background before the first frame. -->
+    <style name="Theme.SampleChatClient" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>

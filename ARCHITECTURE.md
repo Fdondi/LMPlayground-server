@@ -46,6 +46,76 @@ app/src/main/cpp             C++ session: prompt build, KV-cache reuse,
                              sampling, vision (mtmd), tool-call grammar
 ```
 
+## Public inference API
+
+Other apps can run inference through LM Playground by binding
+`ApiService` (action `com.druk.lmplayground.api.BIND_CHAT_SERVICE`), the
+only exported component besides `MainActivity`. Payloads are
+OpenAI-shaped JSON strings, so a client migrating off a remote
+OpenAI-compatible server changes its transport and keeps its data model.
+Contract and schemas: `playground-api/PROTOCOL.md`.
+
+```
+:playground-api          the public contract, consumed by BOTH sides
+  ├── IChatService.aidl / IChatCompletionCallback.aidl
+  ├── json/RequestCodec, ResponseCodec, ErrorCodec   one schema definition
+  └── LmPlaygroundClient  client SDK: discovery, bind, Flow<ChatEvent>
+
+com.druk.lmplayground.api   (main process)
+  ├── ApiService           thin Stub; per-transaction ApiAccessPolicy check
+  ├── ChatCompletionHandler transport-agnostic core → ResponseSink
+  ├── BinderResponseSink   coalesces chunks; linkToDeath on the client
+  ├── EngineArbiter        engineMutex, foreground publication, crash collector
+  ├── HeadlessModelManager transient model owner (EmbeddingModelManager shape)
+  ├── ApiModelResolver     pure capability matching / auto-selection
+  ├── ApiTurnRunner        one turn on a per-request session
+  ├── ApiHistoryMapper     OpenAI messages[] → replay pairs + final turn
+  ├── StreamDeltaTracker   accumulated string → monotonic deltas
+  ├── ParkedToolTurns      continuation tokens for client-side tool calls
+  └── BlobStore            putBlob / data: URL images
+```
+
+**The user's chat is never disturbed.** An API request creates its *own*
+`LlamaGenerationSession` on the model already loaded, so the chat's KV
+cache is untouched — `LlamaService` claims its `GenerationWorker` slot per
+**session**, and two `llama_context`s over one read-only `llama_model` is
+a supported llama.cpp pattern. If a model is loaded that does not meet the
+request's `lmp.require`, the request is **refused**, never served by
+evicting the user's model. With nothing loaded, `HeadlessModelManager`
+loads the smallest qualifying model and unloads it after 5 minutes idle.
+
+`ModelRuntime` publishes every model transition to the arbiter through
+`ModelRuntime.SharedModelSink` (null in tests). Publication happens
+*after* history replay succeeds, and is cleared *before* any blocking
+teardown, so the arbiter never sees a half-built or doomed handle.
+
+**Concurrency.** `EngineArbiter.engineMutex` serialises API turns against
+each other; a queued request waits 15 s then gets `engine_busy`. The user
+never waits on it — an API request yields to an in-flight chat turn for
+20 s and then proceeds anyway. Blocking Send behind a background app
+would be worse than two slow generations.
+
+**Crash handling is mandatory, not defensive.**
+`LlamaGenerationSession.generateAll` awaits a `CompletableDeferred` with
+no timeout, so if `:llama` dies the callback never arrives and an API
+request would hang forever. The arbiter collects `InferenceClient.state`
+and, on `Crashed`, emits `engine_unavailable` immediately and cancels
+**without joining** (the cancellation path's `NonCancellable` 30 s drain
+is waiting on a worker that will never answer).
+
+**Access control is in code, not the manifest.** A custom `<permission>`
+is only granted to clients installed *after* LM Playground, so a client
+installed first would silently never receive it. `ApiAccessPolicy` is
+checked per transaction via `Binder.getCallingUid()` (read synchronously
+on the binder thread — it is thread-local to the transaction). Shipped
+policy is `UserToggleAccessPolicy` over Settings → Advanced → "Allow
+other apps", default ON; allowlist, signature pinning, bearer token and
+interactive consent all fit the same `check()` signature.
+
+**The AIDL interface is append-only.** Binder transaction codes are
+positional and third-party clients are not rebuilt when we update;
+`ApiTransactionOrderTest` fails CI on a reorder.
+
 ## Document Q&A (RAG)
 
 Attaching a document to a chat runs extract → chunk → embed → store, then
@@ -137,7 +207,15 @@ file that the AAB already carries.
   into `fastlane/`.
 - **Instrumented tests** (`app/src/androidTest`): real model loads and
   generation (`ModelGenerationTest` — needs GGUFs in `/data/local/tmp`),
-  service/proxy lifecycle, ViewModel tool-call turns. CI runs
-  `app:mvdApi35Check` on a managed emulator.
+  service/proxy lifecycle, ViewModel tool-call turns, and the exported
+  API surface (`ApiServiceTest` — real binder transactions, no GGUF
+  needed). CI runs `app:mvdApi35Check` on a managed emulator.
+- **API module + sample**: `playground-api:lintDebug` and
+  `samples:chat-client:lintDebug` run separately in CI, because
+  `app:lintDebug` does not analyze dependencies
+  (`lint.checkDependencies` defaults to false). CI also builds
+  `samples:chat-client`, which depends *only* on `:playground-api` — that
+  build breaking is the signal that something leaked out of the public
+  contract.
 - Warning: `connectedAndroidTest` wipes the app's SAF folder grant on a
   real device; re-pick the folder before manual testing (`installDebug`).

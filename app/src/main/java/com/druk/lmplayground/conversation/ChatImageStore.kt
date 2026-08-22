@@ -57,10 +57,37 @@ class ChatImageStore(private val app: Application) {
     // The copy made by persistImageFile is always readable.
     fun resizeImageForVision(file: File): ByteArray? {
         val path = file.absolutePath
+        return resizeForVision(
+            decodeBounds = { options -> BitmapFactory.decodeFile(path, options) },
+            decodeFull = { options -> BitmapFactory.decodeFile(path, options) },
+        )
+    }
 
+    /**
+     * Same downscale, for images that arrive as bytes rather than a file — the
+     * public API's `data:` URLs and `putBlob` uploads never touch disk in their
+     * original form.
+     */
+    fun resizeImageForVision(bytes: ByteArray): ByteArray? = resizeForVision(
+        decodeBounds = { options -> BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options) },
+        decodeFull = { options -> BitmapFactory.decodeByteArray(bytes, 0, bytes.size, options) },
+    )
+
+    /**
+     * Downscale to a 768 px bounding box and re-encode as JPEG q85 — small
+     * enough to cross the binder comfortably, large enough for the vision
+     * encoders we ship.
+     *
+     * The two decode lambdas exist only because `BitmapFactory` has no common
+     * source abstraction; everything after the decode is identical.
+     */
+    private inline fun resizeForVision(
+        decodeBounds: (BitmapFactory.Options) -> Bitmap?,
+        decodeFull: (BitmapFactory.Options) -> Bitmap?,
+    ): ByteArray? {
         // Decode bounds first
         val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(path, options)
+        decodeBounds(options)
 
         val maxDimension = 768
         val origWidth = options.outWidth
@@ -76,7 +103,7 @@ class ChatImageStore(private val app: Application) {
         options.inJustDecodeBounds = false
         options.inSampleSize = (1f / scaleFactor).toInt().coerceAtLeast(1)
 
-        val bitmap = BitmapFactory.decodeFile(path, options) ?: return null
+        val bitmap = decodeFull(options) ?: return null
 
         // Scale to exact target if needed
         val targetW = (origWidth * scaleFactor).toInt().coerceAtLeast(1)

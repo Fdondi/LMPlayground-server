@@ -46,6 +46,20 @@ class StoragePreferences(context: Context) {
         get() = !prefs.getBoolean("disable_repack", false)
         set(value) = prefs.edit { putBoolean("disable_repack", !value) }
 
+    /**
+     * Whether other installed apps may run inference through LM Playground's
+     * exported API (see [com.druk.lmplayground.api.ApiService]).
+     *
+     * ON by default, but the toggle exists because this app's whole positioning
+     * is offline and private: an always-on endpoint lets any installed app
+     * enumerate the user's downloaded models and spend their battery on
+     * prompts. Enforced by
+     * [com.druk.lmplayground.api.UserToggleAccessPolicy].
+     */
+    var externalApiEnabled: Boolean
+        get() = prefs.getBoolean("external_api_enabled", true)
+        set(value) = prefs.edit { putBoolean("external_api_enabled", value) }
+
     fun getCustomModelMetadata(filename: String): Pair<String, Boolean>? {
         val value = prefs.getString("custom_model_$filename", null) ?: return null
         val parts = value.split("|", limit = 2)

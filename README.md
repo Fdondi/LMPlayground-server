@@ -24,6 +24,7 @@ LM Playground is an Android application for running Large Language Models locall
 - **Storage management** - choose where to keep multi-GB model files with Android's Storage Access Framework
 - **ARM optimized** - KleidiAI kernels and OpenMP for faster generation on arm64 devices
 - **Large-screen ready** - tablets, foldables, and Chromebooks get a permanent sessions sidebar, list-detail Settings, and freeform window resize support
+- **Inference API for other apps** - any app on the device can run prompts through LM Playground over an OpenAI-compatible IPC surface, so a developer moving off a remote server changes their transport and keeps their data model ([protocol](playground-api/PROTOCOL.md), [sample client](samples/chat-client)). Off with one switch in Settings → Advanced.
 
 ## Supported Models
 
@@ -95,6 +96,46 @@ faster CPU-only local iteration, build with `-PnoVulkan`:
 ```
 Leave it off for anything you intend to ship — release and CI builds always
 include the Vulkan backend.
+
+## Using LM Playground from your own app
+
+LM Playground exposes its engine over an exported AIDL service, so your app can
+run local inference without shipping or managing a multi-gigabyte model itself.
+Requests and responses are OpenAI-shaped JSON, and the client SDK gives you a
+`Flow` of streaming events:
+
+```kotlin
+val client = LmPlaygroundClient(context)
+client.connect() ?: return  // LM Playground not installed, or too old
+
+client.chatCompletion(
+    ChatCompletionRequest.Builder()
+        .system("You are a terse assistant.")
+        .user("Summarize this in one line: …")
+        .require(Requirements(tools = true))
+        .build()
+).collect { event ->
+    when (event) {
+        is ChatEvent.Delta     -> append(event.content, event.reasoning)
+        is ChatEvent.ToolCalls -> runToolsThenResend(event.completion)
+        is ChatEvent.Done      -> finish(event.completion)
+        is ChatEvent.Failed    -> show(event.error)
+    }
+}
+```
+
+Streaming, vision, client-side tool calling, and capability requirements
+("give me a model that can see images") are all supported. LM Playground will
+never unload the model its own user has open to serve you — it refuses with a
+clear error and tells you which models would work.
+
+See [`playground-api/PROTOCOL.md`](playground-api/PROTOCOL.md) for the wire
+format, and [`samples/chat-client`](samples/chat-client) for a complete chat app
+built on nothing but the public API:
+
+```
+./gradlew :app:installDebug :samples:chat-client:installDebug
+```
 
 ## License
 

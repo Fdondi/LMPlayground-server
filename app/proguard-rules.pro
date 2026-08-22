@@ -40,3 +40,10 @@
 
 # Keep Core
 -keep class com.druk.llamacpp.** { *; }
+
+# Keep the public IPC API surface. The AIDL wire contract is technically safe
+# under R8 already (the interface descriptor and transaction codes are
+# compile-time constants, unaffected by renaming), but -repackageclasses above
+# makes that a question worth removing outright, and third-party clients link
+# against these classes by name.
+-keep class com.druk.lmplayground.api.** { *; }

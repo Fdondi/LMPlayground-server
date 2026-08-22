@@ -27,9 +27,13 @@ class AdvancedFragment : Fragment() {
         setContent {
             PlaygroundTheme {
                 val repackEnabled by viewModel.repackEnabled.collectAsStateWithLifecycle()
+                val externalApiEnabled by viewModel.externalApiEnabled
+                    .collectAsStateWithLifecycle()
                 AdvancedScreen(
                     repackEnabled = repackEnabled,
                     onRepackEnabledChanged = { viewModel.setRepackEnabled(it) },
+                    externalApiEnabled = externalApiEnabled,
+                    onExternalApiEnabledChanged = { viewModel.setExternalApiEnabled(it) },
                     onBackClick = { findNavController().popBackStack() },
                 )
             }

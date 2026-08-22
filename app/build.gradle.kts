@@ -130,7 +130,7 @@ android {
         val major = versionProps.getProperty("major").toInt()
         val minor = versionProps.getProperty("minor").toInt()
         val patch = versionProps.getProperty("patch").toInt()
-        versionName = "$major.$minor.$patch"
+        versionName = "$major.$minor.$patch-francesco"
         // versionCode = base × 1000 + CI run number. Local builds use 0.
         // Keeps ~1000 CI builds per patch before needing a version bump.
         versionCode = (major * 10000 + minor * 100 + patch) * 1000 +
@@ -397,6 +397,11 @@ dependencies {
 
     implementation(libs.kotlin.stdlib)
     implementation(libs.kotlinx.coroutines.android)
+
+    // Public IPC API contract + JSON codecs, shared with third-party clients.
+    // Both sides link the same generated AIDL classes and the same codecs, so
+    // the wire schema has exactly one definition.
+    implementation(project(":playground-api"))
 
     implementation(libs.androidx.activity.compose)
 

@@ -24,4 +24,10 @@ dependencyResolutionManagement {
 }
 rootProject.name = "LMPlayground"
 include(":app")
+// Public IPC API: AIDL contract + JSON codecs + client SDK. Consumed by :app
+// (the service side) and by any third-party app (the client side).
+include(":playground-api")
+// Proof-of-concept third-party client. Depends ONLY on :playground-api —
+// that constraint is what proves the API is genuinely public.
+include(":samples:chat-client")
 
